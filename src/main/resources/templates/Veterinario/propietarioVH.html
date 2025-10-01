@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Historia Clínica Veterinaria</title>
+    <link rel="stylesheet" href="/css/VeterinarioCss/propietarioVH.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="/img/HistoriaClinica.png" alt="logo">
+    </div>
+    <h1>Historia Clínica</h1>
+    <div class="Barra">
+        <input type="text" id="searchInput" placeholder="Ingrese el documento">
+    </div>
+    <h2>Veterinario</h2>
+</header>
+
+<main id="ownersContainer">
+    <div th:each="propietario : ${propietarios}" class="card">
+        <h3 th:text="${propietario.nombrePro}"></h3>
+        <p><b>Documento:</b> <span th:text="${propietario.numDoc}"></span></p>
+        <p><b>Teléfono:</b> <span th:text="${propietario.telefonoPro}"></span></p>
+        <p><b>Correo:</b> <span th:text="${propietario.correoPro}"></span></p>
+
+        <button class="btn btn-primary" th:attr="onclick=|toggleMascotas(${propietario.id})|">
+            Consultar Animales
+        </button>
+
+        <div class="animal-list" th:id="'mascotas-' + ${propietario.id}" style="display:none;">
+            <div th:each="mascota : ${propietario.mascotas}" class="animal-item"
+                 th:attr="onclick=|selectMascota(${propietario.id}, ${mascota.id})|">
+
+                <p>
+                    <b th:text="${mascota.nomMascota}"></b>
+                    (<span th:text="${mascota.especie}"></span>)
+                </p>
+
+                <div class="options" th:id="'options-' + ${mascota.id}" style="display:none; margin-top:10px;">
+                    <!-- Botón para agregar vacuna - CORREGIDO -->
+                    <button class="btn btn-success"
+                            th:attr="onclick=|openVacunaModal('${propietario.id}', '${mascota.id}', '${mascota.nomMascota}')|">
+                        Agregar vacuna
+                    </button>
+
+                    <!-- Botón para generar historia clínica -->
+                    <button class="btn btn-info"
+                            th:attr="onclick=|openHistoryModal('${mascota.id}', '${mascota.nomMascota}')|">
+                        Generar historia clínica
+                    </button>
+
+                </div>
+            </div>
+
+            <p th:if="${#lists.isEmpty(propietario.mascotas)}">
+                Este propietario no tiene mascotas registradas
+            </p>
+        </div>
+    </div>
+</main>
+
+<!-- Modal Vacuna - CORREGIDO -->
+<div id="vacunaModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('vacunaModal')">X</button> <!-- Cambiado a vacunaModal -->
+        <h2 id="vacunaModalTitle">Agregar Vacuna</h2>
+
+        <form th:action="@{/guardarVacuna}" method="post" id="vacunaForm">
+            <input type="hidden" id="vacunaPropietarioId" name="idPropietario">
+            <input type="hidden" id="vacunaMascotaId" name="idMascota">
+
+            <label>Lote:</label>
+            <input type="text" name="lote" required>
+
+            <label>Fecha Aplicación:</label>
+            <input type="date" name="fechaAplicacion" required>
+
+            <label>Fecha Refuerzo:</label>
+            <input type="date" name="fechaRefuerzo">
+
+            <label>Fecha Vencimiento:</label>
+            <input type="date" name="fechaVencimiento">
+
+            <label>Laboratorio:</label>
+            <input type="text" name="laboratorio">
+
+
+            <div class="modal-buttons">
+                <button type="submit" class="btn-generate">Guardar Vacuna</button>
+                <button type="button" class="btn-cancel" onclick="closeModal('vacunaModal')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Historia Clínica -->
+<div id="historyModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('historyModal')">X</button>
+        <h2 id="historyModalTitle">Historia Clínica</h2>
+
+        <!-- VERSIÓN SIMPLIFICADA - Sin th:object -->
+        <form id="historyForm" th:action="@{/guardarHistoria}" method="post">
+            <input type="hidden" id="mascotaId" name="mascotaId">
+
+            <label>Peso (kg):</label>
+            <input type="number" step="0.1" name="peso" required>
+
+            <label>Anamnesis:</label>
+            <textarea name="anamnesis" rows="3" required></textarea>
+
+            <label>Diagnóstico:</label>
+            <textarea name="diagnostico" rows="3" required></textarea>
+
+            <label>Tratamiento:</label>
+            <textarea name="tratamiento" rows="3" required></textarea>
+
+            <label>Fecha y Hora:</label>
+            <input type="datetime-local" name="fechaHora" required>
+
+            <div class="modal-buttons">
+                <button type="submit" class="btn-generate">Guardar Historia</button>
+                <button type="button" class="btn-cancel" onclick="closeModal('historyModal')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let selectedMascotaId = null;
+    let historiaGuardada = false;
+
+    // ★★★ NUEVA FUNCIÓN PARA ABRIR MODAL DE VACUNA ★★★
+    function openVacunaModal(propietarioId, mascotaId, mascotaNombre) {
+        // Llenar los campos hidden del formulario
+        document.getElementById('vacunaPropietarioId').value = propietarioId;
+        document.getElementById('vacunaMascotaId').value = mascotaId;
+        document.getElementById('vacunaModalTitle').textContent = 'Agregar Vacuna - ' + mascotaNombre;
+
+        // Mostrar el modal
+        document.getElementById('vacunaModal').style.display = 'block';
+
+        // Resetear el formulario
+        document.getElementById('vacunaForm').reset();
+    }
+
+    // Manejar el envío del formulario de vacuna
+    document.getElementById('vacunaForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // Validar campos
+        const formData = new FormData(this);
+        // Validar campos requeridos
+        const lote = this.querySelector('[name="lote"]').value;
+        const fechaAplicacion = this.querySelector('[name="fechaAplicacion"]').value;
+
+        if (!lote || !fechaAplicacion ) {
+            alert('Por favor complete los campos requeridos (Lote, Fecha Aplicación');
+            return;
+        }
+        formData.forEach((valor, clave) => {
+            console.log(clave + ": " + valor);
+        });
+        // Enviar formulario
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Vacuna guardada exitosamente');
+                    closeModal('vacunaModal');
+                    // Recargar la página para ver los cambios
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    alert('Error al guardar la vacuna');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al guardar la vacuna');
+            });
+    });
+
+    // Función para abrir el modal de historia clínica
+    function openHistoryModal(mascotaId, mascotaNombre) {
+        selectedMascotaId = mascotaId;
+        historiaGuardada = false;
+
+        document.getElementById('mascotaId').value = mascotaId;
+        document.getElementById('historyModalTitle').textContent = 'Historia Clínica - ' + mascotaNombre;
+        document.getElementById('historyModal').style.display = 'block';
+
+        // Resetear el formulario
+        document.getElementById('historyForm').reset();
+    }
+
+    // Manejar el envío del formulario de historia clínica
+    document.getElementById('historyForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // Validar campos
+        const formData = new FormData(this);
+        let isValid = true;
+
+        for (let [key, value] of formData.entries()) {
+            if (!value.trim()) {
+                isValid = false;
+                break;
+            }
+        }
+
+        if (!isValid) {
+            alert('Por favor complete todos los campos');
+            return;
+        }
+        formData.forEach((valor, clave) => {
+            console.log(clave + ": " + valor);
+        });
+
+        // Enviar formulario
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Error al guardar la historia");
+                }
+                return response.json();
+            })
+            .then(data => {
+                historiaGuardada = true;
+                alert('Historia clínica guardada exitosamente');
+                closeModal('historyModal')
+                console.log(data)
+                window.open('/propietarios/descargarHistoria/' + data.id, '_blank');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al guardar la historia clínica');
+            });
+    });
+
+    // Función para descargar Excel
+    function downloadExcel(historiaId) {
+        window.open('/propietarios/descargarHistoria/' + historiaId, '_blank');
+    }
+
+    // Funciones existentes
+    function toggleMascotas(id) {
+        const div = document.getElementById("mascotas-" + id);
+        div.style.display = (div.style.display === "none") ? "block" : "none";
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+    }
+
+    function selectMascota(ownerId, mascotaId) {
+        document.querySelectorAll(".options").forEach(opt => opt.style.display = "none");
+        const options = document.getElementById("options-" + mascotaId);
+        if (options) {
+            options.style.display = "flex";
+            options.style.flexDirection = "column";
+            options.style.gap = "8px";
+        }
+    }
+</script>
+
+</body>
+</html>

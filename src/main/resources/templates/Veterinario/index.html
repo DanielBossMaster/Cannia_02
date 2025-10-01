@@ -1,0 +1,284 @@
+
+<!--hola-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Veterinario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/VeterinarioCss/estilos.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="logo">
+        <img src="/img/logo.png" alt="logo">
+    </div>
+    <nav class="links">
+        <a href="('cerrar-sesion')">Cerrar sesión</a>
+    </nav>
+
+</header>
+
+<main class="container py-4" >
+    <!-- Botón agregar propietario -->
+    <div class="d-flex justify-content-center gap-4">
+    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPropietarioModal">
+        <img src= "/img/nuevoo.png" alt="nuevo propietario" width="40" height="40">
+        <span>Nuevo Propietario</span>
+    </button>
+
+    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addMascotaModal">
+        <img src= "/img/mascotaaa.png" alt="nueva mascota" width="40" height="40">
+        <span>Nueva Mascota</span>
+    </button>
+
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" >
+        <img src= "/img/tienda.png" alt="Veterinaria" width="40" height="40">
+        <span>Veterinaria</span>
+    </button>
+
+    <!-- botton de historia clinica -->
+
+    <a th:href="@{/veterinario/propietarioVH}" class="btn btn-primary mb-3">
+        <img src="/img/documento.png" alt="Historia clinica" width="40" height="40">
+        <span>Historia Clinica</span>
+    </a>
+
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addOwnerModal">
+        <img src= "/img/citaapng.png" alt="Citas" width="40" height="40">
+        <span>Programar Cita</span>
+    </button>
+    </div>
+
+    <!-- 🔷 BLOQUE 1: -->
+    <!-- Columna Propietarios -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div  class="col" th:each="prop : ${propietarios}" >
+            <div class="card p-3">
+                <!-- Boton borrar propietario -->
+                <div class="d-flex justify-content-end mb-2 gap-2">
+                    <!-- boton eliminar proppietario -->
+                    <form method="post" th:action="@{/veterinario/borrarp/{id}(id=${prop.id})}">
+                        <button type="submit" class="delete" onclick="return confirm('¿Desea Eliminar?')">
+                            <img src="/img/delete.png" alt="Eliminar" height="20">
+                        </button>
+                    </form>
+                    <!-- boton Editar proppietario -->
+                    <button class="delete" data-bs-toggle="modal" th:data-bs-target="'#editarPropietarioModal' + ${prop.id}" >
+                        <img src="/img/ajustes.png" alt="Editar" height="20">
+                    </button>
+                </div>
+                <!-- Modal informacion propietario por id  -->
+                <!-- Tambien muestra que mascotas tiene cada propietario  -->
+
+                <button type="button" class="btn btn-primary " data-bs-toggle="modal" th:data-bs-target="'#modalMascotas' + ${prop.id}">
+                    <strong th:text="${prop.nombrePro + ' ' + prop.apellidoPro}">Propietario</strong>
+                    <p><strong>Telefono:</strong> <span th:text="${prop.telefonoPro}"></span></p>
+                    <p><strong>Correo:</strong> <span th:text="${prop.correoPro}"></span></p>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Bloque 2 -->
+    <div th:each="prop : ${propietarios}" >
+        <!-- Modal que muestra infomacion de la mascota  -->
+        <div class="modal fade" th:id="'modalMascotas' + ${prop.id}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" th:text="'Mascotas de ' + ${prop.nombrePro}">Mascotas</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row" th:if="${prop.mascotas != null}">
+                            <div class="col-md-4 mb-3" th:each="masc : ${prop.mascotas}">
+                                <div class="card-owner text-center">
+                                    <h6 th:text="${masc.nomMascota}">Nombre Mascota</h6>
+                                    <p><strong>Especie:</strong> <span th:text="${masc.especie}"></span></p>
+                                    <p><strong>Color:</strong> <span th:text="${masc.color}"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <p th:if="${prop.mascotas == null}">No tiene mascotas registradas.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:each="prop : ${propietarios}" >
+        <!-- Modal editar propietario -->
+        <div class="modal fade" th:id="'editarPropietarioModal' + ${prop.id}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <!-- Aquí puedes incluir tu formulario de edición -->
+
+                    <form  th:action="@{/veterinario/editar/{id}(id=${prop.id})}" method="post" th:object="${propietario}"  class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Editar Propietario</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Numero de Documento</label>
+                                <input type="text" th:value="${propietario.numDoc}"  class="form-control" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nombre</label>
+                                <input type="text" th:field="*{nombrePro}" class="form-control" >
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Apellido</label>
+                                <input type="text" th:field="*{apellidoPro}" class="form-control" >
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Direccion</label>
+                                <input type="text" th:field="*{direccionPro}" class="form-control" >
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Telefono</label>
+                                <input type="text" th:field="*{telefonoPro}" class="form-control" >
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Correo</label>
+                                <input type="email" th:field="*{correoPro}"  class="form-control" >
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+
+
+            </div>
+        </div>
+    </div>
+    <!-- Modal para agregar propietario -->
+    <div class="modal fade" id="addPropietarioModal" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+            <form  th:action="@{/veterinario/nuevo}" method="post" th:object="${propietario}"  class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registrar Propietario</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Numero de Documento</label>
+                        <input type="text" th:field="*{numDoc}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" th:field="*{nombrePro}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Apellido</label>
+                        <input type="text" th:field="*{apellidoPro}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Direccion</label>
+                        <input type="text" th:field="*{direccionPro}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Telefono</label>
+                        <input type="text" th:field="*{telefonoPro}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Correo</label>
+                        <input type="email" th:field="*{correoPro}"  class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <!-- Modal para agregar Mascota -->
+    <div class="modal fade" id="addMascotaModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <form th:action="@{/veterinario/nuevom}" method="post" th:object="${mascota}" class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Registrar Mascota</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <select name="propietarioId" class="form-label">
+                            <option th:each = "prop : ${propietarios}"
+                                    th:value="${prop.id}"
+                                    th:text=" ${prop.nombrePro + ' ' + prop.apellidoPro}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" th:field ="*{nomMascota}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Especie</label>
+                        <input type="text"  th:field ="*{especie}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Raza</label>
+                        <input type="text" th:field ="*{raza}"  class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Color</label>
+                        <input type="text"  th:field ="*{color}"  class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fecha de nacimiento</label>
+                        <input type="date"  th:field ="*{fechaNacimiento}" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fecha de nacimiento</label>
+                        <select th:field ="*{genero}" class="form-control" required>
+                            <option th:value="Hembra">Hembra</option>
+                            <option th:value="Macho">Macho</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</main>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<footer>
+    <p>&copy; 2025 App Cannia. Todos los derechos reservados.</p>
+</footer>
+</body>
+</html>
+<!-- <form method="post" th:action="@{/veterinario/borrar/{id}(id=${masc.id})}">
+                                                  <button type="submit" onclick="return confirm('¿Desea Eliminar?')" class="delete">
+                                                      <img src= "/img/eliminar.png" alt="Eliminar" height="20">
+                                                  </button>
+                                              </form>
+                                              <form method="post" th:action="@{/veterinario/editarm/{id}(id=${prop.id})}">
+                                                  <button type="submit" class="delete" onclick="return confirm('¿Desea Eliminar?')">
+                                                      <img src="/img/ajustes.png" alt="Editar" height="20">
+                                                  </button>
+                                              </form> -->

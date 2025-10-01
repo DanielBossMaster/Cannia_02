@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:each="prop : ${propietarios}" >
+    <!-- Modal editar propietario -->
+    <div class="modal fade" th:id="'editarPropietarioModal'" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <!-- Aquí puedes incluir tu formulario de edición -->
+
+            <form  th:action="@{/veterinario/editar/{id}(id=${prop.id})}" method="post" th:object="${propietario}"  class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Propietario</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label>Número de Documento</label>
+                        <input type="text" name="numDoc" th:field="@{prop.numDoc}" class="form-control" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label>Nombre</label>
+                        <input type="text" name="nombrePro" id="nombrePro" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label>Apellido</label>
+                        <input type="text" name="apellidoPro" id="apellidoPro" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label>Dirección</label>
+                        <input type="text" name="direccionPro" id="direccionPro" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label>Teléfono</label>
+                        <input type="text" name="telefonoPro" id="telefonoPro" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label>Correo</label>
+                        <input type="email" name="correoPro" id="correoPro" class="form-control">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

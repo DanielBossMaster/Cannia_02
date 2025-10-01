@@ -1,0 +1,208 @@
+
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f1f1f1;
+    min-height: 100vh; /* Asegura que el body ocupe al menos toda la pantalla */
+    display: flex;
+    flex-direction: column; /* Organiza el contenido en columna */
+
+}
+
+/* HEADER */
+header {
+    background: linear-gradient(to right, #d600b9, #2c0045);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+header img {
+    width: 80px;
+    height: auto;
+}
+
+.links a {
+    text-decoration: none;
+    color: #e6d8d8;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.links a:hover {
+    color: #ffffff;
+}
+
+/* Contenedor de propietarios */
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start; /* Alinea al inicio */
+    margin: 20px auto;
+    max-width: 1100px;
+}
+
+/* Card de propietario */
+.card-owner {
+    position: relative; /* Necesario para que el botón eliminar se posicione */
+    width: 260px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    text-align: left;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Separación interna entre elementos */
+}
+
+.card-owner:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+/* Botón eliminar en la esquina superior derecha */
+.card-owner .delete {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    padding: 0;
+    z-index: 10;
+}
+
+/* Botón interno del propietario (abre modal) */
+.card-owner button {
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
+    cursor: pointer;
+    color: #3f0d5c;
+}
+
+.card-owner button:hover {
+    color: #4A148C;
+}
+
+/* Texto del propietario */
+.card-owner strong {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.card-owner p {
+    margin: 2px 0;
+    font-size: 0.9rem;
+}
+
+/* Imagenes de iconos dentro de botones */
+.card-owner img {
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+/* Ajuste de responsividad */
+@media (max-width: 768px) {
+    .cards {
+        justify-content: center;
+    }
+    .card-owner {
+        width: 90%;
+    }
+}
+
+/* BOTONES */
+.btn-primary {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    background-color: #ffffff;
+    border-color: #ffffff;
+    font-weight: bold;
+    color : #3f0d5c;
+
+}
+
+.btn-primary:hover {
+    transform: translateY(-5px); /*<---- esta propiedad da la animacion de los botones*/
+    box-shadow: 0 4px 12px rgb(74, 34, 87);
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #170022;
+}
+
+/* MODAL */
+.modal-content {
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    border: none;
+}
+
+.modal-header {
+    background: linear-gradient(to right, #d600b9, #2c0045);
+    color: white;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+.modal-footer {
+    background-color: #f1f1f1;
+    border-top: none;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+/* FOOTER CORREGIDO */
+footer {
+    background: #3f0f6e;
+    color: #ffffff;
+    text-align: center;
+    padding: 15px;
+    width: 100%;
+    position: relative;
+    bottom: 0;
+    margin-top: 40px; /* Espacio antes del footer, reducido */
+}
+
+/* FOOTER */
+/*footer {*/
+/*  background: #2c0045;*/
+/*  color: #ffffff;*/
+/*  text-align: center;*/
+/*  padding: 10px;*/
+/*  margin-top:220px;*/
+/*}*/
+/*.mb-4 {*/
+/*    max-width: 900px;*/
+/*    margin: 0 auto 20px auto;*/
+
+/*}*/
+
+/*.btn-secondary {*/
+/*    background-color: #6f42c1;*/
+/*    color: white;*/
+/*    font-weight: bold;*/
+/*    margin-bottom: 10px;*/
+/*}*/
+
+/*.btn-secondary:hover {*/
+/*    background-color: #5a34a0;*/
+/*}*/
+
+/*main {*/
+/*    flex: 1; !* Hace que el main ocupe */
+/*    padding-bottom: 20px; !* Espacio inferior para separar del footer *!*/
+/*}*/
