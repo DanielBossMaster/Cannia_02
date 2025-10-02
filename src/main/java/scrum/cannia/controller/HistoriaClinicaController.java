@@ -51,6 +51,9 @@ public class HistoriaClinicaController {
             @ModelAttribute VacunaModel vacuna,
             @RequestParam("idMascota") Long idMascota) {
 
+
+        //comentario de prueba ajskajksjka
+
         // Buscar la mascota
         MascotaModel mascota = mascotaRepository.findById(idMascota)
                 .orElseThrow(() -> new RuntimeException("Mascota no encontrada"));
