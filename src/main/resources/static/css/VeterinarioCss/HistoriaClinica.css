@@ -8,6 +8,11 @@ body {
     color: #333;
 }
 
+.boton-imagen{
+    width: 8px;
+    height: 8px
+}
+
 /* ===== ENCABEZADO ===== */
 header {
     background: linear-gradient(to right, #d600b9, #2c0045);
@@ -277,14 +282,6 @@ main {
     background: #3f0d5c;;
 }
 
-.btn-warning {
-    background: linear-gradient(135deg, #ffd93d, #ff9a3d);
-    color: black;
-}
-
-.btn-warning:hover {
-    background: linear-gradient(135deg, #e6c437, #e68a37);
-}
 
 /* ===== MODALES ===== */
 .modal {

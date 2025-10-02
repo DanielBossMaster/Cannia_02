@@ -70,7 +70,7 @@ public class PropietarioController {
         model.addAttribute("historiaClinica", new HistoriaClinicaModel());
         model.addAttribute("propietarios", propietarios);
 
-        return "veterinario/propietarioVH";
+        return "veterinario/historiaclinica";
     }
     @PostMapping("/guardarVacuna")
     public String guardarVacuna(@RequestParam Long idPropietario,
@@ -79,8 +79,7 @@ public class PropietarioController {
                                 @RequestParam String fechaAplicacion,
                                 @RequestParam(required = false) String fechaRefuerzo,
                                 @RequestParam(required = false) String fechaVencimiento,
-                                @RequestParam(required = false) String laboratorio,
-                                @RequestParam String nombreVete) {
+                                @RequestParam(required = false) String laboratorio){
 
         // Aquí va tu lógica para guardar la vacuna en la base de datos
         // Por ahora solo redirigimos

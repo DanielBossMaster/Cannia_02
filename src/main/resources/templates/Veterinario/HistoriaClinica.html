@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Historia Clínica Veterinaria</title>
+    <link rel="stylesheet" href="/css/VeterinarioCss/HistoriaClinica.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="/img/HistoriaClinica.png" alt="logo">
+    </div>
+    <h1>Historia Clínica</h1>
+    <div class="Barra">
+        <input type="text" id="searchInput" placeholder="Ingrese el documento">
+    </div>
+    <h2>Veterinario</h2>
+</header>
+
+<main id="ownersContainer">
+    <div th:each="propietario : ${propietarios}" class="card">
+        <h3 th:text="${propietario.nombrePro}"></h3>
+        <p><b>Documento:</b> <span th:text="${propietario.numDoc}"></span></p>
+        <p><b>Teléfono:</b> <span th:text="${propietario.telefonoPro}"></span></p>
+        <p><b>Correo:</b> <span th:text="${propietario.correoPro}"></span></p>
+
+        <button class="btn btn-primary" th:attr="onclick=|toggleMascotas(${propietario.id})|">
+            Consultar Animales
+        </button>
+
+        <div class="animal-list" th:id="'mascotas-' + ${propietario.id}" style="display:none;">
+            <div th:each="mascota : ${propietario.mascotas}" class="animal-item"
+                 th:attr="onclick=|selectMascota(${propietario.id}, ${mascota.id})|">
+
+                <p>
+                    <b th:text="${mascota.nomMascota}"></b>
+                    (<span th:text="${mascota.especie}"></span>)
+                </p>
+
+                <div class="options" th:id="'options-' + ${mascota.id}" style="display:none; margin-top:10px;">
+                    <!-- Botón para agregar vacuna - CORREGIDO -->
+                    <button class="btn btn-success"
+                            th:attr="onclick=|openVacunaModal('${propietario.id}', '${mascota.id}', '${mascota.nomMascota}')|">
+                        Agregar vacuna
+                    </button>
+
+                    <!-- Botón para generar historia clínica -->
+                    <button class="btn btn-info"
+                            th:attr="onclick=|openHistoryModal('${mascota.id}', '${mascota.nomMascota}')|">
+                        Generar historia clínica
+                    </button>
+
+                    <!-- NUEVO BOTÓN CON IMAGEN PARA VER HISTORIAS CLÍNICAS -->
+                    <button class="boton-imagen"
+                            th:attr="onclick=|openHistoriesModal('${mascota.id}', '${mascota.nomMascota}')|">
+                        <img src="/img/VisHistoria.png" alt="Ver historias clínicas" class="imagen-boton">
+                    </button>
+                </div>
+            </div>
+
+            <p th:if="${#lists.isEmpty(propietario.mascotas)}">
+                Este propietario no tiene mascotas registradas
+            </p>
+        </div>
+    </div>
+</main>
+
+<!-- Modal Vacuna - CORREGIDO -->
+<div id="vacunaModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('vacunaModal')">X</button>
+        <h2 id="vacunaModalTitle">Agregar Vacuna</h2>
+
+        <form th:action="@{/guardarVacuna}" method="post" id="vacunaForm">
+            <input type="hidden" id="vacunaPropietarioId" name="idPropietario">
+            <input type="hidden" id="vacunaMascotaId" name="idMascota">
+
+            <label>Lote:</label>
+            <input type="text" name="lote" required>
+
+            <label>Fecha Aplicación:</label>
+            <input type="date" name="fechaAplicacion" required>
+
+            <label>Fecha Refuerzo:</label>
+            <input type="date" name="fechaRefuerzo">
+
+            <label>Fecha Vencimiento:</label>
+            <input type="date" name="fechaVencimiento">
+
+            <label>Laboratorio:</label>
+            <input type="text" name="laboratorio">
+
+            <div class="modal-buttons">
+                <button type="submit" class="btn-generate">Guardar Vacuna</button>
+                <button type="button" class="btn-cancel" onclick="closeModal('vacunaModal')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Historia Clínica -->
+<div id="historyModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('historyModal')">X</button>
+        <h2 id="historyModalTitle">Historia Clínica</h2>
+
+        <form id="historyForm" th:action="@{/guardarHistoria}" method="post">
+            <input type="hidden" id="mascotaId" name="mascotaId">
+
+            <label>Peso (kg):</label>
+            <input type="number" step="0.1" name="peso" required>
+
+            <label>Anamnesis:</label>
+            <textarea name="anamnesis" rows="3" required></textarea>
+
+            <label>Diagnóstico:</label>
+            <textarea name="diagnostico" rows="3" required></textarea>
+
+            <label>Tratamiento:</label>
+            <textarea name="tratamiento" rows="3" required></textarea>
+
+            <label>Fecha y Hora:</label>
+            <input type="datetime-local" name="fechaHora" required>
+
+            <div class="modal-buttons">
+                <button type="submit" class="btn-generate">Guardar Historia</button>
+                <button type="button" class="btn-cancel" onclick="closeModal('historyModal')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- NUEVO MODAL PARA VER HISTORIAS CLÍNICAS -->
+<div id="historiesModal" class="modal">
+    <div class="modal-content modal-histories">
+        <button class="close-btn" onclick="closeModal('historiesModal')">X</button>
+        <h2 id="historiesModalTitle">Historial Clínico</h2>
+        <div id="historiesContainer">
+            <!-- Las historias clínicas se cargarán aquí -->
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedMascotaId = null;
+    let historiaGuardada = false;
+
+    // ★★★ FUNCIÓN PARA ABRIR MODAL ★★★
+    function openHistoriesModal(mascotaId, mascotaNombre) {
+        console.log(' Abriendo modal para:', mascotaId, mascotaNombre);
+        selectedMascotaId = mascotaId;
+
+        document.getElementById('historiesModalTitle').textContent = 'Historial Clínico - ' + mascotaNombre;
+        document.getElementById('historiesModal').style.display = 'block';
+
+        loadHistoriesClean(mascotaId);
+    }
+
+    // ★★★ FUNCIÓN LIMPIA PARA CARGAR HISTORIAS ★★★
+    function loadHistoriesClean(mascotaId) {
+        const container = document.getElementById('historiesContainer');
+
+        if (!container) {
+            return;
+        }
+
+        // Mostrar loading bonito
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #666;">
+                <div style="font-size: 48px; margin-bottom: 10px;"></div>
+                <div>Cargando historias clínicas...</div>
+            </div>
+        `;
+
+        // Hacer petición
+        fetch('/obtenerHistoriasClinicas/' + mascotaId)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('El servidor no respondió correctamente');
+                }
+                return response.text();
+            })
+            .then(text => {
+                try {
+                    const historias = JSON.parse(text);
+                    showCleanHistorias(historias, container);
+                } catch (parseError) {
+                    // NO mostrar el JSON crudo, solo mensaje de error
+                    console.error(' Error en JSON del servidor');
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #d32f2f;">
+                            <div style="font-size: 48px; margin-bottom: 10px;"></div>
+                            <h3>Error en los datos</h3>
+                            <p>No se pudieron cargar las historias clínicas.</p>
+                            <p style="font-size: 14px; margin-top: 20px;">
+                                <em>Problema técnico: Formato de datos incorrecto</em>
+                            </p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error(' Error:', error);
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #d32f2f;">
+                        <div style="font-size: 48px; margin-bottom: 10px;"></div>
+                        <h3>Error de conexión</h3>
+                        <p>No se pudo conectar con el servidor.</p>
+                        <p style="font-size: 14px; margin-top: 20px;">
+                            <em>Intente nuevamente en unos momentos</em>
+                        </p>
+                    </div>
+                `;
+            });
+    }
+
+    // ★★★ FUNCIÓN LIMPIA PARA MOSTRAR HISTORIAS ★★★
+    // ★★★ FUNCIÓN LIMPIA PARA CARGAR HISTORIAS ★★★
+    function loadHistoriesClean(mascotaId) {
+        const container = document.getElementById('historiesContainer');
+
+        if (!container) {
+            return;
+        }
+
+        // Mostrar loading bonito
+        container.innerHTML = `
+        <div style="text-align: center; padding: 40px; color: #666;">
+            <div style="font-size: 48px; margin-bottom: 10px;"></div>
+            <div>Cargando historias clínicas...</div>
+        </div>
+    `;
+
+        // Hacer petición
+        fetch('/obtenerHistoriasClinicas/' + mascotaId)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error del servidor: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(historias => {
+                console.log(' Historias recibidas:', historias);
+                showCleanHistorias(historias, container);
+            })
+            .catch(error => {
+                console.error(' Error:', error);
+                container.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: #d32f2f;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">⚠</div>
+                    <h3>Error de conexión</h3>
+                    <p>No se pudo cargar la información.</p>
+                    <p style="font-size: 14px; margin-top: 20px;">
+                        <em>Error: ${error.message}</em>
+                    </p>
+                </div>
+            `;
+            });
+    }
+
+    // ★★★ FUNCIÓN LIMPIA PARA MOSTRAR HISTORIAS ★★★
+    function showCleanHistorias(historias, container) {
+        console.log(' Mostrando historias:', historias);
+
+        if (!Array.isArray(historias)) {
+            container.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #ff9800;">
+                <div style="font-size: 48px; margin-bottom: 10px;"></div>
+                <h3>Datos inesperados</h3>
+                <p>El formato de la información no es correcto.</p>
+            </div>
+        `;
+            return;
+        }
+
+        if (historias.length === 0) {
+            container.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #666;">
+                <div style="font-size: 48px; margin-bottom: 10px;"></div>
+                <h3>No hay historias clínicas</h3>
+                <p>Esta mascota no tiene historias clínicas registradas.</p>
+                <p style="font-size: 14px; margin-top: 20px;">
+                    <em>Use el botón "Generar historia clínica" para crear la primera</em>
+                </p>
+            </div>
+        `;
+            return;
+        }
+
+        let html = '';
+
+        historias.forEach((historia, index) => {
+            const fecha = formatNiceDate(historia.fechaHora);
+            const peso = historia.peso !== null && historia.peso !== undefined ?
+                `${historia.peso} kg` : 'No registrado';
+            const anamnesis = historia.anamnesis || 'No registrado';
+            const diagnostico = historia.diagnostico || 'No registrado';
+            const tratamiento = historia.tratamiento || 'No registrado';
+
+            html += `
+            <div class="historia-card" style="
+                border: 1px solid #e0e0e0;
+                border-radius: 12px;
+                padding: 20px;
+                margin: 16px 0;
+                background: white;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            ">
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f0f0f0;">
+                    <h3 style="margin: 0; color: #2c3e50; font-size: 16px;">
+                         Historia Clínica
+                    </h3>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <span style="background: #3498db; color: white; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: bold;">
+                            ${peso}
+                        </span>
+                        <span style="color: #7f8c8d; font-size: 14px;">
+                            ${fecha}
+                        </span>
+                    </div>
+                </div>
+
+                <div style="display: grid; gap: 12px;">
+                    <div>
+                        <div style="font-weight: 600; color: #555; margin-bottom: 4px; font-size: 14px;">
+                             Anamnesis
+                        </div>
+                        <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; font-size: 14px; line-height: 1.5;">
+                            ${anamnesis}
+                        </div>
+                    </div>
+
+                    <div>
+                        <div style="font-weight: 600; color: #555; margin-bottom: 4px; font-size: 14px;">
+                             Diagnóstico
+                        </div>
+                        <div style="background: #fff3cd; padding: 12px; border-radius: 8px; font-size: 14px; line-height: 1.5;">
+                            ${diagnostico}
+                        </div>
+                    </div>
+
+                    <div>
+                        <div style="font-weight: 600; color: #555; margin-bottom: 4px; font-size: 14px;">
+                             Tratamiento
+                        </div>
+                        <div style="background: #d1ecf1; padding: 12px; border-radius: 8px; font-size: 14px; line-height: 1.5;">
+                            ${tratamiento}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        });
+
+        container.innerHTML = html;
+    }
+
+    // ★★★ FUNCIÓN PARA FORMATEAR FECHA BONITA ★★★
+    function formatNiceDate(dateString) {
+        if (!dateString) return 'Fecha no disponible';
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch (e) {
+            return 'Fecha no disponible';
+        }
+    }
+
+    // ★★★ ACTUALIZAR LA FUNCIÓN DE GUARDAR HISTORIA PARA ACTUALIZAR EL MODAL ★★★
+    document.getElementById('historyForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        let isValid = true;
+
+        for (let [key, value] of formData.entries()) {
+            if (!value.trim()) {
+                isValid = false;
+                break;
+            }
+        }
+
+        if (!isValid) {
+            alert('Por favor complete todos los campos');
+            return;
+        }
+
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Error al guardar la historia");
+                }
+                return response.json();
+            })
+            .then(data => {
+                historiaGuardada = true;
+                alert('Historia clínica guardada exitosamente');
+                closeModal('historyModal');
+
+                // Si el modal de historias está abierto, actualizar las historias
+                if (document.getElementById('historiesModal').style.display === 'block' && selectedMascotaId) {
+                    loadHistories(selectedMascotaId);
+                }
+
+                console.log(data);
+                window.open('/propietarios/descargarHistoria/' + data.id, '_blank');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al guardar la historia clínica');
+            });
+    });
+
+    // ★★★ FUNCIÓN PARA ABRIR MODAL DE VACUNA ★★★
+    function openVacunaModal(propietarioId, mascotaId, mascotaNombre) {
+        document.getElementById('vacunaPropietarioId').value = propietarioId;
+        document.getElementById('vacunaMascotaId').value = mascotaId;
+        document.getElementById('vacunaModalTitle').textContent = 'Agregar Vacuna - ' + mascotaNombre;
+        document.getElementById('vacunaModal').style.display = 'block';
+        document.getElementById('vacunaForm').reset();
+    }
+
+    // Manejar el envío del formulario de vacuna
+    document.getElementById('vacunaForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        const lote = this.querySelector('[name="lote"]').value;
+        const fechaAplicacion = this.querySelector('[name="fechaAplicacion"]').value;
+
+        if (!lote || !fechaAplicacion ) {
+            alert('Por favor complete los campos requeridos (Lote, Fecha Aplicación');
+            return;
+        }
+
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Vacuna guardada exitosamente');
+                    closeModal('vacunaModal');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    alert('Error al guardar la vacuna');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al guardar la vacuna');
+            });
+    });
+
+    // Función para abrir el modal de historia clínica
+    function openHistoryModal(mascotaId, mascotaNombre) {
+        selectedMascotaId = mascotaId;
+        historiaGuardada = false;
+
+        document.getElementById('mascotaId').value = mascotaId;
+        document.getElementById('historyModalTitle').textContent = 'Historia Clínica - ' + mascotaNombre;
+        document.getElementById('historyModal').style.display = 'block';
+        document.getElementById('historyForm').reset();
+    }
+
+    // Funciones existentes
+    function toggleMascotas(id) {
+        const div = document.getElementById("mascotas-" + id);
+        div.style.display = (div.style.display === "none") ? "block" : "none";
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+    }
+
+    function selectMascota(ownerId, mascotaId) {
+        document.querySelectorAll(".options").forEach(opt => opt.style.display = "none");
+        const options = document.getElementById("options-" + mascotaId);
+        if (options) {
+            options.style.display = "flex";
+            options.style.flexDirection = "column";
+            options.style.gap = "8px";
+        }
+    }
+</script>
+
+</body>
+</html>

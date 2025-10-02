@@ -17,6 +17,7 @@ import scrum.cannia.repository.PropietarioRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook; // Para archivos .xlsx
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Row;
-
 
 @Controller
 public class HistoriaClinicaController {
@@ -42,17 +42,55 @@ public class HistoriaClinicaController {
     @Autowired
     private MascotaRepository mascotaRepository;
 
+    // ★★★ ENDPOINT CORREGIDO PARA OBTENER HISTORIAS CLÍNICAS ★★★
+    @GetMapping("/obtenerHistoriasClinicas/{mascotaId}")
+    @ResponseBody
+    public ResponseEntity<?> obtenerHistoriasClinicas(@PathVariable Long mascotaId) {
+        System.out.println(" Solicitando historias para mascota: " + mascotaId);
+
+        try {
+            List<HistoriaClinicaModel> historias = historiaRepository.findByMascotaIdOrderByFechaHoraDesc(mascotaId);
+            System.out.println(" Historias encontradas: " + historias.size());
+
+            // Crear una lista simplificada para evitar problemas de serialización
+            List<Map<String, Object>> historiasSimplificadas = new ArrayList<>();
+
+            for (HistoriaClinicaModel historia : historias) {
+                Map<String, Object> historiaMap = new HashMap<>();
+                historiaMap.put("idHistoriaClinica", historia.getIdHistoriaClinica());
+                historiaMap.put("fechaHora", historia.getFechaHora());
+                historiaMap.put("peso", historia.getPeso());
+                historiaMap.put("anamnesis", historia.getAnamnesis());
+                historiaMap.put("diagnostico", historia.getDiagnostico());
+                historiaMap.put("tratamiento", historia.getTratamiento());
+
+                // Solo información básica de la mascota para evitar relaciones circulares
+                if (historia.getMascota() != null) {
+                    Map<String, Object> mascotaMap = new HashMap<>();
+                    mascotaMap.put("idMascota", historia.getMascota().getId());
+                    mascotaMap.put("nomMascota", historia.getMascota().getNomMascota());
+                    historiaMap.put("mascota", mascotaMap);
+                }
+
+                historiasSimplificadas.add(historiaMap);
+            }
+
+            return ResponseEntity.ok(historiasSimplificadas);
+
+        } catch (Exception e) {
+            System.out.println(" Error en controller: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.ok(new ArrayList<>()); // Devolver lista vacía en caso de error
+        }
+    }
+
     /**
      * Guardar vacuna
      */
-
     @PostMapping("/guardarVacuna")
     public String guardarVacuna(
             @ModelAttribute VacunaModel vacuna,
             @RequestParam("idMascota") Long idMascota) {
-
-
-        //comentario de prueba ajskajksjka
 
         // Buscar la mascota
         MascotaModel mascota = mascotaRepository.findById(idMascota)
@@ -64,7 +102,7 @@ public class HistoriaClinicaController {
         // Guardar vacuna
         vacunaRepository.save(vacuna);
 
-        return "redirect:/veterinario/propietarioVH";
+        return "redirect:/veterinario/historiaclinica";
     }
 
     /**
@@ -80,7 +118,7 @@ public class HistoriaClinicaController {
         // 👇 agregar el objeto vacío para que el formulario no falle
         model.addAttribute("historiaClinica", new HistoriaClinicaModel());
 
-        return "veterinario/propietarioVH";
+        return "veterinario/historiaclinica";
     }
 
     /**
@@ -104,7 +142,4 @@ public class HistoriaClinicaController {
 
         return ResponseEntity.ok(response);
     }
-
-
 }
-
