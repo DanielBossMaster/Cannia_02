@@ -127,11 +127,11 @@ public String actualizar(@PathVariable int id, @ModelAttribute MascotaModel masc
     }
 }
 
-    // Muestra la vista propietarioVH
-    @GetMapping("/propietarioVH")
-    public String mostrarPropietarioVH(Model model) {
+    // Muestra la vista historiaclinica
+    @GetMapping("/historiaclinica")
+    public String mostrarHistoriaClinica(Model model) {
         model.addAttribute("propietarios", propietarioRepository.findAll());
-        return "veterinario/propietarioVH";
+        return "veterinario/historiaclinica";
     }
 
-    }
+}

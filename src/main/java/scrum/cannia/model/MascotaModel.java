@@ -1,5 +1,4 @@
 package scrum.cannia.model;
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
