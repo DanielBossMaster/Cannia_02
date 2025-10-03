@@ -8,11 +8,6 @@ body {
     color: #333;
 }
 
-.boton-imagen{
-    width: 8px;
-    height: 8px
-}
-
 /* ===== ENCABEZADO ===== */
 header {
     background: linear-gradient(to right, #d600b9, #2c0045);
@@ -115,22 +110,6 @@ main {
     border: 1px solid rgba(106, 27, 154, 0.1);
     position: relative;
     overflow: hidden;
-}
-
-/* Efecto de borde sutil */
-.card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #6a11cb, #2575fc);
-}
-
-.card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 35px rgba(106, 27, 154, 0.25);
 }
 
 /* Títulos dentro de las tarjetas */
@@ -496,4 +475,128 @@ textarea {
 
 .modal-content::-webkit-scrollbar-thumb:hover {
     background: #5a0db5;
+}
+
+/*Boton de ver historia clinica */
+
+.boton-imagen {
+    background: #6f42c1;
+    display: grid;
+    place-items: center; /* Centrado en ambos ejes */
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    /*display: flex;*/
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s ease;
+}
+
+.boton-imagen:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgb(111, 66, 193);
+}
+
+/*Boton de ver vacuna*/
+
+.boton-vacuna {
+    background: #3f0d5c;
+    display: grid;
+    place-items: center; /* Centrado en ambos ejes */
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    color: white;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    /*display: flex;*/
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s ease;
+}
+
+.boton-vacuna:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgb(63, 13, 92);
+}
+
+/* Estilos específicos para vacunas */
+.vacuna-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 0;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.vacuna-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.vacuna-title {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.vacuna-info {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.lote-badge {
+    color: white;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.vacuna-content {
+    display: grid;
+    gap: 12px;
+}
+
+.vacuna-dates {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.date-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.date-label {
+    font-weight: 600;
+    color: #555;
+    font-size: 12px;
+}
+
+.date-value {
+    background: #f8f9fa;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.laboratorio-content {
+    background: #e3f2fd;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
 }
