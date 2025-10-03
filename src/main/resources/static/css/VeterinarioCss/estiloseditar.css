@@ -1,0 +1,59 @@
+/* Fondo suave */
+body {
+    background-color: #f9f3f6; /* rosado claro, como el que usabas antes */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor del formulario */
+.form-container {
+    background: #fff;
+    width: 100%;
+    max-width: 500px; /* evita que sea gigante */
+    border-radius: 15px;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease-in-out;
+}
+
+.form-container:hover {
+    transform: translateY(-3px);
+}
+
+/* Títulos */
+header h2 {
+    font-size: 1.8rem;
+    color: rgba(255, 255, 255, 0.74);
+    font-weight: bold;
+}
+
+/* Inputs */
+.form-control {
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+/* Botones */
+.btn {
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+
+.btn-primary {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    background-color: rgba(193, 190, 195, 0.53);
+    border-color: #ffffff;
+    font-weight: bold;
+    color : #3f0d5c;
+
+}
+
+.btn-primary:hover {
+    transform: translateY(-5px); /*<---- esta propiedad da la animacion de los botones*/
+    box-shadow: 0 4px 12px rgb(74, 34, 87);
+    background-color: rgba(193, 190, 195, 0.53);
+    border-color: #ffffff;
+    color: #170022;
+}
