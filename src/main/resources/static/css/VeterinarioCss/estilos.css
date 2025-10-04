@@ -177,32 +177,3 @@ footer {
     margin-top: 40px; /* Espacio antes del footer, reducido */
 }
 
-/* FOOTER */
-/*footer {*/
-/*  background: #2c0045;*/
-/*  color: #ffffff;*/
-/*  text-align: center;*/
-/*  padding: 10px;*/
-/*  margin-top:220px;*/
-/*}*/
-/*.mb-4 {*/
-/*    max-width: 900px;*/
-/*    margin: 0 auto 20px auto;*/
-
-/*}*/
-
-/*.btn-secondary {*/
-/*    background-color: #6f42c1;*/
-/*    color: white;*/
-/*    font-weight: bold;*/
-/*    margin-bottom: 10px;*/
-/*}*/
-
-/*.btn-secondary:hover {*/
-/*    background-color: #5a34a0;*/
-/*}*/
-
-/*main {*/
-/*    flex: 1; !* Hace que el main ocupe */
-/*    padding-bottom: 20px; !* Espacio inferior para separar del footer *!*/
-/*}*/

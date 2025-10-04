@@ -89,6 +89,12 @@ public String borrarp(@PathVariable long id) {
     return "redirect:/veterinario";
 }
 
+@GetMapping("/actualizar/{id}")
+public String actualizarform (@PathVariable Long id,Model model) {
+        var propitarioEncontrado = propietarioRepository.findById(id).orElseThrow();
+        model.addAttribute("propietario", propitarioEncontrado);
+        return"veterinario/EditarPropietario";
+}
 
 @PostMapping("/editar/{id}")
 public String actualizar(@PathVariable Long id, @ModelAttribute PropietarioModel cambios) {
