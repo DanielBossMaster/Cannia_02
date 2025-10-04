@@ -1,6 +1,7 @@
 package scrum.cannia.controller;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,6 +13,7 @@ import scrum.cannia.model.PropietarioModel;
 import scrum.cannia.repository.MascotaRepository;
 import scrum.cannia.repository.PropietarioRepository;
 import scrum.cannia.repository.VeterinarioRepository;
+import scrum.cannia.service.VeterinarioService.PropietarioService;
 
 @Controller
 @RequestMapping("/veterinario")
@@ -76,18 +78,12 @@ public String agregarMascota(@ModelAttribute MascotaModel mascota,
     return "redirect:/veterinario";
 }
 
-
-@PostMapping("/borrar/{id}")
-public String borrar(@PathVariable long id) {
-    mascotaRepository.deleteById(id);
-    return "redirect:/veterinario";
+@DeleteMapping("/borrarp/{id}")
+public ResponseEntity<String>eliminarPropietario(@PathVariable Long id){
+    PropietarioService.eliminarPropietario(id);
+    return ResponseEntity.ok("Propietario eliminado");
 }
 
-@PostMapping("/borrarp/{id}")
-public String borrarp(@PathVariable long id) {
-    propietarioRepository.deleteById(id);
-    return "redirect:/veterinario";
-}
 
 @GetMapping("/actualizar/{id}")
 public String actualizarform (@PathVariable Long id,Model model) {
@@ -141,3 +137,14 @@ public String actualizar(@PathVariable int id, @ModelAttribute MascotaModel masc
     }
 
     }
+//@PostMapping("/borrar/{id}")
+//public String borrar(@PathVariable long id) {
+//    mascotaRepository.deleteById(id);
+//    return "redirect:/veterinario";
+//}
+//
+//@PostMapping("/borrarp/{id}")
+//public String borrarp(@PathVariable long id) {
+//    propietarioRepository.deleteById(id);
+//    return "redirect:/veterinario";
+//}
