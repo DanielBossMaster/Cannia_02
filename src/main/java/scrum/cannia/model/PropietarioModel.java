@@ -37,6 +37,9 @@ public class PropietarioModel {
     @Column(length = 45, nullable = false)
     private String correoPro;
 
+    @Column(nullable = false)
+    private boolean estado = true;
+
     // Relación con Mascota
     @OneToMany(mappedBy = "propietario", fetch = FetchType.EAGER) // Cambiar a EAGER
     private List<MascotaModel> mascotas;
