@@ -3,6 +3,8 @@ package scrum.cannia.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import scrum.cannia.model.MascotaModel;
@@ -50,16 +52,17 @@ public class MascotaController {
         model.addAttribute("mascota", mascota);
         return "FormularioMascota";
     }
+    @PostMapping("/nuevom")
+    public String nuevo(@Validated @ModelAttribute MascotaModel mascotaModel, BindingResult br) {
+        if (br.hasErrors()) {
+            return "mascotas/indexPropietario";
+        } else {
+            mascotaRepository.save(mascotaModel);
+            return "redirect:/mascotas";
+        }
 
-//     Mostrar formulario para registrar mascota
-//    @GetMapping("/registrar")
-//    public String registrar (@PathVariable("idPropietario") Long idPropietario, Model model) {
-//        MascotaModel mascota = new MascotaModel();
-//        propietarioRepository.findById(idPropietario).ifPresent(mascota::setPropietario);
-//
-//        model.addAttribute("mascota", mascota);
-//        return "RegistrarMascota"; // Renderiza RegistrarMascota.html
-//    }
+
+    }
 
     // Guardar mascota (crear o actualizar)
     @PostMapping("/guardar")
