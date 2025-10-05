@@ -1,6 +1,7 @@
 package scrum.cannia.controller;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,13 +37,15 @@ public class VeterinarioController {
 
 }
 
+@Autowired
+private PropietarioService propietarioService;
 
 
 @GetMapping
 
 public String index(Model model) {
     model.addAttribute("veterinarios", veterinarioRepository.findAll());
-    model.addAttribute("propietarios", propietarioRepository.findAll());
+    model.addAttribute("propietarios", propietarioRepository.findByEstadoTrue());
     model.addAttribute("mascotas", mascotaRepository.findAll());
     model.addAttribute("propietario", new PropietarioModel());
     model.addAttribute("mascota", new MascotaModel());
@@ -78,10 +81,10 @@ public String agregarMascota(@ModelAttribute MascotaModel mascota,
     return "redirect:/veterinario";
 }
 
-@DeleteMapping("/borrarp/{id}")
-public ResponseEntity<String>eliminarPropietario(@PathVariable Long id){
-    PropietarioService.eliminarPropietario(id);
-    return ResponseEntity.ok("Propietario eliminado");
+@PostMapping("/borrarp/{id}")
+public String eliminarPropietario(@PathVariable Long id){
+    propietarioService.eliminarPropietario(id);
+    return "redirect:/veterinario";
 }
 
 
@@ -132,19 +135,8 @@ public String actualizar(@PathVariable int id, @ModelAttribute MascotaModel masc
     // Muestra la vista propietarioVH
     @GetMapping("/propietarioVH")
     public String mostrarPropietarioVH(Model model) {
-        model.addAttribute("propietarios", propietarioRepository.findAll());
+        model.addAttribute("propietarios", propietarioRepository.findByEstadoTrue());
         return "veterinario/propietarioVH";
     }
 
     }
-//@PostMapping("/borrar/{id}")
-//public String borrar(@PathVariable long id) {
-//    mascotaRepository.deleteById(id);
-//    return "redirect:/veterinario";
-//}
-//
-//@PostMapping("/borrarp/{id}")
-//public String borrarp(@PathVariable long id) {
-//    propietarioRepository.deleteById(id);
-//    return "redirect:/veterinario";
-//}
