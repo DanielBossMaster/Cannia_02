@@ -1,5 +1,6 @@
 package scrum.cannia.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,10 @@ public class VeterinarioController {
 
     @GetMapping
 
-    public String index(Model model) {
+    public String index(HttpSession session, Model model) {
+        if (session.getAttribute("usuario") == null) {
+            return "redirect:/login"; // Redirige si no hay sesión
+        }
         model.addAttribute("veterinarios", veterinarioRepository.findAll());
         model.addAttribute("propietarios", propietarioRepository.findByEstadoTrue());
         model.addAttribute("mascotas", mascotaRepository.findAll());
@@ -133,10 +137,10 @@ public class VeterinarioController {
     }
 
     // Muestra la vista propietarioVH
-    @GetMapping("/propietarioVH")
+    @GetMapping("/historiaclinica")
     public String mostrarPropietarioVH(Model model) {
         model.addAttribute("propietarios", propietarioRepository.findByEstadoTrue());
-        return "veterinario/propietarioVH";
+        return "veterinario/HistoriaClinica";
     }
 
 }

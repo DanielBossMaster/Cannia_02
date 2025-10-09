@@ -35,4 +35,7 @@ public class VeterinarioModel {
     @Column(length = 20, nullable = false)
     private String correoVete;
 
+    @OneToOne
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
+    private UsuarioModel usuario;
 }
