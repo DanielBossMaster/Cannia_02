@@ -17,22 +17,22 @@ public class VeterinarioModel {
     @Column(name = "id_veterinario")
     private int id;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 50, nullable = false)
     private String numLicencia;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 50, nullable = false)
     private String nombreVete;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 50, nullable = false)
     private String apellidoVete;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 50, nullable = false)
     private String direccionVete;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 50, nullable = false)
     private String telefonoVete;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 50, nullable = false)
     private String correoVete;
 
     @OneToOne
