@@ -44,7 +44,7 @@
 
     <!-- botton de historia clinica -->
 
-    <a th:href="@{/veterinario/propietarioVH}" class="btn btn-primary mb-3">
+    <a th:href="@{/veterinario/HistoriaClinica}" class="btn btn-primary mb-3">
         <img src="/img/documento.png" alt="Historia clinica" width="40" height="40">
         <span>Historia Clinica</span>
     </a>
@@ -77,7 +77,6 @@
                 </div>
                 <!-- Modal informacion propietario por id  -->
                 <!-- Tambien muestra que mascotas tiene cada propietario  -->
-
                 <button type="button" class="btn btn-primary " data-bs-toggle="modal" th:data-bs-target="'#modalMascotas' + ${prop.id}">
                     <strong th:text="${prop.nombrePro + ' ' + prop.apellidoPro}">Propietario</strong>
                     <p><strong>Telefono:</strong> <span th:text="${prop.telefonoPro}"></span></p>
@@ -115,7 +114,6 @@
             </div>
         </div>
     </div>
-
     <!-- Modal para agregar propietario -->
     <div class="modal fade" id="addPropietarioModal" tabindex="-1" aria-hidden="true">
 
@@ -158,9 +156,6 @@
             </form>
         </div>
     </div>
-
-
-
     <!-- Modal para agregar Mascota -->
     <div class="modal fade" id="addMascotaModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -216,8 +211,6 @@
             </form>
         </div>
     </div>
-
-
 </main>
 
 <!-- Bootstrap JS -->
@@ -226,15 +219,6 @@
 <footer>
     <p>&copy; 2025 App Cannia. Todos los derechos reservados.</p>
 </footer>
+
 </body>
 </html>
-<!-- <form method="post" th:action="@{/veterinario/borrar/{id}(id=${masc.id})}">
-                                                  <button type="submit" onclick="return confirm('¿Desea Eliminar?')" class="delete">
-                                                      <img src= "/img/eliminar.png" alt="Eliminar" height="20">
-                                                  </button>
-                                              </form>
-                                              <form method="post" th:action="@{/veterinario/editarm/{id}(id=${prop.id})}">
-                                                  <button type="submit" class="delete" onclick="return confirm('¿Desea Eliminar?')">
-                                                      <img src="/img/ajustes.png" alt="Editar" height="20">
-                                                  </button>
-                                              </form> -->

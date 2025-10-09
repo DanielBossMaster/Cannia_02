@@ -5,7 +5,19 @@ body {
     margin: 0;
     padding: 0;
 }
+header {
+    background: linear-gradient(to right, #d600b9, #2c0045);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
+header img {
+    width: 80px;
+    height: auto;
+}
 /* Contenedor del formulario */
 .form-container {
     background: #fff;
@@ -43,7 +55,7 @@ header h2 {
 .btn-primary {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    background-color: rgba(193, 190, 195, 0.53);
+    background-color: rgba(0, 255, 4, 0.82);
     border-color: #ffffff;
     font-weight: bold;
     color : #3f0d5c;
@@ -53,7 +65,7 @@ header h2 {
 .btn-primary:hover {
     transform: translateY(-5px); /*<---- esta propiedad da la animacion de los botones*/
     box-shadow: 0 4px 12px rgb(74, 34, 87);
-    background-color: rgba(193, 190, 195, 0.53);
+    background-color: rgba(10, 253, 0, 0.53);
     border-color: #ffffff;
     color: #170022;
 }
