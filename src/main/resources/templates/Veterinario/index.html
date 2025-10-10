@@ -1,4 +1,3 @@
-
 <!--hola-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
@@ -19,7 +18,7 @@
         <img src="/img/logo.png" alt="logo">
     </div>
     <nav class="links">
-        <a href="('cerrar-sesion')">Cerrar sesión</a>
+        <a th:href="@{/cerrar-sesion}">Cerrar sesión</a>
     </nav>
 
 </header>
@@ -27,32 +26,32 @@
 <main class="container py-4" >
     <!-- Botón agregar propietario -->
     <div class="d-flex justify-content-center gap-4">
-    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPropietarioModal">
-        <img src= "/img/nuevoo.png" alt="nuevo propietario" width="40" height="40">
-        <span>Nuevo Propietario</span>
-    </button>
+        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPropietarioModal">
+            <img src= "/img/nuevoo.png" alt="nuevo propietario" width="40" height="40">
+            <span>Nuevo Propietario</span>
+        </button>
 
-    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addMascotaModal">
-        <img src= "/img/mascotaaa.png" alt="nueva mascota" width="40" height="40">
-        <span>Nueva Mascota</span>
-    </button>
+        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addMascotaModal">
+            <img src= "/img/mascotaaa.png" alt="nueva mascota" width="40" height="40">
+            <span>Nueva Mascota</span>
+        </button>
 
-    <button class="btn btn-primary mb-3" data-bs-toggle="modal" >
-        <img src= "/img/tienda.png" alt="Veterinaria" width="40" height="40">
-        <span>Veterinaria</span>
-    </button>
+        <button class="btn btn-primary mb-3" data-bs-toggle="modal" >
+            <img src= "/img/tienda.png" alt="Veterinaria" width="40" height="40">
+            <span>Veterinaria</span>
+        </button>
 
-    <!-- botton de historia clinica -->
+        <!-- botton de historia clinica -->
 
     <a th:href="@{/veterinario/HistoriaClinica}" class="btn btn-primary mb-3">
         <img src="/img/documento.png" alt="Historia clinica" width="40" height="40">
         <span>Historia Clinica</span>
     </a>
 
-    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addOwnerModal">
-        <img src= "/img/citaapng.png" alt="Citas" width="40" height="40">
-        <span>Programar Cita</span>
-    </button>
+        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addOwnerModal">
+            <img src= "/img/citaapng.png" alt="Citas" width="40" height="40">
+            <span>Programar Cita</span>
+        </button>
     </div>
 
     <!-- 🔷 BLOQUE 1: -->
@@ -196,7 +195,7 @@
                         <input type="date"  th:field ="*{fechaNacimiento}" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Fecha de nacimiento</label>
+                        <label class="form-label">Genero</label>
                         <select th:field ="*{genero}" class="form-control" required>
                             <option th:value="Hembra">Hembra</option>
                             <option th:value="Macho">Macho</option>

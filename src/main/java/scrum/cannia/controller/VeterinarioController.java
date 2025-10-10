@@ -1,5 +1,6 @@
 package scrum.cannia.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -50,36 +51,46 @@ public String index(Model model) {
     model.addAttribute("propietario", new PropietarioModel());
     model.addAttribute("mascota", new MascotaModel());
     return "veterinario/index";
-
-
-}
-
-@PostMapping("/nuevo")
-public String nuevo(@Validated @ModelAttribute PropietarioModel propietarioModel, BindingResult br) {
-    if (br.hasErrors()) {
-        return "veterinario/index";
-    } else {
-        propietarioRepository.save(propietarioModel);
-        return "redirect:/veterinario";
     }
 
-
-}
-
-@PostMapping("/nuevom")
-public String agregarMascota(@ModelAttribute MascotaModel mascota,
-                             @RequestParam long propietarioId) {
-
-    PropietarioModel propietario = propietarioRepository.findById((long) propietarioId)
-            .orElseThrow(() -> new IllegalArgumentException("No se encontro porpietario"));
-
-    mascota.setPropietario(propietario);
-    propietario.getMascotas().add(mascota);
+    @Autowired
+    private PropietarioService propietarioService;
 
 
-    mascotaRepository.save(mascota);
-    return "redirect:/veterinario";
-}
+    @GetMapping
+
+    public String index(HttpSession session, Model model) {
+        if (session.getAttribute("usuario") == null) {
+            return "redirect:/login"; // Redirige si no hay sesión
+        }
+        model.addAttribute("veterinarios", veterinarioRepository.findAll());
+        model.addAttribute("propietarios", propietarioRepository.findByEstadoTrue());
+        model.addAttribute("mascotas", mascotaRepository.findAll());
+        model.addAttribute("propietario", new PropietarioModel());
+        model.addAttribute("mascota", new MascotaModel());
+        return "veterinario/index";
+
+
+    }
+
+    @PostMapping("/nuevo")
+    public String nuevo(@Validated @ModelAttribute PropietarioModel propietarioModel, BindingResult br) {
+        if (br.hasErrors()) {
+            return "veterinario/index";
+        } else {
+            propietarioRepository.save(propietarioModel);
+            return "redirect:/veterinario";
+        }
+
+
+    }
+
+    @PostMapping("/nuevom")
+    public String agregarMascota(@ModelAttribute MascotaModel mascota,
+                                 @RequestParam long propietarioId) {
+
+        PropietarioModel propietario = propietarioRepository.findById((long) propietarioId)
+                .orElseThrow(() -> new IllegalArgumentException("No se encontro porpietario"));
 
 @PostMapping("/borrarp/{id}")
 public String eliminarPropietario(@PathVariable Long id){
@@ -87,6 +98,11 @@ public String eliminarPropietario(@PathVariable Long id){
     return "redirect:/veterinario";
 }
 
+    @PostMapping("/borrarp/{id}")
+    public String eliminarPropietario(@PathVariable Long id){
+        propietarioService.eliminarPropietario(id);
+        return "redirect:/veterinario";
+    }
 
 @GetMapping("/actualizar/{id}")
 public String actualizarform (@PathVariable Long id,Model model) {
@@ -100,37 +116,49 @@ public String actualizar(@PathVariable Long id, @ModelAttribute PropietarioModel
     PropietarioModel existente = propietarioRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Propietario no encontrado"));
 
-    // Solo actualiza si el usuario ingresó algo
-    if (cambios.getNombrePro() != null && !cambios.getNombrePro().isBlank()) {
-        existente.setNombrePro(cambios.getNombrePro());
-    }
-    if (cambios.getApellidoPro() != null && !cambios.getApellidoPro().isBlank()) {
-        existente.setApellidoPro(cambios.getApellidoPro());
-    }
-    if (cambios.getDireccionPro() != null && !cambios.getDireccionPro().isBlank()) {
-        existente.setDireccionPro(cambios.getDireccionPro());
-    }
-    if (cambios.getTelefonoPro() != null && !cambios.getTelefonoPro().isBlank()) {
-        existente.setTelefonoPro(cambios.getTelefonoPro());
-    }
-    if (cambios.getCorreoPro() != null && !cambios.getCorreoPro().isBlank()) {
-        existente.setCorreoPro(cambios.getCorreoPro());
+    @GetMapping("/actualizar/{id}")
+    public String actualizarform (@PathVariable Long id,Model model) {
+        var propitarioEncontrado = propietarioRepository.findById(id).orElseThrow();
+        model.addAttribute("propietario", propitarioEncontrado);
+        return"veterinario/EditarPropietario";
     }
 
-    propietarioRepository.save(existente);
-    return "redirect:/veterinario";
-}
+    @PostMapping("/editar/{id}")
+    public String actualizar(@PathVariable Long id, @ModelAttribute PropietarioModel cambios) {
+        PropietarioModel existente = propietarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Propietario no encontrado"));
 
-@PostMapping("/editarm/{id}")
-public String actualizar(@PathVariable int id, @ModelAttribute MascotaModel mascotaModel, BindingResult br) {
-    if (br.hasErrors()) {
-        return "veterinario/index";
-    } else {
-        mascotaModel.setId(id);
-        mascotaRepository.save(mascotaModel);
-        return"veterinario/index";
+        // Solo actualiza si el usuario ingresó algo
+        if (cambios.getNombrePro() != null && !cambios.getNombrePro().isBlank()) {
+            existente.setNombrePro(cambios.getNombrePro());
+        }
+        if (cambios.getApellidoPro() != null && !cambios.getApellidoPro().isBlank()) {
+            existente.setApellidoPro(cambios.getApellidoPro());
+        }
+        if (cambios.getDireccionPro() != null && !cambios.getDireccionPro().isBlank()) {
+            existente.setDireccionPro(cambios.getDireccionPro());
+        }
+        if (cambios.getTelefonoPro() != null && !cambios.getTelefonoPro().isBlank()) {
+            existente.setTelefonoPro(cambios.getTelefonoPro());
+        }
+        if (cambios.getCorreoPro() != null && !cambios.getCorreoPro().isBlank()) {
+            existente.setCorreoPro(cambios.getCorreoPro());
+        }
+
+        propietarioRepository.save(existente);
+        return "redirect:/veterinario";
     }
-}
+
+    @PostMapping("/editarm/{id}")
+    public String actualizar(@PathVariable int id, @ModelAttribute MascotaModel mascotaModel, BindingResult br) {
+        if (br.hasErrors()) {
+            return "veterinario/index";
+        } else {
+            mascotaModel.setId(id);
+            mascotaRepository.save(mascotaModel);
+            return"veterinario/index";
+        }
+    }
 
     // Muestra la vista propietarioVH
     @GetMapping("/HistoriaClinica")
@@ -139,4 +167,4 @@ public String actualizar(@PathVariable int id, @ModelAttribute MascotaModel masc
         return "veterinario/HistoriaClinica";
     }
 
-    }
+}

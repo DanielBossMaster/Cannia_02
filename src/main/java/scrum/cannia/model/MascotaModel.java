@@ -1,5 +1,4 @@
 package scrum.cannia.model;
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -48,5 +47,7 @@ public class MascotaModel {
     @ManyToOne
     @JoinColumn(name = "id_propietario", nullable = false)
     private PropietarioModel propietario;
+
+
 
 }
