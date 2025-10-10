@@ -76,8 +76,17 @@ public class VeterinarioController {
 
         PropietarioModel propietario = propietarioRepository.findById((long) propietarioId)
                 .orElseThrow(() -> new IllegalArgumentException("No se encontro porpietario"));
+
+        mascota.setPropietario(propietario);
+        propietario.getMascotas().add(mascota);
+
+
+        mascotaRepository.save(mascota);
         return "redirect:/veterinario";
     }
+
+
+
 
     @PostMapping("/borrarp/{id}")
     public String eliminarPropietario(@PathVariable Long id) {

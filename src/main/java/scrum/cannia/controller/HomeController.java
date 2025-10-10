@@ -45,7 +45,7 @@ public class HomeController {
             case "veterinario":
                 return "redirect:/veterinario";
             case "propietario":
-                return "redirect:/propietarios";
+                return "redirect:/mascotas";
             default:
                 model.addAttribute("error", "Rol no válido o no asignado");
                 session.invalidate();

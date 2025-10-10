@@ -171,12 +171,11 @@ main {
 
 /* FOOTER CORREGIDO */
 footer {
-    background: #3f0f6e;
-    color: #ffffff;
-    background: #3f0f6e;
-    color: #ffffff;
+
     text-align: center;
     padding: 1px;
     width: 100%;
+    position: relative;
+    bottom: 0;
 }
 
