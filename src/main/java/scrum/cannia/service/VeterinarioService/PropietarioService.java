@@ -20,3 +20,4 @@ public class PropietarioService {
         propietarioRepository.save(propietario);
     }
 }
+

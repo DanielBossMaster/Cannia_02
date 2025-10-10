@@ -43,10 +43,10 @@
 
         <!-- botton de historia clinica -->
 
-        <a th:href="@{/veterinario/historiaclinica}" class="btn btn-primary mb-3">
-            <img src="/img/documento.png" alt="Historia clinica" width="40" height="40">
-            <span>Historia Clinica</span>
-        </a>
+    <a th:href="@{/veterinario/HistoriaClinica}" class="btn btn-primary mb-3">
+        <img src="/img/documento.png" alt="Historia clinica" width="40" height="40">
+        <span>Historia Clinica</span>
+    </a>
 
         <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addOwnerModal">
             <img src= "/img/citaapng.png" alt="Citas" width="40" height="40">
@@ -68,13 +68,14 @@
                         </button>
                     </form>
                     <!-- boton Editar proppietario -->
-                    <button class="delete" data-bs-toggle="modal" th:data-bs-target="'#editarPropietarioModal' + ${prop.id}" >
-                        <img src="/img/ajustes.png" alt="Editar" height="20">
+                    <a th:href="@{/veterinario/actualizar/{id}(id=${prop.id})}">
+                    <button class="delete"  >
+                        <img src="/img/ajustes.png" alt="Editar" title="Editar" height="20">
                     </button>
+                        </a>
                 </div>
                 <!-- Modal informacion propietario por id  -->
                 <!-- Tambien muestra que mascotas tiene cada propietario  -->
-
                 <button type="button" class="btn btn-primary " data-bs-toggle="modal" th:data-bs-target="'#modalMascotas' + ${prop.id}">
                     <strong th:text="${prop.nombrePro + ' ' + prop.apellidoPro}">Propietario</strong>
                     <p><strong>Telefono:</strong> <span th:text="${prop.telefonoPro}"></span></p>
@@ -109,53 +110,6 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div th:each="prop : ${propietarios}" >
-        <!-- Modal editar propietario -->
-        <div class="modal fade" th:id="'editarPropietarioModal' + ${prop.id}" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <!-- Aquí puedes incluir tu formulario de edición -->
-
-                <form  th:action="@{/veterinario/editar/{id}(id=${prop.id})}" method="post" th:object="${propietario}"  class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Editar Propietario</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label">Numero de Documento</label>
-                            <input type="text" th:value="${propietario.numDoc}"  class="form-control" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Nombre</label>
-                            <input type="text" th:field="*{nombrePro}" class="form-control" >
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Apellido</label>
-                            <input type="text" th:field="*{apellidoPro}" class="form-control" >
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Direccion</label>
-                            <input type="text" th:field="*{direccionPro}" class="form-control" >
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Telefono</label>
-                            <input type="text" th:field="*{telefonoPro}" class="form-control" >
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Correo</label>
-                            <input type="email" th:field="*{correoPro}"  class="form-control" >
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                    </div>
-                </form>
-
-
             </div>
         </div>
     </div>
@@ -201,9 +155,6 @@
             </form>
         </div>
     </div>
-
-
-
     <!-- Modal para agregar Mascota -->
     <div class="modal fade" id="addMascotaModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -259,8 +210,6 @@
             </form>
         </div>
     </div>
-
-
 </main>
 
 <!-- Bootstrap JS -->
@@ -269,15 +218,6 @@
 <footer>
     <p>&copy; 2025 App Cannia. Todos los derechos reservados.</p>
 </footer>
+
 </body>
 </html>
-<!-- <form method="post" th:action="@{/veterinario/borrar/{id}(id=${masc.id})}">
-                                                  <button type="submit" onclick="return confirm('¿Desea Eliminar?')" class="delete">
-                                                      <img src= "/img/eliminar.png" alt="Eliminar" height="20">
-                                                  </button>
-                                              </form>
-                                              <form method="post" th:action="@{/veterinario/editarm/{id}(id=${prop.id})}">
-                                                  <button type="submit" class="delete" onclick="return confirm('¿Desea Eliminar?')">
-                                                      <img src="/img/ajustes.png" alt="Editar" height="20">
-                                                  </button>
-                                              </form> -->

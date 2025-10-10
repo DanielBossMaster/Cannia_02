@@ -36,6 +36,21 @@ public class VeterinarioController {
         this.mascotaRepository = mascotaRepository;
 
 
+}
+
+@Autowired
+private PropietarioService propietarioService;
+
+
+@GetMapping
+
+public String index(Model model) {
+    model.addAttribute("veterinarios", veterinarioRepository.findAll());
+    model.addAttribute("propietarios", propietarioRepository.findByEstadoTrue());
+    model.addAttribute("mascotas", mascotaRepository.findAll());
+    model.addAttribute("propietario", new PropietarioModel());
+    model.addAttribute("mascota", new MascotaModel());
+    return "veterinario/index";
     }
 
     @Autowired
@@ -77,13 +92,11 @@ public class VeterinarioController {
         PropietarioModel propietario = propietarioRepository.findById((long) propietarioId)
                 .orElseThrow(() -> new IllegalArgumentException("No se encontro porpietario"));
 
-        mascota.setPropietario(propietario);
-        propietario.getMascotas().add(mascota);
-
-
-        mascotaRepository.save(mascota);
-        return "redirect:/veterinario";
-    }
+@PostMapping("/borrarp/{id}")
+public String eliminarPropietario(@PathVariable Long id){
+    propietarioService.eliminarPropietario(id);
+    return "redirect:/veterinario";
+}
 
     @PostMapping("/borrarp/{id}")
     public String eliminarPropietario(@PathVariable Long id){
@@ -91,6 +104,17 @@ public class VeterinarioController {
         return "redirect:/veterinario";
     }
 
+@GetMapping("/actualizar/{id}")
+public String actualizarform (@PathVariable Long id,Model model) {
+        var propitarioEncontrado = propietarioRepository.findById(id).orElseThrow();
+        model.addAttribute("propietario", propitarioEncontrado);
+        return"veterinario/EditarPropietario";
+}
+
+@PostMapping("/editar/{id}")
+public String actualizar(@PathVariable Long id, @ModelAttribute PropietarioModel cambios) {
+    PropietarioModel existente = propietarioRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Propietario no encontrado"));
 
     @GetMapping("/actualizar/{id}")
     public String actualizarform (@PathVariable Long id,Model model) {
@@ -137,7 +161,7 @@ public class VeterinarioController {
     }
 
     // Muestra la vista propietarioVH
-    @GetMapping("/historiaclinica")
+    @GetMapping("/HistoriaClinica")
     public String mostrarPropietarioVH(Model model) {
         model.addAttribute("propietarios", propietarioRepository.findByEstadoTrue());
         return "veterinario/HistoriaClinica";
