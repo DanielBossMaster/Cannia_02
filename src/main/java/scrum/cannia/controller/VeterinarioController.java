@@ -85,9 +85,6 @@ public class VeterinarioController {
         return "redirect:/veterinario";
     }
 
-
-
-
     @PostMapping("/borrarp/{id}")
     public String eliminarPropietario(@PathVariable Long id) {
         propietarioService.eliminarPropietario(id);
