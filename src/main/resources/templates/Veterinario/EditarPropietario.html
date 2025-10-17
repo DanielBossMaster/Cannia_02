@@ -4,58 +4,84 @@
     <meta charset="UTF-8">
     <title>Editar Propietario</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#170022",
+                        secondary: "#170022",
+                        lightBg: "rgb(241,231,253)",
+                        lightSurface: "#f7f8f9",
+                        darkText: "#1e293b",
+                        softText: "#475569",
+                        borderLight: "#e2e8f0",
+                    },
+                },
+            },
+        };
+    </script>
 
-    <link rel="stylesheet" href="/css/VeterinarioCss/estiloseditar.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .tab-active {
+            border-bottom: 3px solid #170022;
+        }
+
+        .tab-btn {
+            transition: all 0.2s ease-in-out;
+        }
+    </style>
 </head>
-<header class="text-center py-3">
-
-    <div class="logo">
-        <img src="/img/logo.png" alt="logo">
+<body class="bg-lightBg text-darkText min-h-screen flex flex-col">
+<header class="bg-secondary text-white flex justify-between items-center px-6 py-3 shadow-md">
+    <div class="flex items-center space-x-3">
+        <img src="/img/logo.png" alt="Logo" class="w-8 h-8">
+        <h1 class="text-lg font-bold">Cannia</h1>
     </div>
-    <nav>
-    <h2>Editar Propietario</h2>
-    </nav>
+    <a th:href="@{/veterinario}"><button class="text-sm hover:font-bold">Inicio</button></a>
 </header>
-<body>
-<main class="d-flex justify-content-center align-items-center vh-100">
-    <div class="form-container">
+<main class=" fixed inset-0  flex mt-8 items-center justify-center z-50">
+    <div class="bg-lightSurface w-full max-w-md  shadow-lg p-6 relative">
     <!-- Formulario -->
     <form  th:action="@{/veterinario/editar/{id}(id=${propietario.id})}"
           method="post"
           th:object="${propietario}"
-          class="border rounded p-4 shadow">
+           class="space-y-4">
 
-        <div class="mb-3">
-            <label class="form-label">Número de Documento</label>
-            <input type="text" th:field="*{numDoc}" class="form-control" readonly>
+        <div>
+            <label class="block text-sm font-semibold text-softText">Número de Documento</label>
+            <input type="text" th:field="*{numDoc}" class="w-full border border-borderLight rounded-md px-3 py-2 " readonly>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Nombre</label>
-            <input type="text" th:field="*{nombrePro}" class="form-control">
+        <div>
+            <label class="block text-sm font-semibold text-softText">Nombre</label>
+            <input type="text" th:field="*{nombrePro}" class="w-full border border-borderLight rounded-md px-3 py-2 ">
         </div>
-        <div class="mb-3">
-            <label class="form-label">Apellido</label>
-            <input type="text" th:field="*{apellidoPro}" class="form-control">
+        <div>
+            <label class="block text-sm font-semibold text-softText">Apellido</label>
+            <input type="text" th:field="*{apellidoPro}" class="w-full border border-borderLight rounded-md px-3 py-2 ">
         </div>
-        <div class="mb-3">
-            <label class="form-label">Dirección</label>
-            <input type="text" th:field="*{direccionPro}" class="form-control">
+        <div>
+            <label class="block text-sm font-semibold text-softText">Dirección</label>
+            <input type="text" th:field="*{direccionPro}" class="w-full border border-borderLight rounded-md px-3 py-2 ">
         </div>
-        <div class="mb-3">
-            <label class="form-label">Teléfono</label>
-            <input type="text" th:field="*{telefonoPro}" class="form-control">
+        <div>
+            <label class="block text-sm font-semibold text-softText">Teléfono</label>
+            <input type="text" th:field="*{telefonoPro}" class="w-full border border-borderLight rounded-md px-3 py-2 ">
         </div>
-        <div class="mb-3">
-            <label class="form-label">Correo</label>
-            <input type="email" th:field="*{correoPro}" class="form-control">
+        <div>
+            <label class="block text-sm font-semibold text-softText">Correo</label>
+            <input type="email" th:field="*{correoPro}" class="w-full border border-borderLight rounded-md px-3 py-2 ">
         </div>
 
-        <div class="d-flex justify-content-between">
-            <a th:href="@{/veterinario}" class="btn btn-danger">Cancelar</a>
-            <button onclick="alert('Cambios guardados con éxito')"type="submit" class="btn btn-success">Guardar cambios</button>
+        <div class="flex justify-end space-x-3 pt-4">
+            <a th:href="@{/veterinario}" class="bg-secondary text-white px-1  rounded-2-xl hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Cancelar</a>
+            <button onclick="alert('Cambios guardados con éxito')" type="submit" class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Guardar cambios</button>
         </div>
     </form>
 </div>

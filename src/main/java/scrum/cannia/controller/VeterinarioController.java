@@ -15,7 +15,9 @@ import scrum.cannia.model.PropietarioModel;
 import scrum.cannia.repository.MascotaRepository;
 import scrum.cannia.repository.PropietarioRepository;
 import scrum.cannia.repository.VeterinarioRepository;
+import scrum.cannia.service.VeterinarioService.MascotaService;
 import scrum.cannia.service.VeterinarioService.PropietarioService;
+
 
 //correciones varias
 
@@ -42,6 +44,9 @@ public class VeterinarioController {
 
     @Autowired
     private PropietarioService propietarioService;
+
+    @Autowired
+    private MascotaService mascotaService;
 
     @GetMapping
     public String index(HttpSession session, Model model) {
@@ -70,20 +75,20 @@ public class VeterinarioController {
 
     }
 
+
     @PostMapping("/nuevom")
-    public String agregarMascota(@ModelAttribute MascotaModel mascota,
-                                 @RequestParam long propietarioId) {
+    public String guardarMascota(
+            @ModelAttribute MascotaModel mascota,
+            @RequestParam("propietarioId") Long propietarioId) {
 
-        PropietarioModel propietario = propietarioRepository.findById((long) propietarioId)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontro porpietario"));
-
+        PropietarioModel propietario = propietarioService.obtenerPorId(propietarioId);
         mascota.setPropietario(propietario);
-        propietario.getMascotas().add(mascota);
+        mascotaService.guardar(mascota);
 
-
-        mascotaRepository.save(mascota);
         return "redirect:/veterinario";
     }
+
+
 
     @PostMapping("/borrarp/{id}")
     public String eliminarPropietario(@PathVariable Long id) {

@@ -14,8 +14,8 @@
                     colors: {
                         primary: "#170022",
                         secondary: "#170022",
-                        lightBg: "#f8fafc",
-                        lightSurface: "#ffffff",
+                        lightBg: "#F3E8FF",
+                        lightSurface: "rgb(247,248,249)",
                         darkText: "#1e293b",
                         softText: "#475569",
                         borderLight: "#e2e8f0",
@@ -45,7 +45,7 @@
 <!-- Header -->
 <header class="bg-secondary text-white flex justify-between items-center px-6 py-3 shadow-md">
     <div class="flex items-center space-x-3">
-        <img src="img/logo.png" alt="Logo" class="w-8 h-8">
+        <img src="/img/logo.png" alt="Logo" class="w-8 h-8">
         <h1 class="text-lg font-bold">Cannia</h1>
     </div>
     <a th:href="@{/veterinario/HistoriaClinica}"><button class="text-sm hover:font-bold">Mascotas</button></a>
@@ -53,7 +53,7 @@
 </header>
 
 <!-- Nav Tabs -->
-<nav class="bg-lightSurface text-softText flex space-x-6 px-6 border-b border-borderLight shadow-sm">
+<nav class="bg-lightSurface  text-softText flex space-x-6 px-6 border-b border-borderLight shadow-sm">
     <button class="py-3 focus:outline-none tab-btn tab-active" data-tab="admin">Consultorio</button>
     <button class="py-3 focus:outline-none tab-btn" data-tab="inventario">Inventario</button>
     <button class="py-3 focus:outline-none tab-btn" data-tab="citas">Citas</button>
@@ -61,20 +61,19 @@
 </nav>
 
 <!-- Contenido -->
-<main class="flex-grow mx-auto w-3/4 px-6 py-8">
+<main class="  flex-grow mx-auto w-3/4 px-6 py-8">
     <!-- ADMINISTRACIÓN -->
     <section id="tab-admin" class="tab-content">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-bold">Gestión de Propietarios</h2>
             <div>
-                <button class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Agregar Propietario</button>
-
+                <button class="bg-white p-2 shadow-2xl rounded-t-lg transform hover:scale-105 mx-8 text-center hover:shadow-xl hover:bg-gray-50 transition-all duration-30">Agregar Propietario</button>
             </div>
         </div>
 
-        <div class="bg-lightSurface rounded-lg p-6 shadow-md border border-borderLight">
+        <div class="bg-lightSurface w-full p-6 shadow-md border border-borderLight w overflow-x-auto ">
             <table class="w-full text-left text-sm">
-                <thead class="bg-gray-100 text-softText uppercase text-xs">
+                <thead class="bg-gray-100 text-softText  uppercase text-xs">
                 <tr>
                     <th class="px-4 py-3">Nombre</th>
                     <th class="px-4 py-3">Correo</th>
@@ -87,15 +86,21 @@
                     <td th:text="${prop.nombrePro + ' ' + prop.apellidoPro}" class="px-4 py-3"></td>
                     <td th:text="${prop.correoPro}" class="px-4 py-3"></td>
                     <td th:text="${prop.telefonoPro}" class="px-4 py-3"></td>
-                    <td class="px-4 py-3 ">
-                        <div class="flex  items-center gap-2">
+                    <td class="px-4 py-3">
+                        <div class="flex flex-col sm:flex-row items-center gap-2 justify-center sm:justify-start">
                         <a th:href="@{/veterinario/actualizar/{id}(id=${prop.id})}">
-                            <button class="bg-blue-600 px-3 py-1 rounded text-sm text-white hover:bg-blue-700 transition">Editar</button>
+                            <button class=" rounded bg-blue-600 px-3 py-1 rounded text-sm text-white hover:bg-blue-700 transition">Editar</button>
                         </a>
                         <form method="post" th:action="@{/veterinario/borrarp/{id}(id=${prop.id})}">
-                            <button onclick="return confirm('¿Desea Eliminar?')" class="bg-red-600 px-3 py-1 rounded text-sm text-white hover:bg-red-700 transition">Eliminar</button>
+                            <button onclick="return confirm('¿Desea Eliminar?')" class="bg-gray-600 px-3 py-1 rounded text-sm text-white font-bolt  hover:bg-red-700 transition">Eliminar</button>
                         </form>
-                            <button class="bg-green-600 px-3 py-1 rounded text-sm text-white hover:bg-green-700 transition">Agregar Mascota</button>
+                            <button
+                                    type="button"
+                                    class="bg-green-600 px-3 py-1 rounded text-sm text-white hover:bg-green-700 transition"
+                                    th:onclick="'abrirModalMascota(' + ${prop.id} + ')'">
+                                Agregar Mascota
+                            </button>
+
                         </div>
                     </td>
 
@@ -153,11 +158,11 @@
         <form th:action="@{/veterinario/nuevo}" method="post" th:object="${propietario}" class="space-y-4">
             <div>
                 <label class="block text-sm font-semibold text-softText">Numero de Documento</label>
-                <input type="text" th:field="*{numDoc}" class="w-full border border-borderLight rounded-md px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" required>
+                <input type="text" th:field="*{numDoc}" class="w-full border border-borderLight rounded-md px-3 py-2 " required>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-softText">Nombre</label>
-                <input type="text" th:field="*{nombrePro}" class="w-full border border-borderLight rounded-md px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" required>
+                <input type="text" th:field="*{nombrePro}" class="w-full border border-borderLight rounded-md px-3 py-2 " required>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-softText">Apellido</label>
@@ -176,34 +181,25 @@
                 <input type="email" th:field="*{correoPro}" class="w-full  border-borderLight  px-3 py-2 " required>
             </div>
             <div class="flex justify-end space-x-3 pt-4">
-                <button type="button" onclick="toggleModal('modalPropietario')" class="px-4 py-2 border border-borderLight rounded-md text-softText hover:bg-gray-100">Cancelar</button>
-                <button type="submit" class="px-4 py-2 bg-secondary text-white rounded-md hover:bg-primary transition">Guardar</button>
+                <button type="button" onclick="toggleModal('modalPropietario')" class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Cancelar</button>
+                <button type="submit" class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Guardar</button>
             </div>
         </form>
         <button onclick="toggleModal('modalPropietario')" class="absolute top-3 right-3 text-softText hover:text-primary">
             <span class="material-icons text-lg">close</span>
         </button>
     </div>
-</div>
+</div><!-- MODAL REGISTRAR MASCOTA -->
+<div th:each="prop : ${propietarios}" >
+    <div id="modalMascota" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-lightSurface w-full max-w-md  shadow-lg p-6 relative">
+            <h3 class="text-lg font-bold text-primary mb-4">Registrar Mascota</h3>
+            <form th:action="@{/veterinario/nuevom}" method="post" th:object="${mascota}"  class="space-y-4">
 
-<!-- MODAL REGISTRAR MASCOTA -->
-<div id="modalMascota" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-lightSurface w-full max-w-md  shadow-lg p-6 relative">
-        <h3 class="text-lg font-bold text-primary mb-4">Registrar Mascota</h3>
-        <form th:action="@{/veterinario/nuevom}" method="post" th:object="${mascota}"  class="space-y-4">
-            <div>
-                <label class="block text-sm font-semibold text-softText">Propietario</label>
-                <select name="propietarioId" class="w-full border border-borderLight rounded-md px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" required>
-                    <option value="">Seleccionar...</option>
-                    <option th:each = "prop : ${propietarios}"
-                            th:value="${prop.id}"
-                            th:text=" ${prop.nombrePro + ' ' + prop.apellidoPro}">
-                    </option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-semibold text-softText">Nombre</label>
-                <input type="text" th:field ="*{nomMascota}" class="w-full border border-borderLight rounded-md px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" required>
+                <input type="hidden" name="propietarioId" id="propietarioId">
+                <div>
+                    <label class="block text-sm font-semibold text-softText">Nombre</label>
+                    <input type="text" th:field ="*{nomMascota}" class="w-full border border-borderLight rounded-md px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" required>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-softText">Especie</label>
@@ -230,8 +226,8 @@
             </div>
 
             <div class="flex justify-end space-x-3 pt-4">
-                <button type="button" onclick="toggleModal('modalMascota')" class="px-4 py-2 border border-borderLight rounded-md text-softText hover:bg-gray-100">Cancelar</button>
-                <button type="submit" class="px-4 py-2 bg-secondary text-white rounded-md hover:bg-primary transition">Guardar</button>
+                <button type="button" onclick="toggleModal('modalMascota')" class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Cancelar</button>
+                <button type="submit" class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Guardar</button>
             </div>
         </form>
         <button onclick="toggleModal('modalMascota')" class="absolute top-3 right-3 text-softText hover:text-primary">
@@ -239,7 +235,7 @@
         </button>
     </div>
 </div>
-
+</div>
 <!-- Script para cambiar pestañas -->
 <script>
     const buttons = document.querySelectorAll(".tab-btn");
@@ -264,12 +260,29 @@
         // Vincular botones del dashboard
         document.querySelectorAll("button").forEach(btn => {
         if (btn.textContent.includes("Agregar Propietario")) {
-        btn.addEventListener("click", () => toggleModal('modalPropietario'));
-    }
-        if (btn.textContent.includes("Agregar Mascota")) {
-        btn.addEventListener("click", () => toggleModal('modalMascota'));
-    }
+            btn.addEventListener("click", () => toggleModal('modalPropietario'));
+        }
     });
+        const modalMascota = document.getElementById('modalMascota');
+        const inputPropietario = document.getElementById('propietarioId');
+
+        function abrirModalMascota(idPropietario) {
+        // Asigna el ID del propietario al input oculto
+            inputPropietario.value = idPropietario;
+        // Muestra el modal
+            modalMascota.classList.remove('hidden');
+    }
+        function cerrarModalMascota() {
+        modalMascota.classList.add('hidden');
+    }
+
+    // Opcional: cerrar modal al hacer clic fuera del contenido
+    modalMascota.addEventListener('click', (e) => {
+        if (e.target === modalMascota) cerrarModalMascota();
+    });
+
+    // Ya no es necesario que el listener detecte todos los botones
+    // porque ahora cada botón tiene su propio onclick con el id correcto
 
 </script>
 
