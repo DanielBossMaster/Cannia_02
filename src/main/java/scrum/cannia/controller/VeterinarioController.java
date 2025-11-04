@@ -23,7 +23,7 @@ import scrum.cannia.service.VeterinarioService.PropietarioService;
 
 @Controller
 @RequestMapping("/veterinario")
-public class VeterinarioController {
+public class  VeterinarioController {
 
     private final VeterinarioRepository veterinarioRepository;
     private final PropietarioRepository propietarioRepository;

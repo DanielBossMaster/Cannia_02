@@ -38,4 +38,8 @@ public class VeterinarioModel {
     @OneToOne
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
     private UsuarioModel usuario;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "veterinaria_id", referencedColumnName = "id")
+    private VeterinariaModel veterinaria;
 }
