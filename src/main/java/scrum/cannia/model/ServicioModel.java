@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name ="veterinario")
+@Table(name ="servicio")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,6 +33,6 @@ public class ServicioModel {
     private Integer Precio;
 
     @ManyToOne
-    @JoinColumn(name = "id_veterinaria", nullable = false)
+    @JoinColumn(name = "id_veterinaria" )
     private VeterinariaModel veterinaria;
 }

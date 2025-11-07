@@ -40,6 +40,6 @@ public class VeterinarioModel {
     private UsuarioModel usuario;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "veterinaria_id", referencedColumnName = "id")
+    @JoinColumn(name = "id_veterinaria", referencedColumnName = "id_veterinaria")
     private VeterinariaModel veterinaria;
 }
