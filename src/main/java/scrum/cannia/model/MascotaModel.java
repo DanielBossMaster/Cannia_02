@@ -49,7 +49,7 @@ public class MascotaModel {
     private PropietarioModel propietario;
 
     @ManyToOne
-    @JoinColumn(name = "id_fundacion", nullable = false)
+    @JoinColumn(name = "id_fundacion", nullable = true)
     private FundacionModel fundacion;
 
 
