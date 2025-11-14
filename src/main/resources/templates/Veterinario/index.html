@@ -49,6 +49,7 @@
         <h1 class="text-lg font-bold">Cannia</h1>
     </div>
     <a th:href="@{/veterinario/HistoriaClinica}"><button class="text-sm hover:font-bold">Mascotas</button></a>
+    <a th:href="@{/veterinario/miVeterinaria/{id}(id=${veterinario.id})}"><button class="text-sm hover:font-bold">Mi Veterinaria</button></a>
     <a th:href="@{/cerrar-sesion}"><button class="text-sm hover:font-bold">Cerrar sesión</button></a>
 </header>
 

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class VeterinariaModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_veterinaria")
     private int id;
 
@@ -25,6 +25,9 @@ public class VeterinariaModel {
 
     @Column(length = 50, nullable = false)
     private String telefono;
+
+    @Column(length = 50, nullable = false)
+    private String direccion;
 
     @OneToOne(mappedBy = "veterinaria", cascade = CascadeType.ALL)
     private VeterinarioModel veterinario;

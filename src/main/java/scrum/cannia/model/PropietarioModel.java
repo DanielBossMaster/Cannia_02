@@ -15,7 +15,7 @@ import java.util.List;
 public class PropietarioModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_propietario")
     private int id;
 

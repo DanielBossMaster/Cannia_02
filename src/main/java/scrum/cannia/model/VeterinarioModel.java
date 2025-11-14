@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class VeterinarioModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_veterinario")
     private int id;
 

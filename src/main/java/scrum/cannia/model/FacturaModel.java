@@ -19,7 +19,7 @@ public class FacturaModel {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_factura")
     private Long id;
 

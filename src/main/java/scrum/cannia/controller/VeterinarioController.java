@@ -8,13 +8,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import scrum.cannia.model.MascotaModel;
-import scrum.cannia.model.PropietarioModel;
+import scrum.cannia.model.*;
 import scrum.cannia.repository.MascotaRepository;
 import scrum.cannia.repository.PropietarioRepository;
+import scrum.cannia.repository.UsuarioRepository;
 import scrum.cannia.repository.VeterinarioRepository;
 import scrum.cannia.service.VeterinarioService.MascotaService;
 import scrum.cannia.service.VeterinarioService.PropietarioService;
+import scrum.cannia.service.VeterinarioService.VeterinarioService;
 
 
 //correciones varias
@@ -26,6 +27,8 @@ public class  VeterinarioController {
     private final VeterinarioRepository veterinarioRepository;
     private final PropietarioRepository propietarioRepository;
     private final MascotaRepository mascotaRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
 
     public VeterinarioController(
@@ -46,11 +49,19 @@ public class  VeterinarioController {
     @Autowired
     private MascotaService mascotaService;
 
+    @Autowired
+    private VeterinarioService veterinarioService;
+
     @GetMapping
     public String index(HttpSession session, Model model) {
-        if (session.getAttribute("usuario") == null) {
-            return "redirect:/login"; // Redirige si no hay sesión
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+
+        if (usuario == null) {
+            return "redirect:/login";
         }
+        VeterinarioModel veterinario = usuario.getVeterinario();
+
+        model.addAttribute("veterinario", veterinario);
         model.addAttribute("veterinarios", veterinarioRepository.findAll());
         model.addAttribute("propietarios", propietarioRepository.findByEstadoTrue());
         model.addAttribute("mascotas", mascotaRepository.findAll());
@@ -124,17 +135,6 @@ public class  VeterinarioController {
             propietarioRepository.save(existente);
             return "redirect:/veterinario";
         }
-        @PostMapping("/editarm/{id}")
-        public String actualizar ( @PathVariable int id, @ModelAttribute MascotaModel mascotaModel, BindingResult br){
-            if (br.hasErrors()) {
-                return "veterinario/index";
-            } else {
-                mascotaModel.setId(id);
-                mascotaRepository.save(mascotaModel);
-                return "veterinario/index";
-            }
-        }
-
         // Muestra la vista propietarioVH
         @GetMapping("/HistoriaClinica")
         public String mostrarPropietarioVH (Model model){
@@ -142,5 +142,43 @@ public class  VeterinarioController {
             return "veterinario/HistoriaClinica";
         }
 
+@GetMapping("/miVeterinaria/{id}")
+public String gestionarVeterinaria(@PathVariable Long id, Model model) {
+    if (veterinarioService.tieneVeterinaria(id)) {
+        VeterinariaModel vet = veterinarioService.obtenerVeterinariaDeVeterinario(id);
+        return "redirect:/veterinario/InicioVeterinaria/" + vet.getId();
     }
+    // Si no tiene veterinaria, mostrar el formulario
+    model.addAttribute("idVeterinario", id);
+    model.addAttribute("veterinaria", new VeterinariaModel());
+    return "veterinario/CrearVeterinaria";
+}
+
+    // 🔹 Mostrar página principal de la veterinaria
+    @GetMapping("/InicioVeterinaria/{id}")
+    public String inicioVeterinaria(@PathVariable Long id, Model model) {
+        VeterinariaModel veterinaria = veterinarioService.obtenerVeterinariaDeVeterinario(id);
+        model.addAttribute("veterinaria", veterinaria);
+        return "veterinario/InicioVeterinaria";
+    }
+
+    // 🔹 Guardar nueva veterinaria (formulario)
+    @PostMapping("/CrearVeterinaria")
+    public String crearVeterinaria(@RequestParam Long idVeterinario, @ModelAttribute VeterinariaModel vet) {
+        VeterinariaModel nuevaVet = veterinarioService.crearVeterinaria(idVeterinario, vet);
+
+        if (nuevaVet == null) {
+            return "redirect:/veterinario/miVeterinaria/" + idVeterinario + "?error=YatieneVeterinaria";
+        }
+
+        return "redirect:/veterinario/InicioVeterinaria/" + nuevaVet.getId();
+    }
+
+    @GetMapping("/CrearVeterinaria/{id}")
+    public String mostrarFormularioVeterinaria(@PathVariable Long id, Model model) {
+        model.addAttribute("id", id);
+        model.addAttribute("veterinaria", new VeterinariaModel());
+        return "veterinario/CrearVeterinaria";
+    }
+}
 

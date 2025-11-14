@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class ServicioModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_servicio")
     private int id;
 
