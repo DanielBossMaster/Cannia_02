@@ -70,8 +70,7 @@
                 <artifactId>poi</artifactId>
                 <version>5.2.5</version>
             </dependency>
-
-            <!-- Apache POI - Soporte para archivos Excel (XSSF = .xlsx) -->
+        <!-- Apache POI - Soporte para archivos Excel (XSSF = .xlsx) -->
             <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-ooxml</artifactId>

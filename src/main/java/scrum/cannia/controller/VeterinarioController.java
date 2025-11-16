@@ -18,8 +18,6 @@ import scrum.cannia.service.VeterinarioService.PropietarioService;
 import scrum.cannia.service.VeterinarioService.VeterinarioService;
 
 
-//correciones varias
-
 @Controller
 @RequestMapping("/veterinario")
 public class  VeterinarioController {
@@ -27,9 +25,6 @@ public class  VeterinarioController {
     private final VeterinarioRepository veterinarioRepository;
     private final PropietarioRepository propietarioRepository;
     private final MascotaRepository mascotaRepository;
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
 
     public VeterinarioController(
             VeterinarioRepository veterinarioRepository,
@@ -39,9 +34,10 @@ public class  VeterinarioController {
         this.propietarioRepository = propietarioRepository;
         this.veterinarioRepository = veterinarioRepository;
         this.mascotaRepository = mascotaRepository;
-
-
     }
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private PropietarioService propietarioService;
@@ -71,7 +67,7 @@ public class  VeterinarioController {
 
 
     }
-
+/// PARA REGISTRAR PROPIETARIO
     @PostMapping("/nuevo")
     public String nuevo(@Validated @ModelAttribute PropietarioModel propietarioModel, BindingResult br) {
         if (br.hasErrors()) {
@@ -83,8 +79,7 @@ public class  VeterinarioController {
 
 
     }
-
-
+/// PARA REGISTRARLE UNA MASCOTA A UN PROPIETARIO
     @PostMapping("/nuevom")
     public String guardarMascota(
             @ModelAttribute MascotaModel mascota,
@@ -96,22 +91,20 @@ public class  VeterinarioController {
 
         return "redirect:/veterinario";
     }
-
-
-
-    @PostMapping("/borrarp/{id}")
+/// PARA BORRAR UN PROPIETARIO (LO CAMBIA DE ESTADO A INACTIVO)
+    @PostMapping("/borrar/{id}")
     public String eliminarPropietario(@PathVariable Long id) {
         propietarioService.eliminarPropietario(id);
         return "redirect:/veterinario";
     }
-
+/// PARA DESPLEGAR EL FORMULARIO QUE ACTUALIZA EL PROPIETARIO
     @GetMapping("/actualizar/{id}")
     public String actualizarform (@PathVariable Long id, Model model){
         var propitarioEncontrado = propietarioRepository.findById(id).orElseThrow();
         model.addAttribute("propietario", propitarioEncontrado);
         return "veterinario/EditarPropietario";
     }
-
+/// PARA GUARDAR EL FORMULARIO DE EDITAR UN PROPIETARIO
     @PostMapping("/editar/{id}")
     public String actualizar (@PathVariable Long id, @ModelAttribute PropietarioModel cambios){
         PropietarioModel existente = propietarioRepository.findById(id)
@@ -134,27 +127,27 @@ public class  VeterinarioController {
             }
             propietarioRepository.save(existente);
             return "redirect:/veterinario";
-        }
-        // Muestra la vista propietarioVH
-        @GetMapping("/HistoriaClinica")
+    }
+/// MUESTRA VISTA DE MASCOTAS
+    @GetMapping("/HistoriaClinica")
         public String mostrarPropietarioVH (Model model){
             model.addAttribute("propietarios", propietarioRepository.findByEstadoTrue());
             return "veterinario/HistoriaClinica";
         }
-
-@GetMapping("/miVeterinaria/{id}")
-public String gestionarVeterinaria(@PathVariable Long id, Model model) {
-    if (veterinarioService.tieneVeterinaria(id)) {
-        VeterinariaModel vet = veterinarioService.obtenerVeterinariaDeVeterinario(id);
-        return "redirect:/veterinario/InicioVeterinaria/" + vet.getId();
-    }
-    // Si no tiene veterinaria, mostrar el formulario
+/// PARA IR A LA VETERINARIA (SI NO TIENE SE REGISTRA, SI YA TIENE SE VA ALA INICIO )
+    @GetMapping("/miVeterinaria/{id}")
+    public String gestionarVeterinaria(@PathVariable Long id, Model model) {
+        if (veterinarioService.tieneVeterinaria(id)) {
+            VeterinariaModel vet = veterinarioService.obtenerVeterinariaDeVeterinario(id);
+            return "redirect:/veterinario/InicioVeterinaria/" + vet.getId();
+        }
+        // Si no tiene veterinaria, mostrar el formulario
     model.addAttribute("idVeterinario", id);
     model.addAttribute("veterinaria", new VeterinariaModel());
     return "veterinario/CrearVeterinaria";
 }
 
-    // 🔹 Mostrar página principal de la veterinaria
+/// MUESTRA PAGINA PRINCIPAL DE LA VETERINARIA
     @GetMapping("/InicioVeterinaria/{id}")
     public String inicioVeterinaria(@PathVariable Long id, Model model) {
         VeterinariaModel veterinaria = veterinarioService.obtenerVeterinariaDeVeterinario(id);
@@ -162,7 +155,7 @@ public String gestionarVeterinaria(@PathVariable Long id, Model model) {
         return "veterinario/InicioVeterinaria";
     }
 
-    // 🔹 Guardar nueva veterinaria (formulario)
+/// GUARDA LA VETERINARIA AL REGISTRARLA
     @PostMapping("/CrearVeterinaria")
     public String crearVeterinaria(@RequestParam Long idVeterinario, @ModelAttribute VeterinariaModel vet) {
         VeterinariaModel nuevaVet = veterinarioService.crearVeterinaria(idVeterinario, vet);
@@ -173,7 +166,7 @@ public String gestionarVeterinaria(@PathVariable Long id, Model model) {
 
         return "redirect:/veterinario/InicioVeterinaria/" + nuevaVet.getId();
     }
-
+/// PASA EL OBJETO VACIO PARA PODER CREAR UNA VETERINARIA
     @GetMapping("/CrearVeterinaria/{id}")
     public String mostrarFormularioVeterinaria(@PathVariable Long id, Model model) {
         model.addAttribute("id", id);

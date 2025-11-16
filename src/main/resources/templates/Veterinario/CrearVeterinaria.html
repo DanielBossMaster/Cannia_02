@@ -1,28 +1,74 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Nueva Veterinaria</title>
-</head>
-<body>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#170022",
+                        borderLight: "#e2e8f0",
+                        "background-dark": "#333333",
+                        lightSurface: "rgb(247,248,249)",
+                        "surface-dark": "#444444",
+                        "text-light": "#212529",
+                        "text-dark": "#F8F9FA",
+                        "text-secondary-light": "#6C757D",
+                        "text-secondary-dark": "#ADB5BD",
+                        "border-light": "#CED4DA",
+                        "border-dark": "#6C757D",
+                    },
+                    fontFamily: {
+                        display: ["Roboto", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                    },
+                },
+            },
+        };
+    </script>
 
-<form th:action="@{/veterinario/CrearVeterinaria(idVeterinario=${id})}" method="post" th:object="${veterinaria}">
+<body class="h-screen bg-[url('/img/fondo_login.jpg')] bg-cover bg-center flex items-end t">
+<div class=" inset-0 flex items-center  p-4 bg-opacity-50">
+    <div class="bg-lightSurface dark:bg-surface-dark shadow-2xl w-96  ml-32 mb-32">
+        <div class="flex items-center justify-between p-4 bg-primary text-white">
+            <h2 class="text-xl font-bold">Registrar Veterinaria</h2>
+        </div>
+        <form th:action="@{/veterinario/CrearVeterinaria(idVeterinario=${id})}" method="post" th:object="${veterinaria}" class="p-8 space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-text-light dark:text-text-dark mb-1">Nombre de veterinaria</label>
+                <input type="text" th:field="*{nombre}" required class="w-full rounded border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-text-light dark:text-text-dark focus:ring-primary focus:border-primary" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-text-light dark:text-text-dark mb-1" >Correo</label>
+                <input type="email" th:field="*{correo}" required class="w-full rounded border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-text-light dark:text-text-dark focus:ring-primary focus:border-primary" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-text-light dark:text-text-dark mb-1" >Telefono</label>
+                <input type="text" th:field="*{telefono}" required class="w-full rounded border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-text-light dark:text-text-dark focus:ring-primary focus:border-primary" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-text-light dark:text-text-dark mb-1" >Dirección</label>
+                <input type="text" th:field="*{direccion}" required class="w-full rounded border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-text-light dark:text-text-dark focus:ring-primary focus:border-primary" />
+            </div>
 
+            <div class="flex justify-end space-x-4 pt-4">
+                <button class="bg-primary text-white px-4 py-2 rounded-md hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition" type="button">
+                    Cancelar
+                </button>
+                <button class="bg-primary text-white px-4 py-2 rounded-md hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition" type="submit">
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
-    <label>Nombre de la veterinaria:</label>
-    <input type="text" th:field="*{nombre}" required />
-
-    <label>Correo:</label>
-    <input type="email" th:field="*{correo}" required />
-
-    <label>Teléfono:</label>
-    <input type="text" th:field="*{telefono}" required />
-
-    <label>Dirección:</label>
-    <input type="text" th:field="*{direccion}" required />
-
-    <button type="submit">Registrar Veterinaria</button>
-</form>
-
-</body>
-</html>
+</body></html>
