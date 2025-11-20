@@ -31,13 +31,17 @@ public class ProductoModel {
     private Integer cantidad;
 
     @Column(length = 20, nullable = false )
-    private Integer Valor;
+    private Integer valor;
 
     @Column(length = 20, nullable = false )
     private boolean estado;
 
+    @Lob
     @Column(length = 20, nullable = false )
     private byte foto;
+
+    @Column
+    private boolean publicado;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 10, nullable = false)

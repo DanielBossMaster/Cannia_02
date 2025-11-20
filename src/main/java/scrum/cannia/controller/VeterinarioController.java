@@ -9,11 +9,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import scrum.cannia.model.*;
-import scrum.cannia.repository.MascotaRepository;
-import scrum.cannia.repository.PropietarioRepository;
-import scrum.cannia.repository.UsuarioRepository;
-import scrum.cannia.repository.VeterinarioRepository;
+import scrum.cannia.repository.*;
 import scrum.cannia.service.VeterinarioService.MascotaService;
+import scrum.cannia.service.VeterinarioService.ProductoService;
 import scrum.cannia.service.VeterinarioService.PropietarioService;
 import scrum.cannia.service.VeterinarioService.VeterinarioService;
 
@@ -47,6 +45,9 @@ public class  VeterinarioController {
 
     @Autowired
     private VeterinarioService veterinarioService;
+
+    @Autowired
+    private ProductoService productoService;
 
     @GetMapping
     public String index(HttpSession session, Model model) {
@@ -100,8 +101,8 @@ public class  VeterinarioController {
 /// PARA DESPLEGAR EL FORMULARIO QUE ACTUALIZA EL PROPIETARIO
     @GetMapping("/actualizar/{id}")
     public String actualizarform (@PathVariable Long id, Model model){
-        var propitarioEncontrado = propietarioRepository.findById(id).orElseThrow();
-        model.addAttribute("propietario", propitarioEncontrado);
+        var propietarioEncontrado = propietarioRepository.findById(id).orElseThrow();
+        model.addAttribute("propietario", propietarioEncontrado);
         return "veterinario/EditarPropietario";
     }
 /// PARA GUARDAR EL FORMULARIO DE EDITAR UN PROPIETARIO
@@ -172,6 +173,12 @@ public class  VeterinarioController {
         model.addAttribute("id", id);
         model.addAttribute("veterinaria", new VeterinariaModel());
         return "veterinario/CrearVeterinaria";
+    }
+
+    @GetMapping("/GestionVentas")
+    public String gestionVentas(Model model) {
+        model.addAttribute("productos",productoService.listarTodos());
+        return "veterinario/GestionVentas";
     }
 }
 
