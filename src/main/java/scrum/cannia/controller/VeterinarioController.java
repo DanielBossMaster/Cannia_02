@@ -180,5 +180,12 @@ public class  VeterinarioController {
         model.addAttribute("productos",productoService.listarTodos());
         return "veterinario/GestionVentas";
     }
+
+    @GetMapping("/Tienda")
+    public String tiendaPreview(Model model) {
+        model.addAttribute("productos", productoService.listarTodos());
+        return "veterinario/TiendaPreview";
+    }
+
 }
 

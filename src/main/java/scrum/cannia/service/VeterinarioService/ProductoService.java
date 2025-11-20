@@ -25,4 +25,8 @@ public class ProductoService {
     public ProductoModel buscarPorId(Integer id) {
         return productoRepository.findById(id).orElse(null);
     }
+    public List<ProductoModel> listarPublicados() {
+        return productoRepository.findByPublicadoTrue();
+    }
+
 }

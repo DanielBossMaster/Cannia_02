@@ -37,7 +37,7 @@ public class ProductoModel {
     private boolean estado;
 
     @Lob
-    @Column(length = 20, nullable = false )
+    @Column
     private byte foto;
 
     @Column

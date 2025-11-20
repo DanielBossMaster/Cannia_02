@@ -55,11 +55,23 @@
                     <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                 </svg></button></a>
     </header>
-
     <main class=" ml-32 mb-32 flex-grow mx-auto  px-6 py-8 mr-32" >
         <section id="tab-admin" class="tab-content">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-bold">Gestión de Productos</h2>
+                <div>
+                    <a th:href="@{/veterinario/Tienda}">
+                    <button class="bg-white p-2 shadow-xl  transform hover:scale-105 mx-8 text-center
+                    hover:shadow-2xl hover:bg-gray-50 transition-all duration-300 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-shopping-bag-icon lucide-shopping-bag"><path d="M16 10a4 4 0 0 1-8 0"/>
+                            <path d="M3.103 6.034h17.794"/>
+                            <path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0
+                            0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"/>
+                        </svg>
+                        Tienda</button></a>
+                </div>
             </div>
 
             <div class="bg-lightSurface w-full p-6 shadow-xl border border-borderLight  overflow-x-auto ">
