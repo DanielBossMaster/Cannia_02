@@ -64,17 +64,28 @@ public class DataLoader implements CommandLineRunner {
             for (PropietarioModel propietario : propietarios) {
                 List<MascotaModel> mascotas = new ArrayList<>();
 
-                MascotaModel m1 = new MascotaModel(0,
-                        "Firulais", "Perro", "Labrador",
-                        sdf.parse("2020-03-10"), sdf.parse("2024-08-15"),
-                        "Antiparasitario", "Marrón", Genero.Macho,
-                        propietario,null);
+                MascotaModel m1 = new MascotaModel();
+                m1.setNomMascota("Firulais");
+                m1.setEspecie("Perro");
+                m1.setRaza("Labrador");
+                m1.setFechaNacimiento(sdf.parse("2020-03-10"));
+                m1.setFechaVacunacion(sdf.parse("2024-08-15"));
+                m1.setMedicamento("Antiparasitario");
+                m1.setColor("Marrón");
+                m1.setGenero(Genero.Macho);
+                m1.setPropietario(propietario);
+// fundacion, edadFundacion y foto pueden quedar como null
 
-                MascotaModel m2 = new MascotaModel(0,
-                        "Mishi", "Gato", "Siames",
-                        sdf.parse("2021-06-01"), sdf.parse("2024-05-20"),
-                        "Vacuna triple felina", "Gris", Genero.Hembra,
-                        propietario,null);
+                MascotaModel m2 = new MascotaModel();
+                m2.setNomMascota("Mishi");
+                m2.setEspecie("Gato");
+                m2.setRaza("Siames");
+                m2.setFechaNacimiento(sdf.parse("2021-06-01"));
+                m2.setFechaVacunacion(sdf.parse("2024-05-20"));
+                m2.setMedicamento("Vacuna triple felina");
+                m2.setColor("Gris");
+                m2.setGenero(Genero.Hembra);
+                m2.setPropietario(propietario);
 
                 mascotas.add(m1);
 
