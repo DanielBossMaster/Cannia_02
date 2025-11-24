@@ -4,26 +4,48 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Fundacion")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class FundacionModel {
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "id_fundacion")
+    private Long id;
 
     @Column(length = 50, nullable = false)
-    private String Nombre;
+    @NotBlank(message = "El Nombre es Obligatorio")
+    private String nombre;
 
     @Column(length = 50, nullable = false)
-    private String Correo;
+    private String descripcion;
 
     @Column(length = 50, nullable = false)
-    private String Telefono;
+    private String direccion;
+
+    @Column(length = 50, nullable = false)
+    private String telefono;
+
+    @Column(length = 50, nullable = false)
+    @Email(message = "Debe ser un correo válido")
+    private String email;
+
+    @Column(length = 100)
+    private String sitioWeb;
+
+    @Column(length = 200, nullable = false)
+    private String logo;
+
+    @OneToMany(mappedBy = "fundacion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MascotaModel> mascotas = new ArrayList<>();
 }
+
