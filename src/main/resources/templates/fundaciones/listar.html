@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/fundacion.css}">
+    <title>Fundaciones</title>
+</head>
+<body>
+
+<h1>Fundaciones registradas</h1>
+
+<a class="btn" href="/fundaciones/crear">Registrar Fundación</a>
+
+<div class="grid">
+    <div class="card" th:each="f : ${fundaciones}">
+        <img th:src="${f.logo}" alt="logo" width="120">
+        <h2 th:text="${f.nombre}"></h2>
+        <p th:text="${f.descripcion}"></p>
+
+        <a th:href="@{'/fundaciones/detalle/' + ${f.id}}">Ver más</a>
+        <a th:href="@{'/fundaciones/editar/' + ${f.id}}">Editar</a>
+        <a th:href="@{'/fundaciones/eliminar/' + ${f.id}}"
+           onclick="return confirm('¿Eliminar esta fundación?')">Eliminar</a>
+    </div>
+</div>
+
+</body>
+</html>
+
+

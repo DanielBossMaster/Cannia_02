@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mascotas de Fundación</title>
+    <link rel="stylesheet" th:href="@{/css/fundacion.css}">
+</head>
+<body>
+
+<a th:href="@{'/fundaciones/detalle/' + ${fundacion.id}}"> Volver</a>
+
+<h1 th:text="'Mascotas de ' + ${fundacion.nombre}"></h1>
+
+<a class="btn" th:href="@{'/fundaciones/' + ${fundacion.id} + '/mascotas/crear'}">Agregar Mascota</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>Foto</th>
+        <th>Nombre</th>
+        <th>Especie</th>
+        <th>Raza</th>
+        <th>Edad</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="m : ${mascotas}">
+        <td><img th:src="@{'/img/' + ${m.foto}}" width="80"></td>
+        <td th:text="${m.nomMascota}"></td>
+        <td th:text="${m.especie}"></td>
+        <td th:text="${m.raza}"></td>
+
+        <td>
+            <span th:text="${m.edadFundacion != null ? m.edadFundacion : ''}"></span>
+        </td>
+        <td>
+            <a th:href="@{'/fundaciones/' + ${fundacion.id} + '/mascotas/editar/' + ${m.id}}">Editar</a> |
+            <a th:href="@{'/fundaciones/' + ${fundacion.id} + '/mascotas/eliminar/' + ${m.id}}"
+               onclick="return confirm('¿Eliminar mascota?')">Eliminar</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
