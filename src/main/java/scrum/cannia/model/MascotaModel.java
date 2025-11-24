@@ -15,7 +15,7 @@ public class MascotaModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_mascota")
-    private int id;
+    private Long id;
 
     @Column(length = 45, nullable = false)
     private String nomMascota;
@@ -52,5 +52,9 @@ public class MascotaModel {
     @JoinColumn(name = "id_fundacion", nullable = true)
     private FundacionModel fundacion;
 
+    @Column(length = 20)
+    private String edadFundacion;
 
+    @Column(length = 255)
+    private byte[] foto;
 }
