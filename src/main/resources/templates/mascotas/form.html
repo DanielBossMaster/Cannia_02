@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mascota</title>
+    <link rel="stylesheet" th:href="@{/css/fundacion.css}">
+</head>
+<body>
+
+<a th:href="@{'/fundaciones/' + ${fundacionId} + '/mascotas'}"> Volver</a>
+
+<h1 th:text="${mascota.id != null} ? 'Editar Mascota' : 'Registrar Mascota'"></h1>
+
+<form th:action="${mascota.id != null} ?
+               @{'/fundaciones/' + ${fundacionId} + '/mascotas/actualizar/' + ${mascota.id}} :
+               @{'/fundaciones/' + ${fundacionId} + '/mascotas/guardar'}"
+      th:object="${mascota}" method="post">
+
+    <label>Nombre</label>
+    <input type="text" th:field="*{nomMascota}" required>
+
+    <label>Especie</label>
+    <input type="text" th:field="*{especie}" required>
+
+    <label>Raza</label>
+    <input type="text" th:field="*{raza}">
+
+    <label>Edad (solo fundación)</label>
+    <input type="text" th:field="*{edadFundacion}" placeholder="Ej: 2 años">
+
+    <label>Género</label>
+    <select th:field="*{genero}">
+        <option th:each="g : ${T(scrum.cannia.model.Genero).values()}"
+                th:value="${g}"
+                th:text="${g}"></option>
+    </select>
+
+    <label>Foto (nombre archivo en /static/img)</label>
+    <input type="text" th:field="*{foto}" placeholder="ej: perro1.jpg">
+
+    <button type="submit">Guardar</button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Fundación</title>
+    <link rel="stylesheet" th:href="@{/css/fundacion.css}">
+</head>
+<body>
+
+<h1 th:text="${fundacion.id == null} ? 'Registrar Fundación' : 'Editar Fundación'"></h1>
+
+<form th:action="${fundacion.id == null} ? @{/fundaciones/guardar} : @{'/fundaciones/actualizar/' + ${fundacion.id}}"
+      th:object="${fundacion}"
+      method="post">
+
+    <label>Nombre</label>
+    <input type="text" th:field="*{nombre}" required>
+
+    <label>Descripción</label>
+    <textarea th:field="*{descripcion}"></textarea>
+
+    <label>Dirección</label>
+    <input type="text" th:field="*{direccion}">
+
+    <label>Teléfono</label>
+    <input type="text" th:field="*{telefono}">
+
+    <label>Email</label>
+    <input type="email" th:field="*{email}">
+
+    <label>Sitio Web</label>
+    <input type="text" th:field="*{sitioWeb}">
+
+    <label>Logo (url o ruta en /img)</label>
+    <input type="text" th:field="*{logo}">
+
+    <button type="submit">Guardar</button>
+</form>
+
+</body>
+</html>
