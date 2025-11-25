@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import scrum.cannia.model.MascotaModel;
 import scrum.cannia.model.FundacionModel;
-import scrum.cannia.service.VeterinarioService.FundacionService;
-import scrum.cannia.service.VeterinarioService.MascotaService;
+import scrum.cannia.service.FundacionService;
+import scrum.cannia.service.MascotaService;
+import scrum.cannia.service.VeterinarioService;
 
 @Controller
 @RequestMapping("/fundaciones/{fundacionId}/mascotas")

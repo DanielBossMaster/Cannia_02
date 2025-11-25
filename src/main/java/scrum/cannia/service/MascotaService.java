@@ -1,4 +1,4 @@
-package scrum.cannia.service.VeterinarioService;
+package scrum.cannia.service;
 
 
 
