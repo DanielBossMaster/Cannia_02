@@ -1,19 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/css/VeterinarioCss/Inventario.css">
-    <title>Inventario</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Inventario - Cannia</title>
+
+    <!-- Fuente moderna -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Hoja de estilos -->
+    <link rel="stylesheet" href="/static/css/VeterinarioCss/Inventario.css" />
 </head>
 <body>
-<header class="encabezado">
-    <div class="contenedor">
-        <img crs="/static/img/logo.png">
-        <h1>Cannia</h1>
-    </div>
-</header>
+<!-- Contenedor principal -->
+<div class="contenedor-principal">
 
-<p class="eslogan">Inventario de productos y servicios</p>
+    <!-- Barra superior morada con avatar y nombre -->
+    <header class="barra-superior" id="encabezado-principal">
+        <div class="logo-area">
+            <!-- Avatar circular y nombre a la derecha -->
+            <div class="avatar" id="avatar">
+                <!-- El contenido del avatar puede ser una imagen de perfil real -->
+                <img src="/static/img/logo.png" alt="Avatar" class="avatar-imagen">
+            </div>
+            <div class="nombre-aplicacion">Cannia</div>
+        </div>
+
+        <!-- Espacio derecho de la barra (vacío a la vista de la imagen) -->
+        <div class="espacio-barra"></div>
+    </header>
+
+    <!-- Área de contenido principal -->
+    <main class="contenido">
+        <!-- Título principal y caja de búsqueda simulada a la derecha -->
+        <div class="fila-superior">
+            <h1 class="titulo-principal">Inventario de productos y servicios</h1>
+
+            <!-- Caja de búsqueda simulada (rectángulo claro) -->
+            <div class="buscador-simulado" id="buscador"></div>
+        </div>
+
+        <!-- Rejilla de tarjetas: dos columnas (como en la imagen) -->
+        <section class="rejilla-tarjetas" id="lista-tarjetas">
+            <!-- Tarjeta izquierda -->
+            <article class="tarjeta tarjeta-cuadrada" id="tarjeta-1">
+                <div class="contenido-tarjeta">
+                    <!-- Líneas punteadas simuladas -->
+                    <div class="linea-punteada linea-arriba"></div>
+                    <div class="linea-punteada linea-media"></div>
+                </div>
+            </article>
+
+            <!-- Tarjeta derecha -->
+            <article class="tarjeta tarjeta-cuadrada" id="tarjeta-2">
+                <div class="contenido-tarjeta">
+                    <div class="linea-punteada linea-arriba"></div>
+                    <div class="linea-punteada linea-media"></div>
+                </div>
+            </article>
+        </section>
+    </main>
+</div>
 </body>
 </html>

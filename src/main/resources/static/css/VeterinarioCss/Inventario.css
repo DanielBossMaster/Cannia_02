@@ -1,6 +1,191 @@
-.encabezado{
-    color:white;
-    background-color: rgb(53, 6, 53);
+/* Variables globales */
+:root{
+  --fondo-pagina: #e5e9fd;        /* fondo claro similar a la imagen */
+  --barra-morada: #3a0a3a;        /* morado oscuro de la barra superior */
+  --tarjeta-morada: #2b0630;      /* color de las tarjetas */
+  --tarjeta-morada-oscura:#280426;
+  --texto-oscuro: #0b0b0b;
+  --texto-claro: #ffffff;
+  --sombra-suave: 0 6px 20px rgba(0,0,0,0.15);
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
 
+/* Reset mínimo */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+  max-width: 2000px;
 
+/* Página */
+body {
+  background: var(--fondo-pagina);
+  color: var(--texto-oscuro);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* Contenedor principal centrado horizontalmente */
+.contenedor-principal {
+
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Barra superior morada */
+.barra-superior {
+  background: var(--barra-morada);
+  color: var(--texto-claro);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+/* Área izquierda de la barra: avatar + nombre */
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Avatar circular */
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #dfefff; /* fondo transitorio si la imagen no carga */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Imagen dentro del avatar (se usa la misma imagen de referencia) */
+.avatar-imagen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Nombre de la app junto al avatar */
+.nombre-aplicacion {
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.2px;
+}
+
+/* Espacio derecho de la barra para balance visual */
+.espacio-barra {
+  flex: 1;
+}
+
+/* Contenido principal (debajo de la barra) */
+.contenido {
+  padding: 28px 36px;
+  flex: 1;
+}
+
+/* Fila superior: título a la izquierda y buscador a la derecha */
+.fila-superior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+/* Título principal */
+.titulo-principal {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--texto-oscuro);
+}
+
+/* Buscador simulado (rectángulo claro a la derecha) */
+.buscador-simulado {
+  width: 160px;
+  height: 36px;
+  background: #f4f6fb; /* color muy claro */
+  border-radius: 2px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04) inset;
+}
+
+/* Rejilla de tarjetas: dos columnas */
+.rejilla-tarjetas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px; /* separación entre columnas */
+  align-items: start;
+}
+
+/* Estilo base de tarjeta */
+.tarjeta {
+  border-radius: 4px;
+  box-shadow: var(--sombra-suave);
+  padding: 18px;
+  position: relative;
+}
+
+/* Tarjetas cuadradas grandes (simulan cuadros morados en la imagen) */
+.tarjeta-cuadrada {
+  background: linear-gradient(180deg, var(--tarjeta-morada), var(--tarjeta-morada-oscura));
+  min-height: 320px; /* altura aproximada para que queden grandes */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Contenido dentro de la tarjeta: usamos espacio en blanco para representar líneas */
+.contenido-tarjeta {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding-left: 36px; /* para que las líneas queden separadas del borde izquierdo */
+}
+
+/* Líneas punteadas blancas que simulan texto */
+.linea-punteada {
+  width: 28%;
+  height: 4px;
+  background-image: linear-gradient(90deg, #ffffff 0 6px, rgba(255,255,255,0) 6px);
+  background-size: 12px 4px;
+  border-radius: 2px;
+  opacity: 0.95;
+}
+
+/* Ajustes de tamaño de las líneas para dar variedad */
+.linea-arriba { width: 20%; height: 6px; margin-top: 18px; }
+.linea-media  { width: 30%; height: 6px; }
+
+/* Pie de página opcional / referencia visual */
+.referencia-visual {
+  padding: 14px 36px;
+  color: #6b6f7a;
+  font-size: 12px;
+}
+
+/* Miniatura de la imagen de referencia en el pie (opcional) */
+.referencia-miniatura {
+  width: 120px;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+/* Texto de la referencia */
+.texto-referencia {
+  margin-top: 6px;
+  color: #6b6f7a;
+}
+
+/* Responsive: en pantallas más pequeñas las tarjetas apilan en una columna */
+@media (max-width: 800px) {
+  .contenedor-principal { padding: 0; }
+  .contenido { padding: 18px; }
+  .rejilla-tarjetas {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .buscador-simulado { width: 120px; }
 }
