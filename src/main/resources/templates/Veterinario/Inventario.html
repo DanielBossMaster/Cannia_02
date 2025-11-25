@@ -8,6 +8,9 @@
     <!-- Fuente moderna -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
     <!-- Hoja de estilos -->
     <link rel="stylesheet" href="/static/css/VeterinarioCss/Inventario.css" />
 </head>
@@ -25,9 +28,6 @@
             </div>
             <div class="nombre-aplicacion">Cannia</div>
         </div>
-
-        <!-- Espacio derecho de la barra (vacío a la vista de la imagen) -->
-        <div class="espacio-barra"></div>
     </header>
 
     <!-- Área de contenido principal -->
@@ -40,26 +40,225 @@
             <div class="buscador-simulado" id="buscador"></div>
         </div>
 
-        <!-- Rejilla de tarjetas: dos columnas (como en la imagen) -->
-        <section class="rejilla-tarjetas" id="lista-tarjetas">
-            <!-- Tarjeta izquierda -->
-            <article class="tarjeta tarjeta-cuadrada" id="tarjeta-1">
-                <div class="contenido-tarjeta">
-                    <!-- Líneas punteadas simuladas -->
-                    <div class="linea-punteada linea-arriba"></div>
-                    <div class="linea-punteada linea-media"></div>
-                </div>
-            </article>
+        <!-- Navegación entre módulos -->
+        <div class="navegacion-modulos">
+            <button class="btn-modulo activo" data-modulo="productos">Productos</button>
+            <button class="btn-modulo" data-modulo="servicios">Servicios</button>
+            <button class="btn-modulo" data-modulo="inventarios">Inventarios</button>
+        </div>
 
-            <!-- Tarjeta derecha -->
-            <article class="tarjeta tarjeta-cuadrada" id="tarjeta-2">
-                <div class="contenido-tarjeta">
-                    <div class="linea-punteada linea-arriba"></div>
-                    <div class="linea-punteada linea-media"></div>
+        <!-- Contenedor de módulos -->
+        <div class="contenedor-modulos">
+
+            <!-- MÓDULO PRODUCTOS -->
+            <div id="modulo-productos" class="modulo activo">
+                <div class="encabezado-modulo">
+                    <h2>Gestión de Productos</h2>
+                    <button class="btn-primario" id="btn-agregar-producto">
+                        <i class="bi bi-plus-circle"></i> Agregar Producto
+                    </button>
                 </div>
-            </article>
-        </section>
+
+                <!-- Tabla de productos -->
+                <div class="tabla-contenedor">
+                    <table class="tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Estado</th>
+                            <th>Promoción</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tabla-productos">
+                        <!-- Los productos se cargarán aquí dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- MÓDULO SERVICIOS -->
+            <div id="modulo-servicios" class="modulo">
+                <div class="encabezado-modulo">
+                    <h2>Gestión de Servicios</h2>
+                    <button class="btn-primario" id="btn-agregar-servicio">
+                        <i class="bi bi-plus-circle"></i> Agregar Servicio
+                    </button>
+                </div>
+
+                <!-- Tabla de servicios -->
+                <div class="tabla-contenedor">
+                    <table class="tabla-datos">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                            <th>Duración</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tabla-servicios">
+                        <!-- Los servicios se cargarán aquí dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- MÓDULO INVENTARIOS -->
+            <div id="modulo-inventarios" class="modulo">
+                <div class="encabezado-modulo">
+                    <h2>Gestión de Inventarios</h2>
+                    <button class="btn-primario" id="btn-ver-graficos">
+                        <i class="bi bi-bar-chart"></i> Ver Gráficos de Inventario
+                    </button>
+                </div>
+
+                <!-- Dashboard de gráficos (inicialmente oculto) -->
+                <div id="dashboard-inventario" class="dashboard-oculto">
+                    <div class="dashboard-header">
+                        <h3>Dashboard de Inventario</h3>
+                        <button class="btn-secundario" id="btn-cerrar-dashboard">
+                            <i class="bi bi-x-lg"></i> Cerrar
+                        </button>
+                    </div>
+
+                    <div class="graficos-container">
+                        <div class="grafico-card">
+                            <h4>Estado Actual del Stock</h4>
+                            <div class="grafico-barras" id="grafico-stock">
+                                <!-- Gráfico de barras se generará aquí -->
+                            </div>
+                        </div>
+
+                        <div class="grafico-card">
+                            <h4>Alertas de Inventario</h4>
+                            <div class="alertas-container" id="alertas-inventario">
+                                <!-- Alertas se generarán aquí -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información general del inventario -->
+                <div class="info-inventario">
+                    <div class="card-info">
+                        <h4>Productos en Stock</h4>
+                        <p class="numero-grande" id="total-productos">0</p>
+                    </div>
+                    <div class="card-info">
+                        <h4>Stock Bajo</h4>
+                        <p class="numero-grande alerta-baja" id="stock-bajo">0</p>
+                    </div>
+                    <div class="card-info">
+                        <h4>Servicios Activos</h4>
+                        <p class="numero-grande" id="servicios-activos">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 </div>
+
+<!-- MODALES -->
+
+<!-- Modal para agregar/editar producto -->
+<div id="modal-producto" class="modal">
+    <div class="modal-contenido">
+        <div class="modal-header">
+            <h3 id="titulo-modal-producto">Agregar Producto</h3>
+            <span class="cerrar-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="form-producto">
+                <input type="hidden" id="producto-id">
+                <div class="form-grupo">
+                    <label for="nombre-producto">Nombre</label>
+                    <input type="text" id="nombre-producto" required>
+                </div>
+                <div class="form-grupo">
+                    <label for="categoria-producto">Categoría</label>
+                    <select id="categoria-producto" required>
+                        <option value="">Seleccionar categoría</option>
+                        <option value="medicamento">Medicamento</option>
+                        <option value="alimento">Alimento</option>
+                        <option value="accesorio">Accesorio</option>
+                        <option value="higiene">Higiene</option>
+                    </select>
+                </div>
+                <div class="form-grupo">
+                    <label for="precio-producto">Precio</label>
+                    <input type="number" id="precio-producto" step="0.01" required>
+                </div>
+                <div class="form-grupo">
+                    <label for="stock-producto">Stock</label>
+                    <input type="number" id="stock-producto" required>
+                </div>
+                <div class="form-grupo">
+                    <label for="descripcion-producto">Descripción</label>
+                    <textarea id="descripcion-producto"></textarea>
+                </div>
+                <div class="form-grupo">
+                    <label>
+                        <input type="checkbox" id="promocion-producto">
+                        ¿Es una promoción?
+                    </label>
+                </div>
+                <div class="form-grupo" id="grupo-precio-promocion" style="display: none;">
+                    <label for="precio-promocion">Precio de promoción</label>
+                    <input type="number" id="precio-promocion" step="0.01">
+                </div>
+                <div class="modal-acciones">
+                    <button type="button" class="btn-secundario cerrar-modal">Cancelar</button>
+                    <button type="submit" class="btn-primario">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agregar/editar servicio -->
+<div id="modal-servicio" class="modal">
+    <div class="modal-contenido">
+        <div class="modal-header">
+            <h3 id="titulo-modal-servicio">Agregar Servicio</h3>
+            <span class="cerrar-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="form-servicio">
+                <input type="hidden" id="servicio-id">
+                <div class="form-grupo">
+                    <label for="nombre-servicio">Nombre</label>
+                    <input type="text" id="nombre-servicio" required>
+                </div>
+                <div class="form-grupo">
+                    <label for="descripcion-servicio">Descripción</label>
+                    <textarea id="descripcion-servicio" required></textarea>
+                </div>
+                <div class="form-grupo">
+                    <label for="precio-servicio">Precio</label>
+                    <input type="number" id="precio-servicio" step="0.01" required>
+                </div>
+                <div class="form-grupo">
+                    <label for="duracion-servicio">Duración (minutos)</label>
+                    <input type="number" id="duracion-servicio" required>
+                </div>
+                <div class="modal-acciones">
+                    <button type="button" class="btn-secundario cerrar-modal">Cancelar</button>
+                    <button type="submit" class="btn-primario">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="/static/js/VeterinarioJs/Inventario.js"></script>
 </body>
 </html>
