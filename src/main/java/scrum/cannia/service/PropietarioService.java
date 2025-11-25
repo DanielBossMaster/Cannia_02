@@ -1,11 +1,9 @@
-package scrum.cannia.service.VeterinarioService;
+package scrum.cannia.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import scrum.cannia.model.PropietarioModel;
 import scrum.cannia.repository.PropietarioRepository;
-
-import java.util.Optional;
 
 
 @Service
