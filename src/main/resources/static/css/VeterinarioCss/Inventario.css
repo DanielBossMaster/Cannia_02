@@ -4,8 +4,8 @@
   --texto-oscuro: #0b0b0b;
   --texto-claro: #ffffff;
   --sombra-suave: 0 6px 20px rgba(0,0,0,0.15);
-  --color-primario: #6c5ce7;
-  --color-secundario: #a29bfe;
+  --color-primario:  #110511;
+  --color-secundario: #140f2e;
   --color-exito: #00b894;
   --color-peligro: #d63031;
   --color-advertencia: #fdcb6e;
@@ -61,7 +61,7 @@ body {
   height: 40px;
   border-radius: 50%;
   overflow: hidden;
-  background: #dfefff; /* fondo transitorio si la imagen no carga */
+  background: #ffffff; /* fondo transitorio si la imagen no carga */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,8 +69,8 @@ body {
 
 /* Imagen dentro del avatar (se usa la misma imagen de referencia) */
 .avatar-imagen {
-  width: 100%;
-  height: 100%;
+  width: 120%;
+  height: 120%;
   object-fit: cover;
 }
 
@@ -176,7 +176,7 @@ body {
 }
 
 .btn-primario:hover {
-  background-color: #5b4bd4;
+  background-color: #140f2e;
 }
 
 .btn-secundario {
@@ -338,7 +338,7 @@ body {
 }
 
 .barra-alerta-verde {
-  background-color: var(--color-exito);
+    background-color: var(--color-exito);
 }
 
 .barra-etiqueta {
@@ -665,21 +665,21 @@ body {
 
 .punto-estado.activo {
     background-color: var(--color-exito);
-    box-shadow: 0 0 0 2px rgba(0, 184, 148, 0.3);
+    box-shadow: 0 0 0 2px var(--color-exito);
 }
 
 .punto-estado.inactivo {
     background-color: var(--color-peligro);
-    box-shadow: 0 0 0 2px rgba(214, 48, 49, 0.3);
+    box-shadow: 0 0 0 2px var(--color-peligro);
 }
 
 /* Efecto hover en los puntos */
 .btn-punto-estado:hover .punto-estado.activo {
     transform: scale(1.2);
-    box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.5);
+    box-shadow: 0 0 0 3px var(--color-exito);
 }
 
 .btn-punto-estado:hover .punto-estado.inactivo {
     transform: scale(1.2);
-    box-shadow: 0 0 0 3px rgba(214, 48, 49, 0.5);
+    box-shadow: 0 0 0 3px var(--color-peligro);
 }
