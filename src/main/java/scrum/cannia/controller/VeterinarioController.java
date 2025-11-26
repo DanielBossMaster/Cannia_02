@@ -224,4 +224,12 @@ public class VeterinarioController {
 
         return "veterinario/TiendaPreview";
     }
+    // ============================================
+    //          ESTIÓN DE INVENTARIO
+    // ============================================
+    @GetMapping("/InventarioVentas")
+    public String mostrarInventarioVentas(Model model) {
+        model.addAttribute("productos", productoService.listarTodos());
+        return "veterinario/inventario";
+    }
 }
