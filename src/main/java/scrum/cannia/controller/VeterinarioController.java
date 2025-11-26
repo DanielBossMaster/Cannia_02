@@ -11,20 +11,29 @@ import org.springframework.web.bind.annotation.*;
 import scrum.cannia.model.*;
 import scrum.cannia.repository.*;
 
-//MODIFICACION DE LOS SERVICE
 import scrum.cannia.service.MascotaService;
 import scrum.cannia.service.ProductoService;
 import scrum.cannia.service.PropietarioService;
 import scrum.cannia.service.VeterinarioService;
 
-
 @Controller
 @RequestMapping("/veterinario")
-public class  VeterinarioController {
+public class VeterinarioController {
 
     private final VeterinarioRepository veterinarioRepository;
     private final PropietarioRepository propietarioRepository;
     private final MascotaRepository mascotaRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+    @Autowired
+    private PropietarioService propietarioService;
+    @Autowired
+    private MascotaService mascotaService;
+    @Autowired
+    private VeterinarioService veterinarioService;
+    @Autowired
+    private ProductoService productoService;
 
     public VeterinarioController(
             VeterinarioRepository veterinarioRepository,
@@ -36,28 +45,13 @@ public class  VeterinarioController {
         this.mascotaRepository = mascotaRepository;
     }
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    @Autowired
-    private PropietarioService propietarioService;
-
-    @Autowired
-    private MascotaService mascotaService;
-
-    @Autowired
-    private VeterinarioService veterinarioService;
-
-    @Autowired
-    private ProductoService productoService;
-
+    // ============================================
+    //               DASHBOARD PRINCIPAL
+    // ============================================
     @GetMapping
     public String index(HttpSession session, Model model) {
-        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
 
-        if (usuario == null) {
-            return "redirect:/login";
-        }
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
         VeterinarioModel veterinario = usuario.getVeterinario();
 
         model.addAttribute("veterinario", veterinario);
@@ -66,27 +60,31 @@ public class  VeterinarioController {
         model.addAttribute("mascotas", mascotaRepository.findAll());
         model.addAttribute("propietario", new PropietarioModel());
         model.addAttribute("mascota", new MascotaModel());
+
         return "veterinario/index";
-
-
     }
-    /// PARA REGISTRAR PROPIETARIO
+
+    // ============================================
+    //        REGISTRAR NUEVO PROPIETARIO
+    // ============================================
     @PostMapping("/nuevo")
-    public String nuevo(@Validated @ModelAttribute PropietarioModel propietarioModel, BindingResult br) {
+    public String nuevo(@Validated @ModelAttribute PropietarioModel propietarioModel,
+                        BindingResult br) {
+
         if (br.hasErrors()) {
             return "veterinario/index";
-        } else {
-            propietarioRepository.save(propietarioModel);
-            return "redirect:/veterinario";
         }
 
-
+        propietarioRepository.save(propietarioModel);
+        return "redirect:/veterinario";
     }
-    /// PARA REGISTRARLE UNA MASCOTA A UN PROPIETARIO
+
+    // ============================================
+    // REGISTRAR MASCOTA A UN PROPIETARIO
+    // ============================================
     @PostMapping("/nuevom")
-    public String guardarMascota(
-            @ModelAttribute MascotaModel mascota,
-            @RequestParam("propietarioId") Long propietarioId) {
+    public String guardarMascota(@ModelAttribute MascotaModel mascota,
+                                 @RequestParam("propietarioId") Long propietarioId) {
 
         PropietarioModel propietario = propietarioService.obtenerPorId(propietarioId);
         mascota.setPropietario(propietario);
@@ -94,73 +92,98 @@ public class  VeterinarioController {
 
         return "redirect:/veterinario";
     }
-    /// PARA BORRAR UN PROPIETARIO (LO CAMBIA DE ESTADO A INACTIVO)
+
+    // ============================================
+    //     CAMBIAR DE ESTADO (ELIMINAR PROPIETARIO)
+    // ============================================
     @PostMapping("/borrar/{id}")
     public String eliminarPropietario(@PathVariable Long id) {
         propietarioService.eliminarPropietario(id);
         return "redirect:/veterinario";
     }
-    /// PARA DESPLEGAR EL FORMULARIO QUE ACTUALIZA EL PROPIETARIO
+
+    // ============================================
+    //      FORMULARIO DE ACTUALIZACIÓN
+    // ============================================
     @GetMapping("/actualizar/{id}")
-    public String actualizarform (@PathVariable Long id, Model model){
+    public String actualizarform(@PathVariable Long id, Model model) {
+
         var propietarioEncontrado = propietarioRepository.findById(id).orElseThrow();
         model.addAttribute("propietario", propietarioEncontrado);
+
         return "veterinario/EditarPropietario";
     }
-    /// PARA GUARDAR EL FORMULARIO DE EDITAR UN PROPIETARIO
+
+    // ============================================
+    //    GUARDAR EDICIÓN DE PROPIETARIO
+    // ============================================
     @PostMapping("/editar/{id}")
-    public String actualizar (@PathVariable Long id, @ModelAttribute PropietarioModel cambios){
+    public String actualizar(@PathVariable Long id,
+                             @ModelAttribute PropietarioModel cambios) {
+
         PropietarioModel existente = propietarioRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Propietario no encontrado"));
-        // Solo actualiza si el usuario ingresó algo
-        if (cambios.getNombrePro() != null && !cambios.getNombrePro().isBlank()) {
+
+        // Actualizar solo campos llenos
+        if (cambios.getNombrePro() != null && !cambios.getNombrePro().isBlank())
             existente.setNombrePro(cambios.getNombrePro());
-        }
-        if (cambios.getApellidoPro() != null && !cambios.getApellidoPro().isBlank()) {
+
+        if (cambios.getApellidoPro() != null && !cambios.getApellidoPro().isBlank())
             existente.setApellidoPro(cambios.getApellidoPro());
-        }
-        if (cambios.getDireccionPro() != null && !cambios.getDireccionPro().isBlank()) {
+
+        if (cambios.getDireccionPro() != null && !cambios.getDireccionPro().isBlank())
             existente.setDireccionPro(cambios.getDireccionPro());
-        }
-        if (cambios.getTelefonoPro() != null && !cambios.getTelefonoPro().isBlank()) {
+
+        if (cambios.getTelefonoPro() != null && !cambios.getTelefonoPro().isBlank())
             existente.setTelefonoPro(cambios.getTelefonoPro());
-        }
-        if (cambios.getCorreoPro() != null && !cambios.getCorreoPro().isBlank()) {
+
+        if (cambios.getCorreoPro() != null && !cambios.getCorreoPro().isBlank())
             existente.setCorreoPro(cambios.getCorreoPro());
-        }
+
         propietarioRepository.save(existente);
         return "redirect:/veterinario";
     }
-    /// MUESTRA VISTA DE MASCOTAS
+
+    // ============================================
+    //        MÓDULO DE HISTORIA CLÍNICA
+    // ============================================
     @GetMapping("/HistoriaClinica")
-    public String mostrarPropietarioVH (Model model){
+    public String mostrarPropietarioVH(Model model) {
         model.addAttribute("propietarios", propietarioRepository.findByEstadoTrue());
         return "veterinario/HistoriaClinica";
     }
-    /// PARA IR A LA VETERINARIA (SI NO TIENE SE REGISTRA, SI YA TIENE SE VA ALA INICIO )
+
+    // ============================================
+    //   GESTIONAR VETERINARIA DEL VETERINARIO
+    // ============================================
     @GetMapping("/miVeterinaria/{id}")
     public String gestionarVeterinaria(@PathVariable Long id, Model model) {
+
         if (veterinarioService.tieneVeterinaria(id)) {
+
             VeterinariaModel vet = veterinarioService.obtenerVeterinariaDeVeterinario(id);
             return "redirect:/veterinario/InicioVeterinaria/" + vet.getId();
         }
-        // Si no tiene veterinaria, mostrar el formulario
+
         model.addAttribute("idVeterinario", id);
         model.addAttribute("veterinaria", new VeterinariaModel());
+
         return "veterinario/CrearVeterinaria";
     }
 
-    /// MUESTRA PAGINA PRINCIPAL DE LA VETERINARIA
     @GetMapping("/InicioVeterinaria/{id}")
     public String inicioVeterinaria(@PathVariable Long id, Model model) {
+
         VeterinariaModel veterinaria = veterinarioService.obtenerVeterinariaDeVeterinario(id);
         model.addAttribute("veterinaria", veterinaria);
+
         return "veterinario/InicioVeterinaria";
     }
 
-    /// GUARDA LA VETERINARIA AL REGISTRARLA
     @PostMapping("/CrearVeterinaria")
-    public String crearVeterinaria(@RequestParam Long idVeterinario, @ModelAttribute VeterinariaModel vet) {
+    public String crearVeterinaria(@RequestParam Long idVeterinario,
+                                   @ModelAttribute VeterinariaModel vet) {
+
         VeterinariaModel nuevaVet = veterinarioService.crearVeterinaria(idVeterinario, vet);
 
         if (nuevaVet == null) {
@@ -169,7 +192,7 @@ public class  VeterinarioController {
 
         return "redirect:/veterinario/InicioVeterinaria/" + nuevaVet.getId();
     }
-    /// PASA EL OBJETO VACIO PARA PODER CREAR UNA VETERINARIA
+
     @GetMapping("/CrearVeterinaria/{id}")
     public String mostrarFormularioVeterinaria(@PathVariable Long id, Model model) {
         model.addAttribute("id", id);
@@ -177,16 +200,28 @@ public class  VeterinarioController {
         return "veterinario/CrearVeterinaria";
     }
 
+    // ============================================
+    //              GESTIÓN DE VENTAS
+    // ============================================
     @GetMapping("/GestionVentas")
     public String gestionVentas(Model model) {
-        model.addAttribute("productos",productoService.listarTodos());
+        model.addAttribute("productos", productoService.listarTodos());
         return "veterinario/GestionVentas";
     }
 
+    // ============================================
+    //                 TIENDA PREVIEW
+    // ============================================
     @GetMapping("/Tienda")
-    public String tiendaPreview(Model model) {
+    public String tiendaPreview(HttpSession session, Model model) {
+
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        VeterinarioModel veterinario = usuario.getVeterinario();
+        VeterinariaModel veterinaria = veterinario.getVeterinaria();
+
+        model.addAttribute("veterinaria", veterinaria);
         model.addAttribute("productos", productoService.listarTodos());
+
         return "veterinario/TiendaPreview";
     }
-
 }
