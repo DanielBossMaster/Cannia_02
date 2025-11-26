@@ -1,18 +1,15 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Inventario - Cannia</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Inventario</title>
 
     <!-- Fuente moderna -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-
-    <!-- Hoja de estilos -->
-    <link rel="stylesheet" href="/static/css/VeterinarioCss/Inventario.css" />
+    <link th:href="@{/css/VeterinarioCss/Inventario.css}" rel="stylesheet">
 </head>
 <body>
 <!-- Contenedor principal -->
@@ -23,8 +20,8 @@
         <div class="logo-area">
             <!-- Avatar circular y nombre a la derecha -->
             <div class="avatar" id="avatar">
-                <!-- El contenido del avatar puede ser una imagen de perfil real -->
-                <img src="/static/img/logo.png" alt="Avatar" class="avatar-imagen">
+                <!--  IMAGEN CORREGIDA -->
+                <img th:src="@{/img/logo.png}" alt="Avatar" class="avatar-imagen">
             </div>
             <div class="nombre-aplicacion">Cannia</div>
         </div>
@@ -75,7 +72,6 @@
                         </tr>
                         </thead>
                         <tbody id="tabla-productos">
-                        <!-- Los productos se cargarán aquí dinámicamente -->
                         </tbody>
                     </table>
                 </div>
@@ -258,7 +254,7 @@
     </div>
 </div>
 
-<!-- Scripts -->
-<script src="/static/js/VeterinarioJs/Inventario.js"></script>
+<!--  SCRIPT -->
+<script th:src="@{/js/VeterinarioJs/Inventario.js}"></script>
 </body>
 </html>
