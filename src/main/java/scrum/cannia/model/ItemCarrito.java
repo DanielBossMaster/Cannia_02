@@ -7,7 +7,7 @@ public class ItemCarrito {
 
     private ProductoModel producto;
     private int cantidad;
-    private double subtotal;
+    private int subtotal;
 
     public ItemCarrito(ProductoModel producto, int cantidad) {
         this.producto = producto;
@@ -15,9 +15,6 @@ public class ItemCarrito {
         calcularSubtotal();
     }
 
-//     ==========================================
-//     METODO NECESARIO PARA QUE TODO FUNCIONE
-//     ==========================================
     public void calcularSubtotal() {
         if (producto != null) {
             this.subtotal = producto.getValor() * cantidad;
