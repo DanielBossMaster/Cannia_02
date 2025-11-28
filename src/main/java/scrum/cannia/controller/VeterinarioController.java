@@ -227,9 +227,22 @@ public class VeterinarioController {
     // ============================================
     //          ESTIÓN DE INVENTARIO
     // ============================================
-    @GetMapping("/InventarioVentas")
+    @GetMapping("/inventario")
     public String mostrarInventarioVentas(Model model) {
         model.addAttribute("productos", productoService.listarTodos());
         return "veterinario/inventario";
+    }
+    @GetMapping("/productos")
+    public String listarProductosVeterinario(Model model) {
+        // Usar el método correcto que ahora existe
+        model.addAttribute("productos", productoService.listarTodos());
+        return "veterinario/productos";
+    }
+
+    @GetMapping("/productos/activos")
+    public String listarProductosActivos(Model model) {
+        // O usar este método si quieres solo los activos
+        model.addAttribute("productos", productoService.obtenerProductosActivos());
+        return "veterinario/productos";
     }
 }
