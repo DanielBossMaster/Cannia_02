@@ -66,7 +66,7 @@ public class CarritoService {
     // =========================================================
     public void eliminar(Integer idProducto) {
         List<ItemCarrito> carrito = getCarrito();
-        carrito.removeIf(item -> item.getProducto().getId().equals(idProducto));
+        carrito.removeIf(item -> item.getProducto().getId() == idProducto);
     }
 
     // =========================================================
@@ -111,7 +111,7 @@ public class CarritoService {
     // =========================================================
     private ItemCarrito buscarItem(List<ItemCarrito> carrito, Integer idProducto) {
         return carrito.stream()
-                .filter(item -> item.getProducto().getId().equals(idProducto))
+                .filter(item -> item.getProducto().getId() == idProducto)
                 .findFirst()
                 .orElse(null);
     }
