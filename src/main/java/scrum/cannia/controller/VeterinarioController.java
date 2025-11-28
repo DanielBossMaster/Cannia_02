@@ -49,7 +49,7 @@ public class VeterinarioController {
     //               DASHBOARD PRINCIPAL
     // ============================================
     @GetMapping
-    public String index(HttpSession session, Model model) {
+    public String Index(HttpSession session, Model model) {
 
         UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
         VeterinarioModel veterinario = usuario.getVeterinario();
@@ -61,7 +61,7 @@ public class VeterinarioController {
         model.addAttribute("propietario", new PropietarioModel());
         model.addAttribute("mascota", new MascotaModel());
 
-        return "veterinario/index";
+        return "veterinario/Index";
     }
 
     // ============================================
@@ -72,7 +72,7 @@ public class VeterinarioController {
                         BindingResult br) {
 
         if (br.hasErrors()) {
-            return "veterinario/index";
+            return "veterinario/Index";
         }
 
         propietarioRepository.save(propietarioModel);
