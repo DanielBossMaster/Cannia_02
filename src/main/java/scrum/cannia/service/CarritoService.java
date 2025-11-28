@@ -1,60 +1,119 @@
 package scrum.cannia.service;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import scrum.cannia.model.ItemCarrito;
 import scrum.cannia.model.ProductoModel;
-import java.util.Objects;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CarritoService {
 
-    private static final String SESSION_KEY = "carrito";
+    private final HttpSession session;
+    private final ProductoService productoService;
 
+    // =========================================================
+    // OBTENER / CREAR CARRITO
+    // =========================================================
     @SuppressWarnings("unchecked")
-    private List<ItemCarrito> getCarrito(HttpSession session) {
-        List<ItemCarrito> carrito = (List<ItemCarrito>) session.getAttribute(SESSION_KEY);
+    private List<ItemCarrito> getCarrito() {
+        List<ItemCarrito> carrito = (List<ItemCarrito>) session.getAttribute("carrito");
 
         if (carrito == null) {
             carrito = new ArrayList<>();
-            session.setAttribute(SESSION_KEY, carrito);
+            session.setAttribute("carrito", carrito);
         }
-
         return carrito;
     }
 
-    public void agregarProducto(HttpSession session, ProductoModel producto) {
-        List<ItemCarrito> carrito = getCarrito(session);
-
-        for (ItemCarrito item : carrito) {
-            if (Objects.equals(item.getProducto().getId(), producto.getId())) {
-                item.setCantidad(item.getCantidad() + 1);
-                return;
-            }
-        }
-
-        carrito.add(new ItemCarrito(producto, 1));
+    // =========================================================
+    // MÉTODOS PÚBLICOS
+    // =========================================================
+    public List<ItemCarrito> getItems() {
+        return getCarrito();
     }
 
-    public void eliminarProducto(HttpSession session, Integer idProducto) {
-        List<ItemCarrito> carrito = getCarrito(session);
-        carrito.removeIf(item -> Objects.equals(item.getProducto().getId(), idProducto));
-
-    }
-
-    public double getTotal(HttpSession session) {
-        return getCarrito(session).stream()
+    public double getTotal() {
+        return getCarrito().stream()
                 .mapToDouble(ItemCarrito::getSubtotal)
                 .sum();
     }
 
-    public List<ItemCarrito> listarItems(HttpSession session) {
-        return getCarrito(session);
+    // =========================================================
+    // AGREGAR PRODUCTO
+    // =========================================================
+    public void agregar(Integer idProducto) {
+        List<ItemCarrito> carrito = getCarrito();
+        ProductoModel producto = productoService.buscarPorId(idProducto);
+
+        ItemCarrito existente = buscarItem(carrito, idProducto);
+
+        if (existente != null) {
+            existente.setCantidad(existente.getCantidad() + 1);
+            existente.calcularSubtotal();
+        } else {
+            ItemCarrito nuevo = new ItemCarrito(producto, 1);
+            carrito.add(nuevo);
+        }
     }
 
-    public void vaciarCarrito(HttpSession session) {
-        session.removeAttribute(SESSION_KEY);
+    // =========================================================
+    // ELIMINAR PRODUCTO
+    // =========================================================
+    public void eliminar(Integer idProducto) {
+        List<ItemCarrito> carrito = getCarrito();
+        carrito.removeIf(item -> item.getProducto().getId().equals(idProducto));
     }
+
+    // =========================================================
+    // VACIAR CARRITO
+    // =========================================================
+    public void vaciar() {
+        session.setAttribute("carrito", new ArrayList<>());
+    }
+
+    // =========================================================
+    // AUMENTAR CANTIDAD
+    // =========================================================
+    public void aumentarCantidad(Integer idProducto) {
+        List<ItemCarrito> carrito = getCarrito();
+        ItemCarrito item = buscarItem(carrito, idProducto);
+
+        if (item != null) {
+            item.setCantidad(item.getCantidad() + 1);
+            item.calcularSubtotal();
+        }
+    }
+
+    // =========================================================
+    // DISMINUIR CANTIDAD
+    // =========================================================
+    public void disminuirCantidad(Integer idProducto) {
+        List<ItemCarrito> carrito = getCarrito();
+        ItemCarrito item = buscarItem(carrito, idProducto);
+
+        if (item != null) {
+            if (item.getCantidad() > 1) {
+                item.setCantidad(item.getCantidad() - 1);
+                item.calcularSubtotal();
+            } else {
+                carrito.remove(item);
+            }
+        }
+    }
+
+    // =========================================================
+    // Metodo AUXILIAR: Buscar Item
+    // =========================================================
+    private ItemCarrito buscarItem(List<ItemCarrito> carrito, Integer idProducto) {
+        return carrito.stream()
+                .filter(item -> item.getProducto().getId().equals(idProducto))
+                .findFirst()
+                .orElse(null);
+    }
+
 }
