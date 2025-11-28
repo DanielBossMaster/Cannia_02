@@ -1,6 +1,6 @@
 /* Variables globales */
 :root{
-  --barra-morada: #110511;        /* morado oscuro de la barra superior */
+  --barra-morada: #170022;        /* morado oscuro de la barra superior */
   --texto-oscuro: #0b0b0b;
   --texto-claro: #ffffff;
   --sombra-suave: 0 6px 20px rgba(0,0,0,0.15);
@@ -12,20 +12,12 @@
   font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-/* Reset mínimo */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  max-width: 2000px;
-}
-
 /* Página */
 body {
   background: #e5e9fd;
   color: var(--texto-oscuro);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /*-webkit-font-smoothing: antialiased;*/
+  /*-moz-osx-font-smoothing: grayscale;*/
   min-height: 100vh;
 }
 
@@ -682,4 +674,21 @@ body {
 .btn-punto-estado:hover .punto-estado.inactivo {
     transform: scale(1.2);
     box-shadow: 0 0 0 3px var(--color-peligro);
+}
+
+/*home button*/
+.btn-home {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 50%;
+    color: white;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    margin-left: auto; /* Empuja a la derecha */
+}
+
+.btn-home:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
