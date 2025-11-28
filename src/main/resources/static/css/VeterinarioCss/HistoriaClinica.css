@@ -526,7 +526,8 @@ textarea {
     border-radius: 8px;
     font-size: 14px;
 }
-/*home button*/
+
+/*Boton de la derecha home button*/
 .btn-home {
     display: flex;
     align-items: center;
