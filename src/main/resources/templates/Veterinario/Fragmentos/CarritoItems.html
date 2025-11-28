@@ -1,0 +1,45 @@
+<div th:fragment="items">
+
+    <!-- Carrito vacío -->
+    <div th:if="${#lists.isEmpty(items)}">
+        <p class="text-gray-500">Tu carrito está vacío.</p>
+    </div>
+
+    <!-- Items del carrito -->
+    <div th:each="item : ${items}" class="flex items-center justify-between py-3 border-b">
+
+        <!-- Nombre del producto -->
+        <span class="font-semibold" th:text="${item.producto.nombre}"></span>
+
+        <!-- Controles de cantidad -->
+        <div class="flex items-center gap-2">
+            <!-- DISMINUIR -->
+            <button th:onclick="|disminuir(${item.producto.id})|"
+               class="px-2 bg-gray-300 rounded hover:bg-gray-400">-</button>
+
+
+            <span th:text="${item.cantidad}" class="font-bold"></span>
+
+            <!-- AUMENTAR -->
+           <button th:onclick="|aumentar(${item.producto.id})|"
+               class="px-2 bg-gray-300 rounded hover:bg-gray-400">+</button>
+        </div>
+
+        <!-- Subtotal -->
+        <span class="text-right font-semibold">
+            $<span th:text="${item.subtotal}"></span>
+        </span>
+
+        <!-- ELIMINAR -->
+        <button th:onclick="|eliminarItem(${item.producto.id})|"
+           class="text-red-600 font-bold text-lg hover:text-red-800">x</button>
+    </div>
+
+    <!-- Total -->
+    <div class="text-right mt-4 font-bold text-xl">
+        Total: $<span th:text="${total}"></span>
+    </div>
+</div>
+
+
+

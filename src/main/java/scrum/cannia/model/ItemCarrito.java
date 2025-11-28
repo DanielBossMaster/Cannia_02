@@ -1,18 +1,26 @@
 package scrum.cannia.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class ItemCarrito {
 
     private ProductoModel producto;
     private int cantidad;
+    private double subtotal;
 
-    public double getSubtotal() {
-        return producto.getValor() * cantidad;
+    public ItemCarrito(ProductoModel producto, int cantidad) {
+        this.producto = producto;
+        this.cantidad = cantidad;
+        calcularSubtotal();
+    }
+
+//     ==========================================
+//     METODO NECESARIO PARA QUE TODO FUNCIONE
+//     ==========================================
+    public void calcularSubtotal() {
+        if (producto != null) {
+            this.subtotal = producto.getValor() * cantidad;
+        }
     }
 }
