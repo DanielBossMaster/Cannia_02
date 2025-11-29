@@ -47,7 +47,10 @@ public class FacturaModel {
     @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FacturaDetalleModel> detalles = new ArrayList<>();
 
-
+    @PrePersist
+    public void prePersist() {
+        this.fechaEmision = LocalDateTime.now();
+    }
 
 
 
