@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Adopción</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#170022",
+                        secondary: "#170022",
+                        lightSurface: "#f7f8f9",
+                        "text-light": "#212529",
+                        "border-light": "#CED4DA",
+                    },
+                    fontFamily: {
+                        display: ["Roboto", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body class="h-screen bg-[url('/img/fondo_login.jpg')] bg-cover bg-center flex items-center justify-center">
+<div class="bg-lightSurface shadow-2xl w-full max-w-xl p-8">
+    <div class="flex items-center justify-between p-4 -mx-8 -mt-8 mb-4 bg-primary text-white">
+        <h2 class="text-xl font-bold">Solicitud de Adopción para <span th:text="${mascota.nomMascota}"></span></h2>
+    </div>
+
+    <form action="/adopcion/procesar" method="post" class="space-y-4">
+        <input type="hidden" name="mascotaId" th:value="${mascota.id}" />
+        <input type="hidden" name="fundacionEmail" th:value="${mascota.fundacion.email}" />
+
+        <p class="text-sm font-medium text-text-light">
+            Por favor, completa el siguiente formulario. Tu información de propietario y esta solicitud se enviarán a la fundación
+            <strong><span th:text="${mascota.fundacion.nombre}"></span></strong>
+            para su revisión.
+        </p>
+
+        <div>
+            <label class="block text-sm font-medium text-text-light mb-1">¿Tienes experiencia previa con mascotas? (*)</label>
+            <textarea name="experiencia" required class="w-full rounded border-border-light bg-lightSurface text-text-light focus:ring-primary focus:border-primary px-3 py-2"></textarea>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-text-light mb-1">Tipo de vivienda (Casa/Apartamento, tamaño) (*)</label>
+            <input type="text" name="vivienda" required class="w-full rounded border-border-light bg-lightSurface text-text-light focus:ring-primary focus:border-primary px-3 py-2" />
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-text-light mb-1">¿Por qué deseas adoptar a esta mascota? (*)</label>
+            <textarea name="motivo" required class="w-full rounded border-border-light bg-lightSurface text-text-light focus:ring-primary focus:border-primary px-3 py-2"></textarea>
+        </div>
+
+        <div class="flex justify-end space-x-4 pt-4">
+            <a th:href="@{/adopcion}" class="bg-lightSurface text-primary px-4 py-2 rounded-md hover:bg-primary hover:text-white hover:shadow-xl font-bold transition border border-primary">
+                Cancelar
+            </a>
+            <button class="bg-primary text-white px-4 py-2 rounded-md hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition" type="submit">
+                Enviar Solicitud
+            </button>
+        </div>
+    </form>
+</div>
+</body>
+</html>l>

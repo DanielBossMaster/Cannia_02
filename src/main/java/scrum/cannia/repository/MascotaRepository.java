@@ -18,4 +18,8 @@ public interface MascotaRepository extends JpaRepository<MascotaModel, Long> {
     List<MascotaModel> findByFundacionId(Long idFundacion);
 
     List<MascotaModel> findByFundacion(FundacionModel fundacion);
+
+    // adopcion
+    List<MascotaModel> findByFundacionIsNotNullAndEstadoTrue(); // mascotas en  adopción (activas)
+    List<MascotaModel> findByFundacionIsNotNullAndEstadoTrueAndEspecie(String especie);// filtro busqueda por especie
 }

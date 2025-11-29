@@ -2,46 +2,92 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Mascotas de Fundación</title>
-    <link rel="stylesheet" th:href="@{/css/fundacion.css}">
+    <title th:text="'Mascotas de ' + ${fundacionNombre}">Listado de Mascotas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#170022",
+                        secondary: "#170022",
+                        lightBg: "#e8ebff",
+                        lightSurface: "#f7f8f9",
+                        darkText: "#1e293b",
+                        softText: "#475569",
+                        borderLight: "#e2e8f0",
+                    },
+                    fontFamily: {
+                        display: ["Roboto", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
 </head>
-<body>
+<body class="bg-lightBg text-darkText min-h-screen">
 
-<a th:href="@{'/fundaciones/detalle/' + ${fundacion.id}}"> Volver</a>
+<header class="bg-secondary text-white flex justify-between items-center px-6 py-3 shadow-md">
+    <h1 class="text-xl font-bold" th:text="'Mascotas de la Fundación: ' + ${fundacionNombre}"></h1>
+    <div class="space-x-3">
+        <a th:href="@{'/fundaciones/dashboard'}"
+           class="text-sm hover:font-bold bg-white text-secondary px-3 py-1 rounded">
+            <- Inicio (¨-¨)
+        </a>
+        <a th:href="@{'/fundaciones/' + ${fundacionId} + '/mascotas/crear'}">
+        <button class="text-sm hover:font-bold bg-white text-secondary px-3 py-1 rounded">
+            Registrar Mascota
+        </button>
+    </a>
+            </button>
+        </a>
+    </div>
+</header>
 
-<h1 th:text="'Mascotas de ' + ${fundacion.nombre}"></h1>
+<main class="container mx-auto px-4 py-8">
 
-<a class="btn" th:href="@{'/fundaciones/' + ${fundacion.id} + '/mascotas/crear'}">Agregar Mascota</a>
+    <div th:if="${#lists.isEmpty(mascotas)}" class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto text-center">
+        <p class="text-softText text-lg">No hay mascotas activas registradas para esta fundación.</p>
+    </div>
 
-<table>
-    <thead>
-    <tr>
-        <th>Foto</th>
-        <th>Nombre</th>
-        <th>Especie</th>
-        <th>Raza</th>
-        <th>Edad</th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="m : ${mascotas}">
-        <td><img th:src="@{'/img/' + ${m.foto}}" width="80"></td>
-        <td th:text="${m.nomMascota}"></td>
-        <td th:text="${m.especie}"></td>
-        <td th:text="${m.raza}"></td>
+    <div th:unless="${#lists.isEmpty(mascotas)}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div th:each="m : ${mascotas}" class="bg-white rounded-lg shadow-xl overflow-hidden border border-borderLight">
 
-        <td>
-            <span th:text="${m.edadFundacion != null ? m.edadFundacion : ''}"></span>
-        </td>
-        <td>
-            <a th:href="@{'/fundaciones/' + ${fundacion.id} + '/mascotas/editar/' + ${m.id}}">Editar</a> |
-            <a th:href="@{'/fundaciones/' + ${fundacion.id} + '/mascotas/eliminar/' + ${m.id}}"
-               onclick="return confirm('¿Eliminar mascota?')">Eliminar</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+            <div class="h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
+                <img th:if="${m.foto != null}" th:src="@{'data:image/jpeg;base64,' + ${#strings.arrayToUrlString(m.foto)}}"
+                     alt="Foto de Mascota" class="w-full h-full object-cover"/>
+                <span th:unless="${m.foto != null}" class="text-softText">Sin foto</span>
+            </div>
 
+            <div class="p-4">
+                <h3 class="text-xl font-bold text-primary mb-1" th:text="${m.nomMascota}">Nombre Mascota</h3>
+                <p class="text-softText text-sm"><span class="font-semibold">Especie:</span> <span th:text="${m.especie}"></span></p>
+                <p class="text-softText text-sm"><span class="font-semibold">Raza:</span> <span th:text="${m.raza}"></span></p>
+                <p class="text-softText text-sm"><span class="font-semibold">Edad (Fundación):</span> <span th:text="${m.edadFundacion}"></span></p>
+                <p th:if="${m.propietario != null}" class="text-xs text-green-600 mt-2 font-semibold">
+                    ¡Adoptada!
+                </p>
+            </div>
+
+            <div class="mt-2 p-4 pt-0 border-t border-borderLight flex justify-end space-x-3 text-sm">
+                <a th:href="@{'/fundaciones/' + ${fundacionId} + '/mascotas/editar/' + ${m.id}}"
+                   class="text-blue-600 hover:text-blue-800 font-medium">
+                    Editar
+                </a>
+
+                <a th:href="@{'/fundaciones/' + ${fundacionId} + '/mascotas/eliminar/' + ${m.id}}"
+                   onclick="return confirm('¿Estás seguro de DESACTIVAR esta mascota? No se puede eliminar permanentemente.')"
+                   class="text-red-600 hover:text-red-800 font-medium">
+                    Desactivar
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="text-center mt-4">
+    <p>&copy; 2025 App Cannia. Todos los derechos reservados.</p>
+</footer>
 </body>
 </html>

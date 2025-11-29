@@ -71,8 +71,8 @@ public class MascotaService {
         existente.setFechaVacunacion(mascota.getFechaVacunacion());
         existente.setMedicamento(mascota.getMedicamento());
         existente.setColor(mascota.getColor());
-        existente.setGenero(mascota.getGenero());
         existente.setFoto(mascota.getFoto());
+        existente.setGenero(mascota.getGenero());
         existente.setEdadFundacion(mascota.getEdadFundacion());
 
         // No permitimos moverla a propietario o cambiarlo a otra fundación aquí
@@ -80,7 +80,20 @@ public class MascotaService {
     }
 
     //eliminar una mascota de fundación
+
     public void eliminarMascota(Long id) {
-        mascotaRepository.deleteById(id);
+        MascotaModel mascota = mascotaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Mascota no encontrada"));
+        mascota.setEstado(false);
+        mascotaRepository.save(mascota);
+    }
+
+    // metodo para la vista de adopción del Propietario
+    public List<MascotaModel> listarMascotasEnAdopcionPorEspecie(String especie) {
+        if (especie == null || especie.isEmpty() || especie.equalsIgnoreCase("Todos")) {
+            return mascotaRepository.findByFundacionIsNotNullAndEstadoTrue(); // Lista todas las activas en fundación
+        }
+
+        return mascotaRepository.findByFundacionIsNotNullAndEstadoTrueAndEspecie(especie);
     }
 }

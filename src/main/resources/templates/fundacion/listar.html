@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Fundaciones</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#170022",
+                        secondary: "#170022",
+                        lightBg: "#e8ebff",
+                        lightSurface: "#f7f8f9",
+                        darkText: "#1e293b",
+                        softText: "#475569",
+                        borderLight: "#e2e8f0",
+                    },
+                    fontFamily: {
+                        display: ["Roboto", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body class="bg-lightBg text-darkText min-h-screen">
+
+<header class="bg-secondary text-white flex justify-between items-center px-6 py-3 shadow-md">
+    <h1 class="text-xl font-bold">Gestión de Fundaciones (Administrador)</h1>
+    <a th:href="@{/templates/fundacion/registrar}">
+        <button class="text-sm hover:font-bold bg-white text-secondary px-3 py-1 rounded">
+            Registrar Fundación
+        </button>
+    </a>
+</header>
+
+<main class="container mx-auto px-4 py-8">
+
+    <div th:if="${#lists.isEmpty(fundaciones)}" class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto text-center">
+        <p class="text-softText text-lg">No hay fundaciones activas registradas.</p>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(fundaciones)}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div th:each="f : ${fundaciones}" class="bg-white rounded-lg shadow-xl p-6 border border-borderLight flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-xl font-bold text-primary" th:text="${f.nombre}">Nombre Fundación</h2>
+                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-xs text-softText">
+                        Logo
+                    </div>
+                </div>
+
+                <p class="text-sm text-softText"><span class="font-semibold">Teléfono:</span> <span th:text="${f.telefono}"></span></p>
+                <p class="text-sm text-softText"><span class="font-semibold">Email:</span> <span th:text="${f.email}"></span></p>
+                <p class="text-sm text-softText"><span class="font-semibold">Dirección:</span> <span th:text="${f.direccion}"></span></p>
+                <p class="text-sm text-softText mt-2" th:text="${f.descripcion}">Descripción</p>
+
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-borderLight flex justify-between items-center">
+
+                <a th:href="@{'/fundaciones/' + ${f.id} + '/mascotas'}"
+                   class="text-sm font-semibold text-primary hover:underline">
+                    Ver Mascotas
+                </a>
+
+                <div class="space-x-3 text-sm">
+                    <a th:href="@{'/fundaciones/editar/' + ${f.id}}"
+                       class="text-blue-600 hover:text-blue-800 font-medium">
+                        Editar
+                    </a>
+
+                    <a th:href="@{'/fundaciones/eliminar/' + ${f.id}}"
+                       onclick="return confirm('¿Estás seguro de DESACTIVAR esta fundación? No se puede eliminar permanentemente.')"
+                       class="text-red-600 hover:text-red-800 font-medium">
+                        Desactivar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="text-center mt-4">
+    <p>&copy; 2025 App Cannia. Todos los derechos reservados.</p>
+</footer>
+</body>
+</html>

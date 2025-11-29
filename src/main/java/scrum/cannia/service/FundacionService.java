@@ -15,7 +15,7 @@ public class FundacionService {
 
 
     public List<FundacionModel> listarFundaciones() {
-        return fundacionRepository.findAll();
+        return fundacionRepository.findByEstadoTrue();
     }
 
 
@@ -42,14 +42,18 @@ public class FundacionService {
         existente.setDireccion(fundacion.getDireccion());
         existente.setTelefono(fundacion.getTelefono());
         existente.setEmail(fundacion.getEmail());
-        existente.setSitioWeb(fundacion.getSitioWeb());
-        existente.setLogo(fundacion.getLogo());
+
 
         return fundacionRepository.save(existente);
     }
 
 
     public void eliminarFundacion(Long id) {
-        fundacionRepository.deleteById(id);
+        FundacionModel fundacion = fundacionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Fundación no encontrada"));
+
+        fundacion.setEstado(false); // Marca como inactiva la fundación
+
+        fundacionRepository.save(fundacion);
     }
 }
