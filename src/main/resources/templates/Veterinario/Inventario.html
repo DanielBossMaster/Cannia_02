@@ -1,260 +1,90 @@
-<!doctype html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Inventario</title>
-
-    <!-- Fuente moderna -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario - Veterinario</title>
     <link th:href="@{/css/VeterinarioCss/Inventario.css}" rel="stylesheet">
+
 </head>
 <body>
-<!-- Contenedor principal -->
 <div class="contenedor-principal">
 
-    <!-- Barra superior morada con avatar y nombre -->
-    <header class="barra-superior" id="encabezado-principal">
-        <div class="logo-area">
-            <!-- Avatar circular y nombre a la derecha -->
-            <div class="avatar" id="avatar">
-                <!--  IMAGEN CORREGIDA -->
-                <img th:src="@{/img/logo.png}" alt="Avatar" class="avatar-imagen">
-            </div>
-            <div class="nombre-aplicacion">Cannia</div>
+    <header class="header-principal">
+        <div class="logo">
+            <h1>Veterinario - Vista de Inventario</h1>
+            <p class="subtitulo">Módulo especializado para personal veterinario</p>
         </div>
+        <nav class="navegacion-principal">
+            <a th:href="@{/veterinario/inventario}" class="boton-nav activo">
+                Inventario
+            </a>
+            <a th:href="@{/inventario}" class="boton-nav">
+                Inventario General
+            </a>
+            <a th:href="@{/}" class="boton-nav boton-secundario">
+                Página Principal
+            </a>
+        </nav>
     </header>
 
-    <!-- Área de contenido principal -->
-    <main class="contenido">
-        <!-- Título principal y caja de búsqueda simulada a la derecha -->
-        <div class="fila-superior">
-            <h1 class="titulo-principal">Inventario de productos y servicios</h1>
+    <main class="contenido-principal">
 
-            <!-- Caja de búsqueda simulada (rectángulo claro) -->
-            <div class="buscador-simulado" id="buscador"></div>
-        </div>
-
-        <!-- Navegación entre módulos -->
-        <div class="navegacion-modulos">
-            <button class="btn-modulo activo" data-modulo="productos">Productos</button>
-            <button class="btn-modulo" data-modulo="servicios">Servicios</button>
-            <button class="btn-modulo" data-modulo="inventarios">Inventarios</button>
-        </div>
-
-        <!-- Contenedor de módulos -->
-        <div class="contenedor-modulos">
-
-            <!-- MÓDULO PRODUCTOS -->
-            <div id="modulo-productos" class="modulo activo">
-                <div class="encabezado-modulo">
-                    <h2>Gestión de Productos</h2>
-                    <button class="btn-primario" id="btn-agregar-producto">
-                        <i class="bi bi-plus-circle"></i> Agregar Producto
-                    </button>
-                </div>
-
-                <!-- Tabla de productos -->
-                <div class="tabla-contenedor">
-                    <table class="tabla-datos">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Categoría</th>
-                            <th>Precio</th>
-                            <th>Stock</th>
-                            <th>Estado</th>
-                            <th>Promoción</th>
-                            <th>Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody id="tabla-productos">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- MÓDULO SERVICIOS -->
-            <div id="modulo-servicios" class="modulo">
-                <div class="encabezado-modulo">
-                    <h2>Gestión de Servicios</h2>
-                    <button class="btn-primario" id="btn-agregar-servicio">
-                        <i class="bi bi-plus-circle"></i> Agregar Servicio
-                    </button>
-                </div>
-
-                <!-- Tabla de servicios -->
-                <div class="tabla-contenedor">
-                    <table class="tabla-datos">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Precio</th>
-                            <th>Duración</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody id="tabla-servicios">
-                        <!-- Los servicios se cargarán aquí dinámicamente -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- MÓDULO INVENTARIOS -->
-            <div id="modulo-inventarios" class="modulo">
-                <div class="encabezado-modulo">
-                    <h2>Gestión de Inventarios</h2>
-                    <button class="btn-primario" id="btn-ver-graficos">
-                        <i class="bi bi-bar-chart"></i> Ver Gráficos de Inventario
-                    </button>
-                </div>
-
-                <!-- Dashboard de gráficos (inicialmente oculto) -->
-                <div id="dashboard-inventario" class="dashboard-oculto">
-                    <div class="dashboard-header">
-                        <h3>Dashboard de Inventario</h3>
-                        <button class="btn-secundario" id="btn-cerrar-dashboard">
-                            <i class="bi bi-x-lg"></i> Cerrar
-                        </button>
+        <section class="seccion-bienvenida">
+            <div class="tarjeta-bienvenida">
+                <h2>Inventario para Veterinarios</h2>
+                <p>Acceso especializado a productos y servicios veterinarios</p>
+                <!-- ESTADÍSTICAS SOLO CON PRODUCTOS -->
+                <div class="estadisticas-rapidas">
+                    <div class="estadistica">
+                        <span class="numero-estadistica" th:text="${#lists.size(productos)}">0</span>
+                        <span class="texto-estadistica">Productos Disponibles</span>
                     </div>
+                </div>
+            </div>
+        </section>
 
-                    <div class="graficos-container">
-                        <div class="grafico-card">
-                            <h4>Estado Actual del Stock</h4>
-                            <div class="grafico-barras" id="grafico-stock">
-                                <!-- Gráfico de barras se generará aquí -->
+        <section class="seccion-modulo">
+            <div class="encabezado-seccion">
+                <h2 class="titulo-seccion">Productos Veterinarios Disponibles</h2>
+            </div>
+
+            <div class="grid-tarjetas" th:if="${not #lists.isEmpty(productos)}">
+                <div th:each="producto : ${productos}" class="tarjeta-producto">
+                    <div class="encabezado-tarjeta">
+                        <h3 class="titulo-producto" th:text="${producto.nombre}">Nombre Producto</h3>
+                        <span class="estado-badge"
+                              th:classappend="${producto.estado} ? 'activo' : 'inactivo'"
+                              th:text="${producto.estado} ? 'DISPONIBLE' : 'NO DISPONIBLE'">
+                                ESTADO
+                            </span>
+                    </div>
+                    <div class="cuerpo-tarjeta">
+                        <p class="descripcion-producto" th:text="${producto.descripcion}">Descripción del producto...</p>
+                        <div class="detalles-producto">
+                            <div class="detalle">
+                                <span class="etiqueta-detalle">Stock Disponible:</span>
+                                <span class="valor-detalle" th:text="${producto.cantidad}">0</span>
                             </div>
-                        </div>
-
-                        <div class="grafico-card">
-                            <h4>Alertas de Inventario</h4>
-                            <div class="alertas-container" id="alertas-inventario">
-                                <!-- Alertas se generarán aquí -->
+                            <div class="detalle">
+                                <span class="etiqueta-detalle">Precio:</span>
+                                <span class="valor-detalle">
+                                        $<span th:text="${#numbers.formatInteger(producto.valor, 1, 'POINT')}">0</span>
+                                    </span>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Información general del inventario -->
-                <div class="info-inventario">
-                    <div class="card-info">
-                        <h4>Productos en Stock</h4>
-                        <p class="numero-grande" id="total-productos">0</p>
-                    </div>
-                    <div class="card-info">
-                        <h4>Stock Bajo</h4>
-                        <p class="numero-grande alerta-baja" id="stock-bajo">0</p>
-                    </div>
-                    <div class="card-info">
-                        <h4>Servicios Activos</h4>
-                        <p class="numero-grande" id="servicios-activos">0</p>
-                    </div>
+            <div th:if="${#lists.isEmpty(productos)}" class="mensaje-vacio">
+                <div class="contenido-mensaje-vacio">
+                    <h3>No hay productos disponibles</h3>
+                    <p>No se encontraron productos en el inventario</p>
                 </div>
             </div>
-        </div>
+        </section>
     </main>
 </div>
-
-<!-- MODALES -->
-
-<!-- Modal para agregar/editar producto -->
-<div id="modal-producto" class="modal">
-    <div class="modal-contenido">
-        <div class="modal-header">
-            <h3 id="titulo-modal-producto">Agregar Producto</h3>
-            <span class="cerrar-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-            <form id="form-producto">
-                <input type="hidden" id="producto-id">
-                <div class="form-grupo">
-                    <label for="nombre-producto">Nombre</label>
-                    <input type="text" id="nombre-producto" required>
-                </div>
-                <div class="form-grupo">
-                    <label for="categoria-producto">Categoría</label>
-                    <select id="categoria-producto" required>
-                        <option value="">Seleccionar categoría</option>
-                        <option value="medicamento">Medicamento</option>
-                        <option value="alimento">Alimento</option>
-                        <option value="accesorio">Accesorio</option>
-                        <option value="higiene">Higiene</option>
-                    </select>
-                </div>
-                <div class="form-grupo">
-                    <label for="precio-producto">Precio</label>
-                    <input type="number" id="precio-producto" step="0.01" required>
-                </div>
-                <div class="form-grupo">
-                    <label for="stock-producto">Stock</label>
-                    <input type="number" id="stock-producto" required>
-                </div>
-                <div class="form-grupo">
-                    <label for="descripcion-producto">Descripción</label>
-                    <textarea id="descripcion-producto"></textarea>
-                </div>
-                <div class="form-grupo">
-                    <label>
-                        <input type="checkbox" id="promocion-producto">
-                        ¿Es una promoción?
-                    </label>
-                </div>
-                <div class="form-grupo" id="grupo-precio-promocion" style="display: none;">
-                    <label for="precio-promocion">Precio de promoción</label>
-                    <input type="number" id="precio-promocion" step="0.01">
-                </div>
-                <div class="modal-acciones">
-                    <button type="button" class="btn-secundario cerrar-modal">Cancelar</button>
-                    <button type="submit" class="btn-primario">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Modal para agregar/editar servicio -->
-<div id="modal-servicio" class="modal">
-    <div class="modal-contenido">
-        <div class="modal-header">
-            <h3 id="titulo-modal-servicio">Agregar Servicio</h3>
-            <span class="cerrar-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-            <form id="form-servicio">
-                <input type="hidden" id="servicio-id">
-                <div class="form-grupo">
-                    <label for="nombre-servicio">Nombre</label>
-                    <input type="text" id="nombre-servicio" required>
-                </div>
-                <div class="form-grupo">
-                    <label for="descripcion-servicio">Descripción</label>
-                    <textarea id="descripcion-servicio" required></textarea>
-                </div>
-                <div class="form-grupo">
-                    <label for="precio-servicio">Precio</label>
-                    <input type="number" id="precio-servicio" step="0.01" required>
-                </div>
-                <div class="form-grupo">
-                    <label for="duracion-servicio">Duración (minutos)</label>
-                    <input type="number" id="duracion-servicio" required>
-                </div>
-                <div class="modal-acciones">
-                    <button type="button" class="btn-secundario cerrar-modal">Cancelar</button>
-                    <button type="submit" class="btn-primario">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!--  SCRIPT -->
-<script th:src="@{/js/VeterinarioJs/Inventario.js}"></script>
 </body>
 </html>

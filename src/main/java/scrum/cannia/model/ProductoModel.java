@@ -1,6 +1,5 @@
 package scrum.cannia.model;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,7 +46,7 @@ public class ProductoModel {
     @Column(length = 10, nullable = false)
     private UnidadMedida unidadMedida;
 
+    // Si InventarioModel tiene un campo llamado 'producto':
     @OneToMany(mappedBy = "producto")
-    private List<InventarioModel> inventarios = new ArrayList<>();
-
+    private List<InventarioModel> inventarios;
 }

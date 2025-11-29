@@ -49,7 +49,7 @@ public class VeterinarioController {
     //               DASHBOARD PRINCIPAL
     // ============================================
     @GetMapping
-    public String index(HttpSession session, Model model) {
+    public String Index(HttpSession session, Model model) {
 
         UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
         VeterinarioModel veterinario = usuario.getVeterinario();
@@ -61,23 +61,45 @@ public class VeterinarioController {
         model.addAttribute("propietario", new PropietarioModel());
         model.addAttribute("mascota", new MascotaModel());
 
-        return "veterinario/index";
+        return "veterinario/Index";
     }
 
     // ============================================
-    //        REGISTRAR NUEVO PROPIETARIO
-    // ============================================
+//        REGISTRAR NUEVO PROPIETARIO
+// ============================================
     @PostMapping("/nuevo")
-    public String nuevo(@Validated @ModelAttribute PropietarioModel propietarioModel,
-                        BindingResult br) {
+    public String nuevo(
+            @Validated @ModelAttribute("propietarioModel") PropietarioModel propietarioModel,
+            BindingResult br,
+            HttpSession session,
+            Model model) {
 
+        // Validación del formulario
         if (br.hasErrors()) {
-            return "veterinario/index";
+            model.addAttribute("mensajeError", "Por favor corrige los campos marcados.");
+            return "veterinario/Index";
         }
 
+        // Obtener el usuario en sesión
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/login";  // Seguridad
+        }
+
+        // Obtener veterinario y veterinaria asociada
+        VeterinarioModel veterinario = usuario.getVeterinario();
+        VeterinariaModel veterinaria = veterinario.getVeterinaria();
+
+        // Asignar automáticamente la veterinaria al propietario que se está registrando
+        propietarioModel.setVeterinaria(veterinaria);
+
+        // Guardar propietario
         propietarioRepository.save(propietarioModel);
-        return "redirect:/veterinario";
+
+        return "redirect:/veterinario";  // Volver al listado
     }
+
+
 
     // ============================================
     // REGISTRAR MASCOTA A UN PROPIETARIO
@@ -227,9 +249,22 @@ public class VeterinarioController {
     // ============================================
     //          ESTIÓN DE INVENTARIO
     // ============================================
-    @GetMapping("/InventarioVentas")
+    @GetMapping("/inventario")
     public String mostrarInventarioVentas(Model model) {
         model.addAttribute("productos", productoService.listarTodos());
         return "veterinario/inventario";
+    }
+    @GetMapping("/productos")
+    public String listarProductosVeterinario(Model model) {
+        // Usar el método correcto que ahora existe
+        model.addAttribute("productos", productoService.listarTodos());
+        return "veterinario/productos";
+    }
+
+    @GetMapping("/productos/activos")
+    public String listarProductosActivos(Model model) {
+        // O usar este método si quieres solo los activos
+        model.addAttribute("productos", productoService.obtenerProductosActivos());
+        return "veterinario/productos";
     }
 }

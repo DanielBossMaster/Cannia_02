@@ -15,24 +15,24 @@ public class ServicioModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_servicio")
-    private int id;
+    private Integer id;
 
     @Column(length = 50, nullable = false)
-    private String Nombre;
+    private String nombre;  // ← CAMBIA 'Nombre' por 'nombre' (minúscula)
 
     @Column(length = 800, nullable = false)
-    private String Descripcion;
+    private String descripcion;  // ← también cambia a minúscula si es necesario
 
     @Column(length = 50, nullable = false)
-    private String Disponibilidad;
+    private String disponibilidad;
 
-    @Column( nullable = false)
-    private Integer DuracionEstimada;
+    @Column(nullable = false)
+    private Integer duracionEstimada;
 
-    @Column( nullable = false)
-    private Integer Precio;
+    @Column(nullable = false)
+    private Integer precio;
 
     @ManyToOne
-    @JoinColumn(name = "id_veterinaria" )
+    @JoinColumn(name = "id_veterinaria")
     private VeterinariaModel veterinaria;
 }

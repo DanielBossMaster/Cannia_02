@@ -38,18 +38,21 @@
         </h1>
     </div>
     <div class="flex items-center space-x-3 gap-8">
-        <button onclick="abrirCarrito()" class="relative">
-
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart-icon lucide-shopping-cart">
-                <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
-                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+        <button onclick="abrirCarrito()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             class="lucide lucide-shopping-cart-icon lucide-shopping-cart">
+            <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
         </button>
         <a th:href="@{/veterinario}">
             <button class="text-sm hover:font-bold">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                     class="lucide lucide-house-icon lucide-house"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="lucide lucide-house-icon lucide-house">
+                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
                     <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                 </svg>
             </button>
@@ -74,101 +77,138 @@
             <img th:src="@{/veterinario/producto/foto/{id}(id=${p.id})}"
                  class="w-full h-48 object-cover rounded-lg mb-4"
                  alt="Imagen del producto">
-
             <h2 class="text-xl font-semibold text-gray-900" th:text="${p.nombre}"></h2>
             <p class="text-gray-600 text-sm mt-2" th:text="${p.descripcion}"></p>
             <p class="text-lg font-bold text-green-600 mt-4">
                 $<span th:text="${p.valor}"></span>
             </p>
-
-            <button onclick="agregarAlCarrito([[${p.id}]])"
-                    class="bg-primary text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center
-               hover:shadow-2xl hover:bg-secondary transition-all duration-300">
+            <button type="button"
+                    th:onclick="'agregarAlCarrito(' + ${p.id} + ')'"
+                  class="bg-primary text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
                 Agregar al carrito
             </button>
         </div>
     </div>
 </div>
-<!-- Modal Carrito -->
-<div id="modalCarrito"
-     class="fixed inset-0 bg-black bg-opacity-40 hidden flex items-center justify-center">
+<!-- MODAL DEL CARRITO -->
+<div id="carritoModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
+    <div class="bg-white p-6  w-96  shadow-xl">
+<div class="flex items-center justify-between">
+        <h2 class="text-2xl font-bold mb-4">Carrito de compras</h2>
+        <button class="text-2xl font-bold mb-4 text-red-600" onclick="cerrarCarrito()" >
+            x</button>
+    </div>
+        <!-- ESTE DIV SE ACTUALIZA POR AJAX -->
+        <div id="carritoItems" th:insert="Veterinario/Fragmentos/CarritoItems :: items"></div>
 
-    <div class="bg-white w-96 p-5 rounded-lg shadow-xl">
+        <div class="flex justify-center mt-4">
+            <button onclick="vaciarCarrito()" class="bg-primary  px-4 text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
+                Vaciar</button>
 
-        <h2 class="text-2xl font-bold mb-3">Carrito</h2>
-
-        <!-- Lista de productos -->
-        <div id="listaCarrito"></div>
-
-        <!-- Total -->
-        <p class="text-xl font-semibold mt-3">
-            Total: $<span id="totalCarrito">0</span>
-        </p>
-
-        <!-- Botones -->
-        <div class="flex justify-between mt-4">
-            <button onclick="cerrarCarrito()"
-                    class="px-4 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded-lg">
-                Cerrar
+            <button id="btnPagar"
+                    class="bg-primary  px-4 text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
+            Ir a pagar
             </button>
+            <script>
+                document.getElementById("btnPagar").addEventListener("click", async () => {
 
-            <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
-                Pagar
-            </button>
+                    const respuesta = await fetch("/pago/crearCheckout", {
+                        method: "POST"
+                    });
+
+                    const data = await respuesta.json();
+
+                    if (data.url) {
+                        window.location.href = data.url; // Redirige a Stripe
+                    } else {
+                        alert("Error creando checkout");
+                    }
+
+                });
+            </script>
         </div>
     </div>
 </div>
 
 
-<!-- =========================== -->
-<!-- SCRIPTS DEL CARRITO -->
-<!-- =========================== -->
 <script>
+    function abrirCarrito() {
+        document.getElementById("carritoModal").classList.remove("hidden");
+        cargarCarrito();
+    }
+
+    function cerrarCarrito() {
+        document.getElementById("carritoModal").classList.add("hidden");
+    }
+
     function agregarAlCarrito(id) {
-        fetch(`/carrito/agregar/${id}`, {
-            method: "POST"
-        })
-            .then(r => r.json())
-            .then(data => {
-                console.log("Carrito actualizado", data);
-                abrirCarrito();
-                cargarCarrito();
+        fetch(`/carrito/agregar/${id}`, { method: "POST" })
+            .then(() => {
+                cargarCarrito();   // 🔥 Recargar contenido del carrito
+                abrirCarrito();    // 🔥 Abrir modal
             });
     }
 
     function cargarCarrito() {
-        fetch("/carrito/listar")
-            .then(r => r.json())
-            .then(data => {
-                const lista = document.getElementById("listaCarrito");
-                lista.innerHTML = "";
-
-                data.items.forEach(item => {
-                    lista.innerHTML += `
-                <div class="flex justify-between border-b py-2">
-                    <span>${item.producto.nombre} (x${item.cantidad})</span>
-                    <span>$${item.subtotal}</span>
-                </div>`;
-                });
-
-                document.getElementById("totalCarrito").innerText = data.total;
+        fetch("/carrito/items")
+            .then(r => r.text())
+            .then(html => {
+                // Reemplazar el contenido dinamicamente
+                document.getElementById("carritoItems").innerHTML = html;
             });
     }
 
-
-
-    function abrirCarrito() {
-        document.getElementById("modalCarrito").classList.remove("hidden");
-    }
-
-    function cerrarCarrito() {
-        document.getElementById("modalCarrito").classList.add("hidden");
+    function vaciarCarrito() {
+        fetch("/carrito/vaciar")
+            .then(() => cargarCarrito());
     }
 
 
+
+        function recargarCarrito() {
+        fetch("/carrito/items")
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById("carritoItems").innerHTML = html;
+            });
+    }
+
+        function aumentar(id) {
+        fetch(`/carrito/aumentar/${id}`, {
+            method: "POST"
+        })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById("carritoItems").innerHTML = html;
+            });
+    }
+
+        function disminuir(id) {
+        fetch(`/carrito/disminuir/${id}`, {
+            method: "POST"
+        })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById("carritoItems").innerHTML = html;
+            });
+    }
+
+        function eliminarItem(id) {
+        fetch(`/carrito/eliminar/${id}`)
+            .then(() => recargarCarrito());
+    }
+
+
+    fetch("/api/pagos/crear-checkout", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(carrito)
+    })
+        .then(res => res.json())
+        .then(data => {
+            window.location.href = data.url;
+        });
 </script>
-
-
 
 </body>
 </html>

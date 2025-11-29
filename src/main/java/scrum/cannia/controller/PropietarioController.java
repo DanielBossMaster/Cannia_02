@@ -1,5 +1,7 @@
 package scrum.cannia.controller;
 
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -7,20 +9,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import scrum.cannia.model.HistoriaClinicaModel;
-import scrum.cannia.model.MascotaModel;
-import scrum.cannia.model.PropietarioModel;
-import scrum.cannia.repository.HistoriaClinicaRepository;
-import scrum.cannia.repository.MascotaRepository;
-import scrum.cannia.repository.PropietarioRepository;
-import scrum.cannia.service.ExcelExportService;
+import org.springframework.web.multipart.MultipartFile;
+import scrum.cannia.model.*;
+import scrum.cannia.repository.*;
+import scrum.cannia.service.*;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/propietarios")
+@RequestMapping("/propietario")
 public class PropietarioController {
 
     private final PropietarioRepository propietarioRepository;
@@ -28,14 +27,62 @@ public class PropietarioController {
     private final HistoriaClinicaRepository historiaClinicaRepository;
     private final ExcelExportService excelExportService;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+    @Autowired
+    private PropietarioService propietarioService;
+    @Autowired
+    private MascotaService mascotaService;
+    @Autowired
+    private VeterinarioService veterinarioService;
+    @Autowired
+    private ProductoService productoService;
+    @Autowired
+    private ExcelLoaderService excelLoaderService;
+    @Autowired
+    private PetRepository petRepository;
+
     public PropietarioController(PropietarioRepository propietarioRepository,
                                  MascotaRepository mascotaRepository,
                                  HistoriaClinicaRepository historiaClinicaRepository,
-                                 ExcelExportService excelExportService) {
+                                 ExcelExportService excelExportService
+                                 ) {
         this.propietarioRepository = propietarioRepository;
         this.mascotaRepository = mascotaRepository;
         this.historiaClinicaRepository = historiaClinicaRepository;
         this.excelExportService = excelExportService;
+    }
+    @GetMapping("/index")
+    public String mostrarIndexPropietario(HttpSession session, Model model) {
+        UsuarioModel user = (UsuarioModel) session.getAttribute("usuario");
+        model.addAttribute("usuario", user);
+        return "Propietario/index";
+    }
+
+    @GetMapping("/cargar-mascotas")
+    public String cargarExcel() {
+        return "Propietario/CargarMascotas";
+    }
+    @PostMapping("/upload")
+    public String procesarExcel(@RequestParam("file") MultipartFile file, Model model) {
+
+        try {
+            ExcelLoaderService.loadPetsFromExcel(file, petRepository);
+            model.addAttribute("message", "Archivo cargado correctamente.");
+        } catch (Exception e) {
+            model.addAttribute("message", "Error al cargar el archivo: " + e.getMessage());
+        }
+
+        return "Propietario/CargarMascotas";
+    }
+    @GetMapping("/muestras")
+    public String mostrarMascotas(Model model) {
+        model.addAttribute("pets", petRepository.findAll());
+
+//        List<PetModel> lista = petRepository.findAll();
+//        model.addAttribute("pets", lista);
+
+        return "Propietario/MuestraMascotas";
     }
 
     @GetMapping("/listar")

@@ -1,37 +1,45 @@
 package scrum.cannia.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import scrum.cannia.model.ProductoModel;
 import scrum.cannia.repository.ProductoRepository;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductoService {
 
-@Autowired
+    @Autowired
     private ProductoRepository productoRepository;
 
-
-    public List<ProductoModel> listarTodos() {
+    public List<ProductoModel> obtenerTodosProductos() {
         return productoRepository.findAll();
     }
 
-    public ProductoModel guardar(ProductoModel p) {
-        return productoRepository.save(p);
+    public List<ProductoModel> obtenerProductosActivos() {
+        return productoRepository.findByEstadoTrue();
     }
 
+    public ProductoModel guardarProducto(ProductoModel producto) {
+        return productoRepository.save(producto);
+    }
+
+    public Optional<ProductoModel> obtenerProductoPorId(Integer id) {
+        return productoRepository.findById(id);
+    }
+
+    public void eliminarProductoLogicamente(Integer id) {
+        productoRepository.findById(id).ifPresent(producto -> {
+            producto.setEstado(false);
+            productoRepository.save(producto);
+        });
+    }
     public ProductoModel buscarPorId(Integer id) {
         return productoRepository.findById(id).orElse(null);
     }
 
-    public List<ProductoModel> listarPublicados() {
-        return productoRepository.findByPublicadoTrue();
+    public List<ProductoModel> listarTodos() {
+        return productoRepository.findAll();
     }
-
-
-    }
-
-
-
+}

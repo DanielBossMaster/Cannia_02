@@ -3,21 +3,21 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background: white;
+    background: #e5e9fd;
     min-height: 100vh;
     color: #333;
 }
 
 /* ===== ENCABEZADO ===== */
 header {
-    background: linear-gradient(to right, #d600b9, #2c0045);
+    background: #1a0021;
     color: white;
-    padding: 15px 30px;
+    padding: 0 18px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px #bcbcbc;
     position: relative;
 }
 
@@ -31,22 +31,22 @@ header {
     width: 60px;
     height: 60px;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     object-fit: cover;
-    border: 3px solid white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
 }
 
 /* Títulos del header */
 header h1 {
     margin: 0;
-    font-size: 2.2rem;
     font-weight: 700;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    flex: 1;
+    font-size: 30px;
+    letter-spacing: 0.4px;
 }
 
-header h2 {
+header {
     margin: 0;
     font-size: 1.3rem;
     font-weight: 300;
@@ -55,20 +55,18 @@ header h2 {
 
 /* ===== BARRA DE BÚSQUEDA ===== */
 .Barra {
-    background: rgba(255, 255, 255, 0.95);
+    background: #ffffff;
     border-radius: 25px;
-    padding: 8px 20px;
+    padding: 4px 15px;
     display: flex;
     align-items: center;
-    width: 300px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 450px;
     transition: all 0.3s ease;
     margin: 10px auto;
 }
 
 .Barra:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .Barra input {
@@ -100,8 +98,7 @@ main {
     width: 320px;
     padding: 25px;
     background: linear-gradient(145deg, #ffffff, #f8f9fa);
-    border-radius: 20px;
-    box-shadow: 0 8px 25px rgba(106, 27, 154, 0.15);
+    box-shadow: 0 8px 25px #bcbcbc;
     text-align: left;
     transition: all 0.3s ease;
     display: flex;
@@ -115,9 +112,10 @@ main {
 /* Títulos dentro de las tarjetas */
 .card h3 {
     margin: 0;
-    color: #6a11cb;
-    font-size: 1.4rem;
-    font-weight: 600;
+    color: #000000;
+    font-size: 21px;
+    font-weight: 700;
+    text-align: center;
     border-bottom: 2px solid #e0e0e0;
     padding-bottom: 10px;
 }
@@ -125,12 +123,12 @@ main {
 /* Párrafos dentro de las tarjetas */
 .card p {
     margin: 5px 0;
-    font-size: 0.95rem;
+    font-size: 18px;
     line-height: 1.4;
 }
 
 .card b {
-    color: #6a11cb;
+    color: #000000;
     font-weight: 600;
 }
 
@@ -140,8 +138,6 @@ main {
     width: 100%;
     margin-top: 10px;
     padding: 12px;
-    border: none;
-    border-radius: 12px;
     cursor: pointer;
     font-weight: 600;
     font-size: 14px;
@@ -152,7 +148,7 @@ main {
 
 .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px #bcbcbc;
 }
 
 .btn:active {
@@ -161,24 +157,15 @@ main {
 
 /* Variantes de botones */
 .btn-primary {
-    background-color: #6f42c1;
+    background-color: #290043;
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: #6f42c1;
+    background-color: #170022;
 }
 
 /* ===== LISTA DE MASCOTAS ===== */
-.animal-list {
-    margin-top: 15px;
-    background: rgba(248, 249, 250, 0.8);
-    border-radius: 15px;
-    padding: 15px;
-    display: none;
-    border: 1px solid rgba(106, 27, 154, 0.1);
-    animation: slideDown 0.3s ease;
-}
 
 @keyframes slideDown {
     from {
@@ -195,33 +182,14 @@ main {
 .animal-item {
     padding: 12px;
     margin-bottom: 10px;
-    border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
-    background: white;
-    border: 1px solid #e0e0e0;
+    background: #f1f2f3;
 }
 
 .animal-item:hover {
-    background: linear-gradient(135deg, #f3e5f5, #e8eaf6);
+    background: #e4e8fb;
     transform: translateX(5px);
-    border-color: #6a11cb;
-}
-
-.animal-item.active {
-    background-color: #6f42c1;
-    color: white;
-    border-color: #5a0db5;
-}
-
-.animal-item p {
-    margin: 0;
-    font-weight: 500;
-}
-
-.animal-item b {
-    font-size: 1.1rem;
-    color: inherit;
 }
 
 /* ===== OPCIONES (Botones de mascotas) ===== */
@@ -235,8 +203,6 @@ main {
 
 .options button {
     padding: 10px 15px;
-    border: none;
-    border-radius: 8px;
     cursor: pointer;
     font-weight: 500;
     transition: all 0.3s ease;
@@ -244,23 +210,22 @@ main {
 }
 
 .btn-success {
-    background-color: #6f42c1;
+    background-color: #290043;
     color: white;
 }
 
 .btn-success:hover {
-    background-color: #6f42c1;
+    background-color: #290043;
 }
 
 .btn-info {
-    background: #3f0d5c;
+    background: #290043;
     color: white;
 }
 
 .btn-info:hover {
-    background: #3f0d5c;;
+    background: #290043;
 }
-
 
 /* ===== MODALES ===== */
 .modal {
@@ -280,17 +245,15 @@ main {
 .modal-content {
     background: linear-gradient(145deg, #ffffff, #f8f9fa);
     padding: 30px;
-    border-radius: 12px;
     width: 450px;
     max-width: 90%;
     max-height: 90vh;
     overflow-y: auto;
     text-align: left;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 20px #bcbcbc;
     animation: modalSlideIn 0.4s ease;
     border: none;
     position: relative;
-
 }
 
 @keyframes modalSlideIn {
@@ -306,11 +269,10 @@ main {
 
 .modal h2 {
     margin-top: 0;
-    color: #6a11cb;
+    color: #000000;
     font-size: 1.6rem;
     font-weight: 600;
     text-align: center;
-    border-bottom: 2px solid #e0e0e0;
     padding-bottom: 15px;
     margin-bottom: 20px;
 }
@@ -337,12 +299,6 @@ input, textarea {
     background: white;
 }
 
-input:focus, textarea:focus {
-    outline: none;
-    border-color: #6a11cb;
-    box-shadow: 0 0 0 3px rgba(106, 27, 154, 0.1);
-}
-
 textarea {
     resize: vertical;
     min-height: 80px;
@@ -357,35 +313,22 @@ textarea {
 }
 
 .btn-generate {
-    background: rgb(94, 61, 104);
-    color: white;
+    background: #170022;
+    color: #ffffff;
     padding: 12px 25px;
-    border: none;
-    border-radius: 10px;
     cursor: pointer;
     font-weight: 600;
     transition: all 0.3s ease;
-}
-
-.btn-generate:hover {
-    background: rgb(94, 61, 104);
-    transform: translateY(-2px);
 }
 
 .btn-cancel {
-    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+    background:#e60606;
     color: white;
     padding: 12px 25px;
-    border: none;
-    border-radius: 10px;
     cursor: pointer;
     font-weight: 600;
     transition: all 0.3s ease;
-}
-
-.btn-cancel:hover {
-    background: linear-gradient(135deg, #7f8c8d, #6c7b7d);
-    transform: translateY(-2px);
+    box-shadow: 0 2px 8px #bcbcbc;
 }
 
 /* Botón cerrar modal */
@@ -393,7 +336,7 @@ textarea {
     position: absolute;
     top: 15px;
     right: 15px;
-    background: #e74c3c;
+    background: #e60606;
     color: white;
     border: none;
     width: 35px;
@@ -408,7 +351,7 @@ textarea {
 }
 
 .close-btn:hover {
-    background: #c0392b;
+    background: #e60606;
     transform: rotate(90deg);
 }
 
@@ -468,29 +411,17 @@ textarea {
     border-radius: 4px;
 }
 
-.modal-content::-webkit-scrollbar-thumb {
-    background: #6a11cb;
-    border-radius: 4px;
-}
-
-.modal-content::-webkit-scrollbar-thumb:hover {
-    background: #5a0db5;
-}
-
 /*Boton de ver historia clinica */
 
 .boton-imagen {
-    background: #6f42c1;
+    background: #290043;
     display: grid;
-    place-items: center; /* Centrado en ambos ejes */
-    border: none;
-    border-radius: 6px;
+    place-items: center;
     padding: 10px 16px;
     color: white;
     font-weight: 500;
     font-size: 14px;
     cursor: pointer;
-    /*display: flex;*/
     align-items: center;
     gap: 8px;
     transition: transform 0.2s ease;
@@ -498,23 +429,20 @@ textarea {
 
 .boton-imagen:hover {
     transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgb(111, 66, 193);
+    box-shadow: 0 2px 8px #bcbcbc;
 }
 
 /*Boton de ver vacuna*/
 
 .boton-vacuna {
-    background: #3f0d5c;
+    background: #290043;
     display: grid;
-    place-items: center; /* Centrado en ambos ejes */
-    border: none;
-    border-radius: 6px;
+    place-items: center;
     padding: 10px 16px;
     color: white;
     font-weight: 500;
     font-size: 14px;
     cursor: pointer;
-    /*display: flex;*/
     align-items: center;
     gap: 8px;
     transition: transform 0.2s ease;
@@ -522,17 +450,15 @@ textarea {
 
 .boton-vacuna:hover {
     transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgb(63, 13, 92);
+    box-shadow: 0 2px 8px #bcbcbc;
 }
 
 /* Estilos específicos para vacunas */
 .vacuna-card {
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
     padding: 20px;
     margin: 16px 0;
     background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px #bcbcbc;
 }
 
 .vacuna-header {
@@ -599,4 +525,16 @@ textarea {
     padding: 12px;
     border-radius: 8px;
     font-size: 14px;
+}
+
+/*Boton de la derecha home button*/
+.btn-home {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 6px;
+    color: #f0f0f0;
+    transition: all 0.3s ease;
+    text-decoration: none;
 }

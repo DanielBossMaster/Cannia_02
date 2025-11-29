@@ -56,7 +56,7 @@ public class InventarioModel {
     private String Provedor;
 
     @ManyToOne
-    @JoinColumn(name = "producto_id", nullable = false)
+    @JoinColumn(name = "id_producto")
     private ProductoModel producto;
 
     @ManyToOne

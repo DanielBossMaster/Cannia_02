@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes y Gráficos - Cannia</title>
+    <link th:href="@{/css/VeterinarioCss/Inventario.css}" rel="stylesheet">
+
+</head>
+<body>
+<!-- Contenedor principal -->
+<div class="contenedor-principal">
+
+    <!-- Header de navegación -->
+    <header class="header-principal">
+        <div class="logo">
+            <h1>Reportes y Análisis - Cannia</h1>
+            <p class="subtitulo">Métricas y estadísticas del inventario</p>
+        </div>
+        <nav class="navegacion-principal">
+            <a th:href="@{/inventario}" class="boton-nav">
+                Vista General
+            </a>
+            <a th:href="@{/inventario/graficos}" class="boton-nav activo">
+                Reportes y Gráficos
+            </a>
+            <a th:href="@{/productos}" class="boton-nav">
+                Gestión de Productos
+            </a>
+            <a th:href="@{/servicios}" class="boton-nav">
+                Gestión de Servicios
+            </a>
+            <a th:href="@{/}" class="boton-nav boton-secundario">
+                Página Principal
+            </a>
+        </nav>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="contenido-principal">
+
+        <!-- Encabezado del dashboard -->
+        <section class="encabezado-dashboard">
+            <h2 class="titulo-principal">Panel de Reportes del Inventario</h2>
+            <p class="descripcion-dashboard">Análisis detallado y métricas en tiempo real del estado del inventario</p>
+            <div class="controles-dashboard">
+                <a th:href="@{/inventario/graficos}" class="boton boton-primario">
+                    Actualizar Reportes
+                </a>
+                <span class="informacion-actualizacion">
+                        Los datos se actualizan al cargar la página
+                    </span>
+            </div>
+        </section>
+
+        <!-- Sección de resumen ejecutivo -->
+        <section class="seccion-resumen">
+            <div class="tarjeta-resumen">
+                <h3>Resumen Ejecutivo</h3>
+                <div class="metricas-principales">
+                    <div class="metrica-principal">
+                        <span class="valor-metrica" th:text="${totalProductos}">0</span>
+                        <span class="titulo-metrica">Total de Productos</span>
+                        <span class="tendencia-metrica">En sistema</span>
+                    </div>
+                    <div class="metrica-principal">
+                        <span class="valor-metrica" th:text="${stockCritico.size()}">0</span>
+                        <span class="titulo-metrica">Productos Críticos</span>
+                        <span class="tendencia-metrica critica">Requieren atención</span>
+                    </div>
+                    <div class="metrica-principal">
+                        <span class="valor-metrica" th:text="${stockAlto.size()}">0</span>
+                        <span class="titulo-metrica">Productos Óptimos</span>
+                        <span class="tendencia-metrica positiva">En buen estado</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de alertas de stock -->
+        <section class="seccion-alertas">
+            <h3 class="titulo-seccion">Estado del Inventario</h3>
+            <div class="grid-alertas">
+                <div class="tarjeta-alerta alerta-critica">
+                    <div class="contenido-alerta">
+                        <h4>Nivel Crítico</h4>
+                        <p class="contador-alerta" th:text="${stockCritico.size()}">0</span>
+                        <p class="descripcion-alerta">Productos con stock por debajo del mínimo</p>
+                        <div class="accion-alerta">
+                            <a th:href="@{/productos}" class="enlace-accion">Revisar inventario</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tarjeta-alerta alerta-advertencia">
+                    <div class="contenido-alerta">
+                        <h4>Nivel Bajo</h4>
+                        <p class="contador-alerta" th:text="${stockNormal.size()}">0</p>
+                        <p class="descripcion-alerta">Productos que requieren monitoreo</p>
+                        <div class="accion-alerta">
+                            <a th:href="@{/productos}" class="enlace-accion">Ver detalles</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tarjeta-alerta alerta-normal">
+                    <div class="contenido-alerta">
+                        <h4>Nivel Óptimo</h4>
+                        <p class="contador-alerta" th:text="${stockAlto.size()}">0</p>
+                        <p class="descripcion-alerta">Productos con stock adecuado</p>
+                        <div class="accion-alerta">
+                            <span class="estado-positivo">Situación favorable</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de gráficos y visualizaciones -->
+        <section class="seccion-graficos">
+            <h3 class="titulo-seccion">Distribución del Inventario</h3>
+
+            <div class="grid-graficos">
+                <!-- Gráfico de distribución de stock -->
+                <div class="tarjeta-grafico">
+                    <h4>Distribución por Niveles de Stock</h4>
+                    <div class="contenedor-grafico">
+                        <div class="grafico-barras-horizontal">
+                            <div class="fila-barra">
+                                <span class="etiqueta-barra">Nivel Crítico</span>
+                                <div class="contenedor-barra">
+                                    <div class="barra-progreso critica"
+                                         th:style="'width: ' + ${porcentajeCritico} + '%;'">
+                                            <span class="texto-barra"
+                                                  th:text="${#numbers.formatDecimal(porcentajeCritico, 1, 1)} + '%'">
+                                                0%
+                                            </span>
+                                    </div>
+                                </div>
+                                <span class="valor-barra" th:text="${stockCritico.size()}">0</span>
+                            </div>
+
+                            <div class="fila-barra">
+                                <span class="etiqueta-barra">Nivel Bajo</span>
+                                <div class="contenedor-barra">
+                                    <div class="barra-progreso advertencia"
+                                         th:style="'width: ' + ${porcentajeNormal} + '%;'">
+                                            <span class="texto-barra"
+                                                  th:text="${#numbers.formatDecimal(porcentajeNormal, 1, 1)} + '%'">
+                                                0%
+                                            </span>
+                                    </div>
+                                </div>
+                                <span class="valor-barra" th:text="${stockNormal.size()}">0</span>
+                            </div>
+
+                            <div class="fila-barra">
+                                <span class="etiqueta-barra">Nivel Óptimo</span>
+                                <div class="contenedor-barra">
+                                    <div class="barra-progreso normal"
+                                         th:style="'width: ' + ${porcentajeAlto} + '%;'">
+                                            <span class="texto-barra"
+                                                  th:text="${#numbers.formatDecimal(porcentajeAlto, 1, 1)} + '%'">
+                                                0%
+                                            </span>
+                                    </div>
+                                </div>
+                                <span class="valor-barra" th:text="${stockAlto.size()}">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumen porcentual -->
+                <div class="tarjeta-grafico">
+                    <h4>Resumen Porcentual</h4>
+                    <div class="contenedor-grafico">
+                        <div class="resumen-porcentual">
+                            <div class="item-porcentual critico">
+                                <span class="porcentaje" th:text="${#numbers.formatDecimal(porcentajeCritico, 1, 1)} + '%'">0%</span>
+                                <span class="categoria">Crítico</span>
+                                <span class="cantidad" th:text="${stockCritico.size()} + ' productos'">0 productos</span>
+                            </div>
+                            <div class="item-porcentual advertencia">
+                                <span class="porcentaje" th:text="${#numbers.formatDecimal(porcentajeNormal, 1, 1)} + '%'">0%</span>
+                                <span class="categoria">Bajo</span>
+                                <span class="cantidad" th:text="${stockNormal.size()} + ' productos'">0 productos</span>
+                            </div>
+                            <div class="item-porcentual normal">
+                                <span class="porcentaje" th:text="${#numbers.formatDecimal(porcentajeAlto, 1, 1)} + '%'">0%</span>
+                                <span class="categoria">Óptimo</span>
+                                <span class="cantidad" th:text="${stockAlto.size()} + ' productos'">0 productos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de análisis detallado -->
+        <section class="seccion-analisis">
+            <h3 class="titulo-seccion">Análisis Detallado</h3>
+            <div class="grid-analisis">
+                <div class="tarjeta-analisis">
+                    <h4>Interpretación de los Datos</h4>
+                    <div class="contenido-analisis">
+                        <p th:if="${porcentajeCritico > 20}" class="analisis-critico">
+                            <strong>Alerta:</strong> Más del 20% de los productos se encuentran en nivel crítico.
+                            Se recomienda revisar urgentemente el inventario y realizar pedidos de reposición.
+                        </p>
+                        <p th:if="${porcentajeCritico <= 20 and porcentajeCritico > 10}" class="analisis-advertencia">
+                            <strong>Atención:</strong> Entre 10-20% de productos en nivel crítico.
+                            Monitorear de cerca y planificar reposiciones.
+                        </p>
+                        <p th:if="${porcentajeCritico <= 10}" class="analisis-normal">
+                            <strong>Estable:</strong> Menos del 10% de productos en nivel crítico.
+                            La situación del inventario es manejable.
+                        </p>
+                        <p th:if="${porcentajeAlto > 70}" class="analisis-positivo">
+                            <strong>Excelente:</strong> Más del 70% de productos en nivel óptimo.
+                            El inventario se encuentra en excelente estado.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="tarjeta-analisis">
+                    <h4>Recomendaciones</h4>
+                    <div class="contenido-analisis">
+                        <ul class="lista-recomendaciones">
+                            <li th:if="${stockCritico.size() > 0}">
+                                Revisar y reponer <strong th:text="${stockCritico.size()}">0</strong> productos en nivel crítico
+                            </li>
+                            <li th:if="${stockNormal.size() > 0}">
+                                Monitorear <strong th:text="${stockNormal.size()}">0</strong> productos en nivel bajo
+                            </li>
+                            <li>Actualizar niveles mínimos de stock según demanda</li>
+                            <li>Revisar periodicidad de los pedidos de reposición</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lista de productos críticos -->
+        <section class="seccion-lista-critica" th:if="${not stockCritico.empty}">
+            <h3 class="titulo-seccion">Productos que Requieren Atención Inmediata</h3>
+            <div class="contenedor-tabla">
+                <table class="tabla-productos">
+                    <thead>
+                    <tr>
+                        <th>Código Producto</th>
+                        <th>Stock Actual</th>
+                        <th>Stock Mínimo Requerido</th>
+                        <th>Déficit</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="inventario : ${stockCritico}">
+                        <td class="codigo-producto" th:text="'PROD-' + ${inventario.id}">PROD-001</td>
+                        <td>
+                            <span class="stock-actual critico" th:text="${inventario.stockActual}">0</span>
+                        </td>
+                        <td th:text="${inventario.stockMinimo}">10</td>
+                        <td>
+                                    <span class="deficit"
+                                          th:text="${inventario.stockMinimo - inventario.stockActual}">0</span>
+                        </td>
+                        <td class="acciones-tabla">
+                            <a th:href="@{/productos/editar/{id}(id=${inventario.id})}"
+                               class="boton boton-accion-pequeno">
+                                Reabastecer
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Sección de acciones desde reportes -->
+        <section class="seccion-acciones-reportes">
+            <h3 class="titulo-seccion">Acciones desde el Panel de Reportes</h3>
+            <div class="contenedor-acciones-reportes">
+                <a th:href="@{/productos/nuevo}" class="boton-accion-reporte">
+                    <span class="texto-accion">Agregar Nuevo Producto</span>
+                    <span class="descripcion-accion">Registrar producto en el inventario</span>
+                </a>
+                <a th:href="@{/servicios/nuevo}" class="boton-accion-reporte">
+                    <span class="texto-accion">Crear Nuevo Servicio</span>
+                    <span class="descripcion-accion">Añadir servicio al catálogo</span>
+                </a>
+                <a th:href="@{/inventario}" class="boton-accion-reporte">
+                    <span class="texto-accion">Volver al Inventario</span>
+                    <span class="descripcion-accion">Ir a la vista general</span>
+                </a>
+                <a th:href="@{/inventario/graficos}" class="boton-accion-reporte">
+                    <span class="texto-accion">Actualizar Reportes</span>
+                    <span class="descripcion-accion">Refrescar datos actuales</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-principal">
+        <div class="contenido-footer">
+            <p>&copy; 2025 Cannia - Sistema de Reportes y Análisis. Todos los derechos reservados.</p>
+            <p class="informacion-sistema">
+                Reporte generado el: <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}">fecha</span> |
+                Total de productos analizados: <span th:text="${totalProductos}">0</span>
+            </p>
+        </div>
+    </footer>
+</div>
+</body>
+</html>

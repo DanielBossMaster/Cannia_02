@@ -1,12 +1,13 @@
 package scrum.cannia.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import scrum.cannia.model.MascotaModel;
-import scrum.cannia.model.PropietarioModel;
+import scrum.cannia.model.*;
+import scrum.cannia.repository.InventarioRepository;
 import scrum.cannia.repository.MascotaRepository;
 import scrum.cannia.repository.PropietarioRepository;
 
@@ -23,37 +24,72 @@ public class MascotaController {
     public MascotaController(MascotaRepository mascotaRepository, PropietarioRepository propietarioRepository) {
         this.mascotaRepository = mascotaRepository;
         this.propietarioRepository = propietarioRepository;
-
     }
 
+
+
+    @Autowired
+    private InventarioRepository inventarioRepository;
+
+    // --------------------------
+    // Página principal del propietario
+    // --------------------------
     @GetMapping
-    String index(Model model) {
+    public String index(Model model, HttpSession session) {
 
-        List<MascotaModel> mascotas = mascotaRepository.findAll();
-        List<PropietarioModel> propietarios = propietarioRepository.findByEstadoTrue();
+        // 1. Obtener el usuario en sesión
+        UsuarioModel usuarioSesion = (UsuarioModel) session.getAttribute("usuario");
+        if (usuarioSesion == null) {
+            System.out.println("❌ No hay usuario en sesión. Redirigiendo...");
+            return "redirect:/login";
+        }
 
+        // 2. Obtener el propietario asociado
+        PropietarioModel propietarioSesion = usuarioSesion.getPropietario();
+        if (propietarioSesion == null) {
+            System.out.println("❌ El usuario NO tiene propietario asociado.");
+            return "redirect:/errorRol";
+        }
+
+        System.out.println("✔ Propietario autenticado: " + propietarioSesion.getNombrePro());
+
+        // 3. Guardar el propietario en sesión para poder usarlo en la tienda
+        session.setAttribute("propietario", propietarioSesion);
+
+        // 4. Traer solo las mascotas de este propietario
+        List<MascotaModel> mascotas = mascotaRepository.findByPropietario(propietarioSesion);
+
+        // 5. Agregar atributos al modelo
         model.addAttribute("mascotas", mascotas);
-        model.addAttribute("propietarios", propietarios);
+        model.addAttribute("propietario", propietarioSesion);
         model.addAttribute("mascota", new MascotaModel());
 
         return "propietario/indexPropietario";
     }
 
-    @PostMapping("/nuevom")
-    public String registrarMascota(@ModelAttribute MascotaModel mascota,
-                                   @RequestParam("numDoc") String numDoc,
-                                   Model model) {
+    // --------------------------
+    // Página de la tienda del propietario
+    // --------------------------
+    @GetMapping("/tienda")
+    public String tiendaPropietario(HttpSession session, Model model) {
 
-        // Buscar propietario por cédula
-        PropietarioModel propietario = propietarioRepository.findByNumDoc(numDoc);
-
-        if (propietario != null) {
-            mascota.setPropietario(propietario);
-            mascotaRepository.save(mascota);
-            model.addAttribute("mensaje", "Mascota registrada correctamente.");
-        } else {
-            model.addAttribute("error", "No se encontró propietario con esa cédula.");
+        // 1. Obtener el propietario desde la sesión
+        PropietarioModel propietario = (PropietarioModel) session.getAttribute("propietario");
+        if (propietario == null) {
+            return "redirect:/login";
         }
-        return "redirect:/mascotas";
+
+        // 2. Tomar su veterinaria
+        VeterinariaModel veterinaria = propietario.getVeterinaria();
+
+        // 3. Cargar productos de esa veterinaria
+        List<InventarioModel> productos = inventarioRepository.findByVeterinariaId(veterinaria.getId());
+
+        // 4. Agregar atributos al modelo
+        model.addAttribute("productos", productos);
+        model.addAttribute("propietario", propietario);
+
+        return "propietario/Tienda";
     }
+
 }
