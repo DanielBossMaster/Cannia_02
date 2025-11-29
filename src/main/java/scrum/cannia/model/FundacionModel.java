@@ -26,7 +26,7 @@ public class FundacionModel {
     @NotBlank(message = "El Nombre es Obligatorio")
     private String nombre;
 
-    @Column(length = 50, nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String descripcion;
 
     @Column(length = 50, nullable = false)
@@ -39,13 +39,16 @@ public class FundacionModel {
     @Email(message = "Debe ser un correo válido")
     private String email;
 
-    @Column(length = 100)
-    private String sitioWeb;
-
-    @Column(length = 200, nullable = false)
-    private String logo;
+    //uso de soft delete
+    @Column(nullable = false)
+    private boolean estado = true;
 
     @OneToMany(mappedBy = "fundacion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MascotaModel> mascotas = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
+    private UsuarioModel usuario;
+
 }
 
