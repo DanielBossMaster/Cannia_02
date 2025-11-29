@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/static/css/FundacionCss/stilos.css}">
+    <title>Fundación</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link th:href="@{/dist/output.css}" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#290043",
+                        secondary: "#170022",
+                        lightBg: "#e8ebff",
+                        lightSurface: "rgb(247,248,249)",
+                        darkText: "#1e293b",
+                        softText: "#475569",
+                        borderLight: "#e2e8f0",
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .tab-active {
+            border-bottom: 3px solid #170022;
+        }
+
+        .tab-btn {
+            transition: all 0.2s ease-in-out;
+        }
+    </style>
+
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+<a th:href="@{'/fundaciones/dashboard'}">Volver</a>
+
+<div class="max-w-3xl mx-auto mt-10 bg-white shadow-xl rounded-lg p-8">
+
+    <h1 class="text-2xl font-bold text-purple-900 mb-6 text-center">
+        Información de Mi Fundación
+    </h1>
+
+    <div class="space-y-4">
+
+        <p><span class="font-semibold">Nombre:</span>
+            <span th:text="${fundacion.nombre}"></span>
+        </p>
+
+        <p><span class="font-semibold">Descripción:</span>
+            <span th:text="${fundacion.descripcion}"></span>
+        </p>
+
+        <p><span class="font-semibold">Dirección:</span>
+            <span th:text="${fundacion.direccion}"></span>
+        </p>
+
+        <p><span class="font-semibold">Teléfono:</span>
+            <span th:text="${fundacion.telefono}"></span>
+        </p>
+
+        <p><span class="font-semibold">Email:</span>
+            <span th:text="${fundacion.email}"></span>
+        </p>
+    </div>
+
+    <div class="mt-6 text-center">
+        <a th:href="@{/fundaciones/mi-fundacion/editar}">
+            <button class="bg-purple-900 text-white px-4 py-2 rounded-md hover:bg-purple-700">
+                Editar Fundación
+            </button>
+        </a>
+    </div>
+
+</div>
+<footer class="text-center mt-4">
+    <p>&copy; 2025 App Cannia. Todos los derechos reservados.</p>
+</footer>
+</body>
+</html>

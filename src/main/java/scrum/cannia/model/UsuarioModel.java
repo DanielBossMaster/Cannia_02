@@ -31,4 +31,8 @@ public class UsuarioModel {
 
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     private VeterinarioModel veterinario;
+
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private FundacionModel fundacion;
+
 }
