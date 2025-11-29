@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${fundacion.id != null} ? 'Editar Fundación' : 'Registrar Fundación'">Formulario Fundación</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#170022",
+                        lightBg: "#e8ebff",
+                        lightSurface: "#f7f8f9",
+                        "text-light": "#212529",
+                        "border-light": "#CED4DA",
+                    },
+                    fontFamily: {
+                        display: ["Roboto", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body class="h-screen bg-[url('/img/fondo_login.jpg')] bg-cover bg-center flex items-center justify-center">
+
+<div class="bg-lightSurface shadow-2xl w-full max-w-2xl p-8">
+    <div class="flex items-center justify-between p-4 -mx-8 -mt-8 mb-4 bg-primary text-white">
+        <h2 class="text-xl font-bold" th:text="${fundacion.id != null} ? 'Editar Fundación' : 'Registrar Fundación'"></h2>
+        <a th:href="@{/fundaciones/dashboard}" class="text-sm hover:font-bold bg-white text-primary px-3 py-1 rounded">
+            Volver al Listado
+        </a>
+    </div>
+
+    <form th:action="@{/fundaciones/mi-fundacion/actualizar}"
+          th:object="${fundacion}"
+          method="post"
+          class="space-y-4">
+
+        <div>
+            <label class="block text-sm font-medium text-text-light mb-1" for="nombre">Nombre (*)</label>
+            <input type="text" id="nombre" th:field="*{nombre}" required
+                   class="w-full rounded border-border-light bg-lightSurface text-text-light focus:ring-primary focus:border-primary px-3 py-2" />
+            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="text-red-500 text-xs"></span>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-text-light mb-1" for="descripcion">Descripción (*)</label>
+            <textarea id="descripcion" th:field="*{descripcion}" required
+                      class="w-full rounded border-border-light bg-lightSurface text-text-light focus:ring-primary focus:border-primary px-3 py-2"></textarea>
+            <span th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}" class="text-red-500 text-xs"></span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-text-light mb-1" for="direccion">Dirección (*)</label>
+                <input type="text" id="direccion" th:field="*{direccion}" required
+                       class="w-full rounded border-border-light bg-lightSurface text-text-light focus:ring-primary focus:border-primary px-3 py-2" />
+                <span th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}" class="text-red-500 text-xs"></span>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-text-light mb-1" for="telefono">Teléfono (*)</label>
+                <input type="text" id="telefono" th:field="*{telefono}" required
+                       class="w-full rounded border-border-light bg-lightSurface text-text-light focus:ring-primary focus:border-primary px-3 py-2" />
+                <span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" class="text-red-500 text-xs"></span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-text-light mb-1" for="email">Email (*)</label>
+                <input type="email" id="email" th:field="*{email}" required
+                       class="w-full rounded border-border-light bg-lightSurface text-text-light focus:ring-primary focus:border-primary px-3 py-2" />
+                <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-500 text-xs"></span>
+            </div>
+
+        </div>
+
+        <div class="pt-4">
+            <button type="submit"
+                    class="w-full bg-primary text-white px-4 py-2 rounded-md hover:opacity-90 font-bold transition">
+                <span th:text="${fundacion.id != null} ? 'Actualizar Fundación' : 'Guardar Fundación'"></span>
+            </button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

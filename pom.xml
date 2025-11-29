@@ -97,7 +97,9 @@
 					</annotationProcessorPaths>
                     <source>17</source>
                     <target>17</target>
-                    <compilerArgs>--enable-preview</compilerArgs>
+                    <release>17</release>
+
+
                 </configuration>
 			</plugin>
 			<plugin>
