@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 
 import scrum.cannia.model.MascotaModel;
 import scrum.cannia.model.FundacionModel;
@@ -27,6 +29,8 @@ public class MascotaFundacionController {
     public String listar(@PathVariable Long fundacionId, Model model) {
         FundacionModel fundacion = fundacionService.obtenerFundacionPorId(fundacionId);
         model.addAttribute("fundacion", fundacion);
+        model.addAttribute("fundacionId", fundacionId);
+        model.addAttribute("fundacionNombre", fundacion.getNombre());
         model.addAttribute("mascotas", mascotaService.listarPorFundacion(fundacionId));
         return "mascotas/listar";
     }
@@ -43,7 +47,8 @@ public class MascotaFundacionController {
     // guardar
     @PostMapping("/guardar")
     public String guardar(@PathVariable Long fundacionId,
-                          @ModelAttribute("mascota") MascotaModel mascota) {
+                          @ModelAttribute("mascota") MascotaModel mascota,
+                          @RequestParam(value = "fotoFile", required = false) MultipartFile fotoFile){
 
         mascotaService.guardarEnFundacion(fundacionId, mascota);
 
@@ -66,7 +71,8 @@ public class MascotaFundacionController {
     @PostMapping("/actualizar/{id}")
     public String actualizar(@PathVariable Long fundacionId,
                              @PathVariable Long id,
-                             @ModelAttribute("mascota") MascotaModel mascota) {
+                             @ModelAttribute("mascota") MascotaModel mascota,
+                             @RequestParam(value = "fotoFile", required = false) MultipartFile fotoFile){
 
         mascotaService.actualizarMascota(id, mascota);
 

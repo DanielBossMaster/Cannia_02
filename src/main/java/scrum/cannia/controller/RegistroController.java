@@ -12,6 +12,8 @@ import scrum.cannia.dto.RegistroDTO;
 import scrum.cannia.model.UsuarioModel;
 import scrum.cannia.model.PropietarioModel;
 import scrum.cannia.model.VeterinarioModel;
+import scrum.cannia.model.FundacionModel;
+import scrum.cannia.repository.FundacionRepository;
 import scrum.cannia.repository.UsuarioRepository;
 import scrum.cannia.repository.PropietarioRepository;
 import scrum.cannia.repository.VeterinarioRepository;
@@ -28,6 +30,9 @@ public class RegistroController {
 
     @Autowired
     private VeterinarioRepository veterinarioRepository;
+
+    @Autowired
+    private FundacionRepository fundacionRepository;
 
     @GetMapping
     public String mostrarFormulario(Model model) {
@@ -99,6 +104,20 @@ public class RegistroController {
                 veterinarioRepository.save(veterinario);
 
                 usuario.setVeterinario(veterinario);
+                usuarioRepository.save(usuario);
+
+            } else if ("fundacion".equalsIgnoreCase(registroDTO.getRol())) {
+                FundacionModel fundacion = new FundacionModel();
+                fundacion.setNombre(registroDTO.getNombreFundacion());
+                fundacion.setDescripcion(registroDTO.getDescripcionFundacion());
+                fundacion.setDireccion(registroDTO.getDireccionFundacion());
+                fundacion.setTelefono(registroDTO.getTelefonoFundacion());
+                fundacion.setEmail(registroDTO.getEmailFundacion());
+                fundacion.setUsuario(usuario);
+
+                fundacionRepository.save(fundacion);
+
+                usuario.setFundacion(fundacion);
                 usuarioRepository.save(usuario);
             }
 
