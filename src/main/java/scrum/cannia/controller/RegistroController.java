@@ -39,27 +39,54 @@ public class RegistroController {
     @Transactional
     public String registrarUsuario(@ModelAttribute("registro") RegistroDTO registroDTO, Model model) {
         try {
+            // Crear usuario
             UsuarioModel usuario = new UsuarioModel();
             usuario.setUsuario(registroDTO.getUsuario());
             usuario.setContrasena(registroDTO.getContrasena());
             usuario.setRol(registroDTO.getRol());
             usuarioRepository.save(usuario);
 
+            // ===========================
+            //   REGISTRO DE PROPIETARIO
+            // ===========================
             if ("propietario".equalsIgnoreCase(registroDTO.getRol())) {
-                PropietarioModel propietario = new PropietarioModel();
-                propietario.setNumDoc(registroDTO.getNumDoc());
-                propietario.setNombrePro(registroDTO.getNombrePro());
-                propietario.setApellidoPro(registroDTO.getApellidoPro());
-                propietario.setDireccionPro(registroDTO.getDireccionPro());
-                propietario.setTelefonoPro(registroDTO.getTelefonoPro());
-                propietario.setCorreoPro(registroDTO.getCorreoPro());
-                propietario.setUsuario(usuario);
-                propietarioRepository.save(propietario);
 
+                // Buscar si ya existe un propietario con este documento
+                PropietarioModel propietarioExistente =
+                        propietarioRepository.findByNumDoc(registroDTO.getNumDoc());
+
+                PropietarioModel propietario;
+
+                if (propietarioExistente != null) {
+                    // ✔ Caso 1: el propietario YA existe → lo usamos
+                    propietario = propietarioExistente;
+
+                } else {
+                    // ✔ Caso 2: no existe → creamos uno nuevo
+                    propietario = new PropietarioModel();
+                    propietario.setNumDoc(registroDTO.getNumDoc());
+                    propietario.setNombrePro(registroDTO.getNombrePro());
+                    propietario.setApellidoPro(registroDTO.getApellidoPro());
+                    propietario.setDireccionPro(registroDTO.getDireccionPro());
+                    propietario.setTelefonoPro(registroDTO.getTelefonoPro());
+                    propietario.setCorreoPro(registroDTO.getCorreoPro());
+
+                    propietarioRepository.save(propietario);
+                }
+
+                // Asociar usuario ↔ propietario
+                propietario.setUsuario(usuario);
                 usuario.setPropietario(propietario);
+
+                propietarioRepository.save(propietario);
                 usuarioRepository.save(usuario);
 
-            } else if ("veterinario".equalsIgnoreCase(registroDTO.getRol())) {
+            }
+            // ===========================
+            //   REGISTRO DE VETERINARIO
+            // ===========================
+            else if ("veterinario".equalsIgnoreCase(registroDTO.getRol())) {
+
                 VeterinarioModel veterinario = new VeterinarioModel();
                 veterinario.setNumLicencia(registroDTO.getNumLicencia());
                 veterinario.setNombreVete(registroDTO.getNombreVete());
@@ -68,6 +95,7 @@ public class RegistroController {
                 veterinario.setTelefonoVete(registroDTO.getTelefonoVete());
                 veterinario.setCorreoVete(registroDTO.getCorreoVete());
                 veterinario.setUsuario(usuario);
+
                 veterinarioRepository.save(veterinario);
 
                 usuario.setVeterinario(veterinario);
@@ -83,5 +111,6 @@ public class RegistroController {
             return "registro/registrar";
         }
     }
+
 }
 

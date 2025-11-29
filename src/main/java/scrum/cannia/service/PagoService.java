@@ -3,10 +3,15 @@ package scrum.cannia.service;
 import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import scrum.cannia.model.CarritoRequest;
-import scrum.cannia.model.ProductoModel;
+import org.springframework.transaction.annotation.Transactional;
+import scrum.cannia.model.*;
+import scrum.cannia.repository.FacturaDetalleRepository;
+import scrum.cannia.repository.FacturaRepository;
+import scrum.cannia.repository.InventarioRepository;
 import scrum.cannia.repository.ProductoRepository;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +20,16 @@ public class PagoService {
 
     @Autowired
     private ProductoRepository productoRepository;
+
+    @Autowired
+    private FacturaRepository facturaRepository;
+
+    @Autowired
+    private FacturaDetalleRepository facturaDetalleRepository;
+
+    @Autowired
+    private InventarioRepository inventarioRepository;
+
 
     public List<SessionCreateParams.LineItem> convertirItemsDelCarrito(CarritoRequest carrito) {
 
@@ -55,4 +70,63 @@ public class PagoService {
 
         return lineItems;
     }
+
+    @Transactional
+    public FacturaModel registrarFactura(
+            PropietarioModel propietario,
+            VeterinariaModel veterinaria,
+            List<ItemCarrito> carrito
+    ) {
+
+        // 1. Crear factura
+        FacturaModel factura = new FacturaModel();
+        factura.setFechaEmision(LocalDateTime.now());
+        factura.setDescripcion("Compra en la tienda veterinaria");
+        factura.setMetodoPago(MetodoPago.Tarjeta);
+        factura.setVeterinaria(veterinaria);
+        factura.setPropietario(propietario);
+
+        BigDecimal total = BigDecimal.ZERO;
+
+        // 2. Crear detalles
+        for (ItemCarrito item : carrito) {
+
+            InventarioModel inventario = inventarioRepository
+                    .findByProductoIdAndVeterinariaId(
+                            item.getProducto().getId(),
+                            veterinaria.getId()
+                    )
+                    .orElseThrow(() -> new RuntimeException("Inventario no encontrado"));
+
+            // Descontar stock
+            inventario.setStockActual(inventario.getStockActual() - item.getCantidad());
+            inventarioRepository.save(inventario);
+
+            // Crear detalle
+            FacturaDetalleModel det = new FacturaDetalleModel();
+            det.setFactura(factura);
+            det.setProducto(item.getProducto());
+            det.setInventario(inventario);
+            det.setCantidad(item.getCantidad());
+
+            BigDecimal precioDetalle = BigDecimal
+                    .valueOf(item.getProducto().getValor())
+                    .multiply(BigDecimal.valueOf(item.getCantidad()));
+
+            det.setPrecio(precioDetalle);
+
+            // Agregar detalle a la factura
+            factura.getDetalles().add(det);
+
+            total = total.add(precioDetalle);
+        }
+
+        factura.setPrecioTotal(total);
+
+        // 3. Guardar all automatico (factura + detalles)
+        return facturaRepository.save(factura);
+    }
+
 }
+
+

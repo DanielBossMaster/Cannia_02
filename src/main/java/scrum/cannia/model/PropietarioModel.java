@@ -44,7 +44,11 @@ public class PropietarioModel {
     @OneToMany(mappedBy = "propietario", fetch = FetchType.EAGER) // Cambiar a EAGER
     private List<MascotaModel> mascotas;
 
-    @OneToOne
-    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
+    @OneToOne(mappedBy = "propietario")
     private UsuarioModel usuario;
+
+    @ManyToOne
+    @JoinColumn(name = "id_veterinaria")
+    private VeterinariaModel veterinaria;
+
 }

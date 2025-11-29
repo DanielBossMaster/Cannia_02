@@ -5,29 +5,30 @@ import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import scrum.cannia.model.CarritoRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import scrum.cannia.model.ItemCarrito;
+import scrum.cannia.model.PropietarioModel;
+import scrum.cannia.model.VeterinariaModel;
+import scrum.cannia.model.VeterinarioModel;
 import scrum.cannia.service.PagoService;
 
 import java.util.List;
 import java.util.Map;
 
-@RestController
-@RequestMapping("/api/pagos")
-public class PagosController {
+@Controller
+@RequestMapping("/pago")
+public class PagoController {
 
     @Autowired
     private PagoService pagoService;
 
-    public PagosController() {
+    public PagoController() {
         Stripe.apiKey = "sk_test_51SYKWZCjwJYz7HpJKzOWlAU9rgBp457N4myuyAnnn4haZ5Buh6ymGykzSHljC4c4NLIb8XNGWUWjqzUDB89h7tHD00sxJgS3Sl"; // TU CLAVE TEST
     }
 
-    @PostMapping("/crear-checkout")
+    @PostMapping("/crearCheckout")
+    @ResponseBody
     public Map<String, String> crearCheckout(HttpSession session) throws Exception {
 
         List<ItemCarrito> carrito = (List<ItemCarrito>) session.getAttribute("carrito");
@@ -57,13 +58,51 @@ public class PagosController {
         SessionCreateParams params = SessionCreateParams.builder()
                 .addAllLineItem(lineItems)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl("http://localhost:8081/success")
-                .setCancelUrl("http://localhost:8081/cancel")
+                .setSuccessUrl("http://localhost:8081/pago/exitoso")
+                .setCancelUrl("http://localhost:8081/pago/cancelado")
                 .build();
 
         Session sessionStripe = Session.create(params);
 
         return Map.of("url", sessionStripe.getUrl());
     }
+
+    @GetMapping("/exitoso")
+    public String pagoExitoso(HttpSession session) {
+
+        // 1. Obtener carrito
+        List<ItemCarrito> carrito = (List<ItemCarrito>) session.getAttribute("carrito");
+
+        if (carrito == null || carrito.isEmpty()) {
+            return "redirect:/veterinario/TiendaPreview"; // o donde quieras
+        }
+
+        // 2. Obtener propietario (logueado)
+        PropietarioModel propietario = (PropietarioModel) session.getAttribute("propietario");
+        if (propietario == null) {
+            throw new RuntimeException("Propietario no encontrado en sesión");
+        }
+
+        // 3. Obtener veterinaria
+        VeterinarioModel veterinario = (VeterinarioModel) session.getAttribute("veterinario");
+        VeterinariaModel veterinaria = veterinario.getVeterinaria();
+
+
+        // 4. Registrar factura en el servicio
+        pagoService.registrarFactura(propietario, veterinaria, carrito);
+
+        // 5. Vaciar carrito
+        session.removeAttribute("carrito");
+
+        // 6. Mostrar vista de éxito
+        return "veterinario/CompraExitosa";
+    }
+
+    @GetMapping("/cancelado")
+    public String pagoCancelado() {
+        return "veterinario/CompraCancelada";
+    }
+
+
 
 }

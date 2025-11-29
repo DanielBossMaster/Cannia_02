@@ -65,19 +65,41 @@ public class VeterinarioController {
     }
 
     // ============================================
-    //        REGISTRAR NUEVO PROPIETARIO
-    // ============================================
+//        REGISTRAR NUEVO PROPIETARIO
+// ============================================
     @PostMapping("/nuevo")
-    public String nuevo(@Validated @ModelAttribute PropietarioModel propietarioModel,
-                        BindingResult br) {
+    public String nuevo(
+            @Validated @ModelAttribute("propietarioModel") PropietarioModel propietarioModel,
+            BindingResult br,
+            HttpSession session,
+            Model model) {
 
+        // Validación del formulario
         if (br.hasErrors()) {
+            model.addAttribute("mensajeError", "Por favor corrige los campos marcados.");
             return "veterinario/Index";
         }
 
+        // Obtener el usuario en sesión
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/login";  // Seguridad
+        }
+
+        // Obtener veterinario y veterinaria asociada
+        VeterinarioModel veterinario = usuario.getVeterinario();
+        VeterinariaModel veterinaria = veterinario.getVeterinaria();
+
+        // Asignar automáticamente la veterinaria al propietario que se está registrando
+        propietarioModel.setVeterinaria(veterinaria);
+
+        // Guardar propietario
         propietarioRepository.save(propietarioModel);
-        return "redirect:/veterinario";
+
+        return "redirect:/veterinario";  // Volver al listado
     }
+
+
 
     // ============================================
     // REGISTRAR MASCOTA A UN PROPIETARIO
