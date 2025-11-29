@@ -112,7 +112,7 @@
             <script>
                 document.getElementById("btnPagar").addEventListener("click", async () => {
 
-                    const respuesta = await fetch("/api/pagos/crear-checkout", {
+                    const respuesta = await fetch("/pago/crearCheckout", {
                         method: "POST"
                     });
 
