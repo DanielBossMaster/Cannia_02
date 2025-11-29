@@ -9,14 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import scrum.cannia.model.HistoriaClinicaModel;
-import scrum.cannia.model.MascotaModel;
-import scrum.cannia.model.PropietarioModel;
-import scrum.cannia.model.UsuarioModel;
-import scrum.cannia.repository.HistoriaClinicaRepository;
-import scrum.cannia.repository.MascotaRepository;
-import scrum.cannia.repository.PropietarioRepository;
-import scrum.cannia.repository.UsuarioRepository;
+import org.springframework.web.multipart.MultipartFile;
+import scrum.cannia.model.*;
+import scrum.cannia.repository.*;
 import scrum.cannia.service.*;
 
 import java.io.ByteArrayInputStream;
@@ -31,7 +26,6 @@ public class PropietarioController {
     private final MascotaRepository mascotaRepository;
     private final HistoriaClinicaRepository historiaClinicaRepository;
     private final ExcelExportService excelExportService;
-    //private final ExcelLoaderService excelLoaderService;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -43,6 +37,10 @@ public class PropietarioController {
     private VeterinarioService veterinarioService;
     @Autowired
     private ProductoService productoService;
+    @Autowired
+    private ExcelLoaderService excelLoaderService;
+    @Autowired
+    private PetRepository petRepository;
 
     public PropietarioController(PropietarioRepository propietarioRepository,
                                  MascotaRepository mascotaRepository,
@@ -53,17 +51,38 @@ public class PropietarioController {
         this.mascotaRepository = mascotaRepository;
         this.historiaClinicaRepository = historiaClinicaRepository;
         this.excelExportService = excelExportService;
-        //this.excelLoaderService = excelLoaderService;
     }
     @GetMapping("/index")
     public String mostrarIndexPropietario(HttpSession session, Model model) {
-
-        // Opcional: Recuperar el usuario desde la sesión
         UsuarioModel user = (UsuarioModel) session.getAttribute("usuario");
-
         model.addAttribute("usuario", user);
+        return "Propietario/index";
+    }
 
-        return "Propietario/index";  // ⚠️ Respeta el nombre de tu carpeta/vista
+    @GetMapping("/cargar-mascotas")
+    public String cargarExcel() {
+        return "Propietario/CargarMascotas";
+    }
+    @PostMapping("/upload")
+    public String procesarExcel(@RequestParam("file") MultipartFile file, Model model) {
+
+        try {
+            ExcelLoaderService.loadPetsFromExcel(file, petRepository);
+            model.addAttribute("message", "Archivo cargado correctamente.");
+        } catch (Exception e) {
+            model.addAttribute("message", "Error al cargar el archivo: " + e.getMessage());
+        }
+
+        return "Propietario/CargarMascotas";
+    }
+    @GetMapping("/muestras")
+    public String mostrarMascotas(Model model) {
+        model.addAttribute("pets", petRepository.findAll());
+
+//        List<PetModel> lista = petRepository.findAll();
+//        model.addAttribute("pets", lista);
+
+        return "Propietario/MuestraMascotas";
     }
 
     @GetMapping("/listar")

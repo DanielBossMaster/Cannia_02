@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cargar Mascotas</title>
+</head>
+<body class="p-10">
+
+<h1 class="text-2xl font-bold mb-4">Cargar archivo de mascotas</h1>
+
+<form th:action="@{/propietario/upload}" method="post" enctype="multipart/form-data">
+
+
+    <input type="file" name="file" accept=".xlsx" required>
+
+    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
+        Subir Excel
+    </button>
+</form>
+
+<p th:if="${message}" th:text="${message}" class="mt-4 text-blue-600 font-semibold"></p>
+
+</body>
+</html>
+
+
