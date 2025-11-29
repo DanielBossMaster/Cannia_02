@@ -1,5 +1,7 @@
 package scrum.cannia.controller;
 
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -10,32 +12,58 @@ import org.springframework.web.bind.annotation.*;
 import scrum.cannia.model.HistoriaClinicaModel;
 import scrum.cannia.model.MascotaModel;
 import scrum.cannia.model.PropietarioModel;
+import scrum.cannia.model.UsuarioModel;
 import scrum.cannia.repository.HistoriaClinicaRepository;
 import scrum.cannia.repository.MascotaRepository;
 import scrum.cannia.repository.PropietarioRepository;
-import scrum.cannia.service.ExcelExportService;
+import scrum.cannia.repository.UsuarioRepository;
+import scrum.cannia.service.*;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/propietarios")
+@RequestMapping("/propietario")
 public class PropietarioController {
 
     private final PropietarioRepository propietarioRepository;
     private final MascotaRepository mascotaRepository;
     private final HistoriaClinicaRepository historiaClinicaRepository;
     private final ExcelExportService excelExportService;
+    //private final ExcelLoaderService excelLoaderService;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+    @Autowired
+    private PropietarioService propietarioService;
+    @Autowired
+    private MascotaService mascotaService;
+    @Autowired
+    private VeterinarioService veterinarioService;
+    @Autowired
+    private ProductoService productoService;
 
     public PropietarioController(PropietarioRepository propietarioRepository,
                                  MascotaRepository mascotaRepository,
                                  HistoriaClinicaRepository historiaClinicaRepository,
-                                 ExcelExportService excelExportService) {
+                                 ExcelExportService excelExportService
+                                 ) {
         this.propietarioRepository = propietarioRepository;
         this.mascotaRepository = mascotaRepository;
         this.historiaClinicaRepository = historiaClinicaRepository;
         this.excelExportService = excelExportService;
+        //this.excelLoaderService = excelLoaderService;
+    }
+    @GetMapping("/index")
+    public String mostrarIndexPropietario(HttpSession session, Model model) {
+
+        // Opcional: Recuperar el usuario desde la sesión
+        UsuarioModel user = (UsuarioModel) session.getAttribute("usuario");
+
+        model.addAttribute("usuario", user);
+
+        return "Propietario/index";  // ⚠️ Respeta el nombre de tu carpeta/vista
     }
 
     @GetMapping("/listar")
