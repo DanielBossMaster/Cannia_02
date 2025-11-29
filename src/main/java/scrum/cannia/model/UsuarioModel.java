@@ -26,7 +26,8 @@ public class UsuarioModel {
     @Column(length = 20, nullable = false)
     private String rol;
 
-    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @OneToOne
+    @JoinColumn(name = "id_propietario")
     private PropietarioModel propietario;
 
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
