@@ -1,106 +1,72 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Panel Propietario</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/VeterinarioCss/estilos.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AppCannia - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
-<header>
-    <div class="logo">
-        <img src="/img/logo.png" alt="logo">
+<body class="bg-[#f6fdf7] text-gray-800">
+<nav class="w-full flex justify-between items-center px-8 py-4 bg-white shadow-sm">
+    <div class="flex items-center gap-2 text-green-600 font-semibold text-lg">
+        <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
+        <h1 class="text-lg font-bold">Cannia</h1>
     </div>
-    <nav class="links">
-        <a th:href="@{/cerrar-sesion}">Cerrar sesión</a>
-    </nav>
+    <div class="flex items-center gap-3">
+        <a class="px-4 py-1 rounded-full bg-gray-100" th:href="@{/profile}">Mi Perfil</a>
+        <a class="px-4 py-1 rounded-full bg-green-500 text-white" th:href="@{/logout}">Cerrar Sesión</a>
+    </div>
+</nav>
 
-</header>
+<main class="max-w-5xl mx-auto mt-12 px-6">
+    <h1 class="text-4xl font-bold">Bienvenido, <span th:text="${ownerName}">Usuario</span>!</h1>//buscar como poner el nombre del usuario
+    <p class="text-gray-500 mt-1">¿Cómo puedo ayudarte el día de hoy?</p>
 
-<body>
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+        <!-- Card -->
+        <a th:href="@{/pets/new}" class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-green-200">
+            <div class="text-green-600 text-3xl"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14c1.657 0 3-1.79 3-4s-1.343-4-3-4-3 1.79-3 4 1.343 4 3 4zM5 13c1.105 0 2-.895 2-2s-.895-3-2-3-2 1.895-2 3 .895 2 2 2zm14 0c1.105 0 2-.895 2-2s-.895-3-2-3-2 1.895-2 3 .895 2 2 2zM7 17c-1.105 0-3 .895-3 2s1.895 2 3 2 3-.895 3-2-1.895-2-3-2zm10 0c-1.105 0-3 .895-3 2s1.895 2 3 2 3-.895 3-2-1.895-2-3-2z"/></svg></div>
+            <h3 class="font-semibold mt-3 text-lg">Registrar Mascota</h3>
+            <p class="text-sm text-gray-500">Añade un nuevo integrante a tu perfil familiar.</p>
+        </a>
 
+        <a th:href="@{/pets/edit}" class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-green-200">
+            <div class="text-green-600 text-3xl"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+            <h3 class="font-semibold mt-3 text-lg">Tus Mascotas</h3>
+            <p class="text-sm text-gray-500">Actualiza la información de tu amigo.</p>
+        </a>
 
-<div class="container text-start my-4">
-    <div  class="col" th:each="prop : ${propietarios}" >
-        <button class="btn btn-primary"
-                th:attr="data-bs-target='#addMascotaModal-' + ${prop.numDoc}"
-                data-bs-toggle="modal">
-            Registrar Mascota
-        </button>
-        <div class="modal fade" th:attr="id='addMascotaModal-' + ${prop.numDoc}" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <form th:action="@{/mascotas/nuevom}" method="post" th:object="${mascota}" class="modal-content">
+        <a th:href="@{/vaccines}" class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-green-200">
+            <div class="text-green-600 text-3xl"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 2l4 4-8 8-4-4 8-8zM2 22l7-1-6-6-1 7z"/></svg></div>
+            <h3 class="font-semibold mt-3 text-lg">Tienda</h3>
+            <p class="text-sm text-gray-500">Los mejores productos para el bienestar.</p>
+        </a>
 
-                    <input type="hidden" name="numDoc" th:value="${prop.numDoc}"/>
-                    <div class="modal-header">
-                        <h5 class="modal-title">Registrar Mascota</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                    </div>
+        <a th:href="@{/history}" class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-green-200">
+            <div class="text-green-600 text-3xl"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 2l4 4-8 8-4-4 8-8zM2 22l7-1-6-6-1 7z"/></svg></div>
+            <h3 class="font-semibold mt-3 text-lg">Historia Clinica</h3>
+                <p class="text-sm text-gray-500">Acceda a registros médicos y visitas pasadas.</p>
+        </a>
 
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label">Nombre</label>
-                            <input type="text" th:field ="*{nomMascota}" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Especie</label>
-                            <input type="text"  th:field ="*{especie}" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Raza</label>
-                            <input type="text" th:field ="*{raza}"  class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Color</label>
-                            <input type="text"  th:field ="*{color}"  class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Fecha de nacimiento</label>
-                            <input type="date"  th:field ="*{fechaNacimiento}" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Genero</label>
-                            <select th:field ="*{genero}" class="form-control" required>
-                                <option th:value="Hembra">Hembra</option>
-                                <option th:value="Macho">Macho</option>
-                            </select>
-                        </div>
+        <a th:href="@{/veterinarians}" class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-green-200">
+            <div class="text-green-600 text-3xl">💬</div>
+            <h3 class="font-semibold mt-3 text-lg">Contactar Veterinarias</h3>
+            <p class="text-sm text-gray-500">Envíe un mensaje o encuentre nuestra información de contacto.</p>
+        </a>
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                    </div>
-                </form>
-            </div>
+        <a th:href="@{/adoptions}" class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-green-200">
+            <div class="text-green-600 text-3xl">💚</div>
+            <h3 class="font-semibold mt-3 text-lg">Adopta una Mascota</h3>
+            <p class="text-sm text-gray-500">Encuentra un nuevo amigo que necesite un hogar.</p>
+        </a>
+    </section>
+
+    <footer class="mt-16 text-center text-sm text-gray-600">
+        <div class="flex justify-center gap-10">
+            <a href="#">© 2025 App Cannia. Todos los derechos reservados.</a>
         </div>
-    </div>
-</div>
-
-
-<div class="container">
-    <h3 class="mb-4 text-center">Mis Mascotas</h3>
-    <div class="cards">
-        <div class="card-owner" th:each="mascota : ${mascotas}">
-            <div  th:each="prop : ${propietarios}">
-                <strong th:text="${prop.nombrePro}" ></strong>
-                <strong th:text="${prop.apellidoPro}"></strong>
-            </div>
-            <strong th:text="${mascota.nomMascota}"></strong>
-            <p><b>Especie:</b> <span th:text="${mascota.especie}"></span></p>
-            <p><b>Raza:</b> <span th:text="${mascota.raza}"></span></p>
-            <p><b>genero:</b> <span th:text="${mascota.genero}"></span></p>
-
-            <!-- Botón Eliminar -->
-            <a th:href="@{/mascotas/eliminar/{id}(id=${mascota.id})}" class="btn btn-primary">Eliminar Mascota</a>
-        </div>
-    </div>
-</div>
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
-
+        <div class="mt-4 flex justify-center gap-4 text-green-600 text-xl">⛑️ 📷 🐶</div>
+    </footer>
+</main>
 </body>
 </html>
