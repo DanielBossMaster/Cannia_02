@@ -11,22 +11,16 @@
     <div class="logo">
         <img src="/img/HistoriaClinica.png" alt="logo">
     </div>
-    <h1>Mascotas</h1>
+    <h1>Historia Clínica</h1>
     <div class="Barra" style="position: relative;">
         <input type="text" id="searchInput" placeholder="Buscar por documento...">
         <button onclick="limpiarBusqueda()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #666;">
             ✕
         </button>
     </div>
-    <!-- Botón Home -->
-    <a th:href="@{/veterinario}" class="btn-home">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-             class="lucide lucide-house">
-            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
-            <path d="M5 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-        </svg>
-    </a>
+    <a th:href="@{/veterinario}">
+        <button class="text-sm hover:font-bold">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-arrow-left-icon lucide-circle-arrow-left"><circle cx="12" cy="12" r="10"/><path d="m12 8-4 4 4 4"/><path d="M16 12H8"/></svg></button></a>
 </header>
 
 <main id="ownersContainer">
