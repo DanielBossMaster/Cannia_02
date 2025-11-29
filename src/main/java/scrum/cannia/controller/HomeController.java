@@ -42,10 +42,25 @@ public class HomeController {
         String rol = u.getRol() != null ? u.getRol().trim().toLowerCase() : "";
 
         switch (rol) {
+
+            case "fundacion":
+
+                if (u.getFundacion() == null) {
+                    model.addAttribute("error", "Este usuario no tiene una fundación asociada.");
+                    return "login/login";
+                }
+
+                // Guardar ID y Nombre de la fundación en sesión
+                session.setAttribute("fundacionId", u.getFundacion().getId());
+                session.setAttribute("fundacionNombre", u.getFundacion().getNombre());
+
+                return "redirect:/fundaciones/dashboard";
             case "veterinario":
                 return "redirect:/veterinario";
             case "propietario":
                 return "redirect:/mascotas";
+
+
             default:
                 model.addAttribute("error", "Rol no válido o no asignado");
                 session.invalidate();
