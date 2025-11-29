@@ -45,16 +45,19 @@ public class MascotaModel {
     private Genero genero;
 
     @ManyToOne
-    @JoinColumn(name = "id_propietario", nullable = false)
+    @JoinColumn(name = "id_propietario", nullable = true)
     private PropietarioModel propietario;
 
     @ManyToOne
-    @JoinColumn(name = "id_fundacion", nullable = true)
+    @JoinColumn(name = "id_fundacion",nullable = true)
     private FundacionModel fundacion;
 
-    @Column(length = 20)
+    @Column(length = 50)
     private String edadFundacion;
 
-    @Column(length = 255)
-    private byte[] foto;
+    @Column(length = 250)
+    private String foto;
+
+    @Column(nullable = false)
+    private boolean estado = true;
 }
