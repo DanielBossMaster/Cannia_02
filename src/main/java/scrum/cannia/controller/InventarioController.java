@@ -1,11 +1,6 @@
 package scrum.cannia.controller;
 
-import scrum.cannia.model.ProductoModel;
-import scrum.cannia.model.ServicioModel;
-import scrum.cannia.model.InventarioModel;
-import scrum.cannia.service.ProductoService;
-import scrum.cannia.service.ServicioService;
-import scrum.cannia.service.InventarioService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,73 +14,73 @@ import java.util.List;
 @Controller
 @RequestMapping("/inventario")
 public class InventarioController {
-
-    @Autowired
-    private ProductoService productoService;
-
-    @Autowired
-    private ServicioService servicioService;
-
-    @Autowired
-    private InventarioService inventarioService;
-
-    /**
-     * Página principal del inventario - muestra productos y servicios
-     */
-    @GetMapping
-    public String mostrarInventario(Model model) {
-        // Cargar productos activos y todos los servicios para mostrar en la vista
-        model.addAttribute("productos", productoService.obtenerProductosActivos());
-        model.addAttribute("servicios", servicioService.obtenerTodosServicios());
-        model.addAttribute("paginaActual", "inventario");
-        return "inventario/inventario";
-    }
-
-    /**
-     * Página de gráficos del inventario - datos precalculados
-     */
-    @GetMapping("/graficos")
-    public String mostrarGraficos(Model model) {
-        // Obtener datos para los gráficos
-        Map<String, Object> datosGraficos = inventarioService.obtenerDatosGraficos();
-
-        // Calcular métricas para los gráficos
-        List<InventarioModel> stockCritico = (List<InventarioModel>) datosGraficos.get("stockCritico");
-        List<InventarioModel> stockNormal = (List<InventarioModel>) datosGraficos.get("stockNormal");
-        List<InventarioModel> stockAlto = (List<InventarioModel>) datosGraficos.get("stockAlto");
-
-        int totalProductos = stockCritico.size() + stockNormal.size() + stockAlto.size();
-
-        // Calcular porcentajes para gráficos
-        double porcentajeCritico = totalProductos > 0 ? (stockCritico.size() * 100.0) / totalProductos : 0;
-        double porcentajeNormal = totalProductos > 0 ? (stockNormal.size() * 100.0) / totalProductos : 0;
-        double porcentajeAlto = totalProductos > 0 ? (stockAlto.size() * 100.0) / totalProductos : 0;
-
-        // Agregar datos al modelo
-        model.addAttribute("stockCritico", stockCritico);
-        model.addAttribute("stockNormal", stockNormal);
-        model.addAttribute("stockAlto", stockAlto);
-        model.addAttribute("totalProductos", totalProductos);
-        model.addAttribute("porcentajeCritico", porcentajeCritico);
-        model.addAttribute("porcentajeNormal", porcentajeNormal);
-        model.addAttribute("porcentajeAlto", porcentajeAlto);
-        model.addAttribute("paginaActual", "graficos");
-
-        return "inventario/graficos";
-    }
-
-    //Redirección a la página de productos
-    @GetMapping("/productos")
-    public String redirigirAProductos() {
-        return "redirect:/productos";
-    }
-//Redirección a la página de servicios
-
-    @GetMapping("/servicios")
-    public String redirigirAServicios() {
-        return "redirect:/servicios";
-    }
-
-
+//
+//    @Autowired
+//    private ProductoService productoService;
+//
+//    @Autowired
+//    private ServicioService servicioService;
+//
+//    @Autowired
+//    private InventarioService inventarioService;
+//
+//    /**
+//     * Página principal del inventario - muestra productos y servicios
+//     */
+//    @GetMapping
+//    public String mostrarInventario(Model model) {
+//        // Cargar productos activos y todos los servicios para mostrar en la vista
+//        model.addAttribute("productos", productoService.obtenerProductosActivos());
+//        model.addAttribute("servicios", servicioService.obtenerTodosServicios());
+//        model.addAttribute("paginaActual", "inventario");
+//        return "inventario/inventario";
+//    }
+//
+//    /**
+//     * Página de gráficos del inventario - datos precalculados
+//     */
+//    @GetMapping("/graficos")
+//    public String mostrarGraficos(Model model) {
+//        // Obtener datos para los gráficos
+//        Map<String, Object> datosGraficos = inventarioService.obtenerDatosGraficos();
+//
+//        // Calcular métricas para los gráficos
+//        List<InventarioModel> stockCritico = (List<InventarioModel>) datosGraficos.get("stockCritico");
+//        List<InventarioModel> stockNormal = (List<InventarioModel>) datosGraficos.get("stockNormal");
+//        List<InventarioModel> stockAlto = (List<InventarioModel>) datosGraficos.get("stockAlto");
+//
+//        int totalProductos = stockCritico.size() + stockNormal.size() + stockAlto.size();
+//
+//        // Calcular porcentajes para gráficos
+//        double porcentajeCritico = totalProductos > 0 ? (stockCritico.size() * 100.0) / totalProductos : 0;
+//        double porcentajeNormal = totalProductos > 0 ? (stockNormal.size() * 100.0) / totalProductos : 0;
+//        double porcentajeAlto = totalProductos > 0 ? (stockAlto.size() * 100.0) / totalProductos : 0;
+//
+//        // Agregar datos al modelo
+//        model.addAttribute("stockCritico", stockCritico);
+//        model.addAttribute("stockNormal", stockNormal);
+//        model.addAttribute("stockAlto", stockAlto);
+//        model.addAttribute("totalProductos", totalProductos);
+//        model.addAttribute("porcentajeCritico", porcentajeCritico);
+//        model.addAttribute("porcentajeNormal", porcentajeNormal);
+//        model.addAttribute("porcentajeAlto", porcentajeAlto);
+//        model.addAttribute("paginaActual", "graficos");
+//
+//        return "inventario/graficos";
+//    }
+//
+//    //Redirección a la página de productos
+//    @GetMapping("/productos")
+//    public String redirigirAProductos() {
+//        return "redirect:/productos";
+//    }
+////Redirección a la página de servicios
+//
+//    @GetMapping("/servicios")
+//    public String redirigirAServicios() {
+//        return "redirect:/servicios";
+//    }
+//
+//
 
 }
