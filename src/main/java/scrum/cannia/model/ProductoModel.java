@@ -37,14 +37,10 @@ public class ProductoModel {
 
     @Lob
     @Column
-    private byte foto;
+    private byte[] foto;
 
     @Column
     private boolean publicado;
-
-    @Enumerated(EnumType.STRING)
-    @Column(length = 10, nullable = false)
-    private UnidadMedida unidadMedida;
 
     // Si InventarioModel tiene un campo llamado 'producto':
     @OneToMany(mappedBy = "producto")

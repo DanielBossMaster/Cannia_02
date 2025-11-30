@@ -9,4 +9,5 @@ import java.util.List;
 public interface ProductoRepository extends JpaRepository<ProductoModel, Integer> {
     List<ProductoModel> findByEstadoTrue(); // Solo productos activos
 //    List<ProductoModel> findByPublicadoTrue(); // Solo productos publicados
+
 }

@@ -23,9 +23,6 @@ public class ServicioModel {
     @Column(length = 800, nullable = false)
     private String descripcion;  // ← también cambia a minúscula si es necesario
 
-    @Column(length = 50, nullable = false)
-    private String disponibilidad;
-
     @Column(nullable = false)
     private Integer duracionEstimada;
 
