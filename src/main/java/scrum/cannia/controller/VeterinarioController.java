@@ -235,9 +235,14 @@ public class VeterinarioController {
     //              FORMULARIO PUBLICIDAD
     // ============================================
     @GetMapping("/FormularioPublicidad")
-    public String publicidad(Model model) {
+    public String publicidad(HttpSession session, Model model) {
+
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        VeterinarioModel veterinario = usuario.getVeterinario();
+        VeterinariaModel veterinaria = veterinario.getVeterinaria();
 
         model.addAttribute("publicidad", new PublicidadModel());
+        model.addAttribute("veterinaria", veterinaria);
 
         return "veterinario/FormularioPublicidad";
 
