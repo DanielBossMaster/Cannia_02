@@ -232,6 +232,17 @@ public class VeterinarioController {
     }
 
     // ============================================
+    //              FORMULARIO PUBLICIDAD
+    // ============================================
+    @GetMapping("/FormularioPublicidad")
+    public String publicidad(Model model) {
+
+        model.addAttribute("publicidad", new PublicidadModel());
+
+        return "veterinario/FormularioPublicidad";
+
+    }
+    // ============================================
     //                 TIENDA PREVIEW
     // ============================================
     @GetMapping("/Tienda")
@@ -247,7 +258,7 @@ public class VeterinarioController {
         return "veterinario/TiendaPreview";
     }
     // ============================================
-    //          ESTIÓN DE INVENTARIO
+    //          EDICION DE INVENTARIO
     // ============================================
     @GetMapping("/inventario")
     public String mostrarInventarioVentas(Model model) {
