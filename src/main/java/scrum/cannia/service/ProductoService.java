@@ -11,18 +11,14 @@ import java.util.Optional;
 @Service
 public class ProductoService {
 
+    @Autowired
     private final ProductoRepository productoRepository;
 
-    public ProductoService(ProductoRepository productoRepository) {
-        this.productoRepository = productoRepository;
-    }
+    public ProductoService(ProductoRepository productoRepository) {this.productoRepository = productoRepository;}
 
-    public static List<Producto> listarTodos() {
-        return productoRepository.findAll();
-    }
+    public  List<ProductoModel> listarTodos() { return productoRepository.findAll();}
 
-    public static <Producto> void guardar(Producto producto, MultipartFile archivo) {
-    }
+    public static <Producto> void guardar(Producto producto, MultipartFile archivo) {}
 
     public List<ProductoModel> obtenerProductosActivos() {
         return productoRepository.findByEstadoTrue();
@@ -31,6 +27,17 @@ public class ProductoService {
     public ProductoModel guardarProducto(ProductoModel producto) {
         return productoRepository.save(producto);
     }
+
+    //                                                   ____
+    // Se usa para el carrito de compras, no borrar  |  |
+    //                                             __|  |__
+    //                                             \      /
+    //                                              \    /
+    //                                               \  /
+    //                                                \/
+
+    public ProductoModel buscarPorId(Integer id)
+    {return productoRepository.findById(id).orElse(null);}
 }
 //
 //    public Optional<ProductoModel> obtenerProductoPorId(Integer id) {
@@ -44,4 +51,3 @@ public class ProductoService {
 //    }
 
 //
-
