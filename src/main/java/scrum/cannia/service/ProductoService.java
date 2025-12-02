@@ -14,11 +14,14 @@ public class ProductoService {
     @Autowired
     private final ProductoRepository productoRepository;
 
-    public ProductoService(ProductoRepository productoRepository) {this.productoRepository = productoRepository;}
+    public ProductoService(ProductoRepository productoRepository)
+    {this.productoRepository = productoRepository;}
 
-    public  List<ProductoModel> listarTodos() { return productoRepository.findAll();}
+    public  List<ProductoModel> listarTodos()
+    { return productoRepository.findAll();}
 
-    public static <Producto> void guardar(Producto producto, MultipartFile archivo) {}
+    public static <Producto> void guardar
+            (Producto producto, MultipartFile archivo) {}
 
     public List<ProductoModel> obtenerProductosActivos() {
         return productoRepository.findByEstadoTrue();
@@ -27,9 +30,18 @@ public class ProductoService {
     public ProductoModel guardarProducto(ProductoModel producto) {
         return productoRepository.save(producto);
     }
+    // Se utiliza en el carrito de compras, no tocar  | |
+    //                                               \   /
+    //                                                \ /
+    public ProductoModel buscarPorId(Integer id)
+    {return productoRepository.findById(id).orElse(null);}
 
-    public ProductoModel buscarPorId(Integer id) {return productoRepository.findById(id).orElse(null);}
+
+
+
+
 }
+
 //
 //    public Optional<ProductoModel> obtenerProductoPorId(Integer id) {
 //        return productoRepository.findById(id);
@@ -40,5 +52,4 @@ public class ProductoService {
 //            productoRepository.save(producto);
 //        });
 //    }
-
 //
