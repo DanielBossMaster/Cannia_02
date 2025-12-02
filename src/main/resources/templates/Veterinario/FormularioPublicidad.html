@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Enviar Publicidad</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="max-w-3xl mx-auto mt-12 p-8 bg-white shadow-lg rounded-lg">
+
+    <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">
+        Enviar Publicidad
+    </h1>
+
+    <!-- Mensaje de éxito -->
+    <div>
+        <div th:if="${param.exito}"
+             class="mb-4 p-4 bg-green-100 text-green-800 rounded">
+            La publicidad fue enviada correctamente a todos los propietarios.
+        </div>
+    </div>
+
+    <!-- Formulario de Publicidad -->
+    <form th:action="@{/publicidad/enviar}" method="post" enctype="multipart/form-data" class="space-y-6">
+
+        <label class="block text-gray-700 font-semibold mb-2" >Correos adicionales (opcional):</label>
+        <textarea class="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200" name="correosManuales" rows="3"
+                  placeholder="correo1@gmail.com, correo2@hotmail.com"></textarea>
+
+
+        <!-- Título -->
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Título</label>
+            <input name="titulo" type="text" required
+                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200">
+        </div>
+
+        <!-- Mensaje -->
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Mensaje (HTML permitido)</label>
+            <textarea name="mensaje" rows="6" required
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200"></textarea>
+        </div>
+
+        <!-- Imagen -->
+        <div>
+            <label class="block text-gray-700 font-semibold mb-2">Imagen</label>
+            <input name="imagen" type="file" accept="image/*"
+                   class="w-full p-3 border border-gray-300 rounded-lg">
+        </div>
+
+        <!-- Botón -->
+        <div class="text-center">
+            <button type="submit"
+                    class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                Enviar Publicidad
+            </button>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>
