@@ -29,56 +29,49 @@ public class EmailController {
     private PropietarioRepository propietarioRepository;
 
     @PostMapping("/enviar")
-    public String enviarPublicidad(@RequestParam String titulo,
-                                   @RequestParam String mensaje,
-                                   @RequestParam(required = false) MultipartFile imagen,
-                                   @RequestParam(required = false) String correosManuales
+    public String enviarPublicidad(
+            @RequestParam String titulo,
+            @RequestParam String mensaje,
+            @RequestParam(required = false) MultipartFile imagen,
+            @RequestParam(required = false) String correosManuales
     ) throws IOException {
 
-        // 1. Correos desde la BD
         List<String> correos = propietarioRepository.obtenerCorreosDePropietarios();
 
-        // 2. Agregar correos manuales
         if (correosManuales != null && !correosManuales.trim().isEmpty()) {
-
-            // dividir por comas o saltos de línea
             String[] extras = correosManuales.split("[,\\n]");
-
             for (String c : extras) {
-                String correo = c.trim();
-                if (!correo.isEmpty() && correo.contains("@")) {
-                    correos.add(correo); // agregar a la lista final
-                }
+                if (c.trim().contains("@")) correos.add(c.trim());
             }
         }
 
-        // 3. Guardar imagen si existe
-        String urlImagen = null;
+        byte[] imagenBytes = null;
+        String nombreImagen = null;
+
         if (imagen != null && !imagen.isEmpty()) {
-            urlImagen = guardarImagen(imagen);
+            imagenBytes = imagen.getBytes();
+            nombreImagen = imagen.getOriginalFilename();
         }
 
-        // 4. Construir HTML
-        String mensajeHtml = construirCorreoHtml(titulo, mensaje, urlImagen);
+        // HTML con CID
+        String mensajeHtml = construirCorreoHtmlCID(titulo, mensaje);
 
-        // 5. Enviar correo masivo
-        emailService.enviarMasivo(correos, titulo, mensajeHtml);
+        emailService.enviarMasivo(correos, titulo, mensajeHtml, imagenBytes, nombreImagen);
 
         return "redirect:/veterinario/GestionVentas";
     }
 
 
-    private String guardarImagen(MultipartFile file) throws IOException {
 
-        String nombre = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        String ruta = "src/main/resources/static/publicidad/" + nombre;
+    private String construirCorreoHtmlCID(String titulo, String mensaje) {
 
-        Path path = Paths.get(ruta);
-        Files.createDirectories(path.getParent());
-        Files.write(path, file.getBytes());
-
-        return "/publicidad/" + nombre; // URL pública
+        return "<div style='font-family: Arial; padding: 20px;'>" +
+                "<h2 style='color: #2b6cb0;'>" + titulo + "</h2>" +
+                "<img src='cid:bannerImagen' style='width:100%; max-width:600px; margin-bottom:20px;'>" +
+                "<p style='font-size: 16px; color: #444;'>" + mensaje + "</p>" +
+                "</div>";
     }
+
 
     private String construirCorreoHtml(String titulo, String mensaje, String imagenUrl) {
         StringBuilder html = new StringBuilder();

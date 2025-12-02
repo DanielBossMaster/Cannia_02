@@ -19,7 +19,7 @@ public class EmailService {
     @Value("${sendgrid.api.key}")
     private String apiKey;
 
-    public void enviarPublicidad(String correo, String titulo, String mensajeHtml) throws IOException {
+    public void enviarPublicidad(String correo, String titulo, String mensajeHtml, byte[] imagenBytes, String nombreImagen) throws IOException {
 
         Email from = new Email("sena.danielboss@gmail.com");
         Email to = new Email(correo);
@@ -27,6 +27,20 @@ public class EmailService {
         Content content = new Content("text/html", mensajeHtml);
 
         Mail mail = new Mail(from, titulo, to, content);
+
+        // Si hay imagen, agregarla como inline
+        if (imagenBytes != null) {
+            com.sendgrid.helpers.mail.objects.Attachments adj =
+                    new com.sendgrid.helpers.mail.objects.Attachments();
+
+            adj.setContent(java.util.Base64.getEncoder().encodeToString(imagenBytes));
+            adj.setType("image/png");
+            adj.setFilename(nombreImagen);
+            adj.setDisposition("inline");
+            adj.setContentId("bannerImagen"); // CID
+
+            mail.addAttachments(adj);
+        }
 
         SendGrid sg = new SendGrid(apiKey);
         Request request = new Request();
@@ -38,11 +52,12 @@ public class EmailService {
         sg.api(request);
     }
 
+
     // ENVÍO MASIVO
-    public void enviarMasivo(List<String> correos, String titulo, String mensajeHtml) {
+    public void enviarMasivo(List<String> correos, String titulo, String mensajeHtml, byte[] imagenBytes, String nombreImagen) {
         correos.forEach(correo -> {
             try {
-                enviarPublicidad(correo, titulo, mensajeHtml);
+                enviarPublicidad(correo, titulo, mensajeHtml, imagenBytes, nombreImagen);
             } catch (Exception e) {
                 System.out.println("Error enviando a: " + correo);
             }
