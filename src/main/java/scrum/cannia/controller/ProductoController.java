@@ -1,5 +1,6 @@
 package scrum.cannia.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +14,15 @@ import scrum.cannia.service.ProductoService;
 @RequestMapping("/productos")
 public class ProductoController {
 
+    @Autowired
+    ProductoService productoService;
+
+
     @GetMapping("/veterinario/inventario")  // o la ruta que uses
     public String mostrarInventario(Model model) {
         model.addAttribute("producto", new ProductoModel()); // ← IMPORTANTE
         model.addAttribute("servicio", new ServicioModel()); // ← IMPORTANTE
-        model.addAttribute("productos", ProductoService.listarTodos());
+        model.addAttribute("productos", productoService.listarTodos());
         return "Veterinario/Inventario"; // o el nombre de tu template
     }
 
