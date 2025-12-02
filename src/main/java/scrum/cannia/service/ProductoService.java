@@ -28,16 +28,7 @@ public class ProductoService {
         return productoRepository.save(producto);
     }
 
-    //                                                   ____
-    // Se usa para el carrito de compras, no borrar  |  |
-    //                                             __|  |__
-    //                                             \      /
-    //                                              \    /
-    //                                               \  /
-    //                                                \/
-
-    public ProductoModel buscarPorId(Integer id)
-    {return productoRepository.findById(id).orElse(null);}
+    public ProductoModel buscarPorId(Integer id) {return productoRepository.findById(id).orElse(null);}
 }
 //
 //    public Optional<ProductoModel> obtenerProductoPorId(Integer id) {
