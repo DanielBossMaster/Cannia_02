@@ -20,6 +20,10 @@ public class ProductoModel {
     @Column(name = "id_producto")
     private int id;
 
+    @Lob
+    @Column
+    private byte[] foto;
+
     @Column(length = 20, nullable = false )
     private String nombre;
 
@@ -32,12 +36,12 @@ public class ProductoModel {
     @Column(length = 20, nullable = false )
     private Integer valor;
 
+    @Column(length = 50, nullable = false)
+    private UnidadMedida unidadMedida;
+
     @Column(length = 20, nullable = false )
     private boolean estado;
 
-    @Lob
-    @Column
-    private byte[] foto;
 
     @Column
     private boolean publicado;
