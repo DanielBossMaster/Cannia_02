@@ -1,20 +1,20 @@
-package scrum.cannia.controller;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import java.util.Map;
-import java.util.List;
+//package scrum.cannia.controller;
+//
+//
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.stereotype.Controller;
+//import org.springframework.ui.Model;
+//import org.springframework.web.bind.annotation.*;
+//import java.util.Map;
+//import java.util.List;
 
 //Controlador principal para el módulo de Inventario
- //Gestiona la navegación entre inventario, productos, servicios y gráficos
-
-@Controller
-@RequestMapping("/inventario")
-public class InventarioController {
+// Gestiona la navegación entre inventario, productos, servicios y gráficos
 //
+//@Controller
+//@RequestMapping("/inventario")
+//public class InventarioController {
+////
 //    @Autowired
 //    private ProductoService productoService;
 //
@@ -74,13 +74,12 @@ public class InventarioController {
 //    public String redirigirAProductos() {
 //        return "redirect:/productos";
 //    }
-////Redirección a la página de servicios
+//edireccion a la pagina de servicios
 //
 //    @GetMapping("/servicios")
 //    public String redirigirAServicios() {
 //        return "redirect:/servicios";
 //    }
 //
-//
 
-}
+
