@@ -36,8 +36,10 @@ public class ProductoModel {
     @Column(length = 20, nullable = false )
     private Integer valor;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 50, nullable = false)
     private UnidadMedida unidadMedida;
+
 
     @Column(length = 20, nullable = false )
     private boolean estado;
@@ -46,6 +48,9 @@ public class ProductoModel {
     @Column
     private boolean publicado;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_veterinaria")
+    private VeterinariaModel veterinaria;
 
     /* Metodo para convertir imagenes */
     @Transient
