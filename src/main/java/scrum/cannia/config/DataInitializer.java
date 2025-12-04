@@ -1,13 +1,14 @@
 package scrum.cannia.config;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import scrum.cannia.model.ProductoModel;
 import scrum.cannia.model.UnidadMedida;
 import scrum.cannia.repository.ProductoRepository;
+
+import java.util.ArrayList;
+
 @Configuration
 public class DataInitializer {
 
@@ -27,8 +28,11 @@ public class DataInitializer {
                         UnidadMedida.Kg,
                         true,
                         true,
-                        null
+                        null,
+                        null,// ← este es fotoBase64
+                        new ArrayList<>() // ← inventarios
                 );
+
 
                 ProductoModel p2 = new ProductoModel(
                         0,
@@ -40,7 +44,9 @@ public class DataInitializer {
                         UnidadMedida.Kg,
                         true,
                         true,
-                        null
+                        null,
+                        null,
+                        new ArrayList<>()
                 );
 
                 ProductoModel p3 = new ProductoModel(
@@ -53,7 +59,9 @@ public class DataInitializer {
                         UnidadMedida.Kg,
                         true,
                         true,
-                        null
+                        null,
+                        null,
+                        new ArrayList<>()
                 );
 
                 ProductoModel p4 = new ProductoModel(
@@ -66,7 +74,9 @@ public class DataInitializer {
                         UnidadMedida.Kg,
                         true,
                         true,
-                        null
+                        null,
+                        null,
+                        new ArrayList<>()
                 );
 
                 ProductoModel p5 = new ProductoModel(
@@ -79,7 +89,9 @@ public class DataInitializer {
                         UnidadMedida.Kg,
                         true,
                         true,
-                        null
+                        null,
+                        null,
+                        new ArrayList<>()
                 );
 
                 ProductoModel p6 = new ProductoModel(
@@ -92,7 +104,9 @@ public class DataInitializer {
                         UnidadMedida.Kg,
                         true,
                         true,
-                        null
+                        null,
+                        null,
+                        new ArrayList<>()
                 );
 
                 ProductoModel p7 = new ProductoModel(
@@ -105,7 +119,9 @@ public class DataInitializer {
                         UnidadMedida.Kg,
                         true,
                         true,
-                        null
+                        null,
+                        null,
+                        new ArrayList<>()
                 );
 
                 ProductoModel p8 = new ProductoModel(
@@ -118,7 +134,9 @@ public class DataInitializer {
                         UnidadMedida.Kg,
                         true,
                         true,
-                        null
+                        null,
+                        null,
+                        new ArrayList<>()
                 );
 
                 ProductoModel p9 = new ProductoModel(
@@ -131,7 +149,9 @@ public class DataInitializer {
                         UnidadMedida.Kg,
                         true,
                         true,
-                        null
+                        null,
+                        null,
+                        new ArrayList<>()
                 );
 
                 ProductoModel p10 = new ProductoModel(
@@ -144,7 +164,9 @@ public class DataInitializer {
                         UnidadMedida.Kg,
                         true,
                         true,
-                        null
+                        null,
+                        null,
+                        new ArrayList<>()
                 );
 
                 productoRepository.save(p1);
