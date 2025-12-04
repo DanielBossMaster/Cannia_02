@@ -1,16 +1,22 @@
 package scrum.cannia.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import scrum.cannia.model.ProductoModel;
-import scrum.cannia.model.ServicioModel;
+import scrum.cannia.model.UsuarioModel;
 import scrum.cannia.service.ProductoService;
 
+import java.util.Base64;
+import java.util.List;
+
 @Controller
-@RequestMapping("/productos")
+@RequestMapping("/inventario/productos")
 public class ProductoController {
 
     @Autowired
@@ -20,28 +26,52 @@ public class ProductoController {
     //   LISTAR INVENTARIO Y MOSTRAR FORMULARIOS
     // ============================================
     @GetMapping
-    public String productos(Model model) {
+    public String productos(Model model, HttpSession session) {
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/login";
+        }
 
+        // Nuevo producto para el formulario
         model.addAttribute("producto", new ProductoModel());
-        model.addAttribute("servicio", new ServicioModel());
-        model.addAttribute("productos", productoService.listarTodos());
 
-        return "veterinario/inventario";
+        // Lista de productos
+        List<ProductoModel> lista = productoService.listarTodos();
 
+        // 🔥 Convertimos foto (byte[]) → Base64 ANTES DE ENVIARLA A LA VISTA
+        for (ProductoModel p : lista) {
+            if (p.getFoto() != null) {
+                String base64 = Base64.getEncoder().encodeToString(p.getFoto());
+                p.setFotoBase64(base64);
+            }
+        }
 
+        model.addAttribute("productos", lista);
+
+        return "Inventario/producto";
     }
-
 
     // ============================================
     //         GUARDAR PRODUCTO
     // ============================================
     @PostMapping("/guardar")
-    public String guardarProducto(@ModelAttribute ProductoModel producto,
-                                  @RequestParam("archivoImagen") MultipartFile archivo) {
+    public String guardarProducto(@Validated @ModelAttribute ProductoModel producto,
+                                  @RequestParam("archivoImagen") MultipartFile archivo,
+                                  BindingResult br,
+                                  HttpSession session,
+                                  Model model) {
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        if (br.hasErrors()) {
+            model.addAttribute("mensaje", "Por favor corrige los campos marcados.");
+            return "Inventario/producto";
+        }
 
         productoService.guardar(producto, archivo);
 
-        return "redirect:/productos";
-        // <-- vuelve a la misma vista
+        return "redirect:/inventario/productos";
     }
 }
