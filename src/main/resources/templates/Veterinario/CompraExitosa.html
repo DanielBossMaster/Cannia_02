@@ -1,99 +1,61 @@
 <!DOCTYPE html>
-
-<html   xmlns:th="http://www.thymeleaf.org">
+<html lang="es">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Confirmación de Pago</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com" rel="preconnect"/>
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-    <style>
-        .material-symbols-outlined {
-            font-variation-settings:
-                    'FILL' 1,
-                    'wght' 400,
-                    'GRAD' 0,
-                    'opsz' 24
-        }
-    </style>
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#13ec5b",
-                        "background-light": "#f6f8f6",
-                        "background-dark": "#102216",
-                    },
-                    fontFamily: {
-                        "display": ["Manrope", "sans-serif"]
-                    },
-                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
-                },
-            },
-        }
-    </script>
+    <meta charset="UTF-8">
+    <title>Pago Exitoso</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-background-light dark:bg-background-dark font-display text-[#111813] dark:text-white">
-<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
-    <!-- TopNavBar -->
-    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-gray-200 dark:border-b-gray-800 px-4 sm:px-10 py-3">
-        <div class="flex items-center gap-4 text-[#111813] dark:text-white">
-            <div class="size-6 text-primary">
-                <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                    <path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
-                </svg>
-            </div>
-            <h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">PagoSeguro</h2>
-        </div>
 
-        <button class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
-            <span class="material-symbols-outlined">menu</span>
-        </button>
-    </header>
-    <!-- Main Content -->
-    <main class="flex-1 w-full flex items-center justify-center py-10 px-4">
-        <div class="w-full max-w-2xl mx-auto bg-white dark:bg-background-dark dark:border dark:border-gray-700 rounded-xl shadow-sm p-6 sm:p-10 text-center">
-            <!-- Success Icon -->
-            <div class="w-20 h-20 bg-primary/20 text-primary rounded-full mx-auto flex items-center justify-center mb-6">
-                <span class="material-symbols-outlined !text-5xl">check_circle</span>
-            </div>
-            <!-- HeadlineText -->
-            <h1 class="text-[#111813] dark:text-white tracking-tight text-3xl sm:text-4xl font-bold leading-tight pb-3">Pago completado con éxito</h1>
-            <!-- BodyText -->
-            <p class="text-gray-600 dark:text-gray-300 text-base font-normal leading-normal pb-8">¡Gracias por tu compra! Hemos enviado un recibo a tu correo electrónico registrado.</p>
-            <!-- Transaction Details -->
-            <div class="border-t border-b border-gray-200 dark:border-gray-700 py-4 mb-8 text-left">
-                <div class="flex justify-between gap-x-6 py-3">
-                    <p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">Monto Total Pagado</p>
-                    <p class="text-[#111813] dark:text-white text-sm font-medium leading-normal text-right">$125.50 USD</p>
-                </div>
-                <div class="flex justify-between gap-x-6 py-3">
-                    <p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">Fecha de Transacción</p>
-                    <p class="text-[#111813] dark:text-white text-sm font-medium leading-normal text-right">24 de Octubre, 2024, 10:30 AM</p>
-                </div>
-                <div class="flex justify-between gap-x-6 py-3">
-                    <p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">ID de la Orden</p>
-                    <p class="text-[#111813] dark:text-white text-sm font-medium leading-normal text-right">ORD-1A2B3C4D5E</p>
-                </div>
-                <div class="flex justify-between gap-x-6 py-3">
-                    <p class="text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">Método de Pago</p>
-                    <p class="text-[#111813] dark:text-white text-sm font-medium leading-normal text-right">Visa **** 1234</p>
-                </div>
-            </div>
-            <!-- Action Buttons -->
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a th:href="@{/veterinario/Tienda}">
-                <button class="flex w-full sm:w-auto min-w-[160px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-gray-100 dark:bg-gray-800 text-[#111813] dark:text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-                    <span class="truncate">Volver al Inicio</span>
-                </button>
-                    </a>
-            </div>
-        </div>
-    </main>
+<body class="bg-gray-100 py-10">
+
+<div class="max-w-2xl mx-auto bg-white shadow-lg rounded-lg p-8">
+
+    <h1 class="text-3xl font-bold text-green-600 mb-6 text-center">
+        ¡Pago Exitoso! 🎉
+    </h1>
+
+    <!-- Datos de factura -->
+    <div class="mb-6">
+        <p class="text-lg"><strong>Número de factura:</strong> <span th:text="${factura.id}"></span></p>
+        <p class="text-lg"><strong>Fecha:</strong> <span th:text="${factura.fechaEmision}"></span></p>
+        <p class="text-lg"><strong>Descripción:</strong> <span th:text="${factura.descripcion}"></span></p>
+        <p class="text-lg"><strong>Método de pago:</strong> <span th:text="${factura.metodoPago}"></span></p>
+    </div>
+
+    <!-- Tabla de productos -->
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border border-gray-300">
+            <thead class="bg-gray-200">
+            <tr>
+                <th class="p-3 border">Producto</th>
+                <th class="p-3 border">Cantidad</th>
+                <th class="p-3 border">Subtotal</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="det : ${factura.detalles}">
+                <td class="p-3 border" th:text="${det.producto.nombre}"></td>
+                <td class="p-3 border text-center" th:text="${det.cantidad}"></td>
+                <td class="p-3 border" th:text="${det.precio}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Total -->
+    <div class="text-right text-2xl font-bold mt-6">
+        Total: $ <span th:text="${factura.precioTotal}"></span>
+    </div>
+
+    <!-- Botón -->
+    <div class="text-center mt-8">
+        <a href="/propietario/Tienda"
+           class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow">
+            Volver a la tienda
+        </a>
+    </div>
+
 </div>
-</body></html>
+
+</body>
+</html>
