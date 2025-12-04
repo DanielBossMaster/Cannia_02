@@ -36,10 +36,18 @@ public class ProductoService {
     public ProductoModel buscarPorId(Integer id)
     {return productoRepository.findById(id).orElse(null);}
 
+    //Guardar productos
+    public void guardar(ProductoModel producto, MultipartFile archivo) {
+        try {
+            if (!archivo.isEmpty()) {
+                producto.setFoto(archivo.getBytes());
+            }
+            productoRepository.save(producto);
 
-
-
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 //
