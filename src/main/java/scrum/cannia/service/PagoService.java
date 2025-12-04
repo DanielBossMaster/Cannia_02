@@ -71,6 +71,9 @@ public class PagoService {
         return lineItems;
     }
 
+    /**
+     * Registra la factura y detalles. Valida stock antes, descuenta y guarda todo en una transacción.
+     */
     @Transactional
     public FacturaModel registrarFactura(
             PropietarioModel propietario,
@@ -78,9 +81,12 @@ public class PagoService {
             List<ItemCarrito> carrito
     ) {
 
+        if (carrito == null || carrito.isEmpty()) {
+            throw new RuntimeException("Carrito vacío al intentar registrar factura.");
+        }
+
         // 1. Crear factura
         FacturaModel factura = new FacturaModel();
-        factura.setFechaEmision(LocalDateTime.now());
         factura.setDescripcion("Compra en la tienda veterinaria");
         factura.setMetodoPago(MetodoPago.Tarjeta);
         factura.setVeterinaria(veterinaria);
@@ -88,7 +94,26 @@ public class PagoService {
 
         BigDecimal total = BigDecimal.ZERO;
 
-        // 2. Crear detalles
+        // 2. Primero: VALIDAR que hay stock suficiente para todos los items
+        for (ItemCarrito item : carrito) {
+
+            var optInv = inventarioRepository.findByProductoIdAndVeterinariaId(
+                    item.getProducto().getId(),
+                    veterinaria.getId()
+            );
+
+            if (optInv.isEmpty()) {
+                throw new RuntimeException("Inventario no encontrado para el producto: " + item.getProducto().getNombre());
+            }
+
+            InventarioModel inventario = optInv.get();
+
+            if (inventario.getStockActual() < item.getCantidad()) {
+                throw new RuntimeException("Stock insuficiente para el producto: " + item.getProducto().getNombre());
+            }
+        }
+
+        // 3. Si todo OK, crear detalles, descontar stock y acumular total
         for (ItemCarrito item : carrito) {
 
             InventarioModel inventario = inventarioRepository
@@ -123,10 +148,8 @@ public class PagoService {
 
         factura.setPrecioTotal(total);
 
-        // 3. Guardar all automatico (factura + detalles)
+        // 4. Guardar (cascade guarda detalles)
         return facturaRepository.save(factura);
     }
 
 }
-
-
