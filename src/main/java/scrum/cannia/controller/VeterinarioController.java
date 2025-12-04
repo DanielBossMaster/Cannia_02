@@ -268,8 +268,13 @@ public class VeterinarioController {
     @GetMapping("/inventario")
     public String mostrarInventarioVentas(Model model) {
         model.addAttribute("productos", productoService.listarTodos());
+        model.addAttribute("producto", new ProductoModel());
+        model.addAttribute("servicio", new ServicioModel());
         return "veterinario/inventario";
     }
+
+
+
     @GetMapping("/productos")
     public String listarProductosVeterinario(Model model) {
         // Usar el método correcto que ahora existe
