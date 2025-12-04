@@ -75,30 +75,6 @@ public class PagoController {
         return Map.of("url", sessionStripe.getUrl());
     }
 
-//    @GetMapping("/exitoso")
-//    public String pagoExitoso() {
-//
-//        List<ItemCarrito> carrito = carritoService.getItems();
-//        if (carrito == null || carrito.isEmpty()) {
-//            return "redirect:/veterinario/TiendaPreview";
-//        }
-//
-//        PropietarioModel propietario = (PropietarioModel) session.getAttribute("propietario");
-//        if (propietario == null) {
-//            throw new RuntimeException("Propietario no encontrado en sesión");
-//        }
-//
-//        VeterinariaModel veterinaria = propietario.getVeterinaria();
-//        if (veterinaria == null) {
-//            throw new RuntimeException("Veterinaria no encontrada para el propietario");
-//        }
-//
-//        pagoService.registrarFactura(propietario, veterinaria, carrito);
-//
-//        carritoService.vaciar();
-//
-//        return "veterinario/CompraExitosa";
-//    }
 
     @GetMapping("/exitoso")
     public String pagoExitoso(HttpSession session, Model model) {

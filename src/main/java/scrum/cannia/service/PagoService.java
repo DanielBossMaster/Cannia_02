@@ -71,9 +71,6 @@ public class PagoService {
         return lineItems;
     }
 
-    /**
-     * Registra la factura y detalles. Valida stock antes, descuenta y guarda todo en una transacción.
-     */
     @Transactional
     public FacturaModel registrarFactura(
             PropietarioModel propietario,
@@ -81,12 +78,9 @@ public class PagoService {
             List<ItemCarrito> carrito
     ) {
 
-        if (carrito == null || carrito.isEmpty()) {
-            throw new RuntimeException("Carrito vacío al intentar registrar factura.");
-        }
-
         // 1. Crear factura
         FacturaModel factura = new FacturaModel();
+        factura.setFechaEmision(LocalDateTime.now());
         factura.setDescripcion("Compra en la tienda veterinaria");
         factura.setMetodoPago(MetodoPago.Tarjeta);
         factura.setVeterinaria(veterinaria);
@@ -94,44 +88,12 @@ public class PagoService {
 
         BigDecimal total = BigDecimal.ZERO;
 
-        // 2. Primero: VALIDAR que hay stock suficiente para todos los items
+        // 2. Crear detalles SIN INVENTARIO
         for (ItemCarrito item : carrito) {
 
-            var optInv = inventarioRepository.findByProductoIdAndVeterinariaId(
-                    item.getProducto().getId(),
-                    veterinaria.getId()
-            );
-
-            if (optInv.isEmpty()) {
-                throw new RuntimeException("Inventario no encontrado para el producto: " + item.getProducto().getNombre());
-            }
-
-            InventarioModel inventario = optInv.get();
-
-            if (inventario.getStockActual() < item.getCantidad()) {
-                throw new RuntimeException("Stock insuficiente para el producto: " + item.getProducto().getNombre());
-            }
-        }
-
-        // 3. Si todo OK, crear detalles, descontar stock y acumular total
-        for (ItemCarrito item : carrito) {
-
-            InventarioModel inventario = inventarioRepository
-                    .findByProductoIdAndVeterinariaId(
-                            item.getProducto().getId(),
-                            veterinaria.getId()
-                    )
-                    .orElseThrow(() -> new RuntimeException("Inventario no encontrado"));
-
-            // Descontar stock
-            inventario.setStockActual(inventario.getStockActual() - item.getCantidad());
-            inventarioRepository.save(inventario);
-
-            // Crear detalle
             FacturaDetalleModel det = new FacturaDetalleModel();
             det.setFactura(factura);
             det.setProducto(item.getProducto());
-            det.setInventario(inventario);
             det.setCantidad(item.getCantidad());
 
             BigDecimal precioDetalle = BigDecimal
@@ -140,16 +102,17 @@ public class PagoService {
 
             det.setPrecio(precioDetalle);
 
-            // Agregar detalle a la factura
             factura.getDetalles().add(det);
-
             total = total.add(precioDetalle);
         }
 
         factura.setPrecioTotal(total);
 
-        // 4. Guardar (cascade guarda detalles)
+        // 3. Guardar factura (cascade guarda detalles)
         return facturaRepository.save(factura);
     }
 
+
 }
+
+
