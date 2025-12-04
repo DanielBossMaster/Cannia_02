@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.poi.hpsf.Decimal;
 
 @Entity
 @Table(name ="servicio")
@@ -28,6 +29,9 @@ public class ServicioModel {
 
     @Column(nullable = false)
     private Integer precio;
+
+    @Column(length = 20, nullable = false )
+    private boolean estado;
 
     @ManyToOne
     @JoinColumn(name = "id_veterinaria")

@@ -21,7 +21,7 @@ public class ProductoModel {
     private int id;
 
     @Lob
-    @Column
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] foto;
 
     @Column(length = 20, nullable = false )
@@ -45,6 +45,19 @@ public class ProductoModel {
 
     @Column
     private boolean publicado;
+
+
+    /* Metodo para convertir imagenes */
+    @Transient
+    private String fotoBase64;
+
+    public String getFotoBase64() {
+        return fotoBase64;
+    }
+
+    public void setFotoBase64(String fotoBase64) {
+        this.fotoBase64 = fotoBase64;
+    }
 
     // Si InventarioModel tiene un campo llamado 'producto':
     @OneToMany(mappedBy = "producto")
