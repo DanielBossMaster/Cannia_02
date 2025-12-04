@@ -254,14 +254,34 @@ public class VeterinarioController {
     public String tiendaPreview(HttpSession session, Model model) {
 
         UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
-        VeterinarioModel veterinario = usuario.getVeterinario();
-        VeterinariaModel veterinaria = veterinario.getVeterinaria();
+
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        VeterinariaModel veterinaria = null;
+
+        // SI EL USUARIO ES PROPIETARIO
+        if (usuario.getPropietario() != null) {
+            veterinaria = usuario.getPropietario().getVeterinaria();
+        }
+
+        // SI EL USUARIO ES VETERINARIO
+        if (usuario.getVeterinario() != null) {
+            veterinaria = usuario.getVeterinario().getVeterinaria();
+        }
+
+        if (veterinaria == null) {
+            System.out.println("❌ El usuario NO pertenece a ninguna veterinaria");
+            return "redirect:/";
+        }
 
         model.addAttribute("veterinaria", veterinaria);
         model.addAttribute("productos", productoService.listarTodos());
 
         return "veterinario/TiendaPreview";
     }
+
     // ============================================
     //          EDICION DE INVENTARIO
     // ============================================
