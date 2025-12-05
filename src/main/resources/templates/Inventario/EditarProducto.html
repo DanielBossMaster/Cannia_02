@@ -1,87 +1,117 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Producto</title>
 
-    <!-- Tus estilos globales -->
     <link th:href="@{/css/VeterinarioCss/Inventario.css}" rel="stylesheet">
 
+    <style>
+        .estado-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .on { background-color: #28a745; }
+        .off { background-color: #dc3545; }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+    </style>
 </head>
+
 <body>
 
-<div class="modal-editar-container">
+<div class="card editar-card">
 
-    <div class="editar-card">
+    <h2>Editar Producto</h2>
 
-        <h2>Editar Producto</h2>
+    <form th:action="@{/inventario/productos/actualizar}"
+          th:object="${producto}" method="post" enctype="multipart/form-data">
 
-        <form th:action="@{/inventario/productos/actualizar}"
-              th:object="${producto}"
-              method="post"
-              enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}">
 
-            <!-- ID oculto -->
-            <input type="hidden" th:field="*{id}">
+        <div class="form-group">
+            <label>Foto actual</label><br>
+            <img th:if="${producto.fotoBase64 != null}"
+                 th:src="'data:image/jpeg;base64,' + ${producto.fotoBase64}"
+                 style="width:120px;height:120px;border-radius:8px;">
+        </div>
 
-            <!-- Foto -->
-            <div class="form-group">
-                <label>Foto</label>
-                <input type="file" name="archivoImagen" class="form-control" accept="image/*">
-            </div>
+        <div class="form-group">
+            <label>Cambiar foto</label>
+            <input type="file" name="archivoImagen" class="form-control" accept="image/*">
+        </div>
 
-            <!-- Nombre -->
-            <div class="form-group">
-                <label>Nombre del Producto</label>
-                <input type="text" th:field="*{nombre}" class="form-control" required>
-            </div>
+        <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" th:field="*{nombre}" class="form-control" required>
+        </div>
 
-            <!-- Descripción -->
-            <div class="form-group">
-                <label>Descripción</label>
-                <input type="text" th:field="*{descripcion}" class="form-control" required>
-            </div>
+        <div class="form-group">
+            <label>Descripción</label>
+            <input type="text" th:field="*{descripcion}" class="form-control" required>
+        </div>
 
-            <!-- Cantidad -->
-            <div class="form-group">
-                <label>Cantidad</label>
-                <input type="number" th:field="*{cantidad}" min="0" step="1" class="form-control" required>
-            </div>
+        <div class="form-group">
+            <label>Cantidad</label>
+            <input type="number" th:field="*{cantidad}" min="0" class="form-control" required>
+        </div>
 
-            <!-- Valor -->
-            <div class="form-group">
-                <label>Valor</label>
-                <input type="number" th:field="*{valor}" min="0" step="0.01" class="form-control" required>
-            </div>
+        <div class="form-group">
+            <label>Valor</label>
+            <input type="number" th:field="*{valor}" min="0" step="0.01" class="form-control" required>
+        </div>
 
-            <!-- Unidad de medida -->
-            <div class="form-group">
-                <label>Unidad de Medida</label>
-                <select th:field="*{unidadMedida}" class="form-control">
-                    <option value="Kg">Kg</option>
-                    <option value="g">g</option>
-                    <option value="l">l</option>
-                    <option value="mL">mL</option>
-                </select>
-            </div>
+        <div class="form-group">
+            <label>Unidad de Medida</label>
+            <select th:field="*{unidadMedida}" class="form-control">
+                <option value="Kg">Kg</option>
+                <option value="g">g</option>
+                <option value="l">l</option>
+                <option value="mL">mL</option>
+            </select>
+        </div>
 
-            <!-- Estado -->
-            <div class="form-group">
-                <label>Estado</label>
-                <input type="checkbox" th:field="*{estado}">
-                <span>Disponible</span>
-            </div>
+        <!-- ESTADO CON PUNTO EDITABLE -->
+        <div class="form-group toggle-container">
+            <label>Estado</label>
 
-            <button type="submit" class="btn-guardar">Guardar Cambios</button>
-        </form>
+            <!-- Punto visible -->
+            <span id="estadoDot"
+                  th:classappend="${producto.estado} ? 'estado-dot on' : 'estado-dot off'">
+            </span>
 
-        <!-- Volver -->
-        <a class="btn-regresar" th:href="@{/inventario/productos}">Volver al Inventario</a>
+            <!-- Checkbox que sí se envía -->
+            <input type="checkbox" id="estadoCheck" th:field="*{estado}">
+        </div>
 
-    </div>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <a th:href="@{/inventario/productos}" class="btn btn-secondary">Cancelar</a>
+
+    </form>
 
 </div>
+
+<script>
+    const check = document.getElementById("estadoCheck");
+    const dot = document.getElementById("estadoDot");
+
+    check.addEventListener("change", () => {
+        if (check.checked) {
+            dot.classList.remove("off");
+            dot.classList.add("on");
+        } else {
+            dot.classList.remove("on");
+            dot.classList.add("off");
+        }
+    });
+</script>
 
 </body>
 </html>

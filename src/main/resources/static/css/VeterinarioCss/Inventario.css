@@ -442,34 +442,7 @@ body {
     background-color: #1e40af; /* Azul más oscuro */
 }
 
-/* Botón Eliminar */
-.btn-eliminar {
-    background-color: #dc2626; /* Rojo */
-}
 
-.btn-eliminar:hover {
-    background-color: #b91c1c; /* Rojo más oscuro */
-}
-.modal-overlay {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-.modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    width: 500px;
-    max-height: 90vh;
-    overflow-y: auto;
-}
 /* Contenedor modal estilo centrado */
 .modal-editar-container {
     display: flex;
@@ -531,4 +504,40 @@ body {
     text-decoration: none;
     color: #333;
     font-weight: bold;
+}
+
+/* Punto verde/rojo */
+.estado-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.on { background-color: #28a745; }
+.off { background-color: #dc3545; }
+
+/* Estilos modal agregar */
+#miModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    width: 450px;
+    border-radius: 12px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 10px; right: 15px;
+    cursor: pointer;
+    font-size: 22px;
 }
