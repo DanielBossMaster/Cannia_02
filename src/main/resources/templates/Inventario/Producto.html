@@ -75,14 +75,10 @@
                             <td th:text="${prod.unidadMedida}"></td>
                             <td th:text="${prod.estado}"></td>
                             <td class="px-4 py-3">
-                                <div class="flex flex-col sm:flex-row items-center gap-2 justify-center sm:justify-start">
-                                    <a>
-                                        <button>Editar</button>
-                                    </a>
-                                    <form>
-                                        <button onclick="return confirm('¿Desea Eliminar?')">Eliminar</button>
-                                    </form>
-                                </div>
+
+                                <a th:href="@{/inventario/productos/editar/{id}(id=${prod.id})}" class="btn btn-editar">
+                                    Editar
+                                </a>
                         </tr>
                         </tbody>
                     </table>
@@ -134,6 +130,7 @@
                             <option value="Kg">Kg</option>
                             <option value="g">g</option>
                             <option value="l">l</option>
+                            <option value="mL">mL</option>
                         </select>
 
                     </div>
@@ -148,6 +145,8 @@
             </div>
         </div>
         </div>
+<!-- Contenedor donde se cargará el modal -->
+<div id="modal-container"></div>
 
 <script>
     const btnAbrir = document.getElementById("btnAbrir");
@@ -155,7 +154,7 @@
     const cerrar = document.querySelector(".close");
     const modalContent = document.querySelector(".modal-content");
 
-    // Abrir modal
+    // Abrir modal de agregar
     btnAbrir.onclick = () => {
         modal.style.display = "flex";
         modalContent.style.display = "block";
