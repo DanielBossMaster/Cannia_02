@@ -3,14 +3,15 @@ package scrum.cannia.controller;
 import com.stripe.Stripe;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import scrum.cannia.model.ItemCarrito;
-import scrum.cannia.model.PropietarioModel;
-import scrum.cannia.model.VeterinariaModel;
-import scrum.cannia.model.VeterinarioModel;
+import scrum.cannia.model.*;
+import scrum.cannia.service.CarritoService;
 import scrum.cannia.service.PagoService;
 
 import java.util.List;
@@ -18,20 +19,27 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/pago")
+@RequiredArgsConstructor // ⭐ INYECCIÓN POR CONSTRUCTOR AUTOMÁTICA
 public class PagoController {
 
-    @Autowired
-    private PagoService pagoService;
+    private final PagoService pagoService;
+    private final CarritoService carritoService;
+    private final HttpSession session;
 
-    public PagoController() {
-        Stripe.apiKey = "sk_test_51SYKWZCjwJYz7HpJKzOWlAU9rgBp457N4myuyAnnn4haZ5Buh6ymGykzSHljC4c4NLIb8XNGWUWjqzUDB89h7tHD00sxJgS3Sl"; // TU CLAVE TEST
+    // inyectar API key desde application.properties
+    @Value("${stripe.api.key}")
+    private String stripeApiKey;
+
+    @PostConstruct
+    private void initStripe() {
+        Stripe.apiKey = stripeApiKey;
     }
 
     @PostMapping("/crearCheckout")
     @ResponseBody
-    public Map<String, String> crearCheckout(HttpSession session) throws Exception {
+    public Map<String, String> crearCheckout() throws Exception {
 
-        List<ItemCarrito> carrito = (List<ItemCarrito>) session.getAttribute("carrito");
+        List<ItemCarrito> carrito = carritoService.getItems();
 
         if (carrito == null || carrito.isEmpty()) {
             throw new RuntimeException("El carrito está vacío");
@@ -43,7 +51,7 @@ public class PagoController {
                         .setPriceData(
                                 SessionCreateParams.LineItem.PriceData.builder()
                                         .setCurrency("cop")
-                                        .setUnitAmount((long) (item.getProducto().getValor() * 100)) // Centavos
+                                        .setUnitAmount((long) (item.getProducto().getValor() * 100))
                                         .setProductData(
                                                 SessionCreateParams.LineItem.PriceData.ProductData
                                                         .builder()
@@ -67,42 +75,54 @@ public class PagoController {
         return Map.of("url", sessionStripe.getUrl());
     }
 
-    @GetMapping("/exitoso")
-    public String pagoExitoso(HttpSession session) {
 
-        // 1. Obtener carrito
+    @GetMapping("/exitoso")
+    public String pagoExitoso(HttpSession session, Model model) {
+
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        // Recuperar propietario
+        PropietarioModel propietario = usuario.getPropietario();
+        if (propietario == null) {
+            model.addAttribute("mensaje", "No se encontró un propietario asociado al usuario.");
+            return "veterinario/CompraExitosa";
+        }
+
+        // Recuperar veterinaria desde el propietario
+        VeterinariaModel veterinaria = propietario.getVeterinaria();
+        if (veterinaria == null) {
+            model.addAttribute("mensaje", "No hay veterinaria asociada al propietario.");
+            return "veterinario/CompraExitosa";
+        }
+
+        // Carrito en sesión
         List<ItemCarrito> carrito = (List<ItemCarrito>) session.getAttribute("carrito");
 
         if (carrito == null || carrito.isEmpty()) {
-            return "redirect:/veterinario/TiendaPreview"; // o donde quieras
+            model.addAttribute("mensaje", "El pago fue exitoso pero el carrito está vacío.");
+            return "veterinario/CompraExitosa";
         }
 
-        // 2. Obtener propietario (logueado)
-        PropietarioModel propietario = (PropietarioModel) session.getAttribute("propietario");
-        if (propietario == null) {
-            throw new RuntimeException("Propietario no encontrado en sesión");
-        }
+        // Crear factura
+        FacturaModel factura = pagoService.registrarFactura(propietario, veterinaria, carrito);
 
-        // 3. Obtener veterinaria
-        VeterinarioModel veterinario = (VeterinarioModel) session.getAttribute("veterinario");
-        VeterinariaModel veterinaria = veterinario.getVeterinaria();
+        // Pasar datos a la vista
+        model.addAttribute("factura", factura);
 
-
-        // 4. Registrar factura en el servicio
-        pagoService.registrarFactura(propietario, veterinaria, carrito);
-
-        // 5. Vaciar carrito
+        // Limpiar carrito
         session.removeAttribute("carrito");
 
-        // 6. Mostrar vista de éxito
         return "veterinario/CompraExitosa";
     }
+
+
 
     @GetMapping("/cancelado")
     public String pagoCancelado() {
         return "veterinario/CompraCancelada";
     }
-
-
-
 }

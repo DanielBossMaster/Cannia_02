@@ -43,6 +43,7 @@
                 <option value="">-- Selecciona --</option>
                 <option value="propietario">Propietario</option>
                 <option value="veterinario">Veterinario</option>
+                <option value="fundacion">Fundación</option>
             </select>
         </div>
 
@@ -102,6 +103,36 @@
             </div>
         </div>
 
+        <!-- Campos Fundacion -->
+        <div id="camposFundacion" class="hidden">
+            <h5 class="mt-3">Datos de la Fundación</h5>
+
+            <div class="mb-3">
+                <label class="form-label">Nombre Fundación</label>
+                <input type="text" th:field="*{nombreFundacion}" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Descripción</label>
+                <input type="text" th:field="*{descripcionFundacion}" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Dirección</label>
+                <input type="text" th:field="*{direccionFundacion}" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Teléfono</label>
+                <input type="text" th:field="*{telefonoFundacion}" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Correo</label>
+                <input type="email" th:field="*{emailFundacion}" class="form-control">
+            </div>
+        </div>
+
         <button type="submit" class="btn btn-primary mt-3 w-100">Registrarse</button>
     </form>
 </div>
@@ -111,11 +142,13 @@
         const rol = document.getElementById("rol").value;
         const camposProp = document.getElementById("camposPropietario");
         const camposVet = document.getElementById("camposVeterinario");
+        const camposFun = document.getElementById("camposFundacion");
 
         camposProp.classList.add("hidden");
         camposVet.classList.add("hidden");
+        camposFun.classList.add("hidden");
 
-        document.querySelectorAll("#camposPropietario input, #camposVeterinario input").forEach(input => {
+        document.querySelectorAll("#camposPropietario input, #camposVeterinario input, #camposFundacion input").forEach(input => {
             input.removeAttribute("required");
         });
 
@@ -125,12 +158,15 @@
         } else if (rol === "veterinario") {
             camposVet.classList.remove("hidden");
             camposVet.querySelectorAll("input").forEach(input => input.setAttribute("required", "true"));
+        } else if (rol === "fundacion") {
+            camposFun.classList.remove("hidden");
+            camposFun.querySelectorAll("input").forEach(input => input.setAttribute("required", "true"));
         }
     }
 
     window.onload = function () {
         mostrarCamposAdicionales();
-    };
+    }
 </script>
 
 <footer class="text-center mt-4">

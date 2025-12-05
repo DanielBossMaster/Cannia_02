@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mascotas en Adopción</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#170022",
+                        secondary: "#170022",
+                        lightBg: "#e8ebff",
+                        lightSurface: "#f7f8f9",
+                        darkText: "#1e293b",
+                        softText: "#475569",
+                        borderLight: "#e2e8f0",
+                    },
+                    fontFamily: {
+                        display: ["Roboto", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        body { font-family: 'Roboto', sans-serif; }
+    </style>
+</head>
+<body class="bg-lightBg text-darkText min-h-screen">
+<header class="bg-secondary text-white flex justify-between items-center px-6 py-3 shadow-md">
+    <div class="flex items-center space-x-3">
+        <img src="/img/logo.png" alt="Logo" class="w-8 h-8">
+        <h1 class="text-lg font-bold">Cannia Adopción</h1>
+    </div>
+    <a th:href="@{/mascotas}">
+        <button class="text-sm hover:font-bold bg-white text-secondary px-3 py-1 rounded">Volver</button>
+    </a>
+</header>
+
+<main class="container mx-auto px-4 py-8">
+
+    <div class="bg-primary text-white p-6 rounded-lg shadow-xl mb-8 max-w-3xl mx-auto text-center">
+        <h2 class="text-2xl font-bold" th:text="${welcomeMessage}"></h2>
+    </div>
+
+    <div class="flex justify-center space-x-4 mb-8">
+        <a th:href="@{/adopcion}"
+           th:classappend="${especieSeleccionada == ''} ? 'bg-secondary text-white' : 'bg-white text-secondary border border-secondary'"
+           class="px-6 py-2 rounded-full font-semibold shadow-md hover:bg-secondary hover:text-white transition">
+            Todos
+        </a>
+        <a th:href="@{/adopcion(especie=${caninoEspecie})}"
+           th:classappend="${especieSeleccionada == caninoEspecie} ? 'bg-secondary text-white' : 'bg-white text-secondary border border-secondary'"
+           class="px-6 py-2 rounded-full font-semibold shadow-md hover:bg-secondary hover:text-white transition">
+            Caninos
+        </a>
+        <a th:href="@{/adopcion(especie=${felinoEspecie})}"
+           th:classappend="${especieSeleccionada == felinoEspecie} ? 'bg-secondary text-white' : 'bg-white text-secondary border border-secondary'"
+           class="px-6 py-2 rounded-full font-semibold shadow-md hover:bg-secondary hover:text-white transition">
+            Felinos
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+
+        <div th:if="${#lists.isEmpty(mascotas)}" class="col-span-full">
+            <p class="text-center text-softText text-lg">
+                No hay mascotas disponibles para adopción en este momento.
+            </p>
+        </div>
+
+        <div th:each="mascota : ${mascotas}" class="bg-white rounded-lg shadow-xl overflow-hidden transform hover:scale-[1.02] transition duration-300 border border-borderLight">
+
+            <div class="h-48 bg-gray-200 flex items-center justify-center overflow-hidden">
+                <img th:if="${mascota.foto != null}" th:src="@{'data:image/jpeg;base64,' + ${#strings.arrayToUrlString(mascota.foto)}}"
+                     alt="Foto de Mascota" class="w-full h-full object-cover"/>
+                <span th:unless="${mascota.foto != null}" class="text-softText">Sin foto</span>
+            </div>
+
+            <div class="p-4">
+                <h3 class="text-xl font-bold text-primary mb-1" th:text="${mascota.nomMascota}">Nombre Mascota</h3>
+                <p class="text-softText text-sm"><span class="font-semibold">Especie:</span> <span th:text="${mascota.especie}"></span></p>
+                <p class="text-softText text-sm"><span class="font-semibold">Raza:</span> <span th:text="${mascota.raza}"></span></p>
+                <p class="text-softText text-sm"><span class="font-semibold">Fundación:</span> <span th:text="${mascota.fundacion.nombre}"></span></p>
+
+                <div class="mt-4">
+                    <a th:href="@{/adopcion/legalizar/{id}(id=${mascota.id})}" class="block text-center bg-primary text-white px-4 py-2 rounded-md hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                        Legalizar Adopción
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="text-center mt-4">
+    <p>&copy; 2025 App Cannia. Todos los derechos reservados.</p>
+</footer>
+</body>
+</html>

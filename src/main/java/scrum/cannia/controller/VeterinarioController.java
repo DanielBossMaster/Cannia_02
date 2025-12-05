@@ -232,28 +232,69 @@ public class VeterinarioController {
     }
 
     // ============================================
+    //              FORMULARIO PUBLICIDAD
+    // ============================================
+    @GetMapping("/FormularioPublicidad")
+    public String publicidad(HttpSession session, Model model) {
+
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        VeterinarioModel veterinario = usuario.getVeterinario();
+        VeterinariaModel veterinaria = veterinario.getVeterinaria();
+
+        model.addAttribute("publicidad", new PublicidadModel());
+        model.addAttribute("veterinaria", veterinaria);
+
+        return "veterinario/FormularioPublicidad";
+
+    }
+    // ============================================
     //                 TIENDA PREVIEW
     // ============================================
     @GetMapping("/Tienda")
     public String tiendaPreview(HttpSession session, Model model) {
 
         UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
-        VeterinarioModel veterinario = usuario.getVeterinario();
-        VeterinariaModel veterinaria = veterinario.getVeterinaria();
+
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        VeterinariaModel veterinaria = null;
+
+        // SI EL USUARIO ES PROPIETARIO
+        if (usuario.getPropietario() != null) {
+            veterinaria = usuario.getPropietario().getVeterinaria();
+        }
+
+        // SI EL USUARIO ES VETERINARIO
+        if (usuario.getVeterinario() != null) {
+            veterinaria = usuario.getVeterinario().getVeterinaria();
+        }
+
+        if (veterinaria == null) {
+            System.out.println("❌ El usuario NO pertenece a ninguna veterinaria");
+            return "redirect:/";
+        }
 
         model.addAttribute("veterinaria", veterinaria);
         model.addAttribute("productos", productoService.listarTodos());
 
         return "veterinario/TiendaPreview";
     }
+
     // ============================================
-    //          ESTIÓN DE INVENTARIO
+    //          EDICION DE INVENTARIO
     // ============================================
     @GetMapping("/inventario")
     public String mostrarInventarioVentas(Model model) {
         model.addAttribute("productos", productoService.listarTodos());
+        model.addAttribute("producto", new ProductoModel());
+        model.addAttribute("servicio", new ServicioModel());
         return "veterinario/inventario";
     }
+
+
+
     @GetMapping("/productos")
     public String listarProductosVeterinario(Model model) {
         // Usar el método correcto que ahora existe

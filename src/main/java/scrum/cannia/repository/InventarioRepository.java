@@ -11,14 +11,14 @@ import java.util.Optional;
 
 @Repository
 public interface InventarioRepository extends JpaRepository<InventarioModel, Integer> {
-
-    // Para alertas de stock
-    List<InventarioModel> findByStockActualLessThan(Integer stockMinimo);
-    List<InventarioModel> findByStockActualBetween(Integer min, Integer max);
-
-    // Para gráficos
-    @Query("SELECT i FROM InventarioModel i WHERE i.fechaActualizacion >= :fecha")
-    List<InventarioModel> findInventariosRecientes(@Param("fecha") LocalDate fecha);
+//
+//    // Para alertas de stock
+//    List<InventarioModel> findByStockActualLessThan(Integer stockMinimo);
+//    List<InventarioModel> findByStockActualBetween(Integer min, Integer max);
+//
+//    // Para gráficos
+//    @Query("SELECT i FROM InventarioModel i WHERE i.fechaActualizacion >= :fecha")
+//    List<InventarioModel> findInventariosRecientes(@Param("fecha") LocalDate fecha);
 
 
     Optional<InventarioModel> findByProductoIdAndVeterinariaId(int productoId, int veterinariaId);

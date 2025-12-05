@@ -8,6 +8,7 @@ import scrum.cannia.model.ProductoModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -66,7 +67,7 @@ public class CarritoService {
     // =========================================================
     public void eliminar(Integer idProducto) {
         List<ItemCarrito> carrito = getCarrito();
-        carrito.removeIf(item -> item.getProducto().getId() == idProducto);
+        carrito.removeIf(item -> Objects.equals(item.getProducto().getId(), idProducto));
     }
 
     // =========================================================
@@ -111,11 +112,8 @@ public class CarritoService {
     // =========================================================
     private ItemCarrito buscarItem(List<ItemCarrito> carrito, Integer idProducto) {
         return carrito.stream()
-                .filter(item -> item.getProducto().getId() == idProducto)
+                .filter(item -> Objects.equals(item.getProducto().getId(), idProducto))
                 .findFirst()
                 .orElse(null);
     }
-
-
-
 }

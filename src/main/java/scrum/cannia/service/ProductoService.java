@@ -1,5 +1,6 @@
 package scrum.cannia.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import scrum.cannia.model.ProductoModel;
 import scrum.cannia.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,16 @@ import java.util.Optional;
 public class ProductoService {
 
     @Autowired
-    private ProductoRepository productoRepository;
+    private final ProductoRepository productoRepository;
 
-    public List<ProductoModel> obtenerTodosProductos() {
-        return productoRepository.findAll();
-    }
+    public ProductoService(ProductoRepository productoRepository)
+    {this.productoRepository = productoRepository;}
+
+    public  List<ProductoModel> listarTodos()
+    { return productoRepository.findAll();}
+
+    public static <Producto> void guardar
+            (Producto producto, MultipartFile archivo) {}
 
     public List<ProductoModel> obtenerProductosActivos() {
         return productoRepository.findByEstadoTrue();
@@ -24,22 +30,34 @@ public class ProductoService {
     public ProductoModel guardarProducto(ProductoModel producto) {
         return productoRepository.save(producto);
     }
+    // Se utiliza en el carrito de compras, no tocar  | |
+    //                                               \   /
+    //                                                \ /
+    public ProductoModel buscarPorId(Integer id)
+    {return productoRepository.findById(id).orElse(null);}
 
-    public Optional<ProductoModel> obtenerProductoPorId(Integer id) {
-        return productoRepository.findById(id);
-    }
-
-    public void eliminarProductoLogicamente(Integer id) {
-        productoRepository.findById(id).ifPresent(producto -> {
-            producto.setEstado(false);
+    //Guardar productos
+    public void guardar(ProductoModel producto, MultipartFile archivo) {
+        try {
+            if (!archivo.isEmpty()) {
+                producto.setFoto(archivo.getBytes());
+            }
             productoRepository.save(producto);
-        });
-    }
-    public ProductoModel buscarPorId(Integer id) {
-        return productoRepository.findById(id).orElse(null);
-    }
 
-    public List<ProductoModel> listarTodos() {
-        return productoRepository.findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
+
+//
+//    public Optional<ProductoModel> obtenerProductoPorId(Integer id) {
+//        return productoRepository.findById(id);
+//    }
+//    public void eliminarProductoLogicamente(Integer id) {
+//        productoRepository.findById(id).ifPresent(producto -> {
+//            producto.setEstado(false);
+//            productoRepository.save(producto);
+//        });
+//    }
+//

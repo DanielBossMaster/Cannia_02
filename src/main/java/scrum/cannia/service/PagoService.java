@@ -88,25 +88,12 @@ public class PagoService {
 
         BigDecimal total = BigDecimal.ZERO;
 
-        // 2. Crear detalles
+        // 2. Crear detalles SIN INVENTARIO
         for (ItemCarrito item : carrito) {
 
-            InventarioModel inventario = inventarioRepository
-                    .findByProductoIdAndVeterinariaId(
-                            item.getProducto().getId(),
-                            veterinaria.getId()
-                    )
-                    .orElseThrow(() -> new RuntimeException("Inventario no encontrado"));
-
-            // Descontar stock
-            inventario.setStockActual(inventario.getStockActual() - item.getCantidad());
-            inventarioRepository.save(inventario);
-
-            // Crear detalle
             FacturaDetalleModel det = new FacturaDetalleModel();
             det.setFactura(factura);
             det.setProducto(item.getProducto());
-            det.setInventario(inventario);
             det.setCantidad(item.getCantidad());
 
             BigDecimal precioDetalle = BigDecimal
@@ -115,17 +102,16 @@ public class PagoService {
 
             det.setPrecio(precioDetalle);
 
-            // Agregar detalle a la factura
             factura.getDetalles().add(det);
-
             total = total.add(precioDetalle);
         }
 
         factura.setPrecioTotal(total);
 
-        // 3. Guardar all automatico (factura + detalles)
+        // 3. Guardar factura (cascade guarda detalles)
         return facturaRepository.save(factura);
     }
+
 
 }
 

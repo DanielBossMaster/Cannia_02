@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface ServicioRepository extends JpaRepository<ServicioModel, Integer> {
-    List<ServicioModel> findAllByOrderByNombreAsc();
+//    List<ServicioModel> findAllByOrderByNombreAsc();
 }

@@ -2,44 +2,100 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Mascota</title>
-    <link rel="stylesheet" th:href="@{/css/fundacion.css}">
+    <title th:text="${mascota.id != null} ? 'Editar Mascota' : 'Registrar Mascota'">Formulario Mascota</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#170022",
+                        lightSurface: "#f7f8f9",
+                        "text-light": "#212529",
+                        "border-light": "#CED4DA",
+                    },
+                    fontFamily: {
+                        display: ["Roboto", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
 </head>
-<body>
+<body class="h-screen bg-[url('/img/fondo_login.jpg')] bg-cover bg-center flex items-center justify-center">
 
-<a th:href="@{'/fundaciones/' + ${fundacionId} + '/mascotas'}"> Volver</a>
+<div class="bg-lightSurface shadow-2xl w-full max-w-2xl p-8">
+    <div class="flex items-center justify-between p-4 -mx-8 -mt-8 mb-4 bg-primary text-white">
+        <h2 class="text-xl font-bold" th:text="${mascota.id != null} ? 'Editar Mascota' : 'Registrar Mascota'"></h2>
+        <a th:href="@{'/fundaciones/' + ${fundacionId} + '/mascotas'}" class="text-sm hover:font-bold bg-white text-primary px-3 py-1 rounded">
+            Volver a Mascotas
+        </a>
+    </div>
 
-<h1 th:text="${mascota.id != null} ? 'Editar Mascota' : 'Registrar Mascota'"></h1>
+    <form th:action="${mascota.id != null} ?
+                  @{'/fundaciones/' + ${fundacionId} + '/mascotas/actualizar/' + ${mascota.id}} :
+                  @{'/fundaciones/' + ${fundacionId} + '/mascotas/guardar'}"
+          th:object="${mascota}"
+          method="post"
+          enctype="multipart/form-data"
+          class="space-y-4">
 
-<form th:action="${mascota.id != null} ?
-               @{'/fundaciones/' + ${fundacionId} + '/mascotas/actualizar/' + ${mascota.id}} :
-               @{'/fundaciones/' + ${fundacionId} + '/mascotas/guardar'}"
-      th:object="${mascota}" method="post">
+        <input type="hidden" th:field="*{fundacion.id}" /> <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+            <label class="block text-sm font-medium text-text-light mb-1" for="nomMascota">Nombre (*)</label>
+            <input type="text" id="nomMascota" th:field="*{nomMascota}" required
+                   class="w-full rounded border-border-light bg-lightSurface text-text-light focus:ring-primary focus:border-primary px-3 py-2" />
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-text-light mb-1" for="especie">Especie (*)</label>
+            <select id="especie" th:field="*{especie}" required
+                    class="w-full rounded border-border-light bg-lightSurface text-text-light focus:ring-primary focus:border-primary px-3 py-2">
+                <option value="">Seleccione Especie</option>
+                <option value="Canino">Canino</option>
+                <option value="Felino">Felino</option>
+            </select>
+        </div>
+    </div>
 
-    <label>Nombre</label>
-    <input type="text" th:field="*{nomMascota}" required>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-text-light mb-1" for="raza">Raza</label>
+                <input type="text" id="raza" th:field="*{raza}"
+                       class="w-full rounded border-border-light bg-lightSurface text-text-light focus:ring-primary focus:border-primary px-3 py-2" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-text-light mb-1" for="genero">Género (*)</label>
+                <select id="genero" th:field="*{genero}" required
+                        class="w-full rounded border-border-light bg-lightSurface text-text-light focus:ring-primary focus:border-primary px-3 py-2">
+                    <option value="">Seleccione Género</option>
+                    <option value="Macho">Macho</option>
+                    <option value="Hembra">Hembra</option>
+                </select>
+            </div>
+        </div>
 
-    <label>Especie</label>
-    <input type="text" th:field="*{especie}" required>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-text-light mb-1" for="edadFundacion">Edad (Solo Fundación)</label>
+                <input type="text" id="edadFundacion" th:field="*{edadFundacion}" placeholder="Ej: 2 años"
+                       class="w-full rounded border-border-light bg-lightSurface text-text-light focus:ring-primary focus:border-primary px-3 py-2" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-text-light mb-1" for="fotoFile">Foto de Mascota</label>
+                <input type="file" id="fotoFile" name="fotoFile" accept="image/*"
+                       class="w-full rounded border-border-light bg-lightSurface text-text-light focus:ring-primary focus:border-primary px-3 py-2" />
+            </div>
+        </div>
 
-    <label>Raza</label>
-    <input type="text" th:field="*{raza}">
-
-    <label>Edad (solo fundación)</label>
-    <input type="text" th:field="*{edadFundacion}" placeholder="Ej: 2 años">
-
-    <label>Género</label>
-    <select th:field="*{genero}">
-        <option th:each="g : ${T(scrum.cannia.model.Genero).values()}"
-                th:value="${g}"
-                th:text="${g}"></option>
-    </select>
-
-    <label>Foto (nombre archivo en /static/img)</label>
-    <input type="text" th:field="*{foto}" placeholder="ej: perro1.jpg">
-
-    <button type="submit">Guardar</button>
-</form>
-
+        <div class="pt-4">
+            <button type="submit"
+                    class="w-full bg-primary text-white px-4 py-2 rounded-md hover:opacity-90 font-bold transition">
+                <span th:text="${mascota.id != null} ? 'Actualizar Mascota' : 'Guardar Mascota'"></span>
+            </button>
+        </div>
+    </form>
+</div>
 </body>
 </html>

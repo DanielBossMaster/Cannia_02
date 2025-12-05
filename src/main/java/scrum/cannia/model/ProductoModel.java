@@ -20,6 +20,10 @@ public class ProductoModel {
     @Column(name = "id_producto")
     private int id;
 
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] foto;
+
     @Column(length = 20, nullable = false )
     private String nombre;
 
@@ -32,19 +36,33 @@ public class ProductoModel {
     @Column(length = 20, nullable = false )
     private Integer valor;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 50, nullable = false)
+    private UnidadMedida unidadMedida;
+
+
     @Column(length = 20, nullable = false )
     private boolean estado;
 
-    @Lob
-    @Column
-    private byte foto;
 
     @Column
     private boolean publicado;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 10, nullable = false)
-    private UnidadMedida unidadMedida;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_veterinaria")
+    private VeterinariaModel veterinaria;
+
+    /* Metodo para convertir imagenes */
+    @Transient
+    private String fotoBase64;
+
+    public String getFotoBase64() {
+        return fotoBase64;
+    }
+
+    public void setFotoBase64(String fotoBase64) {
+        this.fotoBase64 = fotoBase64;
+    }
 
     // Si InventarioModel tiene un campo llamado 'producto':
     @OneToMany(mappedBy = "producto")
