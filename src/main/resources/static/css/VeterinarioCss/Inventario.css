@@ -415,3 +415,120 @@ body {
     color: red;
     font-size: 1.2rem;
 }
+
+/* Estilo base para ambos botones */
+.btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: white;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background-color .2s ease, transform .15s ease;
+}
+
+/* Efecto al pasar el mouse */
+.btn:hover {
+    transform: scale(1.03);
+}
+
+/* Botón Editar */
+.btn-editar {
+    background-color: #2563eb; /* Azul */
+}
+
+.btn-editar:hover {
+    background-color: #1e40af; /* Azul más oscuro */
+}
+
+/* Botón Eliminar */
+.btn-eliminar {
+    background-color: #dc2626; /* Rojo */
+}
+
+.btn-eliminar:hover {
+    background-color: #b91c1c; /* Rojo más oscuro */
+}
+.modal-overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+/* Contenedor modal estilo centrado */
+.modal-editar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+}
+
+.editar-card {
+    background: white;
+    padding: 25px;
+    width: 450px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.2);
+}
+
+.editar-card h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.btn-guardar {
+    background: #170022;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-guardar:hover {
+    background: #290043;
+}
+
+.btn-regresar {
+    display: block;
+    margin-top: 15px;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
