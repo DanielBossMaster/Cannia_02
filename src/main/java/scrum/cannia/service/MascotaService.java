@@ -21,7 +21,7 @@ public class MascotaService {
     @Autowired
     private FundacionRepository fundacionRepository;
 
-    // 🔹 Listar todas las mascotas
+       // 🔹 Listar todas las mascotas
     public List<MascotaModel> listarTodas() {
         return mascotaRepository.findAll();
     }
@@ -83,4 +83,5 @@ public class MascotaService {
     public void eliminarMascota(Long id) {
         mascotaRepository.deleteById(id);
     }
+
 }

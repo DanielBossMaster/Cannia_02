@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import scrum.cannia.model.*;
 import scrum.cannia.repository.*;
 import scrum.cannia.service.*;
+import scrum.cannia.strategy.DataLoaderStrategy;
+import scrum.cannia.strategy.factory.DataLoaderFactory;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
@@ -38,7 +40,7 @@ public class PropietarioController {
     @Autowired
     private ProductoService productoService;
     @Autowired
-    private ExcelLoaderService excelLoaderService;
+    private PetService petService;
     @Autowired
     private PetRepository petRepository;
 
@@ -67,21 +69,27 @@ public class PropietarioController {
     public String procesarExcel(@RequestParam("file") MultipartFile file, Model model) {
 
         try {
-            ExcelLoaderService.loadPetsFromExcel(file, petRepository);
-            model.addAttribute("message", "Archivo cargado correctamente.");
+            String filename = file.getOriginalFilename();
+
+            DataLoaderStrategy strategy = DataLoaderFactory.getStrategy(filename);
+
+            List<PetModel> pets = strategy.loadData(file);
+
+            petService.guardarMascotas(pets);
+
+            model.addAttribute("message", "Archivo cargado: " + pets.size());
+
         } catch (Exception e) {
-            model.addAttribute("message", "Error al cargar el archivo: " + e.getMessage());
+            model.addAttribute("message", "Error al cargar archivo: " + e.getMessage());
         }
 
         return "Propietario/CargarMascotas";
     }
+
+
     @GetMapping("/muestras")
     public String mostrarMascotas(Model model) {
         model.addAttribute("pets", petRepository.findAll());
-
-//        List<PetModel> lista = petRepository.findAll();
-//        model.addAttribute("pets", lista);
-
         return "Propietario/MuestraMascotas";
     }
 

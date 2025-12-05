@@ -55,7 +55,13 @@
                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full shadow-md transition">
                     Ver más
                 </a>
+                <form th:action="@{/foundation/adopt/{id}(id=${pet.id})}" method="post">
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded">
+                        Adoptar Mascota
+                    </button>
+                </form>
             </div>
+
 
         </div>
     </div>
