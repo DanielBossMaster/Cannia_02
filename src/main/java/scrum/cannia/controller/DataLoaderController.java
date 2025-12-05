@@ -11,8 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 import scrum.cannia.strategy.DataLoaderContext;
 import scrum.cannia.strategy.factory.DataLoaderFactory;
 import scrum.cannia.strategy.DataLoaderStrategy;
-import scrum.cannia.model.MascotaModel;
-import scrum.cannia.repository.MascotaRepository;
+import scrum.cannia.model.PetModel;
+import scrum.cannia.repository.PetRepository;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import java.util.List;
 public class DataLoaderController {
 
     @Autowired
-    private MascotaRepository mascotaRepository;
+    private PetRepository petRepository;
 
     // ✔ Muestra el formulario HTML para subir archivo
     @GetMapping("/fundacion/cargar-archivo")
@@ -49,10 +49,10 @@ public class DataLoaderController {
             context.setStrategy(strategy);
 
             // 3. Ejecutar carga del archivo
-            List<MascotaModel> mascotas = context.executeStrategy(file);
+            List<PetModel> mascotas = context.executeStrategy(file);
 
             // 4. Guardar en la base de datos
-            mascotaRepository.saveAll(mascotas);
+            petRepository.saveAll(mascotas);
 
             model.addAttribute("mensaje", "Archivo cargado exitosamente");
             model.addAttribute("cantidad", mascotas.size());
