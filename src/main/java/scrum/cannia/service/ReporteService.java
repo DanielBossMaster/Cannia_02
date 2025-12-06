@@ -15,6 +15,44 @@ public class ReporteService {
     private ProductoRepository productoRepository;
 
     /**
+     * Método PÚBLICO para calcular estadísticas
+     */
+    public Map<String, Object> calcularEstadisticas(List<ProductoModel> productos) {
+        Map<String, Object> stats = new HashMap<>();
+
+        long totalActivos = productos.stream().filter(ProductoModel::isEstado).count();
+        long totalInactivos = productos.stream().filter(p -> !p.isEstado()).count();
+        long totalPublicados = productos.stream().filter(ProductoModel::isPublicado).count();
+
+        int cantidadTotal = productos.stream()
+                .mapToInt(ProductoModel::getCantidad)
+                .sum();
+
+        int valorTotal = productos.stream()
+                .mapToInt(ProductoModel::getValor)
+                .sum();
+
+        int valorPromedio = productos.isEmpty() ? 0 : valorTotal / productos.size();
+
+        stats.put("totalActivos", totalActivos);
+        stats.put("totalInactivos", totalInactivos);
+        stats.put("totalPublicados", totalPublicados);
+        stats.put("cantidadTotalStock", cantidadTotal);
+        stats.put("valorTotalInventario", valorTotal);
+        stats.put("valorPromedioProducto", valorPromedio);
+
+        // Calcular porcentaje solo si hay productos
+        if (!productos.isEmpty()) {
+            int porcentajeActivos = (int) ((totalActivos * 100) / productos.size());
+            stats.put("porcentajeActivos", porcentajeActivos);
+        } else {
+            stats.put("porcentajeActivos", 0);
+        }
+
+        return stats;
+    }
+
+    /**
      * Genera reporte de productos según filtros
      */
     public Map<String, Object> generarReporteProductos(String tipoGrafico, Boolean estadoFiltro) {
@@ -38,7 +76,7 @@ public class ReporteService {
             resultado.put("datos", generarDatosBarras(productos));
         }
 
-        // Estadísticas
+        // Estadísticas - usa el método público
         resultado.put("estadisticas", calcularEstadisticas(productos));
         resultado.put("totalProductos", productos.size());
         resultado.put("filtroAplicado", estadoFiltro != null ?
@@ -118,44 +156,6 @@ public class ReporteService {
         ));
 
         return datos;
-    }
-
-    /**
-     * Calcular estadísticas generales
-     */
-    private Map<String, Object> calcularEstadisticas(List<ProductoModel> productos) {
-        Map<String, Object> stats = new HashMap<>();
-
-        long totalActivos = productos.stream().filter(ProductoModel::isEstado).count();
-        long totalInactivos = productos.stream().filter(p -> !p.isEstado()).count();
-        long totalPublicados = productos.stream().filter(ProductoModel::isPublicado).count();
-
-        int cantidadTotal = productos.stream()
-                .mapToInt(ProductoModel::getCantidad)
-                .sum();
-
-        int valorTotal = productos.stream()
-                .mapToInt(ProductoModel::getValor)
-                .sum();
-
-        int valorPromedio = productos.isEmpty() ? 0 : valorTotal / productos.size();
-
-        stats.put("totalActivos", totalActivos);
-        stats.put("totalInactivos", totalInactivos);
-        stats.put("totalPublicados", totalPublicados);
-        stats.put("cantidadTotalStock", cantidadTotal);
-        stats.put("valorTotalInventario", valorTotal);
-        stats.put("valorPromedioProducto", valorPromedio);
-
-        // Calcular porcentaje solo si hay productos
-        if (!productos.isEmpty()) {
-            int porcentajeActivos = (int) ((totalActivos * 100) / productos.size());
-            stats.put("porcentajeActivos", porcentajeActivos);
-        } else {
-            stats.put("porcentajeActivos", 0);
-        }
-
-        return stats;
     }
 
     /**
