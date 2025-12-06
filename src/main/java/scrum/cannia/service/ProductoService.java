@@ -77,4 +77,25 @@ public class ProductoService {
         productoRepository.save(original);
     }
 
+    public void actualizarConImagen(ProductoModel productoEditado, MultipartFile imagen)
+            throws IOException {
+
+        ProductoModel productoDB = productoRepository
+                .findById(productoEditado.getId())
+                .orElseThrow();
+
+        // Campos normales
+        productoDB.setNombre(productoEditado.getNombre());
+        productoDB.setDescripcion(productoEditado.getDescripcion());
+        productoDB.setValor(productoEditado.getValor());
+
+        // ✅ SOLO si se subió imagen nueva
+        if (imagen != null && !imagen.isEmpty()) {
+            productoDB.setFoto(imagen.getBytes());
+        }
+
+        productoRepository.save(productoDB);
+    }
+
+
 }

@@ -8,14 +8,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.multipart.MultipartFile;
 import scrum.cannia.model.*;
 import scrum.cannia.repository.*;
 
-import scrum.cannia.service.MascotaService;
-import scrum.cannia.service.ProductoService;
-import scrum.cannia.service.PropietarioService;
-import scrum.cannia.service.VeterinarioService;
+import scrum.cannia.service.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -36,6 +35,10 @@ public class VeterinarioController {
     private VeterinarioService veterinarioService;
     @Autowired
     private ProductoService productoService;
+    @Autowired
+    private FacturaService facturaService;
+    @Autowired
+    private FacturaRepository facturaRepository;
 
     public VeterinarioController(
             VeterinarioRepository veterinarioRepository,
@@ -228,8 +231,13 @@ public class VeterinarioController {
     //              GESTIÓN DE VENTAS
     // ============================================
     @GetMapping("/GestionVentas")
-    public String gestionVentas(Model model) {
+    public String gestionVentas(HttpSession session, Model model) {
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        VeterinarioModel veterinario = usuario.getVeterinario();
+        VeterinariaModel veterinaria = veterinario.getVeterinaria();
+
         model.addAttribute("productos", productoService.listarTodos());
+        model.addAttribute("veterinaria", veterinaria);
         return "veterinario/GestionVentas";
     }
 
@@ -250,10 +258,10 @@ public class VeterinarioController {
 
     }
     // ============================================
-    //                 TIENDA PREVIEW
+    //                 TIENDA DE PROPIETARIO
     // ============================================
     @GetMapping("/Tienda")
-    public String tiendaPreview(HttpSession session, Model model) {
+    public String tienda(HttpSession session, Model model) {
 
         UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
 
@@ -289,6 +297,35 @@ public class VeterinarioController {
     }
 
     // ============================================
+    //                 TIENDA DE VETERINARIO
+    // ============================================
+
+    @GetMapping("/TiendaPreview")
+    public String tiendaPreview(HttpSession session, Model model) {
+
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        VeterinariaModel veterinaria = null;
+
+
+        // SI EL USUARIO ES VETERINARIO
+        if (usuario.getVeterinario() != null) {
+            veterinaria = usuario.getVeterinario().getVeterinaria();
+        }
+
+
+
+        model.addAttribute("veterinaria", veterinaria);
+        model.addAttribute("productos", productoService.listarTodos());
+
+        return "veterinario/TiendaPreview";
+    }
+
+    // ============================================
     //          EDICION DE INVENTARIO
     // ============================================
     @GetMapping("/inventario")
@@ -314,4 +351,74 @@ public class VeterinarioController {
         model.addAttribute("productos", productoService.obtenerProductosActivos());
         return "veterinario/productos";
     }
+
+    @GetMapping("/ventas")
+    public String verVentas(HttpSession session, Model model) {
+
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+
+        if (usuario == null || usuario.getVeterinario() == null) {
+            return "redirect:/login";
+        }
+
+        VeterinariaModel veterinaria = usuario.getVeterinario().getVeterinaria();
+
+        List<FacturaModel> ventas = facturaService.obtenerVentasVeterinaria(veterinaria.getId());
+
+        model.addAttribute("ventas", ventas);
+        model.addAttribute("veterinaria", veterinaria);
+
+        return "veterinario/Ventas";
+
+
+    }
+
+    @PostMapping("/ventas/estado")
+    @ResponseBody
+    public void cambiarEstado(
+            @RequestParam Long id,
+            @RequestParam EstadoFactura estado
+    ) {
+        FacturaModel factura = facturaRepository.findById(id).orElseThrow();
+        factura.setEstado(estado);
+        facturaRepository.save(factura);
+    }
+
+    @GetMapping("/productos/editar/{id}")
+    public String mostrarFormularioEditar(
+            @PathVariable Integer id,
+            Model model,
+            HttpSession session
+    ) {
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        if (usuario == null || usuario.getVeterinario() == null) {
+            return "redirect:/login";
+        }
+
+        ProductoModel producto = productoService.buscarPorId(id);
+        if (producto == null) {
+            return "redirect:/veterinario/productos";
+        }
+
+        model.addAttribute("producto", producto);
+        return "veterinario/EditarProducto";
+    }
+
+    @PostMapping("/veterinario/productos/editar")
+    public String actualizarProducto(
+            @ModelAttribute ProductoModel producto,
+            @RequestParam(required = false) MultipartFile imagen,
+            HttpSession session
+    ) throws IOException {
+
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        if (usuario == null || usuario.getVeterinario() == null) {
+            return "redirect:/login";
+        }
+
+        productoService.actualizar(producto, imagen);
+        return "redirect:/veterinario/GestionVentas";
+    }
+
+
 }
