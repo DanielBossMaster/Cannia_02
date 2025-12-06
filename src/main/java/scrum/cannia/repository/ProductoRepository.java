@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface ProductoRepository extends JpaRepository<ProductoModel, Integer> {
     List<ProductoModel> findByEstadoTrue(); // Solo productos activos
     Optional<ProductoModel> findByNombre(String nombre);
-    List<ProductoModel> findByNombreContainingIgnoreCaseOrDescripcionContainingIgnoreCase(String nombre, String descripcion);
+    List<ProductoModel> findByNombreContainingIgnoreCase(String nombre);
 }
 //    List<ProductoModel> findByPublicadoTrue(); // Solo productos publicados
 

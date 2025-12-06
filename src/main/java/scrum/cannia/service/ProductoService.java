@@ -38,6 +38,8 @@ public class ProductoService {
     public ProductoModel buscarPorId(Integer id)
     {return productoRepository.findById(id).orElse(null);}
 
+
+
     //Guardar productos
     public void guardar(ProductoModel producto, MultipartFile archivo) {
         try {
@@ -75,5 +77,9 @@ public class ProductoService {
         productoRepository.save(original);
     }
 
+    public List<ProductoModel> buscarPorNombre(String q) {
+        return productoRepository
+                .findByNombreContainingIgnoreCase(q);
+    }
 
 }

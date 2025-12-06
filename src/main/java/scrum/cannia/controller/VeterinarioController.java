@@ -16,6 +16,8 @@ import scrum.cannia.service.ProductoService;
 import scrum.cannia.service.PropietarioService;
 import scrum.cannia.service.VeterinarioService;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/veterinario")
 public class VeterinarioController {
@@ -264,6 +266,10 @@ public class VeterinarioController {
         // SI EL USUARIO ES PROPIETARIO
         if (usuario.getPropietario() != null) {
             veterinaria = usuario.getPropietario().getVeterinaria();
+
+            // ✅ NUEVO: obtener dirección de la CASA del propietario
+            model.addAttribute("direccion",
+                    usuario.getPropietario().getDireccionPro());
         }
 
         // SI EL USUARIO ES VETERINARIO
@@ -279,7 +285,7 @@ public class VeterinarioController {
         model.addAttribute("veterinaria", veterinaria);
         model.addAttribute("productos", productoService.listarTodos());
 
-        return "veterinario/TiendaPreview";
+        return "veterinario/Tienda";
     }
 
     // ============================================
