@@ -77,9 +77,4 @@ public class ProductoService {
         productoRepository.save(original);
     }
 
-    public List<ProductoModel> buscarPorNombre(String q) {
-        return productoRepository
-                .findByNombreContainingIgnoreCase(q);
-    }
-
 }
