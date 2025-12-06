@@ -69,6 +69,23 @@ public class MascotaController {
 
         return "propietario/indexPropietario";
     }
+    @GetMapping("/misMascotas")
+    public String misMascotas(HttpSession session, Model model) {
+        // Obtener propietario desde la sesión
+        PropietarioModel propietario = (PropietarioModel) session.getAttribute("propietario");
+        if (propietario == null) {
+            return "redirect:/login";
+        }
+
+        // Traer las mascotas del propietario
+        List<MascotaModel> listaMascotasDelPropietario = mascotaRepository.findByPropietario(propietario);
+
+        // Pasar al modelo para Thymeleaf
+        model.addAttribute("listaMascotas", listaMascotasDelPropietario);
+
+        return "propietario/misMascotas"; // Llama al HTML
+    }
+
 
     // --------------------------
     // Página de la tienda del propietario
@@ -126,48 +143,5 @@ public class MascotaController {
         redirectAttributes.addFlashAttribute("success", "Mascota registrada correctamente");
         return "redirect:/propietario/index";
     }
-
-    @GetMapping("/misMascotas")
-    public String misMascotas(HttpSession session, Model model) {
-
-        // Obtener propietario en sesión
-        PropietarioModel propietario = (PropietarioModel) session.getAttribute("propietario");
-
-        if (propietario == null) {
-            return "redirect:/login";
-        }
-
-        // Obtener solo las mascotas del propietario
-        List<MascotaModel> misMascotas =
-                mascotaRepository.findByPropietario(propietario);
-
-        model.addAttribute("listaMascotas", mascotaRepository.findByPropietario(propietario));
-
-        return "propietario/misMascotas";
-    }
-
-    @PostMapping("/actualizar")
-    public String actualizarMascota(MascotaModel mascota, HttpSession session) {
-
-        PropietarioModel propietario = (PropietarioModel) session.getAttribute("propietario");
-        if (propietario == null) {
-            return "redirect:/login";
-        }
-
-        mascota.setPropietario(propietario);
-        mascotaRepository.save(mascota);
-        return "redirect:/propietario/misMascotas";
-    }
-//    @GetMapping("/editar/{id}")
-//    public String editarMascota(@PathVariable Long id, Model model) {
-//
-//        MascotaModel mascota = mascotaRepository.findById(id).orElse(null);
-//
-//        if (mascota == null) return "redirect:/mascotas/misMascotas";
-//
-//        model.addAttribute("mascota", mascota);
-//
-//        return "propietario/editarMascota"; // Vista para modal o página
-//    }
 
 }
