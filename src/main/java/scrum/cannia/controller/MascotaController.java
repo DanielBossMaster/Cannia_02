@@ -1,11 +1,14 @@
 package scrum.cannia.controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import scrum.cannia.model.*;
 import scrum.cannia.repository.InventarioRepository;
 import scrum.cannia.repository.MascotaRepository;
@@ -91,5 +94,80 @@ public class MascotaController {
 
         return "propietario/Tienda";
     }
+
+    // --------------------------
+    // Agrega a la base de datos la mascota generada por el propietario
+    // --------------------------
+    @PostMapping("/guardar")
+    public String guardarMascota(
+            @Valid MascotaModel mascota,
+            BindingResult result,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("error", "Datos inválidos");
+            return "redirect:/propietario/index";
+        }
+
+        PropietarioModel propietario = (PropietarioModel) session.getAttribute("propietario");
+
+        if (propietario == null) {
+            redirectAttributes.addFlashAttribute("error", "No se encontró propietario en sesión.");
+            return "redirect:/propietario/index";
+        }
+
+        System.out.println(">>>> PROPIETARIO ASIGNADO: " + propietario.getId());
+
+        mascota.setPropietario(propietario);
+
+        mascotaRepository.save(mascota);
+
+        redirectAttributes.addFlashAttribute("success", "Mascota registrada correctamente");
+        return "redirect:/propietario/index";
+    }
+
+    @GetMapping("/misMascotas")
+    public String misMascotas(HttpSession session, Model model) {
+
+        // Obtener propietario en sesión
+        PropietarioModel propietario = (PropietarioModel) session.getAttribute("propietario");
+
+        if (propietario == null) {
+            return "redirect:/login";
+        }
+
+        // Obtener solo las mascotas del propietario
+        List<MascotaModel> misMascotas =
+                mascotaRepository.findByPropietario(propietario);
+
+        model.addAttribute("listaMascotas", mascotaRepository.findByPropietario(propietario));
+
+        return "propietario/misMascotas";
+    }
+
+    @PostMapping("/actualizar")
+    public String actualizarMascota(MascotaModel mascota, HttpSession session) {
+
+        PropietarioModel propietario = (PropietarioModel) session.getAttribute("propietario");
+        if (propietario == null) {
+            return "redirect:/login";
+        }
+
+        mascota.setPropietario(propietario);
+        mascotaRepository.save(mascota);
+        return "redirect:/propietario/misMascotas";
+    }
+//    @GetMapping("/editar/{id}")
+//    public String editarMascota(@PathVariable Long id, Model model) {
+//
+//        MascotaModel mascota = mascotaRepository.findById(id).orElse(null);
+//
+//        if (mascota == null) return "redirect:/mascotas/misMascotas";
+//
+//        model.addAttribute("mascota", mascota);
+//
+//        return "propietario/editarMascota"; // Vista para modal o página
+//    }
 
 }
