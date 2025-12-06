@@ -77,15 +77,3 @@ public class ProductoService {
 
 
 }
-
-//
-//    public Optional<ProductoModel> obtenerProductoPorId(Integer id) {
-//        return productoRepository.findById(id);
-//    }
-//    public void eliminarProductoLogicamente(Integer id) {
-//        productoRepository.findById(id).ifPresent(producto -> {
-//            producto.setEstado(false);
-//            productoRepository.save(producto);
-//        });
-//    }
-//

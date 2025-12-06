@@ -48,7 +48,7 @@ public class ServicioController {
         }
 
     // ============================================
-    //         GUARDAR PRODUCTO
+    //         GUARDAR SERVICIO
     // ============================================
 
     @PostMapping("/guardar")
@@ -79,37 +79,18 @@ public class ServicioController {
         return "redirect:/inventario/servicios";
         // ruta de la paginba, para que vuelva a la misma pagina
     }
+
+    @GetMapping("/editar/{id}")
+    public String editarServicio(@PathVariable Integer id, Model model) {
+        ServicioModel serv = servicioService.buscarPorId(id);
+        model.addAttribute("servicio", serv);
+        return "Inventario/EditarServicio";
     }
-//    @Autowired
-//    private ServicioService servicioService;
-//
-//    @GetMapping
-//    public String listarServicios(Model model) {
-//        model.addAttribute("servicios", servicioService.obtenerTodosServicios());
-//        return "inventario/servicios/lista";
-//    }
-//
-//    @GetMapping("/nuevo")
-//    public String mostrarFormularioNuevoServicio(Model model) {
-//        model.addAttribute("servicio", new ServicioModel());
-//        return "inventario/servicios/formulario";
-//    }
-//
-//    @PostMapping("/guardar")
-//    public String guardarServicio(@ModelAttribute ServicioModel servicio) {
-//        servicioService.guardarServicio(servicio);
-//        return "redirect:/inventario";
-//    }
-//
-//    @GetMapping("/editar/{id}")
-//    public String mostrarFormularioEditarServicio(@PathVariable Integer id, Model model) {
-//        servicioService.obtenerServicioPorId(id).ifPresent(servicio ->
-//                model.addAttribute("servicio", servicio));
-//        return "inventario/servicios/formulario";
-//    }
-//
-//    @GetMapping("/eliminar/{id}")
-//    public String eliminarServicio(@PathVariable Integer id) {
-//        servicioService.eliminarServicioLogicamente(id);
-//        return "redirect:/inventario";
-//    }
+
+    @PostMapping("/actualizar")
+    public String actualizar(@ModelAttribute ServicioModel servicio) {
+        servicioService.actualizar(servicio);
+        return "redirect:/inventario/servicios";
+    }
+
+}

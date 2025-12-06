@@ -46,8 +46,13 @@
         <div class="main-content">
 
             <!-- BOTÓN ABRIR MODAL -->
-            <button id="btnAbrir" class="btn btn-primary">
-                + Producto
+            <button th:action="@{/inventario/productos/guardar}" id="btnAbrir" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-plus-icon lucide-circle-plus">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M8 12h8"/>
+                    <path d="M12 8v8"/>
+                </svg>
+                Producto
             </button>
 
             <!-- TABLA -->
@@ -107,7 +112,7 @@
 
         <h3>Agregar Nuevo Producto</h3>
 
-        <form th:action="@{/inventario/productos/guardar}"
+        <form th:action="@{/inventario/producto/guardar}"
               th:object="${producto}" method="post"
               enctype="multipart/form-data">
 
@@ -166,13 +171,40 @@
     const btnAbrir = document.getElementById("btnAbrir");
     const modal = document.getElementById("miModal");
     const cerrar = document.querySelector(".close");
+    const modalContent = document.querySelector(".modal-content");
 
-    btnAbrir.onclick = () => modal.style.display = "flex";
-    cerrar.onclick = () => modal.style.display = "none";
-
-    window.onclick = (e) => {
-        if (e.target === modal) modal.style.display = "none";
+    // Abrir modal de agregar
+    btnAbrir.onclick = () => {
+        modal.style.display = "flex";
+        modalContent.style.display = "block";
     };
+
+    // Cerrar al hacer click en la X
+    cerrar.onclick = () => {
+        modal.style.display = "none";
+    };
+
+    // Cerrar cuando se da click fuera del contenido
+    window.onclick = (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+            modalContent.style.display = "none";
+        }
+    };
+
+    <!-- Abril Modal EDITAR-->
+    function abrirModalEditar(id) {
+        fetch(`/producto/editar/${id}`)
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById("modal-container").innerHTML = html;
+                document.getElementById("modal-editar-producto").style.display = "flex";
+            });
+    }
+
+    function cerrarModalEditar() {
+        document.getElementById("modal-editar-producto").style.display = "none";
+    }
 </script>
 
 </body>

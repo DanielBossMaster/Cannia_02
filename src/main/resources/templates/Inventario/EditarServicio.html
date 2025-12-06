@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <title>Editar Producto</title>
+    <title>Editar Servicio</title>
+    <link th:href="@{/css/VeterinarioCss/Inventario.css}" rel="stylesheet">
 
+    <!-- Tu CSS general -->
     <link th:href="@{/css/VeterinarioCss/Inventario.css}" rel="stylesheet">
 
 </head>
 
 <body>
+
 <header class="barra-superior">
     <a th:href="@{/inventario/servicios}" class="btn-home">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left-from-line-icon lucide-arrow-left-from-line">
@@ -22,27 +24,15 @@
 <div class="modal" id="modalEditar">
 <div class="card editar-card">
 
-    <h2>Editar Producto</h2>
+    <h2 style="text-align:center;">Editar Servicio</h2>
 
-    <form th:action="@{/inventario/productos/actualizar}"
-          th:object="${producto}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/inventario/servicios/actualizar}" th:object="${servicio}" method="post">
 
+        <!-- ID oculto -->
         <input type="hidden" th:field="*{id}">
 
         <div class="form-group">
-            <label>Foto actual</label><br>
-            <img th:if="${producto.fotoBase64 != null}"
-                 th:src="'data:image/jpeg;base64,' + ${producto.fotoBase64}"
-                 style="width:120px;height:120px;border-radius:8px;">
-        </div>
-
-        <div class="form-group">
-            <label>Cambiar foto</label>
-            <input type="file" name="archivoImagen" class="form-control" accept="image/*">
-        </div>
-
-        <div class="form-group">
-            <label>Nombre</label>
+            <label>Nombre del Servicio</label>
             <input type="text" th:field="*{nombre}" class="form-control" required>
         </div>
 
@@ -52,23 +42,13 @@
         </div>
 
         <div class="form-group">
-            <label>Cantidad</label>
-            <input type="number" th:field="*{cantidad}" min="0" class="form-control" required>
+            <label>Duración Estimada (minutos)</label>
+            <input type="number" th:field="*{duracionEstimada}" class="form-control" min="1" required>
         </div>
 
         <div class="form-group">
-            <label>Valor</label>
-            <input type="number" th:field="*{valor}" min="0" step="0.01" class="form-control" required>
-        </div>
-
-        <div class="form-group">
-            <label>Unidad de Medida</label>
-            <select th:field="*{unidadMedida}" class="form-control">
-                <option value="Kg">Kg</option>
-                <option value="g">g</option>
-                <option value="l">l</option>
-                <option value="mL">mL</option>
-            </select>
+            <label>Precio</label>
+            <input type="number" th:field="*{precio}" class="form-control" min="0" step="0.01" required>
         </div>
 
         <!-- ESTADO CON PUNTO EDITABLE -->
@@ -77,7 +57,7 @@
 
             <!-- Punto visible -->
             <span id="estadoDot"
-                  th:classappend="${producto.estado} ? 'estado-dot on' : 'estado-dot off'">
+                  th:classappend="${servicio.estado} ? 'estado-dot on' : 'estado-dot off'">
             </span>
 
             <!-- Checkbox que sí se envía -->
@@ -85,13 +65,11 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-        <a th:href="@{/inventario/productos}" class="btn btn-secondary">Cancelar</a>
+        <a th:href="@{/inventario/servicios}" class="btn btn-secondary">Cancelar</a>
 
     </form>
-
 </div>
 </div>
-
 <script>
     const check = document.getElementById("estadoCheck");
     const dot = document.getElementById("estadoDot");
