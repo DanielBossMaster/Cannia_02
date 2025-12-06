@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes de Productos - Cannia</title>
+
+<style>
+    /* Contenedor principal centrado horizontalmente */
+    .contenedor-principal {
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    /* Barra superior morada */
+    .barra-superior {
+        background: #170022;
+        color: #e5e9fd;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        padding: 0 18px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+
+    /* Área izquierda de la barra: avatar + nombre */
+    .logo-area {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    /* Avatar circular */
+    .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        overflow: hidden;
+        background: #ffffff; /* fondo transitorio si la imagen no carga */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Imagen dentro del avatar (se usa la misma imagen de referencia) */
+    .avatar-imagen {
+        width: 120%;
+        height: 120%;
+        object-fit: cover;
+    }
+
+    /* Nombre de la app junto al avatar */
+    .nombre-aplicacion {
+        font-weight: 700;
+        font-size: 20px;
+        letter-spacing: 0.2px;
+    }
+    /*home button*/
+    .btn-home {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        border-radius: 50%;
+        color: white;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        margin-left: auto; /* Empuja a la derecha */
+    }
+</style>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes de Productos - Cannia</title>
+
+    <link th:href="@{/css/VeterinarioCss/Reporte.css}" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+
+<!-- Barra superior -->
+<header class="barra-superior" id="encabezado-principal">
+    <div class="logo-area">
+        <div class="avatar" id="avatar">
+            <img th:src="@{/img/logo.png}" alt="Avatar" class="avatar-imagen">
+        </div>
+        <div class="nombre-aplicacion">Cannia</div>
+    </div>
+
+    <a th:href="@{/inventario/productos}" class="btn-home">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+             fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+            <path d="M5 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        </svg>
+    </a>
+</header>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-paw me-2"></i>
+            <strong>Cannia</strong> Reportes
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-home me-1"></i> Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-box me-1"></i> Productos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#"><i class="fas fa-chart-bar me-1"></i> Reportes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-cog me-1"></i> Configuración</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Contenido Principal -->
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-2" style="color: var(--primary-color);">
+                        <i class="fas fa-chart-pie me-2"></i>Reportes de Productos
+                    </h1>
+                    <p class="text-muted">Visualiza y analiza el estado de tus productos</p>
+                </div>
+                <div>
+                    <button class="btn btn-reporte" onclick="generarReporte()">
+                        <i class="fas fa-sync-alt me-2"></i>Generar Reporte
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="filter-section">
+                <h5 class="mb-3"><i class="fas fa-filter me-2"></i>Filtros del Reporte</h5>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Tipo de Gráfico</label>
+                        <select id="tipoGrafico" class="form-select">
+                            <option value="BARRAS">Gráfico de Barras</option>
+                            <option value="TORTA">Gráfico de Torta</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Estado del Producto</label>
+                        <select id="filtroEstado" class="form-select">
+                            <option value="">Todos los productos</option>
+                            <option value="true">Solo productos activos</option>
+                            <option value="false">Solo productos inactivos</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Tipo de Visualización</label>
+                        <div class="btn-group w-100" role="group">
+                            <button type="button" class="btn btn-filter active" onclick="cambiarVisualizacion('grafico')">
+                                <i class="fas fa-chart-bar me-1"></i> Gráfico
+                            </button>
+                            <button type="button" class="btn btn-filter" onclick="cambiarVisualizacion('tabla')">
+                                <i class="fas fa-table me-1"></i> Tabla
+                            </button>
+                            <button type="button" class="btn btn-filter" onclick="cambiarVisualizacion('ambos')">
+                                <i class="fas fa-columns me-1"></i> Ambos
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estadísticas Rápidas -->
+    <div class="row mb-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-card">
+                <div class="stat-icon text-primary">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <div class="stat-value" id="statTotal">0</div>
+                <div class="stat-label">Total Productos</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-card">
+                <div class="stat-icon text-success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-value" id="statActivos">0</div>
+                <div class="stat-label">Productos Activos</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-card">
+                <div class="stat-icon text-danger">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div class="stat-value" id="statInactivos">0</div>
+                <div class="stat-label">Productos Inactivos</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card stat-card">
+                <div class="stat-icon text-warning">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-value" id="statValorTotal">$0</div>
+                <div class="stat-label">Valor Total</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pestañas de Visualización -->
+    <div class="row">
+        <div class="col-12">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="grafico-tab" data-bs-toggle="tab" data-bs-target="#grafico" type="button">
+                        <i class="fas fa-chart-bar me-1"></i> Gráfico
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="detalle-tab" data-bs-toggle="tab" data-bs-target="#detalle" type="button">
+                        <i class="fas fa-table me-1"></i> Detalle de Productos
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="estadisticas-tab" data-bs-toggle="tab" data-bs-target="#estadisticas" type="button">
+                        <i class="fas fa-chart-line me-1"></i> Estadísticas
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="myTabContent">
+                <!-- Pestaña Gráfico -->
+                <div class="tab-pane fade show active" id="grafico" role="tabpanel">
+                    <div class="loading-spinner" id="loadingGrafico">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2">Generando gráfico...</p>
+                    </div>
+
+                    <div id="contenedorGrafico">
+                        <div class="chart-container">
+                            <canvas id="graficoReporte"></canvas>
+                        </div>
+                        <div class="text-center mt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Haz clic en las leyendas del gráfico para filtrar datos
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="no-data" id="noDataGrafico" style="display: none;">
+                        <i class="fas fa-chart-bar fa-3x mb-3 text-muted"></i>
+                        <h5>No hay datos para mostrar</h5>
+                        <p>Selecciona diferentes filtros o agrega productos al sistema</p>
+                    </div>
+                </div>
+
+                <!-- Pestaña Detalle -->
+                <div class="tab-pane fade" id="detalle" role="tabpanel">
+                    <div class="table-responsive">
+                        <table class="table table-hover producto-table" id="tablaProductos">
+                            <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Valor Unitario</th>
+                                <th>Valor Total</th>
+                                <th>Estado</th>
+                                <th>Publicado</th>
+                                <th>Unidad</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tablaProductosBody">
+                            <!-- Los datos se llenarán con JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="no-data" id="noDataTabla" style="display: none;">
+                        <i class="fas fa-table fa-3x mb-3 text-muted"></i>
+                        <h5>No hay productos para mostrar</h5>
+                        <p>Intenta con diferentes filtros</p>
+                    </div>
+                </div>
+
+                <!-- Pestaña Estadísticas -->
+                <div class="tab-pane fade" id="estadisticas" role="tabpanel">
+                    <div class="row" id="estadisticasDetalladas">
+                        <!-- Las estadísticas se llenarán con JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botones de Exportación -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-download me-2"></i>Exportar Reporte</h5>
+                    <div class="export-buttons">
+                        <button class="btn btn-outline-primary me-2" onclick="exportarPDF()">
+                            <i class="fas fa-file-pdf me-1"></i> Exportar a PDF
+                        </button>
+                        <button class="btn btn-outline-success me-2" onclick="exportarExcel()">
+                            <i class="fas fa-file-excel me-1"></i> Exportar a Excel
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="imprimirReporte()">
+                            <i class="fas fa-print me-1"></i> Imprimir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="text-center">
+    <div class="container">
+        <hr>
+        <p class="mb-0">
+            <i class="fas fa-paw me-1"></i> Sistema Cannia &copy; 2024
+            <span class="mx-2">•</span>
+            Reportes Generados: <span id="fechaReporte"></span>
+        </p>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Script para los reportes -->
+<script>
+    // Variables globales
+    let chartInstance = null;
+    let datosReporte = null;
+    let visualizacionActual = 'grafico';
+
+    // Inicializar página
+    document.addEventListener('DOMContentLoaded', function() {
+        // Establecer fecha actual
+        const fecha = new Date();
+        document.getElementById('fechaReporte').textContent =
+            fecha.toLocaleDateString('es-ES', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+        // Generar reporte inicial
+        generarReporte();
+
+        // Configurar tabs de Bootstrap
+        const tabEls = document.querySelectorAll('button[data-bs-toggle="tab"]');
+        tabEls.forEach(tab => {
+            tab.addEventListener('shown.bs.tab', function (event) {
+                // Actualizar contenido si es necesario
+                if (event.target.id === 'detalle-tab' && datosReporte) {
+                    llenarTablaProductos(datosReporte.datos);
+                } else if (event.target.id === 'estadisticas-tab' && datosReporte) {
+                    mostrarEstadisticasDetalladas(datosReporte.estadisticas);
+                }
+            });
+        });
+    });
+
+    // Cambiar tipo de visualización
+    function cambiarVisualizacion(tipo) {
+        visualizacionActual = tipo;
+
+        // Actualizar botones activos
+        document.querySelectorAll('.btn-filter').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+
+        // Mostrar/ocultar elementos según la visualización
+        if (tipo === 'grafico') {
+            document.getElementById('grafico-tab').click();
+        } else if (tipo === 'tabla') {
+            document.getElementById('detalle-tab').click();
+        } else if (tipo === 'ambos') {
+            // Mostrar ambos en una vista especial
+            alert('Vista de ambos disponible en próximas versiones');
+        }
+    }
+
+    // Función principal para generar reporte
+    async function generarReporte() {
+        const tipo = document.getElementById('tipoGrafico').value;
+        const estado = document.getElementById('filtroEstado').value;
+
+        // Mostrar loading
+        document.getElementById('loadingGrafico').style.display = 'block';
+        document.getElementById('contenedorGrafico').style.display = 'none';
+        document.getElementById('noDataGrafico').style.display = 'none';
+
+        // Construir URL
+        let url = `/inventario/reportes/api/productos?tipo=${tipo}`;
+        if (estado !== '') {
+            url += `&estado=${estado}`;
+        }
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+
+            datosReporte = await response.json();
+
+            // Actualizar estadísticas rápidas
+            actualizarEstadisticasRapidas(datosReporte.estadisticas);
+
+            // Renderizar gráfico
+            renderizarGrafico(datosReporte);
+
+            // Llenar tabla de productos si estamos en la pestaña
+            if (document.getElementById('detalle-tab').classList.contains('active')) {
+                llenarTablaProductos(datosReporte.datos);
+            }
+
+            // Mostrar estadísticas detalladas si estamos en esa pestaña
+            if (document.getElementById('estadisticas-tab').classList.contains('active')) {
+                mostrarEstadisticasDetalladas(datosReporte.estadisticas);
+            }
+
+            // Ocultar loading
+            document.getElementById('loadingGrafico').style.display = 'none';
+
+            // Mostrar gráfico o mensaje de no datos
+            if (datosReporte.datos && datosReporte.datos.length > 0) {
+                document.getElementById('contenedorGrafico').style.display = 'block';
+            } else {
+                document.getElementById('noDataGrafico').style.display = 'block';
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al generar el reporte: ' + error.message);
+            document.getElementById('loadingGrafico').style.display = 'none';
+            document.getElementById('noDataGrafico').style.display = 'block';
+        }
+    }
+
+    // Actualizar estadísticas rápidas
+    function actualizarEstadisticasRapidas(estadisticas) {
+        document.getElementById('statTotal').textContent = estadisticas.totalActivos + estadisticas.totalInactivos;
+        document.getElementById('statActivos').textContent = estadisticas.totalActivos;
+        document.getElementById('statInactivos').textContent = estadisticas.totalInactivos;
+        document.getElementById('statValorTotal').textContent = `$${estadisticas.valorTotalInventario?.toLocaleString() || '0'}`;
+    }
+
+    // Renderizar gráfico
+    function renderizarGrafico(reporte) {
+        const ctx = document.getElementById('graficoReporte').getContext('2d');
+
+        // Destruir gráfico anterior si existe
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+
+        if (reporte.tipo === 'TORTA') {
+            // Gráfico de torta
+            const datos = reporte.datos;
+            const config = {
+                type: 'pie',
+                data: {
+                    labels: datos.map(item => item.etiqueta),
+                    datasets: [{
+                        data: datos.map(item => item.valor),
+                        backgroundColor: [
+                            '#28a745', // Verde para activos
+                            '#dc3545', // Rojo para inactivos
+                            '#007bff', // Azul
+                            '#ffc107', // Amarillo
+                            '#17a2b8', // Cyan
+                            '#6f42c1'  // Púrpura
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff',
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribución de Productos por Estado',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            padding: 20
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            chartInstance = new Chart(ctx, config);
+
+        } else {
+            // Gráfico de barras
+            const datos = reporte.datos;
+            const config = {
+                type: 'bar',
+                data: {
+                    labels: datos.map(item => item.producto || item.etiqueta),
+                    datasets: [{
+                        label: 'Cantidad en Stock',
+                        data: datos.map(item => item.cantidad || item.valor),
+                        backgroundColor: datos.map(item => {
+                            if (item.estado === 'ACTIVO' || item.estado === true) {
+                                return '#28a745';
+                            } else {
+                                return '#dc3545';
+                            }
+                        }),
+                        borderWidth: 1,
+                        borderColor: '#fff',
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Cantidad',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                stepSize: 1
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Productos',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Cantidad de Productos en Stock',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            padding: 20
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const item = datos[context.dataIndex];
+                                    let tooltip = `Cantidad: ${context.raw}`;
+                                    if (item.valor) {
+                                        tooltip += `\nValor: $${item.valor}`;
+                                    }
+                                    if (item.estado) {
+                                        tooltip += `\nEstado: ${item.estado === 'ACTIVO' || item.estado === true ? 'Activo' : 'Inactivo'}`;
+                                    }
+                                    return tooltip;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            chartInstance = new Chart(ctx, config);
+        }
+    }
+
+    // Llenar tabla de productos
+    function llenarTablaProductos(datos) {
+        const tbody = document.getElementById('tablaProductosBody');
+        const noDataTabla = document.getElementById('noDataTabla');
+
+        tbody.innerHTML = '';
+
+        if (!datos || datos.length === 0) {
+            noDataTabla.style.display = 'block';
+            return;
+        }
+
+        noDataTabla.style.display = 'none';
+
+        datos.forEach(item => {
+            const row = document.createElement('tr');
+
+            // Calcular valor total
+            const cantidad = item.cantidad || 0;
+            const valorUnitario = item.valor || 0;
+            const valorTotal = cantidad * valorUnitario;
+
+            // Determinar clase de estado
+            const estadoClass = (item.estado === 'ACTIVO' || item.estado === true) ?
+                'estado-activo' : 'estado-inactivo';
+            const estadoText = (item.estado === 'ACTIVO' || item.estado === true) ?
+                'Activo' : 'Inactivo';
+
+            // Determinar publicación
+            const publicadoText = (item.publicado === true || item.publicado === 'SI') ?
+                'Sí' : 'No';
+
+            row.innerHTML = `
+                    <td><strong>${item.producto || item.etiqueta || 'Sin nombre'}</strong></td>
+                    <td>${cantidad}</td>
+                    <td>$${valorUnitario.toLocaleString()}</td>
+                    <td><strong>$${valorTotal.toLocaleString()}</strong></td>
+                    <td><span class="${estadoClass}">${estadoText}</span></td>
+                    <td>${publicadoText}</td>
+                    <td>${item.unidadMedida || 'N/A'}</td>
+                `;
+
+            tbody.appendChild(row);
+        });
+    }
+
+    // Mostrar estadísticas detalladas
+    function mostrarEstadisticasDetalladas(estadisticas) {
+        const container = document.getElementById('estadisticasDetalladas');
+
+        const porcentajeActivos = estadisticas.porcentajeActivos || 0;
+        const porcentajeInactivos = 100 - porcentajeActivos;
+
+        container.innerHTML = `
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <i class="fas fa-chart-pie me-2"></i>Distribución por Estado
+                        </div>
+                        <div class="card-body">
+                            <div class="progress mb-3" style="height: 30px;">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                     style="width: ${porcentajeActivos}%"
+                                     aria-valuenow="${porcentajeActivos}"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100">
+                                    Activos: ${porcentajeActivos}%
+                                </div>
+                                <div class="progress-bar bg-danger" role="progressbar"
+                                     style="width: ${porcentajeInactivos}%"
+                                     aria-valuenow="${porcentajeInactivos}"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100">
+                                    Inactivos: ${porcentajeInactivos}%
+                                </div>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <h5>${estadisticas.totalActivos || 0}</h5>
+                                    <small class="text-success">Productos Activos</small>
+                                </div>
+                                <div class="col-6">
+                                    <h5>${estadisticas.totalInactivos || 0}</h5>
+                                    <small class="text-danger">Productos Inactivos</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <i class="fas fa-chart-line me-2"></i>Métricas Financieras
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Valor Total del Inventario</label>
+                                <h3 class="text-primary">$${estadisticas.valorTotalInventario?.toLocaleString() || '0'}</h3>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Valor Promedio por Producto</label>
+                                <h5 class="text-secondary">$${estadisticas.valorPromedioProducto?.toLocaleString() || '0'}</h5>
+                            </div>
+                            <div>
+                                <label class="form-label">Cantidad Total en Stock</label>
+                                <h5 class="text-info">${estadisticas.cantidadTotalStock?.toLocaleString() || '0'} unidades</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-info-circle me-2"></i>Información del Reporte
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p><strong>Productos Publicados:</strong> ${estadisticas.totalPublicados || 0}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p><strong>Fecha del Reporte:</strong> ${new Date().toLocaleDateString()}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p><strong>Filtro Aplicado:</strong> ${datosReporte?.filtroAplicado || 'Ninguno'}</p>
+                                </div>
+                            </div>
+                            <div class="alert alert-info mt-2">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <small>
+                                    <strong>Nota:</strong> Los valores financieros son calculados en base al precio y cantidad de cada producto.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+    }
+
+    // Funciones de exportación (simuladas)
+    function exportarPDF() {
+        alert('Función de exportación a PDF en desarrollo.\nLos datos actuales están listos para exportar.');
+        // Aquí iría la lógica real para exportar a PDF
+    }
+
+    function exportarExcel() {
+        alert('Función de exportación a Excel en desarrollo.\nLos datos actuales están listos para exportar.');
+        // Aquí iría la lógica real para exportar a Excel
+    }
+
+    function imprimirReporte() {
+        window.print();
+    }
+
+    // Función para cambiar entre pestañas manualmente
+    function cambiarTab(tabId) {
+        const tab = new bootstrap.Tab(document.getElementById(tabId));
+        tab.show();
+    }
+</script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">>
 <head>
     <meta charset="UTF-8">
     <title>Productos</title>
@@ -38,7 +39,7 @@
 <!--                <li><a th:href="@{/inventario}">Inventario</a></li>-->
                 <li><a th:href="@{/inventario/productos}">Productos</a></li>
                 <li><a th:href="@{/inventario/servicios}">Servicios</a></li>
-                <li><a href="#">Reportes</a></li>
+                <li><a th:href="@{/inventario/reportes}">Reportes</a></li>
             </ul>
         </div>
 
@@ -112,7 +113,7 @@
 
         <h3>Agregar Nuevo Producto</h3>
 
-        <form th:action="@{/inventario/producto/guardar}"
+        <form th:action="@{/inventario/productos/guardar}"
               th:object="${producto}" method="post"
               enctype="multipart/form-data">
 
@@ -170,40 +171,45 @@
 <script>
     const btnAbrir = document.getElementById("btnAbrir");
     const modal = document.getElementById("miModal");
-    const cerrar = document.querySelector(".close");
-    const modalContent = document.querySelector(".modal-content");
+    const cerrar = document.querySelector("#miModal .close");
 
-    // Abrir modal de agregar
+    // Abrir modal
     btnAbrir.onclick = () => {
-        modal.style.display = "flex";
-        modalContent.style.display = "block";
+        console.log("Se hizo clic en el botón Abrir"); // log
+        modal.style.display = "flex"; // abrir solo al hacer click
     };
 
     // Cerrar al hacer click en la X
     cerrar.onclick = () => {
+        console.log("Se hizo clic en la X para cerrar"); // log
         modal.style.display = "none";
     };
 
     // Cerrar cuando se da click fuera del contenido
     window.onclick = (e) => {
+        console.log("Se hizo clic en la ventana", e.target); // log
         if (e.target === modal) {
+            console.log("Se cerró el modal al hacer clic fuera"); // log
             modal.style.display = "none";
-            modalContent.style.display = "none";
         }
     };
 
-    <!-- Abril Modal EDITAR-->
+    // Abrir Modal Editar
     function abrirModalEditar(id) {
-        fetch(`/producto/editar/${id}`)
+        console.log("Abrir modal editar con id:", id); // log
+        fetch(`/servicios/editar/${id}`)
             .then(response => response.text())
             .then(html => {
+                console.log("HTML recibido del fetch:", html); // log
                 document.getElementById("modal-container").innerHTML = html;
-                document.getElementById("modal-editar-producto").style.display = "flex";
+                document.getElementById("modal-editar-servicio").style.display = "flex";
             });
     }
 
+    // Cerrar Modal Editar
     function cerrarModalEditar() {
-        document.getElementById("modal-editar-producto").style.display = "none";
+        console.log("Cerrar modal editar"); // log
+        document.getElementById("modal-editar-servicio").style.display = "none";
     }
 </script>
 
