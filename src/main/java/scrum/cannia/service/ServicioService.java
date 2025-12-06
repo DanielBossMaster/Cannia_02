@@ -3,9 +3,11 @@ package scrum.cannia.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import scrum.cannia.model.ProductoModel;
 import scrum.cannia.model.ServicioModel;
 import scrum.cannia.repository.ServicioRepository;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -25,23 +27,24 @@ public class ServicioService {
             (Servicio servicio) {
 
     }
+    // ============================================
+//         EDITAR SERVICIO
+// ============================================
+    public void actualizar(ServicioModel servicio) {
+        ServicioModel original = servicioRepository.findById(servicio.getId()).orElse(null);
+        if (original == null) return;
+
+        original.setNombre(servicio.getNombre());
+        original.setDescripcion(servicio.getDescripcion());
+        original.setDuracionEstimada(servicio.getDuracionEstimada());
+        original.setPrecio(servicio.getPrecio());
+        original.setEstado(servicio.isEstado());
+
+        servicioRepository.save(original);
+    }
+    public ServicioModel buscarPorId(Integer id) {
+        return servicioRepository.findById(id).orElse(null);
+    }
+
 }
-//
-//    public ServicioModel guardarServicio(ServicioModel servicio) {
-//        return servicioRepository.save(servicio);
-//    }
-//
-//    public Optional<ServicioModel> obtenerServicioPorId(Integer id) {
-//        return servicioRepository.findById(id);
-//    }
-//
-//    public void eliminarServicioLogicamente(Integer id) {
-//        servicioRepository.deleteById(id);
-//    }
-//    public ServicioModel buscarPorId(Integer id) {
-//        return servicioRepository.findById(id).orElse(null);
-//    }
-//
-//    public List<ServicioModel> listarTodos() {
-//        return servicioRepository.findAll();
-//    }
+

@@ -5,6 +5,8 @@ import scrum.cannia.model.ProductoModel;
 import scrum.cannia.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,16 +50,30 @@ public class ProductoService {
             e.printStackTrace();
         }
     }
-}
+    // ============================================
+    //         EDITAR PRODUCTO
+    // ============================================
+    public void actualizar(ProductoModel producto, MultipartFile archivo) {
+        ProductoModel original = productoRepository.findById(producto.getId()).orElse(null);
+        if (original == null) return;
 
-//
-//    public Optional<ProductoModel> obtenerProductoPorId(Integer id) {
-//        return productoRepository.findById(id);
-//    }
-//    public void eliminarProductoLogicamente(Integer id) {
-//        productoRepository.findById(id).ifPresent(producto -> {
-//            producto.setEstado(false);
-//            productoRepository.save(producto);
-//        });
-//    }
-//
+        original.setNombre(producto.getNombre());
+        original.setDescripcion(producto.getDescripcion());
+        original.setCantidad(producto.getCantidad());
+        original.setValor(producto.getValor());
+        original.setUnidadMedida(producto.getUnidadMedida());
+        original.setEstado(producto.isEstado());
+
+        if (archivo != null && !archivo.isEmpty()) {
+            try {
+                original.setFoto(archivo.getBytes());
+            } catch (IOException e) {
+                throw new RuntimeException("Error procesando la imagen", e);
+            }
+        }
+
+        productoRepository.save(original);
+    }
+
+
+}

@@ -74,4 +74,51 @@ public class ProductoController {
 
         return "redirect:/inventario/productos";
     }
+
+    // Abrir página de edición
+    @GetMapping("/editar/{id}")
+    public String editarForm(@PathVariable Integer id, Model model, HttpSession session) {
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        ProductoModel producto = productoService.buscarPorId(id);
+        if (producto == null) {
+            return "redirect:/inventario/productos"; // o mostrar mensaje de error
+        }
+
+        model.addAttribute("producto", producto);
+        return "Inventario/editarProducto";
+    }
+
+    // Actualizar (ya tenías /actualizar, asegúrate que coincide)
+    @PostMapping("/actualizar")
+    public String actualizarProducto(@Validated @ModelAttribute ProductoModel producto,
+                                     @RequestParam("archivoImagen") MultipartFile archivo,
+                                     BindingResult br,
+                                     HttpSession session,
+                                     Model model) {
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        if (br.hasErrors()) {
+            model.addAttribute("mensaje", "Corrige los campos.");
+            return "Inventario/editarProducto";
+        }
+
+        try {
+            productoService.actualizar(producto, archivo);
+        } catch (Exception e) {
+            model.addAttribute("mensaje", "Error al actualizar: " + e.getMessage());
+            return "Inventario/editarProducto";
+        }
+
+        return "redirect:/inventario/productos";
+    }
+
+
+
 }

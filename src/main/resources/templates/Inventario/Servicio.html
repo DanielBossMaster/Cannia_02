@@ -2,15 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Servicio</title>
+    <title>Servicios</title>
+
+    <!-- Tus estilos -->
     <link th:href="@{/css/VeterinarioCss/Inventario.css}" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 
 </head>
+
 <body>
+
 <div class="contenedor-principal">
 
-    <!-- Barra superior -->
+    <!-- ====================== BARRA SUPERIOR ====================== -->
     <header class="barra-superior" id="encabezado-principal">
         <div class="logo-area">
             <div class="avatar" id="avatar">
@@ -29,137 +33,165 @@
         </a>
     </header>
 
+
+    <!-- ====================== SIDEBAR ====================== -->
     <div class="container">
-        <!-- Sidebar -->
         <div class="sidebar">
             <ul class="nav-links">
-                <li><a th:href="@{/inventario}">Inventario</a></li>
+<!--                <li><a th:href="@{/inventario}">Inventario</a></li>-->
                 <li><a th:href="@{/inventario/productos}">Productos</a></li>
-                <li><a th:href="@{/inventario/servicios}"> Servicios</a></li>
+                <li><a th:href="@{/inventario/servicios}">Servicios</a></li>
                 <li><a href="#">Reportes</a></li>
             </ul>
         </div>
 
-        <!-- MAIN CONTENT -->
-        <div class="main-content">
-            <div class="mt-3 mensaje_error">
-                <div th:if="${mensaje}">
-                    <span th:text="${mensaje}"></span>
-                </div>
-            </div>
 
-            <button id="btnAbrir"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-plus-icon lucide-circle-plus"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+        <!-- ====================== CONTENIDO PRINCIPAL ====================== -->
+        <div class="main-content">
+
+            <!-- BOTÓN ABRIR MODAL -->
+            <button th:action="@{/inventario/servicios/guardar}" id="btnAbrir" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-plus-icon lucide-circle-plus">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M8 12h8"/>
+                    <path d="M12 8v8"/>
+                </svg>
                 Servicio
             </button>
 
-            <div class="tab-content active" id="inventory">
-                <div class="card">
-                    <table class="inventory-table">
-                        <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Descripcion</th>
-                            <th>Duracion Estimada</th>
-                            <th>Precio</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
+            <!-- Tabla -->
+            <div class="card">
+                <table class="inventory-table">
+                    <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Duración</th>
+                        <th>Precio</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
 
-                        </tr>
-                        </thead>
-                        <tbody id="inventory-table-body">
-                        <tr th:each="serv : ${servicios}" >
-                            <td th:text="${serv.nombre}"></td>
-                            <td th:text="${serv.descripcion}"></td>
-                            <td th:text="${serv.duracionEstimada}"></td>
-                            <td th:text="${serv.precio}"></td>
-                            <td th:text="${serv.estado}"></td>
-                            <td class="px-4 py-3">
-                                <div class="flex flex-col sm:flex-row items-center gap-2 justify-center sm:justify-start">
-                                    <a>
-                                        <button>Editar</button>
-                                    </a>
-                                    <form>
-                                        <button onclick="return confirm('¿Desea Eliminar?')">Eliminar</button>
-                                    </form>
-                                </div>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                    <tbody>
+                    <tr th:each="serv : ${servicios}">
+                        <td th:text="${serv.nombre}"></td>
+                        <td th:text="${serv.descripcion}"></td>
+                        <td th:text="${serv.duracionEstimada} + ' min'"></td>
+                        <td th:text="${serv.precio}"></td>
+
+                        <!-- PUNTO VERDE / ROJO -->
+                        <td>
+                            <span th:classappend="${serv.estado} ? 'estado-dot on' : 'estado-dot off'"></span>
+                        </td>
+
+                        <td>
+                            <a th:href="@{/inventario/servicios/editar/{id}(id=${serv.id})}"
+                               class="btn btn-editar">
+                                Editar
+                            </a>
+                        </td>
+
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
 
-    </div>
-    </div>
-
-</main>
-
-    <div class="modal-content">
-        <div class="modal" id="miModal">
-        <span class="close">&times;</span>
-        <div class="card">
-
-
-
-            <h3>Agregar Nuevo Servicio</h3>
-
-            <form th:action="@{/inventario/servicios/guardar}" th:object="${servicio}" method="post">
-                <div class="form-group">
-                    <label>Nombre del Servicio</label>
-                    <input type="text" th:field="*{nombre}" class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Descripción</label>
-                    <input type="text" th:field="*{descripcion}"class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Duración Estimada (minutos)</label>
-                    <input type="number" th:field="*{duracionEstimada}"class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                    <label></label>Precio</label>
-                    <input type="number" th:field="*{precio}"class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Estado</label>
-                    <input type="checkbox" th:field="*{estado}" class="form-check-input">
-                </div>
-
-                <button type="submit" class="btn btn-primary">Agregar Servicio</button>
-            </form>
         </div>
     </div>
 </div>
 
+
+<!-- ====================== MODAL AGREGAR ====================== -->
+<div id="miModal">
+    <div class="modal-content">
+        <span class="close" id="cerrarModal">&times;</span>
+
+        <h3>Agregar Servicio</h3>
+
+        <form th:action="@{/inventario/servicios/guardar}" method="post" th:object="${servicio}">
+
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" th:field="*{nombre}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Descripción</label>
+                <input type="text" th:field="*{descripcion}" required>
+            </div>
+
+            <div class="form-group">
+                <label>Duración Estimada (min)</label>
+                <input type="number" th:field="*{duracionEstimada}" min="1" required>
+            </div>
+
+            <div class="form-group">
+                <label>Precio</label>
+                <input type="number" th:field="*{precio}" step="0.01" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label>Estado</label>
+                <label class="estado-switch">
+                    <input type="checkbox" th:field="*{estado}">
+                    <span class="estado-indicador"></span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Agregar Servicio</button>
+
+        </form>
+    </div>
+</div>
+
+
+<!-- SCRIPT PARA MODAL AGREGAR -->
 <script>
     const btnAbrir = document.getElementById("btnAbrir");
     const modal = document.getElementById("miModal");
-    const cerrar = document.querySelector(".close");
-    const modalContent = document.querySelector(".modal-content");
+    const cerrar = document.querySelector("#miModal .close");
 
     // Abrir modal
     btnAbrir.onclick = () => {
-        modal.style.display = "flex";
-        modalContent.style.display = "block";
+        console.log("Se hizo clic en el botón Abrir"); // log
+        modal.style.display = "flex"; // abrir solo al hacer click
     };
 
     // Cerrar al hacer click en la X
     cerrar.onclick = () => {
+        console.log("Se hizo clic en la X para cerrar"); // log
         modal.style.display = "none";
     };
 
     // Cerrar cuando se da click fuera del contenido
     window.onclick = (e) => {
+        console.log("Se hizo clic en la ventana", e.target); // log
         if (e.target === modal) {
+            console.log("Se cerró el modal al hacer clic fuera"); // log
             modal.style.display = "none";
-            modalContent.style.display = "none";
         }
     };
+
+    // Abrir Modal Editar
+    function abrirModalEditar(id) {
+        console.log("Abrir modal editar con id:", id); // log
+        fetch(`/servicios/editar/${id}`)
+            .then(response => response.text())
+            .then(html => {
+                console.log("HTML recibido del fetch:", html); // log
+                document.getElementById("modal-container").innerHTML = html;
+                document.getElementById("modal-editar-servicio").style.display = "flex";
+            });
+    }
+
+    // Cerrar Modal Editar
+    function cerrarModalEditar() {
+        console.log("Cerrar modal editar"); // log
+        document.getElementById("modal-editar-servicio").style.display = "none";
+    }
 </script>
+
 
 </body>
 </html>

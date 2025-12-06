@@ -97,6 +97,26 @@
             document.getElementById(tab.dataset.tab).classList.add('active');
         });
     });
+
+        function abrirModalEditar(id) {
+        fetch('/inventario/productos/editar/' + id)
+            .then(res => res.text())
+            .then(html => {
+                const modal = `
+                <div class="modal-overlay" onclick="cerrarModal()">
+                    <div class="modal-content" onclick="event.stopPropagation()">
+                        ${html}
+                    </div>
+                </div>
+            `;
+                document.querySelector('#modal-container').innerHTML = modal;
+            });
+    }
+
+        function cerrarModal() {
+        document.querySelector('#modal-container').innerHTML = '';
+    }
+
 </script>
 
 </body>

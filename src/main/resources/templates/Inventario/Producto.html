@@ -2,12 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Producto</title>
+    <title>Productos</title>
     <link th:href="@{/css/VeterinarioCss/Inventario.css}" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 </head>
+
 <body>
+
 <div class="contenedor-principal">
 
     <!-- Barra superior -->
@@ -21,8 +23,7 @@
 
         <a th:href="@{/veterinario}" class="btn-home">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                 fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
                 <path d="M5 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
             </svg>
@@ -30,132 +31,149 @@
     </header>
 
     <div class="container">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <ul class="nav-links">
-            <li><a th:href="@{/inventario}">Inventario</a></li>
-            <li><a th:href="@{/inventario/productos}">Productos</a></li>
-            <li><a th:href="@{/inventario/servicios}"> Servicios</a></li>
-            <li><a href="#">Reportes</a></li>
-        </ul>
-    </div>
-        <!-- MAIN CONTENT -->
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <ul class="nav-links">
+<!--                <li><a th:href="@{/inventario}">Inventario</a></li>-->
+                <li><a th:href="@{/inventario/productos}">Productos</a></li>
+                <li><a th:href="@{/inventario/servicios}">Servicios</a></li>
+                <li><a href="#">Reportes</a></li>
+            </ul>
+        </div>
+
+        <!-- Contenido principal -->
         <div class="main-content">
-            <button id="btnAbrir"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-plus-icon lucide-circle-plus"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+
+            <!-- BOTÓN ABRIR MODAL -->
+            <button th:action="@{/inventario/productos/guardar}" id="btnAbrir" class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-plus-icon lucide-circle-plus">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M8 12h8"/>
+                    <path d="M12 8v8"/>
+                </svg>
                 Producto
             </button>
 
-            <div class="tab-content active" id="inventory">
-                <div class="card">
-                    <table class="inventory-table">
-                        <thead>
-                        <tr>
-                            <th>Foto</th>
-                            <th>Nombre</th>
-                            <th>Descripción</th>
-                            <th>Cantidad</th>
-                            <th>Valor</th>
-                            <th>Unidad Medida</th>
-                            <th>estado</th>
-                            <th>Acciones</th>
+            <!-- TABLA -->
+            <div class="card">
+                <table class="inventory-table">
+                    <thead>
+                    <tr>
+                        <th>Foto</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Valor</th>
+                        <th>Unidad</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
 
-                        </tr>
-                        </thead>
-                        <tbody id="inventory-table-body">
-                        <tr th:each="prod : ${productos}" >
-                            <td>
-                                <img th:if="${prod.fotoBase64 != null}"
-                                     th:src="'data:image/jpeg;base64,' + ${prod.fotoBase64}"
-                                     style="width:70px; height:70px;">
-                            </td>
-                            <td th:text="${prod.nombre}"></td>
-                            <td th:text="${prod.descripcion}"></td>
-                            <td th:text="${prod.cantidad}"></td>
-                            <td th:text="${prod.valor}"></td>
-                            <td th:text="${prod.unidadMedida}"></td>
-                            <td th:text="${prod.estado}"></td>
-                            <td class="px-4 py-3">
-                                <div class="flex flex-col sm:flex-row items-center gap-2 justify-center sm:justify-start">
-                                    <a>
-                                        <button>Editar</button>
-                                    </a>
-                                    <form>
-                                        <button onclick="return confirm('¿Desea Eliminar?')">Eliminar</button>
-                                    </form>
-                                </div>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                    <tbody>
+                    <tr th:each="prod : ${productos}">
+                        <td>
+                            <img th:if="${prod.fotoBase64 != null}"
+                                 th:src="'data:image/jpeg;base64,' + ${prod.fotoBase64}"
+                                 style="width: 70px; height: 70px;">
+                        </td>
+
+                        <td th:text="${prod.nombre}"></td>
+                        <td th:text="${prod.descripcion}"></td>
+                        <td th:text="${prod.cantidad}"></td>
+                        <td th:text="${prod.valor}"></td>
+                        <td th:text="${prod.unidadMedida}"></td>
+
+                        <!-- PUNTO VERDE / ROJO -->
+                        <td>
+                            <span th:classappend="${prod.estado} ? 'estado-dot on' : 'estado-dot off'"></span>
+                        </td>
+
+                        <td>
+                            <a th:href="@{/inventario/productos/editar/{id}(id=${prod.id})}"
+                               class="btn btn-editar">
+                                Editar
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
+
         </div>
-
     </div>
-    </div>
+</div>
 
-    </main>
-        <div class="modal-content">
-            <div class="modal" id="miModal">
-                <span class="close">&times;</span>
-                <div class="card">
+<!-- MODAL AGREGAR -->
+<div id="miModal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
 
-                <h3>Agregar Nuevo Producto</h3>
+        <h3>Agregar Nuevo Producto</h3>
 
-                <form th:action="@{/inventario/productos/guardar}" th:object="${producto}" method="post" enctype="multipart/form-data">
+        <form th:action="@{/inventario/producto/guardar}"
+              th:object="${producto}" method="post"
+              enctype="multipart/form-data">
 
-                    <div class="form-group">
-                        <label>Foto</label>
-                        <input type="file" name="archivoImagen" class="form-control" accept="image/*" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Nombre del Producto</label>
-                        <input type="text" th:field="*{nombre}" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Descripción</label>
-                        <input type="text" th:field="*{descripcion}" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Cantidad</label>
-                        <input type="number" th:field="*{cantidad}" class="form-control" min="0" step="1" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Valor</label>
-                        <input type="number" th:field="*{valor}" class="form-control" min="0" step="0.01" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Unidad de Medida</label>
-                        <select th:field="*{unidadMedida}" class="form-control">
-                            <option value="Kg">Kg</option>
-                            <option value="g">g</option>
-                            <option value="l">l</option>
-                        </select>
-
-                    </div>
-
-                    <div class="form-group">
-                        <label>Estado</label>
-                        <input type="checkbox" th:field="*{estado}" class="form-check-input">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Agregar Producto</button>
-                </form>
+            <div class="form-group">
+                <label>Foto</label>
+                <input type="file" name="archivoImagen" class="form-control" accept="image/*" required>
             </div>
-        </div>
-        </div>
 
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" th:field="*{nombre}" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label>Descripción</label>
+                <input type="text" th:field="*{descripcion}" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label>Cantidad</label>
+                <input type="number" th:field="*{cantidad}" min="0" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label>Valor</label>
+                <input type="number" th:field="*{valor}" min="0" step="0.01" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label>Unidad de Medida</label>
+                <select th:field="*{unidadMedida}" class="form-control">
+                    <option value="Kg">Kg</option>
+                    <option value="g">g</option>
+                    <option value="l">l</option>
+                    <option value="mL">mL</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Estado</label>
+                <label class="estado-switch">
+                    <input type="checkbox" th:field="*{estado}">
+                    <span class="estado-indicador"></span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Agregar Producto</button>
+
+        </form>
+    </div>
+</div>
+
+
+<!-- SCRIPT PARA MODAL AGREGAR -->
 <script>
     const btnAbrir = document.getElementById("btnAbrir");
     const modal = document.getElementById("miModal");
     const cerrar = document.querySelector(".close");
     const modalContent = document.querySelector(".modal-content");
 
-    // Abrir modal
+    // Abrir modal de agregar
     btnAbrir.onclick = () => {
         modal.style.display = "flex";
         modalContent.style.display = "block";
@@ -173,6 +191,21 @@
             modalContent.style.display = "none";
         }
     };
+
+    <!-- Abril Modal EDITAR-->
+    function abrirModalEditar(id) {
+        fetch(`/producto/editar/${id}`)
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById("modal-container").innerHTML = html;
+                document.getElementById("modal-editar-producto").style.display = "flex";
+            });
+    }
+
+    function cerrarModalEditar() {
+        document.getElementById("modal-editar-producto").style.display = "none";
+    }
 </script>
+
 </body>
 </html>
