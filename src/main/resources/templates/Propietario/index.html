@@ -13,13 +13,12 @@
         <h1 class="text-lg font-bold">Cannia</h1>
     </div>
     <div class="flex items-center gap-3">
-        <a class="px-4 py-1 rounded-full bg-gray-100" th:href="@{/profile}">Mi Perfil</a>
         <a class="px-4 py-1 rounded-full bg-green-500 text-white" th:href="@{/logout}">Cerrar Sesión</a>
     </div>
 </nav>
 
 <main class="max-w-5xl mx-auto mt-12 px-6">
-    <h1 class="text-4xl font-bold">Bienvenido, <span th:text="${ownerName}">Usuario</span>!</h1>//buscar como poner el nombre del usuario
+    <h1 class="text-4xl font-bold">Bienvenido, <span th:text="${ownerName}">Usuario</span>!</h1>
     <p class="text-gray-500 mt-1">¿Cómo puedo ayudarte el día de hoy?</p>
 
     <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
