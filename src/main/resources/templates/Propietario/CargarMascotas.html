@@ -1,23 +1,105 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
+    <meta charset="UTF-8">
     <title>Cargar Mascotas</title>
+
+    <!-- Tailwind + Config -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#290043",
+                        secondary: "#170022",
+                        lightBg: "#e8ebff",
+                        lightSurface: "rgb(247,248,249)",
+                        darkText: "#1e293b",
+                        softText: "#475569",
+                        borderLight: "#e2e8f0",
+                        successBtn: "#2ba72b",
+                        dangerBtn: "#d62828",
+                        infoBtn: "#2563eb"
+                    },
+                },
+            },
+        };
+    </script>
+
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+        }
+    </style>
 </head>
-<body class="p-10">
 
-<h1 class="text-2xl font-bold mb-4">Cargar archivo de mascotas</h1>
+<body class="bg-lightBg min-h-screen">
 
-<form th:action="@{/propietario/upload}" method="post" enctype="multipart/form-data">
+<!-- Header -->
+<header class="bg-secondary text-white flex justify-between items-center px-6 py-3 shadow-md">
+    <div class="flex items-center space-x-3">
+        <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
+        <h1 class="text-lg font-bold">Cannia</h1>
+    </div>
 
+    <a th:href="@{/propietario/index}"
+       class="bg-primary hover:bg-secondary px-4 py-2 rounded-lg shadow text-white transition">
+        ⬅ Volver al inicio
+    </a>
+</header>
 
-    <input type="file" name="file" accept=".xlsx" required>
+<!-- Contenido principal -->
+<div class="max-w-2xl mx-auto mt-10 bg-white shadow-xl rounded-2xl p-8">
 
-    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">
-        Subir Excel
-    </button>
-</form>
+    <h2 class="text-3xl font-bold text-center text-darkText mb-6">
+        Cargar Archivo de Mascotas
+    </h2>
 
-<p th:if="${message}" th:text="${message}" class="mt-4 text-blue-600 font-semibold"></p>
+    <!-- Caja moderna para drag & drop -->
+    <form th:action="@{/propietario/upload}" method="post" enctype="multipart/form-data">
+
+        <label for="dropzone-file"
+               class="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed
+                      border-secondary bg-lightBg rounded-xl cursor-pointer hover:bg-gray-200 transition">
+
+            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                <span class="material-icons text-secondary text-5xl">cloud_upload</span>
+
+                <p class="text-darkText font-medium text-lg mt-2">
+                    Arrastra tu archivo aquí
+                </p>
+
+                <p class="text-softText text-sm mt-1">
+                    (Formatos permitidos: XLSX, CSV, JSON)
+                </p>
+            </div>
+
+            <input id="dropzone-file" type="file" name="archivo" class="hidden"
+                   accept=".xlsx,.csv,.json" required>
+        </label>
+
+        <!-- Botón -->
+        <button type="submit"
+                class="w-full mt-6 bg-successBtn hover:bg-green-700 text-white font-semibold
+                       py-3 rounded-xl shadow transition">
+            📤 Subir Archivo
+        </button>
+    </form>
+
+    <!-- Mensajes -->
+    <div th:if="${mensaje}"
+         class="mt-6 text-center bg-green-100 text-green-700 font-semibold p-3 rounded-lg">
+        <p th:text="${mensaje}"></p>
+    </div>
+
+    <div th:if="${error}"
+         class="mt-6 text-center bg-red-100 text-red-700 font-semibold p-3 rounded-lg">
+        <p th:text="${error}"></p>
+    </div>
+
+</div>
 
 </body>
 </html>
