@@ -6,16 +6,16 @@
     </div>
 
     <!-- Items del carrito -->
-    <div th:each="item : ${items}" class="flex items-center justify-between py-3 border-b">
+    <div th:each="item : ${items}" class="flex items-center gap-3 justify-between py-3 border-b">
 
         <!-- Nombre del producto -->
-        <span class="font-semibold" th:text="${item.producto.nombre}"></span>
+        <span  th:text="${item.producto.nombre}"></span>
 
         <!-- Controles de cantidad -->
         <div class="flex items-center gap-2">
             <!-- DISMINUIR -->
             <button th:onclick="|disminuir(${item.producto.id})|"
-               class="px-2 bg-gray-300 rounded hover:bg-gray-400">-</button>
+               class="px-2 bg-gray-300 rounded gap-2 hover:bg-gray-400">-</button>
 
 
             <span th:text="${item.cantidad}" class="font-bold"></span>
@@ -26,7 +26,7 @@
         </div>
 
         <!-- Subtotal -->
-        <span class="text-right font-semibold">
+        <span class="text-right ">
             $<span th:text="${item.subtotal}"></span>
         </span>
 
@@ -36,9 +36,11 @@
     </div>
 
     <!-- Total -->
-    <div class="text-right mt-4 font-bold text-xl">
+    <div class=" font-bold flex text-right space-between gap-44 text-xl">
 
-        Total: $<span th:text="${total}"></span>
+        <div>Total: $<span th:text="${total}"></span></div>
+        <button onclick="vaciarCarrito()" class="text-red-600 font-bold text-lg hover:text-red-800">
+            X</button>
     </div>
 
 </div>
