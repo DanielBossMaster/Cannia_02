@@ -43,148 +43,146 @@
 <body class="bg-lightBg text-darkText min-h-screen flex flex-col">
 <div class="h-screen flex flex-col">
 <!-- Header -->
-<header class="bg-secondary text-white flex justify-between items-center px-6 py-3 shadow-md">
-    <div class="flex items-center space-x-3">
-        <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
-        <h1 class="text-lg font-bold">Cannia</h1>
-    </div>
-
-</header>
-
+    <header class="bg-secondary text-white flex justify-between items-center px-6 py-2 shadow-md">
+        <div class="flex items-center space-x-3">
+            <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
+            <h1 class="text-lg font-bold">Cannia</h1>
+        </div>
+        <div>
+            <h1 class="text-2xl text-center font-bold mb-3 text-white">
+                Bienvenido Veterinario <br> <span th:text="${veterinario.nombreVete}" ></span>  <span th:text="${veterinario.apellidoVete}" ></span>
+            </h1>
+        </div>
+        <div class="flex items-center space-x-3 gap-8">
+            <a th:href="@{/veterinario}">
+                <button class="text-sm hover:font-bold">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="lucide lucide-house-icon lucide-house">
+                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    </svg>
+                </button>
+            </a>
+        </div>
+    </header>
     <div class="flex flex-1 overflow-hidden">
     <!-- SIDEBAR -->
-    <aside id="sidebar"
+        <aside id="sidebar"
            class="bg-secondary text-white w-16 transition-all duration-300 h-full flex flex-col justify-between overflow-hidden">
-
-        <!-- Bloque superior -->
-        <div>
+            <!-- Bloque superior -->
+            <div>
             <!-- Header + botón -->
-            <div class="flex items-center justify-between p-4">
-                <span class="text-xl font-bold whitespace-nowrap hidden sidebar-text">Menu</span>
-                <button onclick="toggleSidebar()" class="text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-logs-icon lucide-logs"><path d="M3 5h1"/><path d="M3 12h1"/><path d="M3 19h1"/><path d="M8 5h1"/><path d="M8 12h1"/><path d="M8 19h1"/><path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/></svg>
-                </button>
-            </div>
-
-            <!-- Vista historia clinica -->
-            <nav class="flex flex-col gap-4 mt-4">
-                <a th:href="@{/veterinario/HistoriaClinica}"
-                   class="flex items-center gap-3 px-4 py-2 hover:bg-primary rounded-md">
-                    <i class="fa-solid fa-house"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                <div class="flex items-center justify-between p-4">
+                    <span class="text-xl font-bold whitespace-nowrap hidden sidebar-text">Menu</span>
+                    <button onclick="toggleSidebar()" class="text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-logs-icon lucide-logs"><path d="M3 5h1"/><path d="M3 12h1"/><path d="M3 19h1"/><path d="M8 5h1"/><path d="M8 12h1"/><path d="M8 19h1"/><path d="M13 5h8"/><path d="M13 12h8"/><path d="M13 19h8"/></svg>
+                    </button>
+                </div>
+                <!-- Vista historia clinica -->
+                <nav class="flex flex-col gap-4 mt-4">
+                    <a th:href="@{/veterinario/HistoriaClinica}"
+                       class="flex items-center gap-3 px-4 py-2 hover:bg-primary ">
+                        <i class="fa-solid fa-house"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                       viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
                                                       stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-paw-print-icon lucide-paw-print">
-                        <circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/>
-                        <path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"/></svg></i>
-                    <span class="sidebar-text hidden">Mascotas</span>
-                </a>
+                            <circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/>
+                            <path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"/></svg></i>
+                        <span class="sidebar-text hidden">Mascotas</span>
+                    </a>
 
-                <a th:href="@{/veterinario/miVeterinaria/{id}(id=${veterinario.id})}"
-                   class="flex items-center gap-3 px-4 py-2 hover:bg-primary rounded-md">
-                    <i class="fa-solid fa-user"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    <a th:href="@{/veterinario/miVeterinaria/{id}(id=${veterinario.id})}"
+                       class="flex items-center gap-3 px-4 py-2 hover:bg-primary ">
+                        <i class="fa-solid fa-user"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                      viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
                                                      stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-open-icon lucide-package-open">
-                        <path d="M12 22v-9"/><path d="M15.17 2.21a1.67 1.67 0 0 1 1.63 0L21 4.57a1.93 1.93 0 0 1 0 3.36L8.82 14.79a1.655 1.655 0 0 1-1.64 0L3 12.43a1.93 1.93 0 0 1 0-3.36z"/>
-                        <path d="M20 13v3.87a2.06 2.06 0 0 1-1.11 1.83l-6 3.08a1.93 1.93 0 0 1-1.78 0l-6-3.08A2.06 2.06 0 0 1 4 16.87V13"/>
-                        <path d="M21 12.43a1.93 1.93 0 0 0 0-3.36L8.83 2.2a1.64 1.64 0 0 0-1.63 0L3 4.57a1.93 1.93 0 0 0 0 3.36l12.18 6.86a1.636 1.636 0 0 0 1.63 0z"/></svg></i>
-                    <span class="sidebar-text hidden">Veterinaria</span>
-                </a>
-
-            </nav>
-        </div>
-
-        <!-- Bloque inferior (2 items) -->
-        <div class="mb-6">
-            <nav class="flex flex-col gap-4">
-                <a th:href="@{/cerrar-sesion}" class="flex items-center gap-3 px-4 py-2 hover:bg-primary rounded-md">
-                    <i class="fa-solid fa-circle-info"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                            <path d="M12 22v-9"/><path d="M15.17 2.21a1.67 1.67 0 0 1 1.63 0L21 4.57a1.93 1.93 0 0 1 0 3.36L8.82 14.79a1.655 1.655 0 0 1-1.64 0L3 12.43a1.93 1.93 0 0 1 0-3.36z"/>
+                            <path d="M20 13v3.87a2.06 2.06 0 0 1-1.11 1.83l-6 3.08a1.93 1.93 0 0 1-1.78 0l-6-3.08A2.06 2.06 0 0 1 4 16.87V13"/>
+                            <path d="M21 12.43a1.93 1.93 0 0 0 0-3.36L8.83 2.2a1.64 1.64 0 0 0-1.63 0L3 4.57a1.93 1.93 0 0 0 0 3.36l12.18 6.86a1.636 1.636 0 0 0 1.63 0z"/></svg></i>
+                        <span class="sidebar-text hidden">Veterinaria</span>
+                    </a>
+                </nav>
+            </div>
+            <!-- Bloque inferior (2 items) -->
+            <div class="mb-6">
+                <nav class="flex flex-col gap-4">
+                    <a th:href="@{/cerrar-sesion}" class="flex items-center gap-3 px-4 py-2 hover:bg-primary ">
+                        <i class="fa-solid fa-circle-info"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                             viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"
                                                             stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out">
-                        <path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg></i>
-                    <span class="sidebar-text hidden">Cerrar Sesion</span>
-                </a>
-            </nav>
-        </div>
-
-    </aside>
-    <!-- CONTENIDO PRINCIPAL -->
-    <main class=" ml-32 mb-32 flex-grow mx-auto  px-6 py-8 mr-32" >
-     <section id="tab-admin" class="tab-content">
-         <div>
-             <div class="items-center ">
-                 <h1 class="text-2xl text-center font-bold">
-                     Bienvenido Veterinario<br><span th:text="${veterinario.nombreVete}" ></span>  <span th:text="${veterinario.apellidoVete}" ></span>
-                 </h1>
-                  <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-bold">Gestión de Propietarios</h2>
-
-            <div>
-                <button class="bg-white p-2 shadow-xl  transform hover:scale-105 mx-8 text-center
-                hover:shadow-2xl hover:bg-gray-50 transition-all duration-300 flex items-center gap-2">
-                    <img src="/img/new-user.png" alt="" class="w-8 h-8">
-                    Agregar Propietario</button>
+                            <path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg></i>
+                        <span class="sidebar-text hidden">Cerrar Sesion</span>
+                    </a>
+                </nav>
             </div>
-        </div>
-
-        <div class="bg-lightSurface w-full p-6 shadow-xl border border-borderLight  overflow-x-auto ">
-            <table class="w-full text-left text-sm">
-                <thead class="bg-gray-100 text-softText  uppercase text-xs">
-                <tr>
-                    <th class="px-4 py-3">Nombre</th>
-                    <th class="px-4 py-3">Correo</th>
-                    <th class="px-4 py-3">Teléfono</th>
-                    <th class="px-4 py-3">Opciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="prop : ${propietarios}"  class="border-t border-borderLight hover:bg-gray-100 transition">
-                    <td th:text="${prop.nombrePro + ' ' + prop.apellidoPro}" class="px-4 py-3"></td>
-                    <td th:text="${prop.correoPro}" class="px-4 py-3"></td>
-                    <td th:text="${prop.telefonoPro}" class="px-4 py-3"></td>
-                    <td class="px-4 py-3">
-                        <div class="flex flex-col sm:flex-row items-center gap-2 justify-center sm:justify-start">
-                        <a th:href="@{/veterinario/actualizar/{id}(id=${prop.id})}">
-                            <button class=" rounded bg-blue-600 px-3 py-1 rounded text-sm text-white hover:bg-blue-700 transition">Editar</button>
-                        </a>
-                        <form method="post" th:action="@{/veterinario/borrar/{id}(id=${prop.id})}">
-                            <button onclick="return confirm('¿Desea Eliminar?')" class="bg-red-600 px-3 py-1 rounded text-sm text-white font-bolt  hover:bg-red-700 transition">Eliminar</button>
-                        </form>
-                            <button
-                                    type="button"
-                                    class="bg-green-600 px-3 py-1 rounded text-sm text-white hover:bg-green-700 transition"
-                                    th:onclick="'abrirModalMascota(' + ${prop.id} + ')'">
-                                Agregar Mascota
-                            </button>
-
+        </aside>
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class=" ml-32 mb-32 flex-grow mx-auto  px-6 py-8 mr-32" >
+            <section id="tab-admin" class="tab-content">
+                    <div class="items-center ">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold">Gestión de Propietarios</h2>
+                            <div>
+                                <button class="bg-white p-2 shadow-xl  transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-gray-50 transition-all duration-300 flex items-center gap-2">
+                                    <img src="/img/new-user.png" alt="" class="w-8 h-8">Agregar Propietario</button>
+                            </div>
                         </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div></div>
-     </section>
-
-        <footer class=" text-center text-sm text-primary py-3">
-            © 2025 App Cannia. Todos los derechos reservados.
-        </footer>
-    </main>
+                        <div class="bg-lightSurface w-full p-6 shadow-xl border border-borderLight  overflow-x-auto ">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-gray-100 text-softText  uppercase text-xs">
+                                <tr>
+                                    <th class="px-4 py-3">Nombre</th>
+                                    <th class="px-4 py-3">Correo</th>
+                                    <th class="px-4 py-3">Teléfono</th>
+                                    <th class="px-4 py-3">Opciones</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="prop : ${propietarios}"  class="border-t border-borderLight hover:bg-gray-100 transition">
+                                    <td th:text="${prop.nombrePro + ' ' + prop.apellidoPro}" class="px-4 py-3"></td>
+                                    <td th:text="${prop.correoPro}" class="px-4 py-3"></td>
+                                    <td th:text="${prop.telefonoPro}" class="px-4 py-3"></td>
+                                    <td class="px-4 py-3">
+                                        <div class="flex flex-col sm:flex-row items-center gap-2 justify-center sm:justify-start">
+                                            <a th:href="@{/veterinario/actualizar/{id}(id=${prop.id})}">
+                                                <button class="  bg-blue-600 px-3 py-1  text-sm text-white hover:bg-blue-700 transition">Editar</button>
+                                            </a>
+                                            <form method="post" th:action="@{/veterinario/borrar/{id}(id=${prop.id})}">
+                                                <button onclick="return confirm('¿Desea Eliminar?')" class="bg-red-600 px-3 py-1 xt-sm text-white font-bolt  hover:bg-red-700 transition">Eliminar</button>
+                                            </form>
+                                            <button type="button" class="bg-green-600 px-3 py-1 xt-sm text-white hover:bg-green-700 transition"
+                                                    th:onclick="'abrirModalMascota(' + ${prop.id} + ')'">
+                                                Agregar Mascota
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            </section>
+            <!-- Footer -->
+            <footer class=" text-center text-sm text-primary py-3">
+                © 2025 App Cannia. Todos los derechos reservados.
+            </footer>
+        </main>
     </div>
 </div>
-
-<!-- Footer -->
-
 
 <!-- MODAL REGISTRAR PROPIETARIO -->
 <div id="modalPropietario" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-lightSurface w-full  max-w-md  shadow-lg p-6 relative">
-        <h3 class="text-lg font-bold text-primary mb-4">Registrar Propietario</h3>
+        <h3 class="text-lg font-bold text-center text-secondary mb-4">Registrar Propietario</h3>
         <form th:action="@{/veterinario/nuevo}" method="post" th:object="${propietario}" class="space-y-4">
             <div>
                 <label class="block text-sm font-semibold text-softText">Numero de Documento</label>
-                <input type="text" th:field="*{numDoc}" class="w-full border border-borderLight rounded-md px-3 py-2 " required>
+                <input type="text" th:field="*{numDoc}" class="w-full border border-borderLight  px-3 py-2 " required>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-softText">Nombre</label>
-                <input type="text" th:field="*{nombrePro}" class="w-full border border-borderLight rounded-md px-3 py-2 " required>
+                <input type="text" th:field="*{nombrePro}" class="w-full border border-borderLight  px-3 py-2 " required>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-softText">Apellido</label>
@@ -203,8 +201,8 @@
                 <input type="email" th:field="*{correoPro}" class="w-full  border-borderLight  px-3 py-2 " required>
             </div>
             <div class="flex justify-end space-x-3 pt-4">
-                <button type="button" onclick="toggleModal('modalPropietario')" class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Cancelar</button>
-                <button type="submit" class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Guardar</button>
+                <button type="button" onclick="toggleModal('modalPropietario')" class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Cancelar</button>
+                <button type="submit" class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Guardar</button>
             </div>
         </form>
         <button onclick="toggleModal('modalPropietario')" class="absolute top-3 right-3 text-softText hover:text-primary">
@@ -215,41 +213,41 @@
 <div th:each="prop : ${propietarios}" >
     <div id="modalMascota" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-lightSurface w-full max-w-md  shadow-lg p-6 relative">
-            <h3 class="text-lg font-bold text-primary mb-4">Registrar Mascota</h3>
+            <h3 class="text-lg font-bold text-center text-secondary mb-4">Registrar Mascota</h3>
             <form th:action="@{/veterinario/nuevom}" method="post" th:object="${mascota}"  class="space-y-4">
 
                 <input type="hidden" name="propietarioId" id="propietarioId">
                 <div>
                     <label class="block text-sm font-semibold text-softText">Nombre</label>
-                    <input type="text" th:field ="*{nomMascota}" class="w-full border border-borderLight rounded-md px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" required>
+                    <input type="text" th:field ="*{nomMascota}" class="w-full border border-borderLight  px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" required>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-softText">Especie</label>
-                <input type="text" th:field ="*{especie}" class="w-full border border-borderLight rounded-md px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" required>
+                <input type="text" th:field ="*{especie}" class="w-full border border-borderLight  px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" required>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-softText">Raza</label>
-                <input type="text" th:field ="*{raza}"  class="w-full border border-borderLight rounded-md px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" min="0" required>
+                <input type="text" th:field ="*{raza}"  class="w-full border border-borderLight  px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" min="0" required>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-softText">Color</label>
-                <input type="text" th:field ="*{color}"  class="w-full border border-borderLight rounded-md px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" min="0" required>
+                <input type="text" th:field ="*{color}"  class="w-full border border-borderLight  px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" min="0" required>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-softText">Fecha de nacimiento</label>
-                <input type="date" th:field ="*{fechaNacimiento}"   class="w-full border border-borderLight rounded-md px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" min="0" required>
+                <input type="date" th:field ="*{fechaNacimiento}"  th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" class="w-full border border-borderLight  px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" min="0" required>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-softText">Genero</label>
-                <select th:field ="*{genero}" class="w-full border border-borderLight rounded-md px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" required>
+                <select th:field ="*{genero}" class="w-full border border-borderLight  px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" required>
                     <option th:value="Hembra">Hembra</option>
                     <option th:value="Macho">Macho</option>
                 </select>
             </div>
 
             <div class="flex justify-end space-x-3 pt-4">
-                <button type="button" onclick="toggleModal('modalMascota')" class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Cancelar</button>
-                <button type="submit" class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Guardar</button>
+                <button type="button" onclick="toggleModal('modalMascota')" class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Cancelar</button>
+                <button type="submit" class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Guardar</button>
             </div>
         </form>
             <button onclick="toggleModal('modalMascota')" class="absolute top-3 right-3 text-softText hover:text-primary">
@@ -258,7 +256,6 @@
         </div>
     </div>
 </div>
-<!-- Script para cambiar pestañas -->
 <script>
 //SIDEBAR
 function toggleSidebar() {
@@ -309,6 +306,5 @@ function toggleSidebar() {
     // porque ahora cada botón tiene su propio onclick con el id correcto
 
 </script>
-
 </body>
 </html>
