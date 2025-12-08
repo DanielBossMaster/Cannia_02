@@ -15,7 +15,7 @@ public class VeterinariaModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_veterinaria")
-    private int id;
+    private Integer id;
 
     @Column(length = 50, nullable = false)
     private String nombre;

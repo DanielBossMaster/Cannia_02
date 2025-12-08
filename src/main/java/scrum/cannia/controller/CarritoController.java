@@ -113,6 +113,18 @@ public class CarritoController {
     }
 
 
+    /** A. Fuente de Datos	List<ItemCarrito> carrito = carritoService.getItems();
+     * La información de lo que se va a comprar (ID del producto, precio, cantidad) se
+     * obtiene de los objetos ItemCarrito almacenados en la sesión.
+     B. Mapeo y Transformación del JSON	List<SessionCreateParams.LineItem>
+     lineItems = carrito.stream().map(item -> ...)	Esta es la transformación del JSON
+     (objeto Java). Aquí tu código traduce los campos de tu modelo (item.getProducto().getValor(),
+     item.getCantidad()) al formato específico que Stripe requiere: SessionCreateParams.LineItem
+     (el equivalente al JSON del carrito).
+     C. Construcción del Objeto Final	SessionCreateParams params = SessionCreateParams.builder()...
+     Se construye el objeto final que será enviado. Este objeto incluye: los ítems transformados, el modo de pago
+     (Mode.PAYMENT), y las URLs de retorno (setSuccessUrl, setCancelUrl). **/
+
 
 
 }

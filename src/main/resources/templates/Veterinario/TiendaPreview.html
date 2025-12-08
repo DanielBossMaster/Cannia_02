@@ -40,11 +40,11 @@
     <div class="flex items-center space-x-3 gap-8">
         <button onclick="abrirCarrito()">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-             viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-             class="lucide lucide-shopping-cart-icon lucide-shopping-cart">
-            <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
-            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 class="lucide lucide-shopping-cart-icon lucide-shopping-cart">
+                <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
         </button>
         <a th:href="@{/propietario/index}">
             <button class="text-sm hover:font-bold">
@@ -62,175 +62,249 @@
 <!-- Contenedor principal -->
 <div class="text-center mx-auto p-8">
     <!-- Encabezado -->
-    <p class="text-gray-600 mb-8">
-        Aqui podras encontrar un amplio catalogo de los productos de tu veterinaria de confianza y
-        tenerlos siempre a la mano y disponibles.
+    <p class="text-gray-600 mb-8 mx-36 ">
+        Esta es la experiencia de compra final para tus usuarios. Debes revisar detalladamente que la información del producto
+        <br>(incluyendo especificaciones, valor monetario y detalles clave) se alinee perfectamente con lo planificado para garantizar una transacción fluida y sin confusiones para el comprador.
     </p>
-    <div class="max-w-xl mx-auto mb-6">
-        <form th:action="@{/tienda}" method="get">
-        <input type="text"  placeholder="Buscar productos..." th:value="${q}" class="w-full p-3 rounded-lg shadow ">
-            </form>
+    <div class=" flex space-between gap-4 max-w-xl mx-auto mb-6">
+
+        <input type="text" id="searchInput" placeholder="Buscar productos..."  class="w-full p-3 shadow ">
+        <button class="text-secondary" onclick="limpiarBusqueda()" >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 class="lucide lucide-delete-icon lucide-delete">
+                <path d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"/>
+                <path d="m12 9 6 6"/><path d="m18 9-6 6"/>
+            </svg>
+        </button>
+
     </div>
     <!-- Grid de productos -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+    <div id="productosContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
         <div th:each="p : ${productos}"
-             class=" bg-white shadow-lg hover:shadow-2xl transition mx-6 p-6 flex flex-col">
+             class=" producto-card bg-white shadow-lg hover:shadow-2xl transition mx-6 p-6 flex flex-col">
             <!-- Imagen -->
             <img th:src="@{/veterinario/producto/foto/{id}(id=${p.id})}"
-                 class="w-full h-48 object-cover rounded-lg mb-4"
+                 class=" imagen w-full h-48 object-cover rounded-lg mb-4"
                  alt="Imagen del producto">
-            <h2 class="text-xl font-semibold text-gray-900" th:text="${p.nombre}"></h2>
-            <p class="text-gray-600 text-sm mt-2" th:text="${p.descripcion}"></p>
-            <p class="text-lg font-bold text-green-600 mt-4">
+            <h2 class="nombre-producto text-xl font-semibold text-gray-900" th:text="${p.nombre}"></h2>
+            <p class=" descripcion text-gray-600 text-sm mt-2" th:text="${p.descripcion}"></p>
+            <p class="precio text-lg font-bold text-green-600 mt-4"
+               th:data-precio="${p.valor}">
                 $<span th:text="${p.valor}"></span>
             </p>
             <button type="button"
-                    th:onclick="'agregarAlCarrito(' + ${p.id} + ')'"
-                  class="bg-primary text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
+                    th:onclick="'agregarAlCarrito(' + ${p.id} + ');mostrarExito()'"
+                    class="bg-primary text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
                 Agregar al carrito
             </button>
         </div>
     </div>
 </div>
 <!-- MODAL DEL CARRITO -->
-<div id="carritoModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
-    <div class="bg-white p-6  w-96  shadow-xl">
-<div class="flex items-center justify-between">
-        <h2 class="text-2xl font-bold mb-4">Carrito de compras</h2>
-        <button class="text-2xl font-bold mb-4 text-red-600" onclick="cerrarCarrito()" >
-            x</button>
-    </div>
-        <!-- ESTE DIV SE ACTUALIZA POR AJAX -->
-        <div id="carritoItems" th:insert="Veterinario/Fragmentos/CarritoItems :: items"></div>
+<div id="carritoModal" class="hidden fixed inset-0 bg-black bg-opacity-40  flex justify-center overflow-auto items-center">
+    <div class="bg-white p-6   shadow-xl">
+        <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-bold mb-4">Carrito de compras</h2>
+            <button class="text-2xl font-bold mb-4 text-red-600" onclick="cerrarCarrito()" >
+                x</button>
+        </div>
 
+        <div class=" flex items-center space-between gap-10 ">
+            <div class="">
+                <h2 class="text-lg font-semibold">Método de entrega</h2>
+
+                <!-- Opción Domicilio -->
+                <label class="flex items-start gap-2 cursor-pointer">
+                    <input type="radio" name="metodoEntrega" value="domicilio" checked
+                           onclick="mostrarDireccion(true)">
+                    <span>Domicilio</span>
+                </label>
+                <div class="p-4 bg-gray-50 border mb-4">
+                    <h3 class="font-semibold">Dirección de domicilio</h3>
+                    <p th:text="${direccion}"></p>
+                </div>
+
+                <!-- Opción recoger en tienda -->
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="metodoEntrega" value="tienda"
+                           onclick="mostrarDireccion(false)">
+                    <span>Recoger en tienda</span>
+                </label>
+            </div>
+
+            <!-- ESTE DIV SE ACTUALIZA POR AJAX -->
+            <div id="carritoItems" th:insert="Veterinario/Fragmentos/CarritoItems :: items"></div>
+        </div>
         <div class="flex justify-center mt-4">
-            <button onclick="vaciarCarrito()" class="bg-primary  px-4 text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
-                Vaciar</button>
 
             <button id="btnPagar"
                     class="bg-primary  px-4 text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
-            Ir a pagar
+                Ir a pagar
             </button>
-            <script>
-                document.getElementById("btnPagar").addEventListener("click", async () => {
 
-                    const respuesta = await fetch("/pago/crearCheckout", {
-                        method: "POST"
-                    });
-
-                    const data = await respuesta.json();
-
-                    if (data.url) {
-                        window.location.href = data.url; // Redirige a Stripe
-                    } else {
-                        alert("Error creando checkout");
-                    }
-
-                });
-            </script>
         </div>
-    </div>
-</div>
 
 
-<script>
-    function abrirCarrito() {
-        document.getElementById("carritoModal").classList.remove("hidden");
-        cargarCarrito();
-    }
+        <script>
+            function abrirCarrito() {
+                document.getElementById("carritoModal").classList.remove("hidden");
+                cargarCarrito();
+            }
 
-    function cerrarCarrito() {
-        document.getElementById("carritoModal").classList.add("hidden");
-    }
+            function cerrarCarrito() {
+                document.getElementById("carritoModal").classList.add("hidden");
+            }
 
-    function agregarAlCarrito(id) {
-        fetch(`/carrito/agregar/${id}`, { method: "POST" })
-            .then(() => {
-                cargarCarrito();   // 🔥 Recargar contenido del carrito
-                abrirCarrito();    // 🔥 Abrir modal
+            function agregarAlCarrito(id) {
+                fetch(`/carrito/agregar/${id}`, { method: "POST" })
+                    .then(() => {
+                        cargarCarrito();   // 🔥 Recargar contenido del carrito
+                        // 🔥 Abrir modal
+                    });
+            }
+
+            function cargarCarrito() {
+                fetch("/carrito/items")
+                    .then(r => r.text())
+                    .then(html => {
+                        // Reemplazar el contenido dinamicamente
+                        document.getElementById("carritoItems").innerHTML = html;
+                    });
+            }
+
+            function vaciarCarrito() {
+                fetch("/carrito/vaciar")
+                    .then(() => cargarCarrito());
+            }
+
+
+
+            function recargarCarrito() {
+                fetch("/carrito/items")
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById("carritoItems").innerHTML = html;
+                    });
+            }
+
+            function aumentar(id) {
+                fetch(`/carrito/aumentar/${id}`, {
+                    method: "POST"
+                })
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById("carritoItems").innerHTML = html;
+                    });
+            }
+
+            function disminuir(id) {
+                fetch(`/carrito/disminuir/${id}`, {
+                    method: "POST"
+                })
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById("carritoItems").innerHTML = html;
+                    });
+            }
+
+            function eliminarItem(id) {
+                fetch(`/carrito/eliminar/${id}`)
+                    .then(() => recargarCarrito());
+            }
+
+
+
+            function mostrarExito() {
+                alert("✅ ¡Agregado al carrito exitosamente!");
+            }
+
+
+            //BARRA DE BUSQUEDA
+
+            let todosProductos = [];
+
+            function guardarProductos() {
+                const cards = document.querySelectorAll('#productosContainer .producto-card');
+
+                todosProductos = Array.from(cards).map(card => {
+                    return {
+                        elemento: card,
+                        nombre: card.querySelector('.nombre-producto')?.textContent || '',
+                        descripcion: card.querySelector('.descripcion')?.textContent || '',
+                        precio: card.querySelector('.precio')?.dataset.precio || ''
+
+                    };
+                });
+            }
+
+            function filtrarProductos(terminoBusqueda) {
+                const termino = terminoBusqueda.toLowerCase().trim();
+
+                if (termino === '') {
+                    todosProductos.forEach(p => p.elemento.style.display = 'block');
+                    return;
+                }
+
+                let hayResultados = false;
+
+                todosProductos.forEach(p => {
+                    const coincide =
+                        p.nombre.toLowerCase().includes(termino) ||
+                        p.descripcion.toLowerCase().includes(termino) ||
+                        p.precio.toLowerCase().includes(termino);
+
+                    if (coincide) {
+                        p.elemento.style.display = 'block';
+                        hayResultados = true;
+                    } else {
+                        p.elemento.style.display = 'none';
+                    }
+                });
+
+                mostrarMensajeSinResultados(!hayResultados, termino);
+            }
+
+            function mostrarMensajeSinResultados(mostrar, termino) {
+                let mensaje = document.getElementById('mensajeSinResultados');
+
+                if (!mostrar) {
+                    if (mensaje) mensaje.remove();
+                    return;
+                }
+
+                if (!mensaje) {
+                    mensaje = document.createElement('div');
+                    mensaje.id = 'mensajeSinResultados';
+                    mensaje.className = "col-span-full text-center text-gray-500 mt-8";
+                    mensaje.innerHTML = `
+            <h3 class="text-lg font-semibold">No se encontraron productos</h3>
+            <p>Búsqueda: "<b>${termino}</b>"</p>
+        `;
+                    document.getElementById('productosContainer').appendChild(mensaje);
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                guardarProductos();
+
+                const input = document.getElementById('searchInput');
+                input.addEventListener('input', e => filtrarProductos(e.target.value));
+                input.addEventListener('keydown', e => {
+                    if (e.key === 'Escape') limpiarBusqueda();
+                });
             });
-    }
 
-    function cargarCarrito() {
-        fetch("/carrito/items")
-            .then(r => r.text())
-            .then(html => {
-                // Reemplazar el contenido dinamicamente
-                document.getElementById("carritoItems").innerHTML = html;
-            });
-    }
-
-    function vaciarCarrito() {
-        fetch("/carrito/vaciar")
-            .then(() => cargarCarrito());
-    }
+            function limpiarBusqueda() {
+                const input = document.getElementById('searchInput');
+                input.value = '';
+                filtrarProductos('');
+                input.focus();
+            }
 
 
 
-        function recargarCarrito() {
-        fetch("/carrito/items")
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById("carritoItems").innerHTML = html;
-            });
-    }
-
-        function aumentar(id) {
-        fetch(`/carrito/aumentar/${id}`, {
-            method: "POST"
-        })
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById("carritoItems").innerHTML = html;
-            });
-    }
-
-        function disminuir(id) {
-        fetch(`/carrito/disminuir/${id}`, {
-            method: "POST"
-        })
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById("carritoItems").innerHTML = html;
-            });
-    }
-
-        function eliminarItem(id) {
-        fetch(`/carrito/eliminar/${id}`)
-            .then(() => recargarCarrito());
-    }
-
-
-    fetch("/api/pagos/crear-checkout", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify(carrito)
-    })
-        .then(res => res.json())
-        .then(data => {
-            window.location.href = data.url;
-        });
-
-
-        const searchInput = document.getElementById('search');
-        const productos = document.querySelectorAll('.producto');
-
-        searchInput.addEventListener('keyup', function() {
-        const filtro = searchInput.value.toLowerCase();
-
-        productos.forEach(producto => {
-        const nombre = producto.querySelector('h2').textContent.toLowerCase();
-        const descripcion = producto.querySelector('p').textContent.toLowerCase();
-
-        if (nombre.includes(filtro) || descripcion.includes(filtro)) {
-        producto.style.display = ''; // mostrar
-    } else {
-        producto.style.display = 'none'; // ocultar
-    }
-    });
-    });
-
-</script>
+        </script>
 
 </body>
 </html>

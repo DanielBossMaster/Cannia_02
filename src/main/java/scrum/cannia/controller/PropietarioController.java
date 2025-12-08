@@ -66,7 +66,7 @@ public class PropietarioController {
         return "Propietario/CargarMascotas";
     }
     @PostMapping("/upload")
-    public String procesarExcel(@RequestParam("file") MultipartFile file, Model model) {
+    public String procesarExcel(@RequestParam("archivo") MultipartFile file, Model model) {
 
         try {
             String filename = file.getOriginalFilename();
@@ -77,7 +77,7 @@ public class PropietarioController {
 
             petService.guardarMascotas(pets);
 
-            model.addAttribute("message", "Archivo cargado: " + pets.size());
+            model.addAttribute("mensaje", "Archivo '" + filename + "' cargado correctamente. Elementos procesados: " + pets.size());
 
         } catch (Exception e) {
             model.addAttribute("message", "Error al cargar archivo: " + e.getMessage());
@@ -107,6 +107,7 @@ public class PropietarioController {
     public String verMascotas() {
         return "propietarios/mascotas";
     }
+
 
     /**
      * Guarda la vacuna

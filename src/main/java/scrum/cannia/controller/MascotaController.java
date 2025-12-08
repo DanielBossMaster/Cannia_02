@@ -1,11 +1,14 @@
 package scrum.cannia.controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import scrum.cannia.model.*;
 import scrum.cannia.repository.InventarioRepository;
 import scrum.cannia.repository.MascotaRepository;
@@ -66,6 +69,23 @@ public class MascotaController {
 
         return "propietario/indexPropietario";
     }
+    @GetMapping("/misMascotas")
+    public String misMascotas(HttpSession session, Model model) {
+        // Obtener propietario desde la sesión
+        PropietarioModel propietario = (PropietarioModel) session.getAttribute("propietario");
+        if (propietario == null) {
+            return "redirect:/login";
+        }
+
+        // Traer las mascotas del propietario
+        List<MascotaModel> listaMascotasDelPropietario = mascotaRepository.findByPropietario(propietario);
+
+        // Pasar al modelo para Thymeleaf
+        model.addAttribute("listaMascotas", listaMascotasDelPropietario);
+
+        return "propietario/misMascotas"; // Llama al HTML
+    }
+
 
     // --------------------------
     // Página de la tienda del propietario
@@ -90,6 +110,38 @@ public class MascotaController {
         model.addAttribute("propietario", propietario);
 
         return "propietario/Tienda";
+    }
+
+    // --------------------------
+    // Agrega a la base de datos la mascota generada por el propietario
+    // --------------------------
+    @PostMapping("/guardar")
+    public String guardarMascota(
+            @Valid MascotaModel mascota,
+            BindingResult result,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("error", "Datos inválidos");
+            return "redirect:/propietario/index";
+        }
+
+        PropietarioModel propietario = (PropietarioModel) session.getAttribute("propietario");
+
+        if (propietario == null) {
+            redirectAttributes.addFlashAttribute("error", "No se encontró propietario en sesión.");
+            return "redirect:/propietario/index";
+        }
+
+        System.out.println(">>>> PROPIETARIO ASIGNADO: " + propietario.getId());
+
+        mascota.setPropietario(propietario);
+
+        mascotaRepository.save(mascota);
+
+        redirectAttributes.addFlashAttribute("success", "Mascota registrada correctamente");
+        return "redirect:/propietario/index";
     }
 
 }

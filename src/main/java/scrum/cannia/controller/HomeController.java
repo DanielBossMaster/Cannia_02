@@ -58,6 +58,14 @@ public class HomeController {
             case "veterinario":
                 return "redirect:/veterinario";
             case "propietario":
+
+                if (u.getPropietario() == null) {
+                    model.addAttribute("error", "Este usuario no tiene un propietario asociado.");
+                    return "login/login";
+                }
+
+                session.setAttribute("propietario", u.getPropietario());
+                System.out.println(">>>> PROPIETARIO EN SESIÓN: " + u.getPropietario().getId());
                 return "redirect:/propietario/index";  // tu vista html
             default:
                 model.addAttribute("error", "Rol no válido o no asignado");

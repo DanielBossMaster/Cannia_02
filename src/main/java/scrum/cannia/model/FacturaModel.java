@@ -36,6 +36,10 @@ public class FacturaModel {
     @Column(length = 40, nullable = false)
     private BigDecimal precioTotal;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20, nullable = false)
+    private EstadoFactura estado;
+
     @ManyToOne
     @JoinColumn(name = "id_veterinaria",nullable = false)
     private VeterinariaModel veterinaria;
@@ -50,6 +54,7 @@ public class FacturaModel {
     @PrePersist
     public void prePersist() {
         this.fechaEmision = LocalDateTime.now();
+        this.estado = EstadoFactura.PAGADA;
     }
 
 

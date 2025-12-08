@@ -30,6 +30,7 @@ public class PetModel {
     @Column(length = 50, nullable = false)
     private String colorPet;
 
+//    Se implemento FactoryMethod
     public PetModel(String nombrePet, String razaPet, int edadPet, String colorPet) {
         this.nombrePet = nombrePet;
         this.razaPet = razaPet;
