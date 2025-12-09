@@ -3,7 +3,7 @@ package scrum.cannia.strategy.impl;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
-import scrum.cannia.model.PetModel;
+import scrum.cannia.dto.MascotaCargaDTO;
 import scrum.cannia.strategy.DataLoaderStrategy;
 
 import java.io.InputStream;
@@ -13,9 +13,9 @@ import java.util.List;
 public class ExcelDataLoader implements DataLoaderStrategy {
 
     @Override
-    public List<PetModel> loadData(MultipartFile file) throws Exception {
+    public List<MascotaCargaDTO> loadData(MultipartFile file) throws Exception {
 
-        List<PetModel> pets = new ArrayList<>();
+        List<MascotaCargaDTO> mascotas = new ArrayList<>();
 
         InputStream inputStream = file.getInputStream();
         Workbook workbook = new XSSFWorkbook(inputStream);
@@ -40,18 +40,17 @@ public class ExcelDataLoader implements DataLoaderStrategy {
                 continue;
             }
 
-            PetModel pet = PetModel.builder()
-                    .nombrePet(nombreCell.getStringCellValue())
-                    .razaPet(razaCell.getStringCellValue())
-                    .edadPet(edad)
-                    .colorPet(colorCell.getStringCellValue())
-                    .build();
+            MascotaCargaDTO dto = new MascotaCargaDTO();
+            dto.setNombre(nombreCell.getStringCellValue());
+            dto.setRaza(razaCell.getStringCellValue());
+            dto.setEdad(edad);
+            dto.setColor(colorCell.getStringCellValue());
 
-            pets.add(pet);
+            mascotas.add(dto);
         }
 
         workbook.close();
-        return pets;
+        return mascotas;
     }
 }
 

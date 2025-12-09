@@ -23,6 +23,17 @@
     </style>
 </head>
 <body class="bg-light">
+<header class="bg-secondary text-white flex justify-between items-center px-6 py-3 shadow-md">
+    <div class="flex items-center space-x-3">
+        <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
+        <h1 class="text-lg font-bold">Cannia</h1>
+    </div>
+
+    <a th:href="@{/propietario/index}"
+       class="bg-primary hover:bg-secondary px-4 py-2 rounded-lg shadow text-white transition">
+        ⬅ Volver al inicio
+    </a>
+</header>
 
 <div class="container mt-4">
     <h2 class="text-center mb-4">🐾 Mis Mascotas</h2>

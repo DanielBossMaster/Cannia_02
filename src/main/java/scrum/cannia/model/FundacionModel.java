@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "Fundacion")
+@Table(name = "fundacion")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,10 +38,6 @@ public class FundacionModel {
     @Column(length = 50, nullable = false)
     @Email(message = "Debe ser un correo válido")
     private String email;
-
-    //uso de soft delete
-    @Column(nullable = false)
-    private boolean estado = true;
 
     @OneToMany(mappedBy = "fundacion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MascotaModel> mascotas = new ArrayList<>();

@@ -14,6 +14,7 @@ public interface MascotaRepository extends JpaRepository<MascotaModel, Long> {
 
     List<MascotaModel> findByPropietario(PropietarioModel propietario);
 
+    List<MascotaModel> findByPropietarioIsNullAndFundacionIsNotNullAndEstadoTrue();
     // FundacioN
     List<MascotaModel> findByFundacionId(Long idFundacion);
 

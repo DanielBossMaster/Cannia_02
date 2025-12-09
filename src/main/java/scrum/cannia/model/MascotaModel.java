@@ -2,6 +2,7 @@ package scrum.cannia.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import scrum.cannia.dto.MascotaCargaDTO;
 
 import java.util.Date;
 
@@ -60,4 +61,61 @@ public class MascotaModel {
 
     @Column(nullable = false)
     private boolean estado = true;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 15, nullable = false)
+    private TipoEstadoMascota tipoEstado;
+
+    // Factory Method mascota creada por Fundacion
+    public static MascotaModel crearDesdeFundacion(MascotaCargaDTO dto, FundacionModel fundacion) {
+        MascotaModel mascota = new MascotaModel();
+
+        // Campos obligatorios
+        mascota.setNomMascota(dto.getNombre());
+        mascota.setEspecie(dto.getEspecie() != null ? dto.getEspecie() : "Desconocida");
+        mascota.setRaza(dto.getRaza());
+        mascota.setColor(dto.getColor());
+        mascota.setGenero(dto.getGenero());
+        mascota.setTipoEstado(dto.getTipoEstado());
+        mascota.setFechaNacimiento(dto.getFechaNacimiento());
+        mascota.setFechaVacunacion(dto.getFechaVacunacion());
+
+        // Campos opcionales con valores por defecto
+        mascota.setEdadFundacion(dto.getEdad() != null ? String.valueOf(dto.getEdad()) : "0");
+        mascota.setFoto(dto.getFoto() != null ? dto.getFoto() : "");
+        mascota.setMedicamento(dto.getMedicamento() != null ? dto.getMedicamento() : "");
+
+        // Relaciones
+        mascota.setFundacion(fundacion);
+        mascota.setPropietario(null);
+
+        // Estado activo por defecto
+        mascota.setEstado(true);
+
+        return mascota;
+    }
+
+    //  Factory Method mascota creada por Propietario
+    public static MascotaModel crearParaPropietario(
+            String nombre,
+            String especie,
+            String raza,
+            Genero genero,
+            String color,
+            PropietarioModel propietario) {
+
+        MascotaModel mascota = new MascotaModel();
+        mascota.nomMascota = nombre;
+        mascota.especie = especie;
+        mascota.raza = raza;
+        mascota.genero = genero;
+        mascota.color = color;
+        mascota.propietario = propietario;
+        mascota.fundacion = null;
+        mascota.tipoEstado = TipoEstadoMascota.PROPIA;
+        mascota.estado = true;
+
+        return mascota;
+    }
+
 }
