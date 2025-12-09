@@ -155,7 +155,7 @@
             </div>
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Filtros -->
     <div class="row mb-4">
         <div class="col-12">
@@ -188,9 +188,9 @@
                             <button type="button" class="btn btn-filter" onclick="cambiarVisualizacion('tabla')">
                                 <i class="fas fa-table me-1"></i> Tabla
                             </button>
-                            <button type="button" class="btn btn-filter" onclick="cambiarVisualizacion('ambos')">
-                                <i class="fas fa-columns me-1"></i> Ambos
-                            </button>
+<!--                            <button type="button" class="btn btn-filter" onclick="cambiarVisualizacion('ambos')">-->
+<!--                                <i class="fas fa-columns me-1"></i> Ambos-->
+<!--                            </button>-->
                         </div>
                     </div>
                 </div>
@@ -338,12 +338,12 @@
                         <button class="btn btn-outline-info me-2" onclick="previsualizarPDF()">
                             <i class="fas fa-eye me-1"></i> Previsualizar PDF
                         </button>
-                        <button class="btn btn-outline-success me-2" onclick="exportarExcel()">
-                            <i class="fas fa-file-excel me-1"></i> Exportar Excel
-                        </button>
-                        <button class="btn btn-outline-secondary" onclick="imprimirReporte()">
-                            <i class="fas fa-print me-1"></i> Imprimir
-                        </button>
+<!--                        <button class="btn btn-outline-success me-2" onclick="exportarExcel()">-->
+<!--                            <i class="fas fa-file-excel me-1"></i> Exportar Excel-->
+<!--                        </button>-->
+<!--                        <button class="btn btn-outline-secondary" onclick="imprimirReporte()">-->
+<!--                            <i class="fas fa-print me-1"></i> Imprimir-->
+<!--                        </button>-->
                     </div>
                 </div>
             </div>
@@ -385,8 +385,9 @@
                 day: 'numeric'
             });
 
-        // Generar reporte inicial
-        generarReporte();
+        // Configurar listeners para los filtros
+        document.getElementById('tipoGrafico').addEventListener('change', generarReporte);
+        document.getElementById('filtroEstado').addEventListener('change', generarReporte);
 
         // Configurar tabs de Bootstrap
         const tabEls = document.querySelectorAll('button[data-bs-toggle="tab"]');
@@ -400,6 +401,9 @@
                 }
             });
         });
+
+        // Generar reporte inicial
+        generarReporte();
     });
 
     // Cambiar tipo de visualización
@@ -417,9 +421,6 @@
             document.getElementById('grafico-tab').click();
         } else if (tipo === 'tabla') {
             document.getElementById('detalle-tab').click();
-        } else if (tipo === 'ambos') {
-            // Mostrar ambos en una vista especial
-            alert('Vista de ambos disponible en próximas versiones');
         }
     }
 
@@ -475,7 +476,7 @@
 
         } catch (error) {
             console.error('Error:', error);
-            alert('Error al generar el reporte: ' + error.message);
+            mostrarNotificacion('Error al generar el reporte: ' + error.message, 'error');
             document.getElementById('loadingGrafico').style.display = 'none';
             document.getElementById('noDataGrafico').style.display = 'block';
         }
@@ -483,9 +484,9 @@
 
     // Actualizar estadísticas rápidas
     function actualizarEstadisticasRapidas(estadisticas) {
-        document.getElementById('statTotal').textContent = estadisticas.totalActivos + estadisticas.totalInactivos;
-        document.getElementById('statActivos').textContent = estadisticas.totalActivos;
-        document.getElementById('statInactivos').textContent = estadisticas.totalInactivos;
+        document.getElementById('statTotal').textContent = (estadisticas.totalActivos || 0) + (estadisticas.totalInactivos || 0);
+        document.getElementById('statActivos').textContent = estadisticas.totalActivos || 0;
+        document.getElementById('statInactivos').textContent = estadisticas.totalInactivos || 0;
         document.getElementById('statValorTotal').textContent = `$${estadisticas.valorTotalInventario?.toLocaleString() || '0'}`;
     }
 
@@ -498,15 +499,20 @@
             chartInstance.destroy();
         }
 
+        // Verificar si hay datos
+        if (!reporte.datos || reporte.datos.length === 0) {
+            return;
+        }
+
         if (reporte.tipo === 'TORTA') {
             // Gráfico de torta
             const datos = reporte.datos;
             const config = {
                 type: 'pie',
                 data: {
-                    labels: datos.map(item => item.etiqueta),
+                    labels: datos.map(item => item.etiqueta || item.producto || 'Sin nombre'),
                     datasets: [{
-                        data: datos.map(item => item.valor),
+                        data: datos.map(item => item.valor || item.cantidad || 0),
                         backgroundColor: [
                             '#28a745', // Verde para activos
                             '#dc3545', // Rojo para inactivos
@@ -536,7 +542,7 @@
                         },
                         title: {
                             display: true,
-                            text: 'Distribución de Productos por Estado',
+                            text: 'Distribución de Productos',
                             font: {
                                 size: 16,
                                 weight: 'bold'
@@ -565,10 +571,10 @@
             const config = {
                 type: 'bar',
                 data: {
-                    labels: datos.map(item => item.producto || item.etiqueta),
+                    labels: datos.map(item => item.producto || item.etiqueta || 'Producto'),
                     datasets: [{
                         label: 'Cantidad en Stock',
-                        data: datos.map(item => item.cantidad || item.valor),
+                        data: datos.map(item => item.cantidad || item.valor || 0),
                         backgroundColor: datos.map(item => {
                             if (item.estado === 'ACTIVO' || item.estado === true) {
                                 return '#28a745';
@@ -680,14 +686,14 @@
                 'Sí' : 'No';
 
             row.innerHTML = `
-                    <td><strong>${item.producto || item.etiqueta || 'Sin nombre'}</strong></td>
-                    <td>${cantidad}</td>
-                    <td>$${valorUnitario.toLocaleString()}</td>
-                    <td><strong>$${valorTotal.toLocaleString()}</strong></td>
-                    <td><span class="${estadoClass}">${estadoText}</span></td>
-                    <td>${publicadoText}</td>
-                    <td>${item.unidadMedida || 'N/A'}</td>
-                `;
+                <td><strong>${item.producto || item.etiqueta || 'Sin nombre'}</strong></td>
+                <td>${cantidad}</td>
+                <td>$${valorUnitario.toLocaleString()}</td>
+                <td><strong>$${valorTotal.toLocaleString()}</strong></td>
+                <td><span class="${estadoClass}">${estadoText}</span></td>
+                <td>${publicadoText}</td>
+                <td>${item.unidadMedida || 'N/A'}</td>
+            `;
 
             tbody.appendChild(row);
         });
@@ -697,99 +703,99 @@
     function mostrarEstadisticasDetalladas(estadisticas) {
         const container = document.getElementById('estadisticasDetalladas');
 
-        const porcentajeActivos = estadisticas.porcentajeActivos || 0;
+        const total = (estadisticas.totalActivos || 0) + (estadisticas.totalInactivos || 0);
+        const porcentajeActivos = total > 0 ? Math.round((estadisticas.totalActivos / total) * 100) : 0;
         const porcentajeInactivos = 100 - porcentajeActivos;
 
         container.innerHTML = `
-                <div class="col-md-6">
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <i class="fas fa-chart-pie me-2"></i>Distribución por Estado
-                        </div>
-                        <div class="card-body">
-                            <div class="progress mb-3" style="height: 30px;">
-                                <div class="progress-bar bg-success" role="progressbar"
-                                     style="width: ${porcentajeActivos}%"
-                                     aria-valuenow="${porcentajeActivos}"
-                                     aria-valuemin="0"
-                                     aria-valuemax="100">
-                                    Activos: ${porcentajeActivos}%
-                                </div>
-                                <div class="progress-bar bg-danger" role="progressbar"
-                                     style="width: ${porcentajeInactivos}%"
-                                     aria-valuenow="${porcentajeInactivos}"
-                                     aria-valuemin="0"
-                                     aria-valuemax="100">
-                                    Inactivos: ${porcentajeInactivos}%
-                                </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fas fa-chart-pie me-2"></i>Distribución por Estado
+                    </div>
+                    <div class="card-body">
+                        <div class="progress mb-3" style="height: 30px;">
+                            <div class="progress-bar bg-success" role="progressbar"
+                                 style="width: ${porcentajeActivos}%"
+                                 aria-valuenow="${porcentajeActivos}"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100">
+                                Activos: ${porcentajeActivos}%
                             </div>
-                            <div class="row text-center">
-                                <div class="col-6">
-                                    <h5>${estadisticas.totalActivos || 0}</h5>
-                                    <small class="text-success">Productos Activos</small>
-                                </div>
-                                <div class="col-6">
-                                    <h5>${estadisticas.totalInactivos || 0}</h5>
-                                    <small class="text-danger">Productos Inactivos</small>
-                                </div>
+                            <div class="progress-bar bg-danger" role="progressbar"
+                                 style="width: ${porcentajeInactivos}%"
+                                 aria-valuenow="${porcentajeInactivos}"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100">
+                                Inactivos: ${porcentajeInactivos}%
+                            </div>
+                        </div>
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <h5>${estadisticas.totalActivos || 0}</h5>
+                                <small class="text-success">Productos Activos</small>
+                            </div>
+                            <div class="col-6">
+                                <h5>${estadisticas.totalInactivos || 0}</h5>
+                                <small class="text-danger">Productos Inactivos</small>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-md-6">
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <i class="fas fa-chart-line me-2"></i>Métricas Financieras
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fas fa-chart-line me-2"></i>Métricas Financieras
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Valor Total del Inventario</label>
+                            <h3 class="text-primary">$${estadisticas.valorTotalInventario?.toLocaleString() || '0'}</h3>
                         </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label">Valor Total del Inventario</label>
-                                <h3 class="text-primary">$${estadisticas.valorTotalInventario?.toLocaleString() || '0'}</h3>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Valor Promedio por Producto</label>
-                                <h5 class="text-secondary">$${estadisticas.valorPromedioProducto?.toLocaleString() || '0'}</h5>
-                            </div>
-                            <div>
-                                <label class="form-label">Cantidad Total en Stock</label>
-                                <h5 class="text-info">${estadisticas.cantidadTotalStock?.toLocaleString() || '0'} unidades</h5>
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label">Valor Promedio por Producto</label>
+                            <h5 class="text-secondary">$${estadisticas.valorPromedioProducto?.toLocaleString() || '0'}</h5>
+                        </div>
+                        <div>
+                            <label class="form-label">Cantidad Total en Stock</label>
+                            <h5 class="text-info">${estadisticas.cantidadTotalStock?.toLocaleString() || '0'} unidades</h5>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <i class="fas fa-info-circle me-2"></i>Información del Reporte
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-info-circle me-2"></i>Información del Reporte
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p><strong>Productos Publicados:</strong> ${estadisticas.totalPublicados || 0}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><strong>Fecha del Reporte:</strong> ${new Date().toLocaleDateString()}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><strong>Total Productos:</strong> ${total}</p>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <p><strong>Productos Publicados:</strong> ${estadisticas.totalPublicados || 0}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p><strong>Fecha del Reporte:</strong> ${new Date().toLocaleDateString()}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p><strong>Filtro Aplicado:</strong> ${datosReporte?.filtroAplicado || 'Ninguno'}</p>
-                                </div>
-                            </div>
-                            <div class="alert alert-info mt-2">
-                                <i class="fas fa-lightbulb me-2"></i>
-                                <small>
-                                    <strong>Nota:</strong> Los valores financieros son calculados en base al precio y cantidad de cada producto.
-                                </small>
-                            </div>
+                        <div class="alert alert-info mt-2">
+                            <i class="fas fa-lightbulb me-2"></i>
+                            <small>
+                                <strong>Nota:</strong> Los valores financieros son calculados en base al precio y cantidad de cada producto.
+                            </small>
                         </div>
                     </div>
                 </div>
-            `;
+            </div>
+        `;
     }
 
-    // Agrega estas funciones a tu reportes.html
-
+    // Funciones de exportación
     async function exportarPDF() {
         const estado = document.getElementById('filtroEstado').value;
 
@@ -846,9 +852,9 @@
                          alert-dismissible fade show position-fixed`;
         alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
         alertDiv.innerHTML = `
-        ${mensaje}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
+            ${mensaje}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
         document.body.appendChild(alertDiv);
 
         // Auto-eliminar después de 3 segundos
@@ -859,35 +865,34 @@
         }, 3000);
     }
 
-    // También actualiza la función imprimirReporte
     function imprimirReporte() {
         // Solo imprime la sección del reporte
         const contenido = document.getElementById('grafico').innerHTML;
         const ventana = window.open('', '_blank');
         ventana.document.write(`
-        <html>
-        <head>
-            <title>Reporte de Productos - Cannia</title>
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-            <style>
-                @media print {
-                    .no-print { display: none !important; }
-                }
-                body { padding: 20px; }
-            </style>
-        </head>
-        <body>
-            <h1>Reporte de Productos - Cannia</h1>
-            <div>${contenido}</div>
-            <script>
-                window.onload = function() {
-                    window.print();
-                    setTimeout(() => window.close(), 500);
-                }
-            <\/script>
-        </body>
-        </html>
-    `);
+            <html>
+            <head>
+                <title>Reporte de Productos - Cannia</title>
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+                <style>
+                    @media print {
+                        .no-print { display: none !important; }
+                    }
+                    body { padding: 20px; }
+                </style>
+            </head>
+            <body>
+                <h1>Reporte de Productos - Cannia</h1>
+                <div>${contenido}</div>
+                <script>
+                    window.onload = function() {
+                        window.print();
+                        setTimeout(() => window.close(), 500);
+                    }
+                <\/script>
+            </body>
+            </html>
+        `);
         ventana.document.close();
     }
 </script>
