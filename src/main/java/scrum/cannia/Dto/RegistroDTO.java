@@ -1,4 +1,4 @@
-package scrum.cannia.dto;
+package scrum.cannia.Dto;
 import lombok.Data;
 
 @Data
