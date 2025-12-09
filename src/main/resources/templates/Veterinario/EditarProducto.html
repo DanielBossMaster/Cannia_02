@@ -52,13 +52,18 @@
                 <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
             </svg></button></a>
 </header>
-<main class=" fixed inset-0  flex mt-8 items-center justify-center z-50">
+<main class="flex-1 flex items-center justify-center py-10">
     <div class="bg-lightSurface w-full max-w-md  shadow-lg p-6 relative">
     <!-- Formulario -->
-    <form  th:action="@{/veterinario/productos/editar}"
-          method="post"
-          th:object="${producto}"
-           class="space-y-4">
+        <form  th:action="@{/veterinario/productos/guardar}"
+               method="post"
+               th:object="${producto}"
+               enctype="multipart/form-data"
+               class="space-y-4">
+
+
+
+        <input type="hidden" th:field="*{id}" />
 
         <div>
             <label class="block text-sm font-semibold text-softText">Nombre</label>
@@ -84,6 +89,23 @@
             <label>Nueva imagen (opcional)</label>
             <input type="file" name="imagen" accept="image/*"
                    class="w-full border p-2"/>
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold text-softText mb-2">Categorías</label>
+            <div class="border border-borderLight p-3 bg-white space-y-2">
+
+                <div th:each="cat : ${todasCategorias}" class="flex items-center space-x-2">
+
+                    <input type="checkbox"
+                           th:field="*{categorias}"
+                           th:value="${cat.id}"
+                           class="form-checkbox text-primary"/>
+
+                    <label th:text="${cat.nombre}" class="text-sm text-darkText"></label>
+                </div>
+
+            </div>
         </div>
 
         <div class="flex justify-end space-x-3 pt-4">

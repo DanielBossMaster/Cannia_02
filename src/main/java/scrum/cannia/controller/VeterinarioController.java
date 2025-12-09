@@ -9,6 +9,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import scrum.cannia.Dto.ProductoBusquedaDto;
 import scrum.cannia.model.*;
 import scrum.cannia.repository.*;
 
@@ -39,6 +41,10 @@ public class VeterinarioController {
     private FacturaService facturaService;
     @Autowired
     private FacturaRepository facturaRepository;
+    @Autowired
+    private ConsumidorBusquedaService consumidorBusquedaService;
+    @Autowired
+    private CategoriaService categoriaService;
 
     public VeterinarioController(
             VeterinarioRepository veterinarioRepository,
@@ -228,16 +234,36 @@ public class VeterinarioController {
     }
 
     // ============================================
-    //              GESTIÓN DE VENTAS
-    // ============================================
+//              GESTIÓN DE VENTAS
+// ============================================
     @GetMapping("/GestionVentas")
     public String gestionVentas(HttpSession session, Model model) {
+
+        // --- Lógica de Seguridad y Carga de Entidades Principales ---
         UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
         VeterinarioModel veterinario = usuario.getVeterinario();
         VeterinariaModel veterinaria = veterinario.getVeterinaria();
 
+        // 1. Cargar Productos (Necesario para la tabla principal)
         model.addAttribute("productos", productoService.listarTodos());
+
+        // 2. Cargar Veterinaria (Necesario para el encabezado)
         model.addAttribute("veterinaria", veterinaria);
+
+        // --- 🚨 ATRIBUTOS FALTANTES PARA EL MODAL DE CATEGORÍAS 🚨 ---
+
+        // 3. Cargar TODAS las Categorías (Necesario para la tabla dentro del modal)
+        // Se asume que tienes inyectado y funcionando 'categoriaService'.
+        model.addAttribute("categorias", categoriaService.listarTodas());
+
+        // 4. Inicializar un objeto CategoriaModel vacío
+        // (Necesario para el th:object="${categoria}" del formulario POST en el modal)
+        if (!model.containsAttribute("categoria")) {
+            model.addAttribute("categoria", new CategoriaModel());
+        }
+
+        // -----------------------------------------------------------
+
         return "veterinario/GestionVentas";
     }
 
@@ -257,11 +283,18 @@ public class VeterinarioController {
         return "veterinario/FormularioPublicidad";
 
     }
+
     // ============================================
     //                 TIENDA DE PROPIETARIO
     // ============================================
     @GetMapping("/Tienda")
-    public String tienda(HttpSession session, Model model) {
+    public String tienda(
+            HttpSession session,
+            Model model,
+            // 1. Aceptar parámetros de URL: q (query) e idCategoria
+            @RequestParam(value = "q", required = false) String q,
+            @RequestParam(value = "idCategoria", required = false) Long idCategoria
+    ) {
 
         UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
 
@@ -270,28 +303,51 @@ public class VeterinarioController {
         }
 
         VeterinariaModel veterinaria = null;
-
-        // SI EL USUARIO ES PROPIETARIO
+        // ... (Tu lógica de obtención de usuario/veterinaria se mantiene igual) ...
         if (usuario.getPropietario() != null) {
             veterinaria = usuario.getPropietario().getVeterinaria();
-
-            // ✅ NUEVO: obtener dirección de la CASA del propietario
-            model.addAttribute("direccion",
-                    usuario.getPropietario().getDireccionPro());
-        }
-
-        // SI EL USUARIO ES VETERINARIO
-        if (usuario.getVeterinario() != null) {
-            veterinaria = usuario.getVeterinario().getVeterinaria();
+            model.addAttribute("direccion", usuario.getPropietario().getDireccionPro());
         }
 
         if (veterinaria == null) {
             System.out.println("❌ El usuario NO pertenece a ninguna veterinaria");
             return "redirect:/";
         }
-
         model.addAttribute("veterinaria", veterinaria);
-        model.addAttribute("productos", productoService.listarTodos());
+
+        // ------------------------------------------------------------------
+        // LÓGICA DE CARGA DEL CATÁLOGO (COMPLETO O FILTRADO)
+        // ------------------------------------------------------------------
+
+        try {
+            // Determinar si hay alguna búsqueda activa
+            boolean esBusqueda = (q != null && !q.trim().isEmpty()) || (idCategoria != null);
+
+            // Limpiar 'q' para el WS: si está vacío o solo con espacios, pásalo como null al WS
+            String queryParaWS = (q == null || q.trim().isEmpty()) ? null : q.trim();
+
+            // 2. Llamar al Web Service usando los parámetros (q, idCategoria)
+            List<ProductoBusquedaDto> resultados =
+                    consumidorBusquedaService.obtenerProductosFiltrados(queryParaWS, idCategoria);
+
+            // 3. Pasar todos los datos necesarios a la vista:
+
+            // Lista de productos (ya sea filtrada o completa)
+            model.addAttribute("productos", resultados);
+
+            // Lista de categorías para el dropdown de filtros
+            model.addAttribute("categorias", categoriaService.listarTodas());
+
+            // Contexto de la búsqueda (para mantener el estado y la lógica condicional en Thymeleaf)
+            model.addAttribute("consulta", q); // Valor original para mostrar en la caja de texto
+            model.addAttribute("categoriaSeleccionada", idCategoria); // ID seleccionado
+            model.addAttribute("esBusqueda", esBusqueda); // Bandera para la vista
+
+        } catch (Exception e) {
+            System.err.println("Error al cargar o buscar productos: " + e.getMessage());
+            model.addAttribute("errorBusqueda", "Error al procesar la solicitud de productos.");
+            model.addAttribute("productos", List.of());
+        }
 
         return "veterinario/Tienda";
     }
@@ -400,11 +456,15 @@ public class VeterinarioController {
             return "redirect:/veterinario/productos";
         }
 
+        List<CategoriaModel> todasCategorias = categoriaService.listarTodas();
+
         model.addAttribute("producto", producto);
+        model.addAttribute("todasCategorias", todasCategorias);
+
         return "veterinario/EditarProducto";
     }
 
-    @PostMapping("/veterinario/productos/editar")
+    @PostMapping("/productos/guardar")
     public String actualizarProducto(
             @ModelAttribute ProductoModel producto,
             @RequestParam(required = false) MultipartFile imagen,
@@ -416,9 +476,58 @@ public class VeterinarioController {
             return "redirect:/login";
         }
 
-        productoService.actualizar(producto, imagen);
+        productoService.actualizarC(producto, imagen);
         return "redirect:/veterinario/GestionVentas";
     }
 
 
+
+    // 1. Méto de Carga Inicial (Ya lo tienes, asegura que 'categoria' esté siempre inicializado)
+    @GetMapping("/admin/categorias")
+    public String administrarCategorias(Model model) {
+        // ... (Tu lógica de seguridad y carga de veterinaria si aplica) ...
+
+        model.addAttribute("categorias", categoriaService.listarTodas());
+        // Inicializa el objeto para que el formulario POST no falle al crear uno nuevo
+        if (!model.containsAttribute("categoria")) {
+            model.addAttribute("categoria", new CategoriaModel());
+        }
+
+        // Si vienes de un error de validación, Thymeleaf ya habrá puesto el objeto 'categoria'
+        return "veterinario/GestionVentas"; // Retorna tu vista principal de gestión
+    }
+
+    // 2. Métod POST para Guardar/Actualizar (Se mantiene igual)
+    @PostMapping("/admin/guardarCategoria")
+    public String guardarCategoria(@ModelAttribute CategoriaModel categoria, RedirectAttributes redirectAttributes) {
+        try {
+            categoriaService.guardar(categoria);
+            // Puedes añadir un mensaje de éxito
+        } catch (Exception e) {
+            // Manejo de errores si aplica
+            redirectAttributes.addFlashAttribute("categoria", categoria);
+            // ... (añadir errores) ...
+            return "redirect:/veterinario/GestionVentas";
+        }
+        return "redirect:/veterinario/GestionVentas";
+    }
+
+    // 3. NUEVO: Endpoint para cargar datos de la categoría vía AJAX (Recomendado: devuelve JSON)
+// Nota: Usa @ResponseBody o @RestController para devolver JSON
+    @GetMapping("/admin/categoria/{id}")
+    @ResponseBody
+    public CategoriaModel cargarDatosCategoria(@PathVariable Long id) {
+        // Si el ID es 0 o null, podrías devolver un objeto vacío para "Crear Nuevo"
+        if (id == 0) {
+            return new CategoriaModel();
+        }
+        return categoriaService.obtenerPorId(id);
+    }
+
+    // 4. Eliminar (Se mantiene igual)
+    @GetMapping("/admin/eliminarCategoria/{id}")
+    public String eliminarCategoria(@PathVariable Long id) {
+        categoriaService.eliminar(id);
+        return "redirect:/veterinario/GestionVentas";
+    }
 }
