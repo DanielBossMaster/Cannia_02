@@ -77,24 +77,32 @@ public class ProductoService {
         productoRepository.save(original);
     }
 
-    public void actualizarConImagen(ProductoModel productoEditado, MultipartFile imagen)
-            throws IOException {
+    public void actualizarC(ProductoModel producto, MultipartFile archivo) {
 
-        ProductoModel productoDB = productoRepository
-                .findById(productoEditado.getId())
-                .orElseThrow();
+        ProductoModel original = productoRepository.findById(producto.getId()).orElse(null);
+        if (original == null) return;
 
-        // Campos normales
-        productoDB.setNombre(productoEditado.getNombre());
-        productoDB.setDescripcion(productoEditado.getDescripcion());
-        productoDB.setValor(productoEditado.getValor());
+        original.setNombre(producto.getNombre());
+        original.setDescripcion(producto.getDescripcion());
 
-        // ✅ SOLO si se subió imagen nueva
-        if (imagen != null && !imagen.isEmpty()) {
-            productoDB.setFoto(imagen.getBytes());
+        original.setValor(producto.getValor());
+
+        original.setEstado(producto.isEstado());
+
+        if (producto.getCategorias() != null) {
+            original.setCategorias(producto.getCategorias());
         }
 
-        productoRepository.save(productoDB);
+        if (archivo != null && !archivo.isEmpty()) {
+            try {
+                original.setFoto(archivo.getBytes());
+            } catch (IOException e) {
+                throw new RuntimeException("Error procesando la imagen", e);
+            }
+        }
+
+        // 5. Guardar los cambios (JPA gestiona la tabla @ManyToMany)
+        productoRepository.save(original);
     }
 
 
