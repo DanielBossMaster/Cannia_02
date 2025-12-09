@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import scrum.cannia.dto.RegistroDTO;
+import scrum.cannia.Dto.RegistroDTO;
 import scrum.cannia.model.UsuarioModel;
 import scrum.cannia.model.PropietarioModel;
 import scrum.cannia.model.VeterinarioModel;
