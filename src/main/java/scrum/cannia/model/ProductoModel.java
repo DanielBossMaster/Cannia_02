@@ -24,16 +24,16 @@ public class ProductoModel {
     @Column(columnDefinition = "LONGBLOB")
     private byte[] foto;
 
-    @Column(length = 20, nullable = false )
+    @Column(length = 20, nullable = false)
     private String nombre;
 
-    @Column(length = 300, nullable = false )
+    @Column(length = 300, nullable = false)
     private String descripcion;
 
-    @Column(length = 20, nullable = false )
+    @Column(length = 20, nullable = false)
     private Integer cantidad;
 
-    @Column(length = 20, nullable = false )
+    @Column(length = 20, nullable = false)
     private Integer valor;
 
     @Enumerated(EnumType.STRING)
@@ -41,7 +41,7 @@ public class ProductoModel {
     private UnidadMedida unidadMedida;
 
 
-    @Column(length = 20, nullable = false )
+    @Column(length = 20, nullable = false)
     private boolean estado;
 
 
@@ -67,4 +67,21 @@ public class ProductoModel {
     // Si InventarioModel tiene un campo llamado 'producto':
     @OneToMany(mappedBy = "producto")
     private List<InventarioModel> inventarios;
+
+    // ===============================================
+    // CAMBIO REQUERIDO: RELACIÓN CON CATEGORIAS
+    // ===============================================
+
+    @ManyToMany
+    @JoinTable(
+            name = "producto_categoria", // Nombre de la tabla intermedia que usamos en el script SQL
+            joinColumns = @JoinColumn(name = "id_producto"), // Columna FK de Producto en la tabla intermedia
+            inverseJoinColumns = @JoinColumn(name = "id_categoria") // Columna FK de Categoria en la tabla intermedia
+    )
+    private List<CategoriaModel> categorias;
+
+    // ===============================================
+
+    // ... campos y métodos existentes (inventarios, getFotoBase64, etc.)
+
 }
