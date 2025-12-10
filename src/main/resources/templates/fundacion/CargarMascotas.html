@@ -44,7 +44,7 @@
         <h1 class="text-lg font-bold">Cannia</h1>
     </div>
 
-    <a th:href="@{/propietario/index}"
+    <a th:href="@{/fundacion/dashboard}"
        class="bg-primary hover:bg-secondary px-4 py-2 rounded-lg shadow text-white transition">
         ⬅ Volver al inicio
     </a>
@@ -58,7 +58,7 @@
     </h2>
 
     <!-- Caja moderna para drag & drop -->
-    <form th:action="@{/propietario/upload}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/fundacion/upload}" method="post" enctype="multipart/form-data">
         <label for="dropzone-file"
                class="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed
                       border-secondary bg-lightBg rounded-xl cursor-pointer hover:bg-gray-200 transition">

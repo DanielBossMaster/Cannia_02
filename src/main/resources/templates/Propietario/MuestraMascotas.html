@@ -2,30 +2,41 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Mascotas</title>
+    <title>Mascotas en Adopción</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-gray-100">
+<header class="bg-secondary text-white flex justify-between items-center px-6 py-3 shadow-md">
+    <div class="flex items-center space-x-3">
+        <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
+        <h1 class="text-lg font-bold">Cannia</h1>
+    </div>
+
+    <a th:href="@{/propietario/index}"
+       class="bg-primary hover:bg-secondary px-4 py-2 rounded-lg shadow text-white transition">
+        ⬅ Volver al inicio
+    </a>
+</header>
 
 <!-- Encabezado -->
 <div class="text-center py-10">
-    <h1 class="text-4xl font-bold text-green-600">🐾 Tus Mascotas</h1>
-    <p class="text-gray-600 mt-2">Estas mascotas fueron cargadas desde Excel</p>
+    <h1 class="text-4xl font-bold text-green-600">🐾 Mascotas en Adopción</h1>
+    <p class="text-gray-600 mt-2">Mascotas disponibles subidas por fundaciones</p>
 </div>
 
 <div class="container mx-auto px-6 pb-10">
 
     <!-- Si no hay mascotas -->
-    <div th:if="${#lists.isEmpty(pets)}" class="text-center text-gray-500 text-xl">
-        No hay mascotas registradas.
+    <div th:if="${#lists.isEmpty(mascotas)}" class="text-center text-gray-500 text-xl">
+        No hay mascotas disponibles para adopción.
     </div>
 
     <!-- Grid de cards -->
-    <div th:if="${!#lists.isEmpty(pets)}"
+    <div th:if="${!#lists.isEmpty(mascotas)}"
          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-        <div th:each="pet : ${pets}"
+        <div th:each="mascota : ${mascotas}"
              class="bg-white p-6 rounded-2xl shadow hover:shadow-xl transition border border-green-200">
 
             <div class="flex justify-center mb-4">
@@ -33,21 +44,26 @@
             </div>
 
             <h2 class="text-2xl font-semibold text-gray-800 text-center"
-                th:text="${pet.nombrePet}"></h2>
+                th:text="${mascota.nomMascota}"></h2>
 
             <p class="text-gray-600 text-center mt-1">
-                <span class="font-semibold">Raza:</span>
-                <span th:text="${pet.razaPet}"></span>
+                <span class="font-semibold">Especie:</span>
+                <span th:text="${mascota.especie}"></span>
             </p>
 
             <p class="text-gray-600 text-center">
-                <span class="font-semibold">Edad:</span>
-                <span th:text="${pet.edadPet}"></span> años
+                <span class="font-semibold">Raza:</span>
+                <span th:text="${mascota.raza}"></span>
             </p>
 
             <p class="text-gray-600 text-center">
                 <span class="font-semibold">Color:</span>
-                <span th:text="${pet.colorPet}"></span>
+                <span th:text="${mascota.color}"></span>
+            </p>
+
+            <p class="text-gray-600 text-center">
+                <span class="font-semibold">Fundación:</span>
+                <span th:text="${mascota.fundacion.nombre}"></span>
             </p>
 
             <div class="mt-5 text-center">
@@ -55,13 +71,13 @@
                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full shadow-md transition">
                     Ver más
                 </a>
-                <form th:action="@{/foundation/adopt/{id}(id=${pet.id})}" method="post">
-                    <button class="bg-blue-600 hover:bg-green-700 text-white px-6 py-2 rounded-full shadow-md transition">
+
+                <form th:action="@{/propietario/solicitar-adopcion/{id}(id=${mascota.id})}" method="post">
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full shadow-md transition mt-2">
                         Adoptar Mascota
                     </button>
                 </form>
             </div>
-
 
         </div>
     </div>
@@ -69,3 +85,4 @@
 
 </body>
 </html>
+

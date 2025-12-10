@@ -2,10 +2,14 @@ package scrum.cannia.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import scrum.cannia.dto.MascotaCargaDTO;
+import scrum.cannia.model.Genero;
 import scrum.cannia.model.MascotaModel;
+import scrum.cannia.model.UsuarioModel;
 import scrum.cannia.repository.MascotaRepository;
 import scrum.cannia.model.FundacionModel;
 import scrum.cannia.repository.FundacionRepository;
+import scrum.cannia.repository.UsuarioRepository;
 
 //import org.springframework.web.multipart.MultipartFile;
 
@@ -15,13 +19,43 @@ import java.util.Optional;
 @Service
 public class MascotaService {
 
-    @Autowired
-    private MascotaRepository mascotaRepository;
+    private final MascotaRepository mascotaRepository;
+    private final FundacionRepository fundacionRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @Autowired
-    private FundacionRepository fundacionRepository;
+    public MascotaService(MascotaRepository mascotaRepository,
+                          FundacionRepository fundacionRepository,
+                          UsuarioRepository usuarioRepository) {
+        this.mascotaRepository = mascotaRepository;
+        this.fundacionRepository = fundacionRepository;
+        this.usuarioRepository = usuarioRepository;
+    }
 
-       // 🔹 Listar todas las mascotas
+    public void guardarMascotasDesdeFundacion(List<MascotaCargaDTO> lista, String username) {
+
+        UsuarioModel usuario = usuarioRepository.findByUsuario(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
+
+        FundacionModel fundacion = fundacionRepository.findByUsuario(usuario)
+                .orElseThrow(() -> new RuntimeException("Fundación no encontrada para el usuario: " + usuario));
+
+
+        for (MascotaCargaDTO dto : lista) {
+
+            MascotaModel mascota = MascotaModel.crearDesdeFundacion(dto, fundacion);
+
+            mascotaRepository.save(mascota);
+        }
+    }
+
+    public List<MascotaModel> listarMascotasDisponibles() {
+        return mascotaRepository
+                .findByPropietarioIsNullAndFundacionIsNotNullAndEstadoTrue();
+    }
+//---------------------------------------------------------------------------------------
+
+    // 🔹 Listar todas las mascotas
     public List<MascotaModel> listarTodas() {
         return mascotaRepository.findAll();
     }

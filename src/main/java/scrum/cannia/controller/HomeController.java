@@ -54,7 +54,7 @@ public class HomeController {
                 session.setAttribute("fundacionId", u.getFundacion().getId());
                 session.setAttribute("fundacionNombre", u.getFundacion().getNombre());
 
-                return "redirect:/fundaciones/dashboard";
+                return "redirect:/fundacion/dashboard";
             case "veterinario":
                 return "redirect:/veterinario";
             case "propietario":

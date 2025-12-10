@@ -40,9 +40,6 @@ public class PropietarioController {
     @Autowired
     private ProductoService productoService;
     @Autowired
-    private PetService petService;
-    @Autowired
-    private PetRepository petRepository;
 
     public PropietarioController(PropietarioRepository propietarioRepository,
                                  MascotaRepository mascotaRepository,
@@ -61,36 +58,14 @@ public class PropietarioController {
         return "Propietario/index";
     }
 
-    @GetMapping("/cargar-mascotas")
-    public String cargarExcel() {
-        return "Propietario/CargarMascotas";
-    }
-    @PostMapping("/upload")
-    public String procesarExcel(@RequestParam("archivo") MultipartFile file, Model model) {
+    @GetMapping("/mascotas-adopcion")
+    public String verMascotasParaAdoptar(Model model) {
 
-        try {
-            String filename = file.getOriginalFilename();
+        List<MascotaModel> mascotas = mascotaService.listarMascotasDisponibles();
 
-            DataLoaderStrategy strategy = DataLoaderFactory.getStrategy(filename);
+        model.addAttribute("mascotas", mascotas);
 
-            List<PetModel> pets = strategy.loadData(file);
-
-            petService.guardarMascotas(pets);
-
-            model.addAttribute("mensaje", "Archivo '" + filename + "' cargado correctamente. Elementos procesados: " + pets.size());
-
-        } catch (Exception e) {
-            model.addAttribute("message", "Error al cargar archivo: " + e.getMessage());
-        }
-
-        return "Propietario/CargarMascotas";
-    }
-
-
-    @GetMapping("/muestras")
-    public String mostrarMascotas(Model model) {
-        model.addAttribute("pets", petRepository.findAll());
-        return "Propietario/MuestraMascotas";
+        return "propietario/MuestraMascotas";
     }
 
     @GetMapping("/listar")
