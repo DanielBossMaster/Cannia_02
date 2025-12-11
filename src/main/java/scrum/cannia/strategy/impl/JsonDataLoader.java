@@ -3,7 +3,7 @@ package scrum.cannia.strategy.impl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.multipart.MultipartFile;
-import scrum.cannia.dto.MascotaCargaDTO;
+import scrum.cannia.Dto.MascotaCargaDTO;
 import scrum.cannia.strategy.DataLoaderStrategy;
 
 import java.util.List;

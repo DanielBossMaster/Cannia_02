@@ -3,7 +3,6 @@ package scrum.cannia.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -41,10 +40,11 @@ public class PropietarioModel {
     private boolean estado = true;
 
     // Relación con Mascota
-    @OneToMany(mappedBy = "propietario", fetch = FetchType.EAGER) // Cambiar a EAGER
+    @OneToMany(mappedBy = "propietario", fetch = FetchType.LAZY) // Cambiar a EAGER
     private List<MascotaModel> mascotas;
 
-    @OneToOne(mappedBy = "propietario")
+    @OneToOne
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
     private UsuarioModel usuario;
 
     @ManyToOne

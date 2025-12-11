@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import scrum.cannia.model.MascotaModel;
 import scrum.cannia.model.PropietarioModel;
-import scrum.cannia.model.FundacionModel;
+import scrum.cannia.model.TipoEstadoMascota;
 
 import java.util.List;
 
@@ -14,13 +14,11 @@ public interface MascotaRepository extends JpaRepository<MascotaModel, Long> {
 
     List<MascotaModel> findByPropietario(PropietarioModel propietario);
 
-    List<MascotaModel> findByPropietarioIsNullAndFundacionIsNotNullAndEstadoTrue();
-    // FundacioN
-    List<MascotaModel> findByFundacionId(Long idFundacion);
+    List<MascotaModel> findByFundacion_Id(Long fundacionId);
 
-    List<MascotaModel> findByFundacion(FundacionModel fundacion);
+    List<MascotaModel> findByTipoEstado(TipoEstadoMascota tipo);
 
     // adopcion
-    List<MascotaModel> findByFundacionIsNotNullAndEstadoTrue(); // mascotas en  adopción (activas)
-    List<MascotaModel> findByFundacionIsNotNullAndEstadoTrueAndEspecie(String especie);// filtro busqueda por especie
+//    List<MascotaModel> findByFundacionIsNotNullAndEstadoTrue(); // mascotas en  adopción (activas)
+//    List<MascotaModel> findByFundacionIsNotNullAndEstadoTrueAndEspecie(String especie);// filtro busqueda por especie
 }
