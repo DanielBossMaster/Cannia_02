@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import scrum.cannia.model.PropietarioModel;
 import scrum.cannia.model.MascotaModel;
 import scrum.cannia.model.Genero;
+import scrum.cannia.model.TipoEstadoMascota;
 import scrum.cannia.repository.PropietarioRepository;
 import scrum.cannia.repository.MascotaRepository;
 
@@ -72,8 +73,14 @@ public class DataLoader implements CommandLineRunner {
                 m1.setFechaVacunacion(sdf.parse("2024-08-15"));
                 m1.setMedicamento("Antiparasitario");
                 m1.setColor("Marrón");
-                m1.setGenero(Genero.Macho);
+                m1.setGenero(Genero.MACHO);
                 m1.setPropietario(propietario);
+
+                // ✅ NUEVOS CAMPOS OBLIGATORIOS
+                m1.setTipoEstado(TipoEstadoMascota.PROPIA);  // evita el error NOT NULL
+                m1.setFoto("");                              // evita null
+                m1.setEdadFundacion("0");                    // valor por defecto
+                m1.setFundacion(null);                       // porque es del propietario
 // fundacion, edadFundacion y foto pueden quedar como null
 
                 MascotaModel m2 = new MascotaModel();
@@ -84,8 +91,13 @@ public class DataLoader implements CommandLineRunner {
                 m2.setFechaVacunacion(sdf.parse("2024-05-20"));
                 m2.setMedicamento("Vacuna triple felina");
                 m2.setColor("Gris");
-                m2.setGenero(Genero.Hembra);
+                m2.setGenero(Genero.HEMBRA);
                 m2.setPropietario(propietario);
+
+                m2.setTipoEstado(TipoEstadoMascota.PROPIA);  // evita el error NOT NULL
+                m2.setFoto("");                              // evita null
+                m2.setEdadFundacion("0");                    // valor por defecto
+                m2.setFundacion(null);                       // porque es del propietario
 
                 mascotas.add(m1);
 
