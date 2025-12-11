@@ -62,249 +62,206 @@
 <!-- Contenedor principal -->
 <div class="text-center mx-auto p-8">
     <!-- Encabezado -->
-    <p class="text-gray-600 mb-8 mx-36 ">
-        Esta es la experiencia de compra final para tus usuarios. Debes revisar detalladamente que la información del producto
-        <br>(incluyendo especificaciones, valor monetario y detalles clave) se alinee perfectamente con lo planificado para garantizar una transacción fluida y sin confusiones para el comprador.
-    </p>
-    <div class=" flex space-between gap-4 max-w-xl mx-auto mb-6">
 
-        <input type="text" id="searchInput" placeholder="Buscar productos..."  class="w-full p-3 shadow ">
-        <button class="text-secondary" onclick="limpiarBusqueda()" >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                 class="lucide lucide-delete-icon lucide-delete">
-                <path d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"/>
-                <path d="m12 9 6 6"/><path d="m18 9-6 6"/>
-            </svg>
-        </button>
 
-    </div>
-    <!-- Grid de productos -->
-    <div id="productosContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-        <div th:each="p : ${productos}"
-             class=" producto-card bg-white shadow-lg hover:shadow-2xl transition mx-6 p-6 flex flex-col">
-            <!-- Imagen -->
-            <img th:src="@{/veterinario/producto/foto/{id}(id=${p.id})}"
-                 class=" imagen w-full h-48 object-cover rounded-lg mb-4"
-                 alt="Imagen del producto">
-            <h2 class="nombre-producto text-xl font-semibold text-gray-900" th:text="${p.nombre}"></h2>
-            <p class=" descripcion text-gray-600 text-sm mt-2" th:text="${p.descripcion}"></p>
-            <p class="precio text-lg font-bold text-green-600 mt-4"
-               th:data-precio="${p.valor}">
-                $<span th:text="${p.valor}"></span>
+        <div th:unless="${esBusqueda}">
+            <p class="text-gray-600 mb-8">
+                Esta es la experiencia de compra final para tus usuarios. Debes revisar detalladamente que la información del producto
+                <br>(incluyendo especificaciones, valor monetario y detalles clave) se alinee perfectamente con lo planificado para garantizar una transacción fluida y sin confusiones para el comprador.
             </p>
-            <button type="button"
-                    th:onclick="'agregarAlCarrito(' + ${p.id} + ');mostrarExito()'"
-                    class="bg-primary text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
-                Agregar al carrito
-            </button>
+        </div>
+
+        <div th:if="${esBusqueda}">
+            <p class="text-gray-600 mb-8">
+                Mostrando resultados para: "<b th:text="${consulta}"></b>"
+                <span th:if="${categoriaSeleccionada != null}">en la categoría seleccionada.</span>
+                <a th:href="@{/veterinario/Tienda}" class="bg-primary text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">Ver Catálogo Completo</a>
+            </p>
+        </div>
+
+        <div class=" p-4 max-w-4xl mx-auto mb-6">
+            <div class="sidebar-filtros">
+                <form th:action="@{/veterinario/Tienda}" method="GET" class="flex flex-row gap-4 w-full items-end">
+
+                    <div class="form-group mb-0 flex-grow">
+                        <label for="searchInput" class="sr-only">Buscar por nombre:</label>
+                        <input type="text" name="q" id="searchInput"
+                               th:value="${consulta}"
+                               class="w-full p-2 border border-gray-300  focus:ring-primary focus:border-primary"
+                               placeholder="Buscar por nombre...">
+                    </div>
+
+                    <div class="form-group mb-0 w-1/3 min-w-0">
+                        <label for="categoriaInput" class="sr-only">Categoría:</label>
+                        <select id="categoriaInput" name="idCategoria"
+                                class="w-full p-2 border border-gray-300  focus:ring-primary focus:border-primary">
+                            <option value=""> Todas las Categorías </option>
+                            <option th:each="cat : ${categorias}"
+                                    th:value="${cat.id}"
+                                    th:text="${cat.nombre}"
+                                    th:selected="${cat.id == categoriaSeleccionada}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <button type="submit"
+                            class="p-2 h-10 bg-primary text-white  hover:bg-secondary transition duration-150 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(productos)}" class="col-span-full text-center text-gray-500 mt-8">
+            <h3 class="text-lg font-semibold">No se encontraron productos</h3>
+            <p th:if="${esBusqueda}">Intenta una búsqueda diferente o limpia los filtros.</p>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(productos)}" id="productosContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+            <div th:each="p : ${productos}"
+                 class=" producto-card bg-white shadow-lg hover:shadow-2xl transition mx-6 p-6 flex flex-col">
+
+                <img th:if="${p.fotoBase64 != null and not #strings.isEmpty(p.fotoBase64)}"
+                     th:src="${p.fotoBase64}"
+                     class=" imagen w-full h-48 object-cover mb-4"
+                     alt="Imagen del producto">
+
+                <img th:if="${p.fotoBase64 == null or #strings.isEmpty(p.fotoBase64)}"
+                     src="/img/placeholder.png"
+                     class=" imagen w-full h-48 object-cover mb-4"
+                     alt="Producto sin imagen">
+
+                <h2 class="nombre-producto text-xl font-semibold text-gray-900" th:text="${p.nombre}"></h2>
+                <p class=" descripcion text-gray-600 text-sm mt-2" th:text="${p.descripcion}"></p>
+                <p class="precio text-lg font-bold text-green-600 mt-4"
+                   th:data-precio="${p.valor}">
+                    $<span th:text="${p.valor}"></span>
+                </p>
+                <button type="button"
+                        th:onclick="'agregarAlCarrito(' + ${p.id} + ');mostrarExito()'"
+                        class="bg-primary text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
+                    Agregar al carrito
+                </button>
+            </div>
         </div>
     </div>
-</div>
-<!-- MODAL DEL CARRITO -->
-<div id="carritoModal" class="hidden fixed inset-0 bg-black bg-opacity-40  flex justify-center overflow-auto items-center">
-    <div class="bg-white p-6   shadow-xl">
-        <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold mb-4">Carrito de compras</h2>
-            <button class="text-2xl font-bold mb-4 text-red-600" onclick="cerrarCarrito()" >
-                x</button>
-        </div>
-
-        <div class=" flex items-center space-between gap-10 ">
-            <div class="">
-                <h2 class="text-lg font-semibold">Método de entrega</h2>
-
-                <!-- Opción Domicilio -->
-                <label class="flex items-start gap-2 cursor-pointer">
-                    <input type="radio" name="metodoEntrega" value="domicilio" checked
-                           onclick="mostrarDireccion(true)">
-                    <span>Domicilio</span>
-                </label>
-                <div class="p-4 bg-gray-50 border mb-4">
-                    <h3 class="font-semibold">Dirección de domicilio</h3>
-                    <p th:text="${direccion}"></p>
-                </div>
-
-                <!-- Opción recoger en tienda -->
-                <label class="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="metodoEntrega" value="tienda"
-                           onclick="mostrarDireccion(false)">
-                    <span>Recoger en tienda</span>
-                </label>
+    <div id="carritoModal" class="hidden fixed inset-0 bg-black bg-opacity-40  flex justify-center overflow-auto items-center">
+        <div class="bg-white p-6   shadow-xl">
+            <div class="flex items-center justify-between">
+                <h2 class="text-2xl font-bold mb-4">Carrito de compras</h2>
+                <button class="text-2xl font-bold mb-4 text-red-600" onclick="cerrarCarrito()" >
+                    x</button>
             </div>
 
-            <!-- ESTE DIV SE ACTUALIZA POR AJAX -->
-            <div id="carritoItems" th:insert="Veterinario/Fragmentos/CarritoItems :: items"></div>
+            <div class=" flex items-center space-between gap-10 ">
+                <div class="">
+                    <h2 class="text-lg font-semibold">Método de entrega</h2>
+
+                    <label class="flex items-start gap-2 cursor-pointer">
+                        <input type="radio" name="metodoEntrega" value="domicilio" checked
+                               onclick="mostrarDireccion(true)">
+                        <span>Domicilio</span>
+                    </label>
+                    <div class="p-4 bg-gray-50 border mb-4">
+                        <h3 class="font-semibold">Dirección de domicilio</h3>
+                        <p th:text="${direccion}"></p>
+                    </div>
+
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="metodoEntrega" value="tienda"
+                               onclick="mostrarDireccion(false)">
+                        <span>Recoger en tienda</span>
+                    </label>
+                </div>
+
+                <div id="carritoItems" th:insert="Veterinario/Fragmentos/CarritoItems :: items"></div>
+
+            </div>
+            <div class="flex justify-center mt-4">
+
+                <button id="btnPagar"
+                        class="bg-primary  px-4 text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
+                    Ir a pagar
+                </button>
+
+            </div>
         </div>
-        <div class="flex justify-center mt-4">
+    </div>
 
-            <button id="btnPagar"
-                    class="bg-primary  px-4 text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
-                Ir a pagar
-            </button>
+    <script>
+        function abrirCarrito() {
+            document.getElementById("carritoModal").classList.remove("hidden");
+            cargarCarrito();
+        }
 
-        </div>
+        function cerrarCarrito() {
+            document.getElementById("carritoModal").classList.add("hidden");
+        }
 
-
-        <script>
-            function abrirCarrito() {
-                document.getElementById("carritoModal").classList.remove("hidden");
-                cargarCarrito();
-            }
-
-            function cerrarCarrito() {
-                document.getElementById("carritoModal").classList.add("hidden");
-            }
-
-            function agregarAlCarrito(id) {
-                fetch(`/carrito/agregar/${id}`, { method: "POST" })
-                    .then(() => {
-                        cargarCarrito();   // 🔥 Recargar contenido del carrito
-                        // 🔥 Abrir modal
-                    });
-            }
-
-            function cargarCarrito() {
-                fetch("/carrito/items")
-                    .then(r => r.text())
-                    .then(html => {
-                        // Reemplazar el contenido dinamicamente
-                        document.getElementById("carritoItems").innerHTML = html;
-                    });
-            }
-
-            function vaciarCarrito() {
-                fetch("/carrito/vaciar")
-                    .then(() => cargarCarrito());
-            }
-
-
-
-            function recargarCarrito() {
-                fetch("/carrito/items")
-                    .then(response => response.text())
-                    .then(html => {
-                        document.getElementById("carritoItems").innerHTML = html;
-                    });
-            }
-
-            function aumentar(id) {
-                fetch(`/carrito/aumentar/${id}`, {
-                    method: "POST"
-                })
-                    .then(response => response.text())
-                    .then(html => {
-                        document.getElementById("carritoItems").innerHTML = html;
-                    });
-            }
-
-            function disminuir(id) {
-                fetch(`/carrito/disminuir/${id}`, {
-                    method: "POST"
-                })
-                    .then(response => response.text())
-                    .then(html => {
-                        document.getElementById("carritoItems").innerHTML = html;
-                    });
-            }
-
-            function eliminarItem(id) {
-                fetch(`/carrito/eliminar/${id}`)
-                    .then(() => recargarCarrito());
-            }
-
-
-
-            function mostrarExito() {
-                alert("✅ ¡Agregado al carrito exitosamente!");
-            }
-
-
-            //BARRA DE BUSQUEDA
-
-            let todosProductos = [];
-
-            function guardarProductos() {
-                const cards = document.querySelectorAll('#productosContainer .producto-card');
-
-                todosProductos = Array.from(cards).map(card => {
-                    return {
-                        elemento: card,
-                        nombre: card.querySelector('.nombre-producto')?.textContent || '',
-                        descripcion: card.querySelector('.descripcion')?.textContent || '',
-                        precio: card.querySelector('.precio')?.dataset.precio || ''
-
-                    };
+        function agregarAlCarrito(id) {
+            fetch(`/carrito/agregar/${id}`, { method: "POST" })
+                .then(() => {
+                    cargarCarrito();   // 🔥 Recargar contenido del carrito
+                    // 🔥 Abrir modal
                 });
-            }
+        }
 
-            function filtrarProductos(terminoBusqueda) {
-                const termino = terminoBusqueda.toLowerCase().trim();
-
-                if (termino === '') {
-                    todosProductos.forEach(p => p.elemento.style.display = 'block');
-                    return;
-                }
-
-                let hayResultados = false;
-
-                todosProductos.forEach(p => {
-                    const coincide =
-                        p.nombre.toLowerCase().includes(termino) ||
-                        p.descripcion.toLowerCase().includes(termino) ||
-                        p.precio.toLowerCase().includes(termino);
-
-                    if (coincide) {
-                        p.elemento.style.display = 'block';
-                        hayResultados = true;
-                    } else {
-                        p.elemento.style.display = 'none';
-                    }
+        function cargarCarrito() {
+            fetch("/carrito/items")
+                .then(r => r.text())
+                .then(html => {
+                    // Reemplazar el contenido dinamicamente
+                    document.getElementById("carritoItems").innerHTML = html;
                 });
+        }
 
-                mostrarMensajeSinResultados(!hayResultados, termino);
-            }
+        function vaciarCarrito() {
+            fetch("/carrito/vaciar")
+                .then(() => cargarCarrito());
+        }
 
-            function mostrarMensajeSinResultados(mostrar, termino) {
-                let mensaje = document.getElementById('mensajeSinResultados');
 
-                if (!mostrar) {
-                    if (mensaje) mensaje.remove();
-                    return;
-                }
 
-                if (!mensaje) {
-                    mensaje = document.createElement('div');
-                    mensaje.id = 'mensajeSinResultados';
-                    mensaje.className = "col-span-full text-center text-gray-500 mt-8";
-                    mensaje.innerHTML = `
-            <h3 class="text-lg font-semibold">No se encontraron productos</h3>
-            <p>Búsqueda: "<b>${termino}</b>"</p>
-        `;
-                    document.getElementById('productosContainer').appendChild(mensaje);
-                }
-            }
-
-            document.addEventListener('DOMContentLoaded', () => {
-                guardarProductos();
-
-                const input = document.getElementById('searchInput');
-                input.addEventListener('input', e => filtrarProductos(e.target.value));
-                input.addEventListener('keydown', e => {
-                    if (e.key === 'Escape') limpiarBusqueda();
+        function recargarCarrito() {
+            fetch("/carrito/items")
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById("carritoItems").innerHTML = html;
                 });
-            });
+        }
 
-            function limpiarBusqueda() {
-                const input = document.getElementById('searchInput');
-                input.value = '';
-                filtrarProductos('');
-                input.focus();
-            }
+        function aumentar(id) {
+            fetch(`/carrito/aumentar/${id}`, {
+                method: "POST"
+            })
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById("carritoItems").innerHTML = html;
+                });
+        }
+
+        function disminuir(id) {
+            fetch(`/carrito/disminuir/${id}`, {
+                method: "POST"
+            })
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById("carritoItems").innerHTML = html;
+                });
+        }
+
+        function eliminarItem(id) {
+            fetch(`/carrito/eliminar/${id}`)
+                .then(() => recargarCarrito());
+        }
 
 
 
-        </script>
+        function mostrarExito() {
+            alert("✅ ¡Agregado al carrito exitosamente!");
+        }
+
+    </script>
 
 </body>
 </html>

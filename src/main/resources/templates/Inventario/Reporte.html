@@ -171,11 +171,13 @@
                     </div>
 
                     <div class="col-md-4 mb-3">
-                        <label class="form-label">Estado del Producto</label>
-                        <select id="filtroEstado" class="form-select">
-                            <option value="">Todos los productos</option>
-                            <option value="true">Solo productos activos</option>
-                            <option value="false">Solo productos inactivos</option>
+                        <label class="form-label">Tipo de Reporte</label>
+                        <select id="filtroReporte" class="form-select">
+                            <option value="productos">Todos los productos</option>
+                            <option value="activos">Solo productos activos</option>
+                            <option value="inactivos">Solo productos inactivos</option>
+                            <option value="ventas-categoria">Ventas por categoría</option>
+                            <option value="ventas-dia">Ventas del día</option>
                         </select>
                     </div>
 
@@ -338,12 +340,7 @@
                         <button class="btn btn-outline-info me-2" onclick="previsualizarPDF()">
                             <i class="fas fa-eye me-1"></i> Previsualizar PDF
                         </button>
-<!--                        <button class="btn btn-outline-success me-2" onclick="exportarExcel()">-->
-<!--                            <i class="fas fa-file-excel me-1"></i> Exportar Excel-->
-<!--                        </button>-->
-<!--                        <button class="btn btn-outline-secondary" onclick="imprimirReporte()">-->
-<!--                            <i class="fas fa-print me-1"></i> Imprimir-->
-<!--                        </button>-->
+
                     </div>
                 </div>
             </div>
@@ -375,6 +372,8 @@
 
     // Inicializar página
     document.addEventListener('DOMContentLoaded', function() {
+        console.log("Pagina cargada - inicializando reportes");
+
         // Establecer fecha actual
         const fecha = new Date();
         document.getElementById('fechaReporte').textContent =
@@ -387,17 +386,18 @@
 
         // Configurar listeners para los filtros
         document.getElementById('tipoGrafico').addEventListener('change', generarReporte);
-        document.getElementById('filtroEstado').addEventListener('change', generarReporte);
+        document.getElementById('filtroReporte').addEventListener('change', generarReporte);
 
         // Configurar tabs de Bootstrap
         const tabEls = document.querySelectorAll('button[data-bs-toggle="tab"]');
         tabEls.forEach(tab => {
             tab.addEventListener('shown.bs.tab', function (event) {
+                console.log("Tab cambiado:", event.target.id);
                 // Actualizar contenido si es necesario
                 if (event.target.id === 'detalle-tab' && datosReporte) {
-                    llenarTablaProductos(datosReporte.datos);
+                    llenarTablaProductos(datosReporte.datos, document.getElementById('filtroReporte').value);
                 } else if (event.target.id === 'estadisticas-tab' && datosReporte) {
-                    mostrarEstadisticasDetalladas(datosReporte.estadisticas);
+                    mostrarEstadisticasDetalladas(datosReporte.estadisticas, document.getElementById('filtroReporte').value);
                 }
             });
         });
@@ -408,6 +408,7 @@
 
     // Cambiar tipo de visualización
     function cambiarVisualizacion(tipo) {
+        console.log("Cambiar visualizacion a:", tipo);
         visualizacionActual = tipo;
 
         // Actualizar botones activos
@@ -424,44 +425,68 @@
         }
     }
 
+    // Función para actualizar el título según el tipo de reporte
+    function actualizarTituloReporte(tipoReporte) {
+        const tituloMap = {
+            'productos': 'Reporte de Productos',
+            'activos': 'Reporte de Productos Activos',
+            'inactivos': 'Reporte de Productos Inactivos',
+            'ventas-categoria': 'Ventas por Categoría',
+            'ventas-dia': 'Ventas del Día'
+        };
+
+        const titulo = document.querySelector('h1.h3.mb-2');
+        if (titulo) {
+            titulo.innerHTML = '<i class="fas fa-chart-pie me-2"></i>' + (tituloMap[tipoReporte] || 'Reporte');
+        }
+    }
+
     // Función principal para generar reporte
     async function generarReporte() {
+        console.log("=== INICIANDO generarReporte ===");
+
         const tipo = document.getElementById('tipoGrafico').value;
-        const estado = document.getElementById('filtroEstado').value;
+        const tipoReporte = document.getElementById('filtroReporte').value;
+
+        console.log("Parametros - Tipo grafico:", tipo, "Tipo reporte:", tipoReporte);
 
         // Mostrar loading
         document.getElementById('loadingGrafico').style.display = 'block';
         document.getElementById('contenedorGrafico').style.display = 'none';
         document.getElementById('noDataGrafico').style.display = 'none';
 
-        // Construir URL
-        let url = `/inventario/reportes/api/productos?tipo=${tipo}`;
-        if (estado !== '') {
-            url += `&estado=${estado}`;
-        }
+        // Construir URL basada en el tipo de reporte
+        let url = `/inventario/reportes/api/productos?tipo=${tipo}&reporte=${tipoReporte}`;
+        console.log("URL de API:", url);
 
         try {
             const response = await fetch(url);
+            console.log("Respuesta HTTP - Status:", response.status, "OK:", response.ok);
+
             if (!response.ok) {
-                throw new Error(`Error HTTP: ${response.status}`);
+                throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
             }
 
             datosReporte = await response.json();
+            console.log("Datos recibidos del servidor:", datosReporte);
+
+            // Actualizar título según el tipo de reporte
+            actualizarTituloReporte(tipoReporte);
 
             // Actualizar estadísticas rápidas
-            actualizarEstadisticasRapidas(datosReporte.estadisticas);
+            actualizarEstadisticasRapidas(datosReporte.estadisticas, tipoReporte);
 
-            // Renderizar gráfico
-            renderizarGrafico(datosReporte);
+            // Renderizar gráfico según el tipo de reporte
+            renderizarGrafico(datosReporte, tipoReporte);
 
             // Llenar tabla de productos si estamos en la pestaña
             if (document.getElementById('detalle-tab').classList.contains('active')) {
-                llenarTablaProductos(datosReporte.datos);
+                llenarTablaProductos(datosReporte.datos, tipoReporte);
             }
 
             // Mostrar estadísticas detalladas si estamos en esa pestaña
             if (document.getElementById('estadisticas-tab').classList.contains('active')) {
-                mostrarEstadisticasDetalladas(datosReporte.estadisticas);
+                mostrarEstadisticasDetalladas(datosReporte.estadisticas, tipoReporte);
             }
 
             // Ocultar loading
@@ -470,191 +495,334 @@
             // Mostrar gráfico o mensaje de no datos
             if (datosReporte.datos && datosReporte.datos.length > 0) {
                 document.getElementById('contenedorGrafico').style.display = 'block';
+                console.log("Mostrando grafico con", datosReporte.datos.length, "elementos");
             } else {
                 document.getElementById('noDataGrafico').style.display = 'block';
+                console.log("No hay datos para mostrar");
             }
 
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error en generarReporte:', error);
             mostrarNotificacion('Error al generar el reporte: ' + error.message, 'error');
             document.getElementById('loadingGrafico').style.display = 'none';
             document.getElementById('noDataGrafico').style.display = 'block';
         }
+
+        console.log("=== FINALIZANDO generarReporte ===");
     }
 
     // Actualizar estadísticas rápidas
-    function actualizarEstadisticasRapidas(estadisticas) {
-        document.getElementById('statTotal').textContent = (estadisticas.totalActivos || 0) + (estadisticas.totalInactivos || 0);
-        document.getElementById('statActivos').textContent = estadisticas.totalActivos || 0;
-        document.getElementById('statInactivos').textContent = estadisticas.totalInactivos || 0;
-        document.getElementById('statValorTotal').textContent = `$${estadisticas.valorTotalInventario?.toLocaleString() || '0'}`;
+    function actualizarEstadisticasRapidas(estadisticas, tipoReporte) {
+        console.log("Actualizando estadisticas rapidas para:", tipoReporte);
+
+        if (tipoReporte === 'ventas-categoria' || tipoReporte === 'ventas-dia') {
+            // Estadísticas para ventas
+            document.getElementById('statTotal').textContent = estadisticas.totalCategorias || estadisticas.totalHoras || 0;
+            document.getElementById('statActivos').textContent = '$' + (estadisticas.ventaMaxima?.toLocaleString() || '0');
+            document.getElementById('statActivos').parentElement.querySelector('.stat-label').textContent =
+                tipoReporte === 'ventas-categoria' ? 'Venta Máxima' : 'Máximo del Día';
+
+            document.getElementById('statInactivos').textContent = '$' + (estadisticas.ventaMinima?.toLocaleString() || '0');
+            document.getElementById('statInactivos').parentElement.querySelector('.stat-label').textContent =
+                tipoReporte === 'ventas-categoria' ? 'Venta Mínima' : 'Mínimo del Día';
+
+            document.getElementById('statValorTotal').textContent = '$' + (estadisticas.totalVentas?.toLocaleString() || estadisticas.totalDia?.toLocaleString() || '0');
+            document.getElementById('statValorTotal').parentElement.querySelector('.stat-label').textContent = 'Total Ventas';
+        } else {
+            // Estadísticas para productos
+            const total = (estadisticas.totalActivos || 0) + (estadisticas.totalInactivos || 0);
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statActivos').textContent = estadisticas.totalActivos || 0;
+            document.getElementById('statActivos').parentElement.querySelector('.stat-label').textContent = 'Productos Activos';
+
+            document.getElementById('statInactivos').textContent = estadisticas.totalInactivos || 0;
+            document.getElementById('statInactivos').parentElement.querySelector('.stat-label').textContent = 'Productos Inactivos';
+
+            document.getElementById('statValorTotal').textContent = '$' + (estadisticas.valorTotalInventario?.toLocaleString() || '0');
+            document.getElementById('statValorTotal').parentElement.querySelector('.stat-label').textContent = 'Valor Total';
+        }
+    }
+
+    // Función específica para gráficos de ventas
+    function renderizarGraficoVentas(ctx, reporte, tipoReporte) {
+        const datos = reporte.datos;
+        const tipoGrafico = document.getElementById('tipoGrafico').value;
+        const esTorta = tipoGrafico === 'TORTA';
+
+        console.log("Renderizando grafico de ventas:", tipoReporte, "Tipo:", tipoGrafico, "Datos:", datos.length);
+
+        const config = {
+            type: esTorta ? 'pie' : 'bar',
+            data: {
+                labels: datos.map(item => item.categoria || item.hora || item.etiqueta || 'Sin nombre'),
+                datasets: [{
+                    label: tipoReporte === 'ventas-categoria' ? 'Ventas por Categoría' : 'Ventas del Día',
+                    data: datos.map(item => item.total || item.cantidad || item.valor || 0),
+                    backgroundColor: esTorta ? [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
+                        '#9966FF', '#FF9F40', '#8AC926', '#1982C4',
+                        '#6A4C93', '#F15BB5', '#00BBF9', '#00F5D4'
+                    ] : 'rgba(54, 162, 235, 0.7)',
+                    borderColor: esTorta ? '#fff' : 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2,
+                    borderRadius: esTorta ? 0 : 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: esTorta ? 'right' : 'top',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: tipoReporte === 'ventas-categoria' ? 'Ventas por Categoría' : 'Ventas del Día',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        },
+                        padding: 20
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                if (esTorta) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return label + ': $' + value.toLocaleString() + ' (' + percentage + '%)';
+                                }
+                                return label + ': $' + value.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                scales: esTorta ? {} : {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Monto ($)',
+                            font: { weight: 'bold' }
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: tipoReporte === 'ventas-categoria' ? 'Categorías' : 'Horas',
+                            font: { weight: 'bold' }
+                        },
+                        ticks: {
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    }
+                }
+            }
+        };
+
+        chartInstance = new Chart(ctx, config);
+        console.log("Grafico de ventas creado exitosamente");
+    }
+
+    // Renderizar gráfico de torta
+    function renderizarGraficoTorta(ctx, reporte) {
+        const datos = reporte.datos;
+        console.log("Renderizando grafico de torta con", datos.length, "elementos");
+
+        const config = {
+            type: 'pie',
+            data: {
+                labels: datos.map(item => item.etiqueta || item.producto || 'Sin nombre'),
+                datasets: [{
+                    data: datos.map(item => item.valor || item.cantidad || 0),
+                    backgroundColor: [
+                        '#28a745', '#dc3545', '#007bff', '#ffc107',
+                        '#17a2b8', '#6f42c1', '#e83e8c', '#20c997',
+                        '#fd7e14', '#6610f2'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff',
+                    hoverOffset: 15
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Distribución de Productos',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        },
+                        padding: 20
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return label + ': ' + value + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        chartInstance = new Chart(ctx, config);
+    }
+
+    // Renderizar gráfico de barras
+    function renderizarGraficoBarras(ctx, reporte) {
+        const datos = reporte.datos;
+        console.log("Renderizando grafico de barras con", datos.length, "elementos");
+
+        const config = {
+            type: 'bar',
+            data: {
+                labels: datos.map(item => item.producto || item.etiqueta || 'Producto'),
+                datasets: [{
+                    label: 'Cantidad en Stock',
+                    data: datos.map(item => item.cantidad || item.valor || 0),
+                    backgroundColor: datos.map(item => {
+                        if (item.estado === 'ACTIVO' || item.estado === true) {
+                            return '#28a745';
+                        } else {
+                            return '#dc3545';
+                        }
+                    }),
+                    borderWidth: 1,
+                    borderColor: '#fff',
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Cantidad',
+                            font: {
+                                weight: 'bold'
+                            }
+                        },
+                        ticks: {
+                            stepSize: 1
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Productos',
+                            font: {
+                                weight: 'bold'
+                            }
+                        },
+                        ticks: {
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Cantidad de Productos en Stock',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        },
+                        padding: 20
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const item = datos[context.dataIndex];
+                                let tooltip = 'Cantidad: ' + context.raw;
+                                if (item.valor) {
+                                    tooltip += '\nValor: $' + item.valor;
+                                }
+                                if (item.estado) {
+                                    tooltip += '\nEstado: ' + (item.estado === 'ACTIVO' || item.estado === true ? 'Activo' : 'Inactivo');
+                                }
+                                return tooltip;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        chartInstance = new Chart(ctx, config);
     }
 
     // Renderizar gráfico
-    function renderizarGrafico(reporte) {
+    function renderizarGrafico(reporte, tipoReporte) {
         const ctx = document.getElementById('graficoReporte').getContext('2d');
+        console.log("RenderizarGrafico llamado - Tipo reporte:", tipoReporte);
 
         // Destruir gráfico anterior si existe
         if (chartInstance) {
             chartInstance.destroy();
+            console.log("Grafico anterior destruido");
         }
 
         // Verificar si hay datos
         if (!reporte.datos || reporte.datos.length === 0) {
+            console.log("No hay datos para renderizar grafico");
             return;
         }
 
-        if (reporte.tipo === 'TORTA') {
-            // Gráfico de torta
-            const datos = reporte.datos;
-            const config = {
-                type: 'pie',
-                data: {
-                    labels: datos.map(item => item.etiqueta || item.producto || 'Sin nombre'),
-                    datasets: [{
-                        data: datos.map(item => item.valor || item.cantidad || 0),
-                        backgroundColor: [
-                            '#28a745', // Verde para activos
-                            '#dc3545', // Rojo para inactivos
-                            '#007bff', // Azul
-                            '#ffc107', // Amarillo
-                            '#17a2b8', // Cyan
-                            '#6f42c1'  // Púrpura
-                        ],
-                        borderWidth: 2,
-                        borderColor: '#fff',
-                        hoverOffset: 15
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true,
-                                font: {
-                                    size: 14
-                                }
-                            }
-                        },
-                        title: {
-                            display: true,
-                            text: 'Distribución de Productos',
-                            font: {
-                                size: 16,
-                                weight: 'bold'
-                            },
-                            padding: 20
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = Math.round((value / total) * 100);
-                                    return `${label}: ${value} (${percentage}%)`;
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-            chartInstance = new Chart(ctx, config);
-
+        if (tipoReporte === 'ventas-categoria' || tipoReporte === 'ventas-dia') {
+            // Configuración para reportes de ventas
+            console.log("Usando renderizado para ventas");
+            renderizarGraficoVentas(ctx, reporte, tipoReporte);
+        } else if (reporte.tipo === 'TORTA') {
+            // Gráfico de torta para productos
+            console.log("Usando renderizado de torta para productos");
+            renderizarGraficoTorta(ctx, reporte);
         } else {
-            // Gráfico de barras
-            const datos = reporte.datos;
-            const config = {
-                type: 'bar',
-                data: {
-                    labels: datos.map(item => item.producto || item.etiqueta || 'Producto'),
-                    datasets: [{
-                        label: 'Cantidad en Stock',
-                        data: datos.map(item => item.cantidad || item.valor || 0),
-                        backgroundColor: datos.map(item => {
-                            if (item.estado === 'ACTIVO' || item.estado === true) {
-                                return '#28a745';
-                            } else {
-                                return '#dc3545';
-                            }
-                        }),
-                        borderWidth: 1,
-                        borderColor: '#fff',
-                        borderRadius: 5
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Cantidad',
-                                font: {
-                                    weight: 'bold'
-                                }
-                            },
-                            ticks: {
-                                stepSize: 1
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Productos',
-                                font: {
-                                    weight: 'bold'
-                                }
-                            },
-                            ticks: {
-                                maxRotation: 45,
-                                minRotation: 45
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        title: {
-                            display: true,
-                            text: 'Cantidad de Productos en Stock',
-                            font: {
-                                size: 16,
-                                weight: 'bold'
-                            },
-                            padding: 20
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const item = datos[context.dataIndex];
-                                    let tooltip = `Cantidad: ${context.raw}`;
-                                    if (item.valor) {
-                                        tooltip += `\nValor: $${item.valor}`;
-                                    }
-                                    if (item.estado) {
-                                        tooltip += `\nEstado: ${item.estado === 'ACTIVO' || item.estado === true ? 'Activo' : 'Inactivo'}`;
-                                    }
-                                    return tooltip;
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-            chartInstance = new Chart(ctx, config);
+            // Gráfico de barras para productos
+            console.log("Usando renderizado de barras para productos");
+            renderizarGraficoBarras(ctx, reporte);
         }
     }
 
     // Llenar tabla de productos
-    function llenarTablaProductos(datos) {
+    function llenarTablaProductos(datos, tipoReporte) {
         const tbody = document.getElementById('tablaProductosBody');
         const noDataTabla = document.getElementById('noDataTabla');
 
@@ -667,137 +835,267 @@
 
         noDataTabla.style.display = 'none';
 
+        // Actualizar encabezados según el tipo de reporte
+        if (tipoReporte === 'ventas-categoria' || tipoReporte === 'ventas-dia') {
+            document.querySelectorAll('#tablaProductos thead tr th').forEach((th, index) => {
+                if (index === 0) th.textContent = tipoReporte === 'ventas-categoria' ? 'Categoría' : 'Hora';
+                if (index === 1) th.textContent = 'Cantidad Vendida';
+                if (index === 2) th.textContent = 'Valor Unitario';
+                if (index === 3) th.textContent = 'Total Ventas';
+            });
+
+            // Ocultar columnas no necesarias
+            document.querySelectorAll('#tablaProductos thead tr th:nth-child(5), #tablaProductos thead tr th:nth-child(6), #tablaProductos thead tr th:nth-child(7), #tablaProductos thead tr th:nth-child(8)').forEach(th => {
+                th.style.display = 'none';
+            });
+        } else {
+            // Restaurar encabezados originales
+            const headers = ['Producto', 'Cantidad', 'Valor Unitario', 'Valor Total', 'Estado', 'Publicado', 'Unidad', 'Categoría'];
+            document.querySelectorAll('#tablaProductos thead tr th').forEach((th, index) => {
+                th.textContent = headers[index];
+                th.style.display = '';
+            });
+        }
+
         datos.forEach(item => {
             const row = document.createElement('tr');
 
-            // Calcular valor total
-            const cantidad = item.cantidad || 0;
-            const valorUnitario = item.valor || 0;
-            const valorTotal = cantidad * valorUnitario;
+            if (tipoReporte === 'ventas-categoria' || tipoReporte === 'ventas-dia') {
+                // Para reportes de ventas
+                const cantidad = item.cantidad || item.cantidadVendida || 0;
+                const valorUnitario = item.precioPromedio || item.valorUnitario || 0;
+                const valorTotal = item.total || item.totalVentas || (cantidad * valorUnitario);
 
-            // Determinar clase de estado
-            const estadoClass = (item.estado === 'ACTIVO' || item.estado === true) ?
-                'estado-activo' : 'estado-inactivo';
-            const estadoText = (item.estado === 'ACTIVO' || item.estado === true) ?
-                'Activo' : 'Inactivo';
+                row.innerHTML = `
+                    <td><strong>${item.categoria || item.hora || item.etiqueta || 'Sin nombre'}</strong></td>
+                    <td>${cantidad}</td>
+                    <td>$${valorUnitario.toLocaleString()}</td>
+                    <td><strong>$${valorTotal.toLocaleString()}</strong></td>
+                    <td style="display: none;"></td>
+                    <td style="display: none;"></td>
+                    <td style="display: none;"></td>
+                    <td style="display: none;"></td>
+                `;
+            } else {
+                // Para reportes de productos
+                const cantidad = item.cantidad || 0;
+                const valorUnitario = item.valor || 0;
+                const valorTotal = cantidad * valorUnitario;
 
-            // Determinar publicación
-            const publicadoText = (item.publicado === true || item.publicado === 'SI') ?
-                'Sí' : 'No';
+                // Determinar clase de estado
+                const estadoClass = (item.estado === 'ACTIVO' || item.estado === true) ?
+                    'estado-activo' : 'estado-inactivo';
+                const estadoText = (item.estado === 'ACTIVO' || item.estado === true) ?
+                    'Activo' : 'Inactivo';
 
-            row.innerHTML = `
-                <td><strong>${item.producto || item.etiqueta || 'Sin nombre'}</strong></td>
-                <td>${cantidad}</td>
-                <td>$${valorUnitario.toLocaleString()}</td>
-                <td><strong>$${valorTotal.toLocaleString()}</strong></td>
-                <td><span class="${estadoClass}">${estadoText}</span></td>
-                <td>${publicadoText}</td>
-                <td>${item.unidadMedida || 'N/A'}</td>
-            `;
+                // Determinar publicación
+                const publicadoText = (item.publicado === true || item.publicado === 'SI') ?
+                    'Sí' : 'No';
+
+                row.innerHTML = `
+                    <td><strong>${item.producto || item.etiqueta || 'Sin nombre'}</strong></td>
+                    <td>${cantidad}</td>
+                    <td>$${valorUnitario.toLocaleString()}</td>
+                    <td><strong>$${valorTotal.toLocaleString()}</strong></td>
+                    <td><span class="${estadoClass}">${estadoText}</span></td>
+                    <td>${publicadoText}</td>
+                    <td>${item.unidadMedida || 'N/A'}</td>
+                    <td>${item.categoria || 'N/A'}</td>
+                `;
+            }
 
             tbody.appendChild(row);
         });
+
+        console.log("Tabla llenada con", datos.length, "registros");
     }
 
     // Mostrar estadísticas detalladas
-    function mostrarEstadisticasDetalladas(estadisticas) {
+    function mostrarEstadisticasDetalladas(estadisticas, tipoReporte) {
         const container = document.getElementById('estadisticasDetalladas');
+        console.log("Mostrando estadisticas detalladas para:", tipoReporte);
 
-        const total = (estadisticas.totalActivos || 0) + (estadisticas.totalInactivos || 0);
-        const porcentajeActivos = total > 0 ? Math.round((estadisticas.totalActivos / total) * 100) : 0;
-        const porcentajeInactivos = 100 - porcentajeActivos;
-
-        container.innerHTML = `
-            <div class="col-md-6">
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <i class="fas fa-chart-pie me-2"></i>Distribución por Estado
-                    </div>
-                    <div class="card-body">
-                        <div class="progress mb-3" style="height: 30px;">
-                            <div class="progress-bar bg-success" role="progressbar"
-                                 style="width: ${porcentajeActivos}%"
-                                 aria-valuenow="${porcentajeActivos}"
-                                 aria-valuemin="0"
-                                 aria-valuemax="100">
-                                Activos: ${porcentajeActivos}%
-                            </div>
-                            <div class="progress-bar bg-danger" role="progressbar"
-                                 style="width: ${porcentajeInactivos}%"
-                                 aria-valuenow="${porcentajeInactivos}"
-                                 aria-valuemin="0"
-                                 aria-valuemax="100">
-                                Inactivos: ${porcentajeInactivos}%
-                            </div>
+        if (tipoReporte === 'ventas-categoria' || tipoReporte === 'ventas-dia') {
+            // Estadísticas para ventas
+            container.innerHTML = `
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <i class="fas fa-chart-bar me-2"></i>Resumen de Ventas
                         </div>
-                        <div class="row text-center">
-                            <div class="col-6">
-                                <h5>${estadisticas.totalActivos || 0}</h5>
-                                <small class="text-success">Productos Activos</small>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Total de Ventas</label>
+                                <h3 class="text-primary">$${(estadisticas.totalVentas || estadisticas.totalDia || 0).toLocaleString()}</h3>
                             </div>
-                            <div class="col-6">
-                                <h5>${estadisticas.totalInactivos || 0}</h5>
-                                <small class="text-danger">Productos Inactivos</small>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Venta Máxima</label>
+                                    <h5 class="text-success">$${(estadisticas.ventaMaxima || 0).toLocaleString()}</h5>
+                                    <small>${estadisticas.categoriaMaxima || estadisticas.horaMaxima || 'N/A'}</small>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label">Venta Mínima</label>
+                                    <h5 class="text-danger">$${(estadisticas.ventaMinima || 0).toLocaleString()}</h5>
+                                    <small>${estadisticas.categoriaMinima || estadisticas.horaMinima || 'N/A'}</small>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Promedio de Venta</label>
+                                <h5 class="text-warning">$${(estadisticas.promedioVentas || estadisticas.promedioHora || 0).toLocaleString()}</h5>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-md-6">
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <i class="fas fa-chart-line me-2"></i>Métricas Financieras
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label class="form-label">Valor Total del Inventario</label>
-                            <h3 class="text-primary">$${estadisticas.valorTotalInventario?.toLocaleString() || '0'}</h3>
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <i class="fas fa-chart-pie me-2"></i>Distribución
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Valor Promedio por Producto</label>
-                            <h5 class="text-secondary">$${estadisticas.valorPromedioProducto?.toLocaleString() || '0'}</h5>
-                        </div>
-                        <div>
-                            <label class="form-label">Cantidad Total en Stock</label>
-                            <h5 class="text-info">${estadisticas.cantidadTotalStock?.toLocaleString() || '0'} unidades</h5>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Total de ${tipoReporte === 'ventas-categoria' ? 'Categorías' : 'Horas'}</label>
+                                <h5 class="text-info">${estadisticas.totalCategorias || estadisticas.totalHoras || 0}</h5>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Cantidad Total Vendida</label>
+                                <h5 class="text-secondary">${(estadisticas.cantidadTotalVendida || estadisticas.totalCantidadVendida || 0).toLocaleString()} unidades</h5>
+                            </div>
+                            <div>
+                                <label class="form-label">Ticket Promedio</label>
+                                <h5 class="text-success">$${(estadisticas.ticketPromedio || 0).toLocaleString()}</h5>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fas fa-info-circle me-2"></i>Información del Reporte
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <p><strong>Productos Publicados:</strong> ${estadisticas.totalPublicados || 0}</p>
-                            </div>
-                            <div class="col-md-4">
-                                <p><strong>Fecha del Reporte:</strong> ${new Date().toLocaleDateString()}</p>
-                            </div>
-                            <div class="col-md-4">
-                                <p><strong>Total Productos:</strong> ${total}</p>
-                            </div>
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-info-circle me-2"></i>Información del Reporte
                         </div>
-                        <div class="alert alert-info mt-2">
-                            <i class="fas fa-lightbulb me-2"></i>
-                            <small>
-                                <strong>Nota:</strong> Los valores financieros son calculados en base al precio y cantidad de cada producto.
-                            </small>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p><strong>Tipo de Reporte:</strong> ${tipoReporte === 'ventas-categoria' ? 'Ventas por Categoría' : 'Ventas del Día'}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p><strong>Fecha del Reporte:</strong> ${new Date().toLocaleDateString()}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p><strong>Período:</strong> ${estadisticas.periodo || 'Actual'}</p>
+                                </div>
+                            </div>
+                            <div class="alert alert-info mt-2">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <small>
+                                    <strong>Nota:</strong> Los datos de ventas son calculados en base a transacciones confirmadas.
+                                </small>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        `;
+            `;
+        } else {
+            // Estadísticas para productos
+            const total = (estadisticas.totalActivos || 0) + (estadisticas.totalInactivos || 0);
+            const porcentajeActivos = total > 0 ? Math.round((estadisticas.totalActivos / total) * 100) : 0;
+            const porcentajeInactivos = 100 - porcentajeActivos;
+
+            container.innerHTML = `
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <i class="fas fa-chart-pie me-2"></i>Distribución por Estado
+                        </div>
+                        <div class="card-body">
+                            <div class="progress mb-3" style="height: 30px;">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                     style="width: ${porcentajeActivos}%"
+                                     aria-valuenow="${porcentajeActivos}"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100">
+                                    Activos: ${porcentajeActivos}%
+                                </div>
+                                <div class="progress-bar bg-danger" role="progressbar"
+                                     style="width: ${porcentajeInactivos}%"
+                                     aria-valuenow="${porcentajeInactivos}"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100">
+                                    Inactivos: ${porcentajeInactivos}%
+                                </div>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <h5>${estadisticas.totalActivos || 0}</h5>
+                                    <small class="text-success">Productos Activos</small>
+                                </div>
+                                <div class="col-6">
+                                    <h5>${estadisticas.totalInactivos || 0}</h5>
+                                    <small class="text-danger">Productos Inactivos</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <i class="fas fa-chart-line me-2"></i>Métricas Financieras
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label">Valor Total del Inventario</label>
+                                <h3 class="text-primary">$${(estadisticas.valorTotalInventario || 0).toLocaleString()}</h3>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Valor Promedio por Producto</label>
+                                <h5 class="text-secondary">$${(estadisticas.valorPromedioProducto || 0).toLocaleString()}</h5>
+                            </div>
+                            <div>
+                                <label class="form-label">Cantidad Total en Stock</label>
+                                <h5 class="text-info">${(estadisticas.cantidadTotalStock || 0).toLocaleString()} unidades</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-info-circle me-2"></i>Información del Reporte
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p><strong>Productos Publicados:</strong> ${estadisticas.totalPublicados || 0}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p><strong>Fecha del Reporte:</strong> ${new Date().toLocaleDateString()}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p><strong>Total Productos:</strong> ${total}</p>
+                                </div>
+                            </div>
+                            <div class="alert alert-info mt-2">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <small>
+                                    <strong>Nota:</strong> Los valores financieros son calculados en base al precio y cantidad de cada producto.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
     }
 
     // Funciones de exportación
     async function exportarPDF() {
-        const estado = document.getElementById('filtroEstado').value;
+        const tipoReporte = document.getElementById('filtroReporte').value;
+        console.log("Exportando PDF para:", tipoReporte);
 
         // Mostrar loading
         const btnPdf = document.querySelector('[onclick*="exportarPDF"]');
@@ -806,26 +1104,23 @@
         btnPdf.disabled = true;
 
         try {
-            // Construir URL
-            let url = `/inventario/reportes/exportar/pdf`;
-            if (estado !== '') {
-                url += `?estado=${estado}`;
-            }
+            // Construir URL según el tipo de reporte
+            let url = '/inventario/reportes/exportar/pdf?reporte=' + tipoReporte;
 
             // Crear enlace temporal para descarga
             const link = document.createElement('a');
             link.href = url;
-            link.download = `reporte-productos-${new Date().getTime()}.pdf`;
+            link.download = 'reporte-' + tipoReporte + '-' + new Date().getTime() + '.pdf';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
 
             // Notificación de éxito
-            mostrarNotificacion('✅ PDF generado correctamente', 'success');
+            mostrarNotificacion('PDF generado correctamente', 'success');
 
         } catch (error) {
             console.error('Error al exportar PDF:', error);
-            mostrarNotificacion('❌ Error al generar PDF', 'error');
+            mostrarNotificacion('Error al generar PDF', 'error');
         } finally {
             // Restaurar botón
             btnPdf.innerHTML = originalText;
@@ -834,22 +1129,22 @@
     }
 
     async function previsualizarPDF() {
-        const estado = document.getElementById('filtroEstado').value;
+        const tipoReporte = document.getElementById('filtroReporte').value;
+        console.log("Previsualizando PDF para:", tipoReporte);
 
-        let url = `/inventario/reportes/ver/pdf`;
-        if (estado !== '') {
-            url += `?estado=${estado}`;
-        }
+        const url = '/inventario/reportes/ver/pdf?reporte=' + tipoReporte;
 
         // Abrir en nueva pestaña
         window.open(url, '_blank');
     }
 
     function mostrarNotificacion(mensaje, tipo) {
+        console.log("Mostrando notificacion:", mensaje, "Tipo:", tipo);
+
         // Crear notificación
         const alertDiv = document.createElement('div');
-        alertDiv.className = `alert alert-${tipo === 'success' ? 'success' : 'danger'}
-                         alert-dismissible fade show position-fixed`;
+        alertDiv.className = 'alert alert-' + (tipo === 'success' ? 'success' : 'danger') +
+            ' alert-dismissible fade show position-fixed';
         alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
         alertDiv.innerHTML = `
             ${mensaje}
@@ -866,6 +1161,7 @@
     }
 
     function imprimirReporte() {
+        console.log("Imprimir reporte");
         // Solo imprime la sección del reporte
         const contenido = document.getElementById('grafico').innerHTML;
         const ventana = window.open('', '_blank');

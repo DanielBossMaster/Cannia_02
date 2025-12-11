@@ -64,10 +64,6 @@ public class ProductoModel {
         this.fotoBase64 = fotoBase64;
     }
 
-    // Si InventarioModel tiene un campo llamado 'producto':
-    @OneToMany(mappedBy = "producto")
-    private List<InventarioModel> inventarios;
-
     // ===============================================
     // CAMBIO REQUERIDO: RELACIÓN CON CATEGORIAS
     // ===============================================
@@ -81,7 +77,5 @@ public class ProductoModel {
     private List<CategoriaModel> categorias;
 
     // ===============================================
-
-    // ... campos y métodos existentes (inventarios, getFotoBase64, etc.)
 
 }

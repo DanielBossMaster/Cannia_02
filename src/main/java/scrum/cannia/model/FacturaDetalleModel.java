@@ -18,9 +18,6 @@ public class FacturaDetalleModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_inventario")
-    private InventarioModel inventario;
 
     @ManyToOne
     @JoinColumn(name = "factura_id", nullable = false)

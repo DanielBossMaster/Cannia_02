@@ -14,6 +14,8 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.servlet.http.HttpServletResponse;
+import scrum.cannia.service.VentasReporteService;
+
 import java.io.IOException;
 
 
@@ -35,6 +37,9 @@ public class ReporteController {
     @Autowired
     private ProductoRepository productoRepository;
 
+    @Autowired
+    private VentasReporteService ventasReporteService;
+
     // 1. METODO PARA MOSTRAR LA PÁGINA HTML
     @GetMapping("")
     public String mostrarPaginaReportes(Model model) {
@@ -45,19 +50,31 @@ public class ReporteController {
 
     // 2. METODO PARA LA API (JSON)
     @GetMapping("/api/productos")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> generarReporteApi(
-            @RequestParam(required = false, defaultValue = "BARRAS") String tipo,
-            @RequestParam(required = false) Boolean estado) {
+    public ResponseEntity<Map<String, Object>> generarReporte(  // CAMBIAR a Map
+                                                                @RequestParam String tipo,
+                                                                @RequestParam(required = false, defaultValue = "productos") String reporte) {
 
-        try {
-            Map<String, Object> reporte = reporteService.generarReporteProductos(tipo, estado);
-            return ResponseEntity.ok(reporte);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError()
-                    .body(Map.of("error", "Error al generar reporte: " + e.getMessage()));
+        Map<String, Object> reporteResult;  // CAMBIAR a Map
+
+        switch (reporte) {
+            case "ventas-categoria":
+                reporteResult = ventasReporteService.generarVentasPorCategoria();
+                break;
+            case "ventas-dia":
+                reporteResult = ventasReporteService.generarVentasDelDia();
+                break;
+            case "activos":
+                reporteResult = reporteService.generarReporteProductos(tipo, true);  // ← tipo PRIMERO
+                break;
+            case "inactivos":
+                reporteResult = reporteService.generarReporteProductos(tipo, false); // ← tipo PRIMERO
+                break;
+            default:
+                reporteResult = reporteService.generarReporteProductos(tipo, null);  // ← tipo PRIMERO
+                break;
         }
+
+        return ResponseEntity.ok(reporteResult);
     }
 
     // 3. METODO PARA OPCIONES DE FILTRO
@@ -199,5 +216,12 @@ public class ReporteController {
             response.getWriter().println("ERROR AL GENERAR PDF: " + e.getMessage());
             e.printStackTrace(response.getWriter());
         }
+    }
+    // Metodo de diagnóstico
+    @GetMapping("/diagnostico")
+    @ResponseBody
+    public String diagnostico() {
+        ventasReporteService.diagnosticarDatos();
+        return "Diagnóstico ejecutado. Revisa la consola de Spring Boot.";
     }
 }

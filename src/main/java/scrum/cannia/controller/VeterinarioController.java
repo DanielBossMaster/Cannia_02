@@ -17,6 +17,7 @@ import scrum.cannia.repository.*;
 import scrum.cannia.service.*;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 @Controller
@@ -245,7 +246,7 @@ public class VeterinarioController {
         VeterinariaModel veterinaria = veterinario.getVeterinaria();
 
         // 1. Cargar Productos (Necesario para la tabla principal)
-        model.addAttribute("productos", productoService.listarTodos());
+        model.addAttribute("productos", productoService.obtenerProductosActivos());
 
         // 2. Cargar Veterinaria (Necesario para el encabezado)
         model.addAttribute("veterinaria", veterinaria);
@@ -328,7 +329,7 @@ public class VeterinarioController {
 
             // 2. Llamar al Web Service usando los parámetros (q, idCategoria)
             List<ProductoBusquedaDto> resultados =
-                    consumidorBusquedaService.obtenerProductosFiltrados(queryParaWS, idCategoria);
+                    productoService.obtenerProductosActivosFiltrados(queryParaWS, idCategoria); // <<<--- ¡AQUÍ ESTÁ EL CAMBIO!
 
             // 3. Pasar todos los datos necesarios a la vista:
 
@@ -367,16 +368,32 @@ public class VeterinarioController {
 
         VeterinariaModel veterinaria = null;
 
-
         // SI EL USUARIO ES VETERINARIO
         if (usuario.getVeterinario() != null) {
             veterinaria = usuario.getVeterinario().getVeterinaria();
         }
 
+        // Asumo que listarTodos() llama a un repositorio o servicio que devuelve ProductoModel
+        List<ProductoModel> lista = productoService.obtenerProductosActivos();
 
+        // 🔥 Convertimos foto (byte[]) → Base64 ANTES DE ENVIARLA A LA VISTA
+        for (ProductoModel p : lista) {
+            if (p.getFoto() != null) {
+
+                // 1. Conversión simple a Base64
+                String base64 = Base64.getEncoder().encodeToString(p.getFoto());
+
+                // 2.  Agregar el prefijo Data URL
+                // (Asumimos que el tipo de imagen es JPEG. Si usas PNG, cambia 'jpeg' a 'png')
+                String dataUrl = "data:image/jpeg;base64," + base64;
+
+                p.setFotoBase64(dataUrl);
+            }
+        }
+
+        model.addAttribute("productos", lista);
 
         model.addAttribute("veterinaria", veterinaria);
-        model.addAttribute("productos", productoService.listarTodos());
 
         return "veterinario/TiendaPreview";
     }
@@ -511,7 +528,6 @@ public class VeterinarioController {
         }
         return "redirect:/veterinario/GestionVentas";
     }
-
     // 3. NUEVO: Endpoint para cargar datos de la categoría vía AJAX (Recomendado: devuelve JSON)
 // Nota: Usa @ResponseBody o @RestController para devolver JSON
     @GetMapping("/admin/categoria/{id}")
