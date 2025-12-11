@@ -63,7 +63,7 @@ public class MascotaModel {
     private boolean estado = true;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 15, nullable = false)
+    @Column(length = 15, nullable = true)
     private TipoEstadoMascota tipoEstado;
 
     // Factory Method mascota creada por Fundacion
