@@ -4,7 +4,7 @@ package scrum.cannia.service;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import scrum.cannia.Dto.ProductoBusquedaDto; // Importar el DTO
+import scrum.cannia.Dto.ProductoBusquedaDto;
 import java.util.List;
 
 @Service
@@ -12,7 +12,7 @@ public class ConsumidorBusquedaService {
 
     private final WebClient busquedaWebClient;
 
-    // Inyectamos el WebClient que configuramos
+    // Inyeccion del WebClient
     public ConsumidorBusquedaService(@Qualifier("busquedaWebClient") WebClient busquedaWebClient) {
         this.busquedaWebClient = busquedaWebClient;
     }
@@ -31,7 +31,7 @@ public class ConsumidorBusquedaService {
                         .queryParam("idCategoria", idCategoria)
                         .build())
                 .retrieve()
-                .bodyToFlux(ProductoBusquedaDto.class) // <--- CAMBIO CLAVE: Usamos el DTO aquí
+                .bodyToFlux(ProductoBusquedaDto.class)
                 .collectList()
                 .block();
     }

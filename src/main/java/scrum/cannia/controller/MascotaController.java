@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import scrum.cannia.model.*;
-import scrum.cannia.repository.InventarioRepository;
 import scrum.cannia.repository.MascotaRepository;
 import scrum.cannia.repository.PropietarioRepository;
 
@@ -28,11 +27,6 @@ public class MascotaController {
         this.mascotaRepository = mascotaRepository;
         this.propietarioRepository = propietarioRepository;
     }
-
-
-
-    @Autowired
-    private InventarioRepository inventarioRepository;
 
     // --------------------------
     // Página principal del propietario
@@ -69,6 +63,7 @@ public class MascotaController {
 
         return "propietario/indexPropietario";
     }
+
     @GetMapping("/misMascotas")
     public String misMascotas(HttpSession session, Model model) {
         // Obtener propietario desde la sesión
@@ -84,32 +79,6 @@ public class MascotaController {
         model.addAttribute("listaMascotas", listaMascotasDelPropietario);
 
         return "propietario/misMascotas"; // Llama al HTML
-    }
-
-
-    // --------------------------
-    // Página de la tienda del propietario
-    // --------------------------
-    @GetMapping("/tienda")
-    public String tiendaPropietario(HttpSession session, Model model) {
-
-        // 1. Obtener el propietario desde la sesión
-        PropietarioModel propietario = (PropietarioModel) session.getAttribute("propietario");
-        if (propietario == null) {
-            return "redirect:/login";
-        }
-
-        // 2. Tomar su veterinaria
-        VeterinariaModel veterinaria = propietario.getVeterinaria();
-
-        // 3. Cargar productos de esa veterinaria
-        List<InventarioModel> productos = inventarioRepository.findByVeterinariaId(veterinaria.getId());
-
-        // 4. Agregar atributos al modelo
-        model.addAttribute("productos", productos);
-        model.addAttribute("propietario", propietario);
-
-        return "propietario/Tienda";
     }
 
     // --------------------------

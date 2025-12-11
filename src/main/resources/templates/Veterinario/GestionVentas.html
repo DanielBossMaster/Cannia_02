@@ -138,7 +138,7 @@
                     <table class="w-full text-left text-sm">
                         <thead class="bg-gray-100 text-softText  uppercase text-xs">
                         <tr>
-                            <th class="p-3">Imagen</th>
+
                             <th class="p-3">Producto</th>
                             <th class="p-3">Precio</th>
 
@@ -147,9 +147,7 @@
                         </thead>
                         <tbody>
                         <tr th:each="prod : ${productos}"  class="border-t border-borderLight hover:bg-gray-100 transition">
-                            <td class="p-3">
-                                <img th:src="@{${prod.foto}}" class="w-16 h-16 object-cover rounded">
-                            </td>
+
                             <td th:text="${prod.nombre}" class="px-4 py-3"></td>
                             <td th:text="${prod.valor}" class="px-4 py-3"></td>
 
