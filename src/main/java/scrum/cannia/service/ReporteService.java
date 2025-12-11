@@ -14,8 +14,11 @@ public class ReporteService {
     @Autowired
     private ProductoRepository productoRepository;
 
+    @Autowired
+    private VentasReporteService ventasReporteService;
+
     /**
-     * Método PÚBLICO para calcular estadísticas
+     * Metodo PÚBLICO para calcular estadísticas
      */
     public Map<String, Object> calcularEstadisticas(List<ProductoModel> productos) {
         Map<String, Object> stats = new HashMap<>();
@@ -76,7 +79,7 @@ public class ReporteService {
             resultado.put("datos", generarDatosBarras(productos));
         }
 
-        // Estadísticas - usa el método público
+        // Estadísticas - usa el Metodo público
         resultado.put("estadisticas", calcularEstadisticas(productos));
         resultado.put("totalProductos", productos.size());
         resultado.put("filtroAplicado", estadoFiltro != null ?
@@ -180,7 +183,7 @@ public class ReporteService {
     }
 
     /**
-     * Método auxiliar para contar productos por estado
+     * Metodo auxiliar para contar productos por estado
      */
     public Map<String, Long> contarProductosPorEstado() {
         List<ProductoModel> todos = productoRepository.findAll();
@@ -191,5 +194,19 @@ public class ReporteService {
         conteo.put("total", (long) todos.size());
 
         return conteo;
+    }
+
+    /**
+     * Obtener ventas por categoría (para PDF)
+     */
+    public List<Map<String, Object>> obtenerVentasPorCategoria() {
+        try {
+            // Usar el servicio de ventas que ya creaste
+            Map<String, Object> reporte = ventasReporteService.generarVentasPorCategoria();
+            return (List<Map<String, Object>>) reporte.get("datos");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>(); // Lista vacía si hay error
+        }
     }
 }
