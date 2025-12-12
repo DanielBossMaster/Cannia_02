@@ -265,7 +265,7 @@ public class VeterinarioController {
 
         // -----------------------------------------------------------
 
-        return "veterinario/GestionVentas";
+        return "redirect:/veterinario/InicioVeterinaria";
     }
 
     // ============================================
