@@ -5,41 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Registro de Usuario</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/VeterinarioCss/estilos.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    <style>
-        .hidden {
-            display: none;
-        }
-    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#170022",
+                        secondary: "#290043",
+                        lightBg: "#e8ebff",
+                        lightSurface: "rgb(247,248,249)",
+                        darkText: "#1e293b",
+                        softText: "#475569",
+                        borderLight: "#e2e8f0",
+                    },
+                },
+            },
+        };
+    </script>
+    <style> body {font-family: 'Poppins', sans-serif;} </style>
 </head>
 
-<body>
-<header>
-    <div class="logo">
-        <img src="/img/logo.png" alt="logo">
-    </div>
-</header>
+<body class="h-screen bg-[url('/img/gato-registro.jpg')] ">
 
-<div class="container py-4">
-    <h2 class="text-center mb-4">Registro de Usuario</h2>
+<!-- CONTENEDOR PRINCIPAL -->
 
-    <form th:action="@{/registro}" method="post" th:object="${registro}" class="card p-4 shadow">
+<div class=" flex flex-col items-center justify-center p-6">
+    <div class="bg-white  shadow-lg -xl p-8">
+        <div class="flex flex-col items-center space-y-6">
+            <img src="/img/logo.png" alt="logo" style="width:100px;">
+            <h1 class="text-3xl font-bold text-primary">Registro de Usuario</h1>
 
-        <div class="mb-3">
-            <label for="usuario" class="form-label">Usuario</label>
-            <input type="text" id="usuario" th:field="*{usuario}" class="form-control" required>
+    <form th:action="@{/registro}" method="post" th:object="${registro}">
+
+        <!-- Usuario -->
+        <div class="mb-4">
+            <label for="usuario" class="block font-semibold mb-1">Usuario</label>
+            <input type="text" id="usuario" th:field="*{usuario}"
+                   class="w-full border -lg px-3 py-2 focus:ring focus:ring-blue-300"
+                   required>
         </div>
 
-        <div class="mb-3">
-            <label for="contrasena" class="form-label">Contraseña</label>
-            <input type="password" id="contrasena" th:field="*{contrasena}" class="form-control" required>
+        <!-- Contraseña -->
+        <div class="mb-4">
+            <label for="contrasena" class="block font-semibold mb-1">Contraseña</label>
+            <input type="password" id="contrasena" th:field="*{contrasena}"
+                   class="w-full border -lg px-3 py-2 focus:ring focus:ring-blue-300"
+                   required>
         </div>
 
-        <div class="mb-3">
-            <label for="rol" class="form-label">Selecciona tu rol:</label>
-            <select th:field="*{rol}" id="rol" class="form-select" required onchange="mostrarCamposAdicionales()">
+        <!-- Rol -->
+        <div class="mb-4">
+            <label for="rol" class="block font-semibold mb-1">Selecciona tu rol:</label>
+            <select th:field="*{rol}" id="rol"
+                    class="w-full border -lg px-3 py-2 focus:ring focus:ring-blue-300"
+                    required onchange="mostrarCamposAdicionales()">
                 <option value="">-- Selecciona --</option>
                 <option value="propietario">Propietario</option>
                 <option value="veterinario">Veterinario</option>
@@ -47,96 +68,158 @@
             </select>
         </div>
 
+        <!-- CAMPOS PROPIETARIO -->
         <div id="camposPropietario" class="hidden">
+            <h3 class="text-lg font-semibold mb-2 mt-3">Datos del Propietario</h3>
 
-            <div class="mb-3">
-                <label class="form-label">Número de Documento</label>
-                <input type="text" th:field="*{numDoc}" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Nombre Propietario</label>
-                <input type="text" th:field="*{nombrePro}" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Apellido Propietario</label>
-                <input type="text" th:field="*{apellidoPro}" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Dirección Propietario</label>
-                <input type="text" th:field="*{direccionPro}" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Telefono Propietario</label>
-                <input type="text" th:field="*{telefonoPro}" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Correo Propietario</label>
-                <input type="email" th:field="*{correoPro}" class="form-control">
+            <div class="grid grid-cols-1 gap-4">
+
+                <div>
+                    <label class="font-semibold">Número de Documento</label>
+                    <input type="text" th:field="*{numDoc}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
+
+                <div>
+                    <label class="font-semibold">Nombre Propietario</label>
+                    <input type="text" th:field="*{nombrePro}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
+
+                <div>
+                    <label class="font-semibold">Apellido Propietario</label>
+                    <input type="text" th:field="*{apellidoPro}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
+
+                <div>
+                    <label class="font-semibold">Dirección</label>
+                    <input type="text" th:field="*{direccionPro}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
+
+                <div>
+                    <label class="font-semibold">Teléfono</label>
+                    <input type="text" th:field="*{telefonoPro}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
+
+                <div>
+                    <label class="font-semibold">Correo</label>
+                    <input type="email" th:field="*{correoPro}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
+
+                <div>
+                    <label for="idVeterinariaSeleccionada" class="font-semibold">Veterinaria para la Tienda</label>
+                    <select th:field="*{idVeterinariaSeleccionada}" id="idVeterinariaSeleccionada"
+                            class="w-full border -lg px-3 py-2" required>
+                        <option value="">-- Selecciona una Veterinaria --</option>
+                        <option th:each="veterinaria : ${veterinarias}"
+                                th:value="${veterinaria.id}"
+                                th:text="${veterinaria.nombre}">
+                            Nombre de Veterinaria
+                        </option>
+                    </select>
+                </div>
+
             </div>
         </div>
 
-        <!-- Campos Veterinario -->
+        <!-- CAMPOS VETERINARIO -->
         <div id="camposVeterinario" class="hidden">
-            <div class="mb-3">
-                <label class="form-label">Número de Licencia Profesional</label>
-                <input type="text" th:field="*{numLicencia}" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Nombre Veterinario</label>
-                <input type="text" th:field="*{nombreVete}" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Apellido Veterinario</label>
-                <input type="text" th:field="*{apellidoVete}" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Dirección Veterinario</label>
-                <input type="text" th:field="*{direccionVete}" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Teléfono Veterinario</label>
-                <input type="text" th:field="*{telefonoVete}" class="form-control" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Correo Veterinario</label>
-                <input type="email" th:field="*{correoVete}" class="form-control" required>
+            <h3 class="text-lg font-semibold mb-2 mt-3">Datos del Veterinario</h3>
+
+            <div class="grid grid-cols-1 gap-4">
+
+                <div>
+                    <label class="font-semibold">Número de Licencia Profesional</label>
+                    <input type="text" th:field="*{numLicencia}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
+
+                <div>
+                    <label class="font-semibold">Nombre Veterinario</label>
+                    <input type="text" th:field="*{nombreVete}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
+
+                <div>
+                    <label class="font-semibold">Apellido Veterinario</label>
+                    <input type="text" th:field="*{apellidoVete}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
+
+                <div>
+                    <label class="font-semibold">Dirección</label>
+                    <input type="text" th:field="*{direccionVete}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
+
+                <div>
+                    <label class="font-semibold">Teléfono</label>
+                    <input type="text" th:field="*{telefonoVete}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
+
+                <div>
+                    <label class="font-semibold">Correo</label>
+                    <input type="email" th:field="*{correoVete}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
+
             </div>
         </div>
 
-        <!-- Campos Fundacion -->
+        <!-- CAMPOS FUNDACION -->
         <div id="camposFundacion" class="hidden">
-            <h5 class="mt-3">Datos de la Fundación</h5>
+            <h3 class="text-lg font-semibold mb-2 mt-3">Datos de la Fundación</h3>
 
-            <div class="mb-3">
-                <label class="form-label">Nombre Fundación</label>
-                <input type="text" th:field="*{nombreFundacion}" class="form-control">
-            </div>
+            <div class="grid grid-cols-1 gap-4">
 
-            <div class="mb-3">
-                <label class="form-label">Descripción</label>
-                <input type="text" th:field="*{descripcionFundacion}" class="form-control">
-            </div>
+                <div>
+                    <label class="font-semibold">Nombre Fundación</label>
+                    <input type="text" th:field="*{nombreFundacion}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">Dirección</label>
-                <input type="text" th:field="*{direccionFundacion}" class="form-control">
-            </div>
+                <div>
+                    <label class="font-semibold">Descripción</label>
+                    <input type="text" th:field="*{descripcionFundacion}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">Teléfono</label>
-                <input type="text" th:field="*{telefonoFundacion}" class="form-control">
-            </div>
+                <div>
+                    <label class="font-semibold">Dirección</label>
+                    <input type="text" th:field="*{direccionFundacion}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">Correo</label>
-                <input type="email" th:field="*{emailFundacion}" class="form-control">
+                <div>
+                    <label class="font-semibold">Teléfono</label>
+                    <input type="text" th:field="*{telefonoFundacion}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
+
+                <div>
+                    <label class="font-semibold">Correo</label>
+                    <input type="email" th:field="*{emailFundacion}"
+                           class="w-full border -lg px-3 py-2">
+                </div>
+
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary mt-3 w-100">Registrarse</button>
+        <!-- BOTÓN -->
+        <button type="submit"
+                class=" w-full text-center font-bold mt-8 bg-primary text-white px-6 py-3 -md transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black">
+            Registrarse
+        </button>
     </form>
+        </div>
+    </div>
 </div>
-
+<!-- SCRIPTS -->
 <script>
     function mostrarCamposAdicionales() {
         const rol = document.getElementById("rol").value;
@@ -148,30 +231,25 @@
         camposVet.classList.add("hidden");
         camposFun.classList.add("hidden");
 
-        document.querySelectorAll("#camposPropietario input, #camposVeterinario input, #camposFundacion input").forEach(input => {
-            input.removeAttribute("required");
-        });
+        document.querySelectorAll("#camposPropietario input, #camposVeterinario input, #camposFundacion input")
+            .forEach(input => input.removeAttribute("required"));
 
         if (rol === "propietario") {
             camposProp.classList.remove("hidden");
-            camposProp.querySelectorAll("input").forEach(input => input.setAttribute("required", "true"));
+            camposProp.querySelectorAll("input").forEach(i => i.setAttribute("required", true));
         } else if (rol === "veterinario") {
             camposVet.classList.remove("hidden");
-            camposVet.querySelectorAll("input").forEach(input => input.setAttribute("required", "true"));
+            camposVet.querySelectorAll("input").forEach(i => i.setAttribute("required", true));
         } else if (rol === "fundacion") {
             camposFun.classList.remove("hidden");
-            camposFun.querySelectorAll("input").forEach(input => input.setAttribute("required", "true"));
+            camposFun.querySelectorAll("input").forEach(i => i.setAttribute("required", true));
         }
     }
 
-    window.onload = function () {
-        mostrarCamposAdicionales();
-    }
+    window.onload = mostrarCamposAdicionales;
 </script>
 
-<footer class="text-center mt-4">
-    <p>&copy; 2025 App Cannia. Todos los derechos reservados.</p>
-</footer>
+
 
 </body>
 </html>
