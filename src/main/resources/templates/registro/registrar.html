@@ -113,7 +113,7 @@
                 <div>
                     <label for="idVeterinariaSeleccionada" class="font-semibold">Veterinaria para la Tienda</label>
                     <select th:field="*{idVeterinariaSeleccionada}" id="idVeterinariaSeleccionada"
-                            class="w-full border -lg px-3 py-2" required>
+                            class="w-full border -lg px-3 py-2" >
                         <option value="">-- Selecciona una Veterinaria --</option>
                         <option th:each="veterinaria : ${veterinarias}"
                                 th:value="${veterinaria.id}"
