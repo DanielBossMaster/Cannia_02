@@ -1,5 +1,6 @@
 package scrum.cannia.repository;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import scrum.cannia.model.ProductoModel;
@@ -10,14 +11,17 @@ import java.util.Optional;
 
 @Repository
 public interface ProductoRepository extends JpaRepository<ProductoModel, Integer> {
+
+    @Modifying
+    @Query(value = "DELETE FROM producto_categoria WHERE id_categoria = :categoriaId",
+            nativeQuery = true)
+        // El parámetro debe ser Long, que es el tipo del ID de la categoría
+    void desasociarProductosDeCategoria(@Param("categoriaId") Long categoriaId);
+
     List<ProductoModel> findByEstadoTrue(); // Solo productos activos
-    Optional<ProductoModel> findByNombre(String nombre);
-    List<ProductoModel> findByNombreContainingIgnoreCaseOrDescripcionContainingIgnoreCase(String nombre, String descripcion);
 
     /// Métodos automáticos de Spring Data JPA
     List<ProductoModel> findByEstado(boolean estado);
-    List<ProductoModel> findByPublicado(boolean publicado);
-    List<ProductoModel> findByEstadoAndPublicado(boolean estado, boolean publicado);
 
     // Consulta para el reporte (ajustada a TU modelo)
     @Query("SELECT p.nombre, SUM(p.cantidad), p.estado " +
@@ -30,8 +34,6 @@ public interface ProductoRepository extends JpaRepository<ProductoModel, Integer
     // Otra consulta útil por categoría (si tienes categoría en tu modelo)
     @Query("SELECT p, COUNT(p) FROM ProductoModel p GROUP BY p.estado")
     List<Object[]> contarPorEstado();
-
-
 
     // =================================================================================
     // MÉTODOS REQUERIDOS PARA FILTRAR POR Q, CATEGORÍA Y ESTADO=TRUE
@@ -56,8 +58,6 @@ public interface ProductoRepository extends JpaRepository<ProductoModel, Integer
             "AND p.estado = TRUE")
     List<ProductoModel> findByNombreOrDescripcionAndCategoriaIdAndEstadoTrue(@Param("q") String q, @Param("idCategoria") Long idCategoria);
 
-    // 4. Buscar TODOS los productos activos (Sin q ni idCategoria)
-    // Ya tienes este: List<ProductoModel> findByEstadoTrue();
 }
-//    List<ProductoModel> findByPublicadoTrue(); // Solo productos publicados
+
 
