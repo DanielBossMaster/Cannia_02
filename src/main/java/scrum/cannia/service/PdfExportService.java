@@ -27,7 +27,7 @@ public class PdfExportService {
     @Autowired
     private VentasReporteService ventasReporteService;
 
-    // ============ MetodoS PARA PRODUCTOS ============
+    // ============ MÉTODOS PARA PRODUCTOS ============
 
     public byte[] generarPdfReporteProductos(java.util.List<ProductoModel> productos,
                                              Map<String, Object> estadisticas,
@@ -68,7 +68,7 @@ public class PdfExportService {
         return baos.toByteArray();
     }
 
-    // ============ MetodoS PARA VENTAS POR CATEGORÍA ============
+    // ============ MÉTODOS PARA VENTAS POR CATEGORÍA ============
 
     public void generarPdfVentasPorCategoria(HttpServletResponse response) throws Exception {
         response.setContentType("application/pdf");
@@ -120,6 +120,25 @@ public class PdfExportService {
         Map<String, Object> reporteVentas = ventasReporteService.generarVentasPorCategoria();
         java.util.List<Map<String, Object>> ventas = (java.util.List<Map<String, Object>>) reporteVentas.get("datos");
         Map<String, Object> estadisticasVentas = (Map<String, Object>) reporteVentas.get("estadisticas");
+
+        // ============ GRÁFICA DE VENTAS POR CATEGORÍA ============
+        if (ventas != null && !ventas.isEmpty()) {
+            Paragraph subtituloGrafica = new Paragraph("GRÁFICA - VENTAS POR CATEGORÍA",
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14));
+            subtituloGrafica.setSpacingBefore(10);
+            document.add(subtituloGrafica);
+
+            try {
+                byte[] imagenGrafica = graficaService.generarGraficaVentasPorCategoria(ventas);
+                Image grafica = Image.getInstance(imagenGrafica);
+                grafica.setAlignment(Element.ALIGN_CENTER);
+                grafica.scaleToFit(500, 300);
+                document.add(grafica);
+                document.add(Chunk.NEWLINE);
+            } catch (Exception e) {
+                document.add(new Paragraph("No se pudo generar la gráfica: " + e.getMessage()));
+            }
+        }
 
         // Tabla de estadísticas
         PdfPTable tablaEstadisticas = new PdfPTable(2);
@@ -264,6 +283,25 @@ public class PdfExportService {
         java.util.List<Map<String, Object>> ventas = (java.util.List<Map<String, Object>>) reporteVentas.get("datos");
         Map<String, Object> estadisticasVentas = (Map<String, Object>) reporteVentas.get("estadisticas");
 
+        // ============ GRÁFICA DE VENTAS POR CATEGORÍA ============
+        if (ventas != null && !ventas.isEmpty()) {
+            Paragraph subtituloGrafica = new Paragraph("GRÁFICA - VENTAS POR CATEGORÍA",
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14));
+            subtituloGrafica.setSpacingBefore(10);
+            document.add(subtituloGrafica);
+
+            try {
+                byte[] imagenGrafica = graficaService.generarGraficaVentasPorCategoria(ventas);
+                Image grafica = Image.getInstance(imagenGrafica);
+                grafica.setAlignment(Element.ALIGN_CENTER);
+                grafica.scaleToFit(500, 300);
+                document.add(grafica);
+                document.add(Chunk.NEWLINE);
+            } catch (Exception e) {
+                document.add(new Paragraph("No se pudo generar la gráfica: " + e.getMessage()));
+            }
+        }
+
         // Tabla de estadísticas
         PdfPTable tablaEstadisticas = new PdfPTable(2);
         tablaEstadisticas.setWidthPercentage(60);
@@ -361,6 +399,7 @@ public class PdfExportService {
         document.close();
         return baos.toByteArray();
     }
+
     // ============ MÉTODOS PARA VENTAS DEL DÍA ============
 
     public void generarPdfVentasDelDia(HttpServletResponse response) throws Exception {
@@ -410,6 +449,25 @@ public class PdfExportService {
         Map<String, Object> reporteVentas = ventasReporteService.generarVentasDelDia();
         java.util.List<Map<String, Object>> ventas = (java.util.List<Map<String, Object>>) reporteVentas.get("datos");
         Map<String, Object> estadisticas = (Map<String, Object>) reporteVentas.get("estadisticas");
+
+        // ============ GRÁFICA DE VENTAS DEL DÍA ============
+        if (ventas != null && !ventas.isEmpty()) {
+            Paragraph subtituloGrafica = new Paragraph("GRÁFICA - VENTAS DEL DÍA",
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14));
+            subtituloGrafica.setSpacingBefore(10);
+            document.add(subtituloGrafica);
+
+            try {
+                byte[] imagenGrafica = graficaService.generarGraficaVentasDelDia(ventas);
+                Image grafica = Image.getInstance(imagenGrafica);
+                grafica.setAlignment(Element.ALIGN_CENTER);
+                grafica.scaleToFit(500, 300);
+                document.add(grafica);
+                document.add(Chunk.NEWLINE);
+            } catch (Exception e) {
+                document.add(new Paragraph("No se pudo generar la gráfica: " + e.getMessage()));
+            }
+        }
 
         // Tabla de estadísticas del día
         PdfPTable tablaEstadisticas = new PdfPTable(2);
@@ -547,6 +605,25 @@ public class PdfExportService {
         java.util.List<Map<String, Object>> ventas = (java.util.List<Map<String, Object>>) reporteVentas.get("datos");
         Map<String, Object> estadisticas = (Map<String, Object>) reporteVentas.get("estadisticas");
 
+        // ============ GRÁFICA DE VENTAS DEL DÍA ============
+        if (ventas != null && !ventas.isEmpty()) {
+            Paragraph subtituloGrafica = new Paragraph("GRÁFICA - VENTAS DEL DÍA",
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14));
+            subtituloGrafica.setSpacingBefore(10);
+            document.add(subtituloGrafica);
+
+            try {
+                byte[] imagenGrafica = graficaService.generarGraficaVentasDelDia(ventas);
+                Image grafica = Image.getInstance(imagenGrafica);
+                grafica.setAlignment(Element.ALIGN_CENTER);
+                grafica.scaleToFit(500, 300);
+                document.add(grafica);
+                document.add(Chunk.NEWLINE);
+            } catch (Exception e) {
+                document.add(new Paragraph("No se pudo generar la gráfica: " + e.getMessage()));
+            }
+        }
+
         // Tabla de estadísticas del día
         PdfPTable tablaEstadisticas = new PdfPTable(2);
         tablaEstadisticas.setWidthPercentage(60);
@@ -637,6 +714,7 @@ public class PdfExportService {
         document.close();
         return baos.toByteArray();
     }
+
     // ============ MÉTODOS AUXILIARES PARA CELDAS ============
 
     private PdfPCell crearCeldaFiltro(String texto) {
