@@ -78,13 +78,17 @@
             <input type="text" th:field="*{valor}" class="w-full border border-borderLight  px-3 py-2 ">
         </div>
        <!-- ✅ VER IMAGEN ACTUAL -->
-        <div>
-            <label>Imagen actual</label>
-            <img th:src="@{/veterinario/producto/foto/{id}(id=${producto.id})}"
-                 class="w-32 h-32 object-cover  border"/>
-        </div>
+            <div>
+                <label class="block text-sm font-semibold text-softText">Imagen actual</label>
 
-        <!-- ✅ CAMBIAR IMAGEN -->
+                <!-- Si tiene imagen -->
+                <div th:if="${producto.fotoBase64}">
+                    <img th:src="'data:image/*;base64,' + ${producto.fotoBase64}"
+                         class="w-40 h-40 object-cover rounded-lg">
+                </div>
+
+
+            <!-- ✅ CAMBIAR IMAGEN -->
         <div>
             <label>Nueva imagen (opcional)</label>
             <input type="file" name="imagen" accept="image/*"
