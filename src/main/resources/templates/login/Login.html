@@ -36,25 +36,25 @@
 <div class="h-screen bg-[url('/img/gato_dos_login.jpg')] bg-cover bg-center flex items-end justify-center">
     <div class="flex flex-col items-center justify-center min-h-screen px-4 py-8">
         <main class="w-full max-w-sm">
-            <div class="bg-white dark:bg-zinc-900/50 shadow-lg rounded-xl p-8">
+            <div class="bg-white dark:bg-zinc-900/50 shadow-lg -xl p-8">
                 <div class="flex flex-col items-center space-y-6">
                     <img src="/img/logo.png" alt="logo" style="width:100px;">
                     <h1 class="text-3xl font-bold text-primary">Iniciar Sesión</h1>
                     <form method="post" th:action="@{/login}" class="w-full space-y-4">
                         <div>
                             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1" for="usuario">Usuario</label>
-                            <input class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-md focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500" id="usuario" name="usuario" placeholder="Tu nombre de usuario" type="text"  required/>
+                            <input class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 -md focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500" id="usuario" name="usuario" placeholder="Tu nombre de usuario" type="text"  required/>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1" for="contrasena">Contraseña</label>
-                            <input class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-md focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500" id="contrasena" name="contrasena" placeholder="Tu contraseña" type="password"  required/>
+                            <input class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 -md focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500" id="contrasena" name="contrasena" placeholder="Tu contraseña" type="password"  required/>
                         </div>
-                        <button class=" w-full text-center font-bold mt-8 bg-primary text-white px-6 py-3 rounded-md transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black">
+                        <button class=" w-full text-center font-bold mt-8 bg-primary text-white px-6 py-3 -md transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black">
                             Ingresar
                         </button>
 
                         <a th:href="@{/registro}">
-                            <div class=" w-full text-center font-bold mt-8 bg-primary text-white px-6 py-3 rounded-md transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black">
+                            <div class=" w-full text-center font-bold mt-8 bg-primary text-white px-6 py-3 -md transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black">
                                 Registrarse
                             </div>
                         </a>

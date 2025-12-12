@@ -14,6 +14,8 @@ public class RegistroDTO {
     private String direccionPro;
     private String telefonoPro;
     private String correoPro;
+    private Integer idVeterinariaSeleccionada;
+
 
     private String numLicencia;
     private String nombreVete;

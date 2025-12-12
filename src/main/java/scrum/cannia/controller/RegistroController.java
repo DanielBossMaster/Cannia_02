@@ -9,14 +9,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import scrum.cannia.Dto.RegistroDTO;
-import scrum.cannia.model.UsuarioModel;
-import scrum.cannia.model.PropietarioModel;
-import scrum.cannia.model.VeterinarioModel;
-import scrum.cannia.model.FundacionModel;
-import scrum.cannia.repository.FundacionRepository;
-import scrum.cannia.repository.UsuarioRepository;
-import scrum.cannia.repository.PropietarioRepository;
-import scrum.cannia.repository.VeterinarioRepository;
+import scrum.cannia.model.*;
+import scrum.cannia.repository.*;
+
+import java.lang.IllegalArgumentException;
+
 
 @Controller
 @RequestMapping("/registro")
@@ -34,9 +31,13 @@ public class RegistroController {
     @Autowired
     private FundacionRepository fundacionRepository;
 
+  @Autowired
+  private VeterinariaRepository veterinariaRepository;
+
     @GetMapping
     public String mostrarFormulario(Model model) {
         model.addAttribute("registro", new RegistroDTO());
+        model.addAttribute("veterinarias", veterinariaRepository.findAll());
         return "registro/registrar";
     }
 
@@ -56,18 +57,32 @@ public class RegistroController {
             // ===========================
             if ("propietario".equalsIgnoreCase(registroDTO.getRol())) {
 
-                // Buscar si ya existe un propietario con este documento
+                // 1. Validar la selección de Veterinaria
+                if (registroDTO.getIdVeterinariaSeleccionada() == null) {
+                    throw new IllegalArgumentException("Debe seleccionar una veterinaria.");
+                }
+
+                // 2. Buscar la Veterinaria seleccionada
+                VeterinariaModel veterinariaSeleccionada = veterinariaRepository
+                        .findById(registroDTO.getIdVeterinariaSeleccionada())
+                        .orElseThrow(() -> new IllegalArgumentException("Veterinaria seleccionada no válida."));
+
+                // ... (Lógica de búsqueda de PropietarioExistente, igual que antes) ...
                 PropietarioModel propietarioExistente =
                         propietarioRepository.findByNumDoc(registroDTO.getNumDoc());
 
                 PropietarioModel propietario;
 
                 if (propietarioExistente != null) {
-                    // ✔ Caso 1: el propietario YA existe → lo usamos
                     propietario = propietarioExistente;
 
+                    // Asegurar que si ya existe un propietario, se asocie la veterinaria seleccionada
+                    // (O manejar la lógica si el propietario existente ya tiene una veterinaria diferente)
+                    if (propietario.getVeterinaria() == null) {
+                        propietario.setVeterinaria(veterinariaSeleccionada);
+                    }
+
                 } else {
-                    // ✔ Caso 2: no existe → creamos uno nuevo
                     propietario = new PropietarioModel();
                     propietario.setNumDoc(registroDTO.getNumDoc());
                     propietario.setNombrePro(registroDTO.getNombrePro());
@@ -75,6 +90,11 @@ public class RegistroController {
                     propietario.setDireccionPro(registroDTO.getDireccionPro());
                     propietario.setTelefonoPro(registroDTO.getTelefonoPro());
                     propietario.setCorreoPro(registroDTO.getCorreoPro());
+
+                    // **********************************
+                    // ** ASIGNACIÓN DE LA VETERINARIA SELECCIONADA **
+                    // **********************************
+                    propietario.setVeterinaria(veterinariaSeleccionada);
 
                     propietarioRepository.save(propietario);
                 }
@@ -85,7 +105,6 @@ public class RegistroController {
 
                 propietarioRepository.save(propietario);
                 usuarioRepository.save(usuario);
-
             }
             // ===========================
             //   REGISTRO DE VETERINARIO

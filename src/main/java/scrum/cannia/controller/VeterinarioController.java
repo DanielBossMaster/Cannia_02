@@ -358,42 +358,59 @@ public class VeterinarioController {
     // ============================================
 
     @GetMapping("/TiendaPreview")
-    public String tiendaPreview(HttpSession session, Model model) {
-
+    public String tiendaPreview(HttpSession session,
+                                Model model,
+                                @RequestParam(value = "q", required = false) String q,
+                                @RequestParam(value = "idCategoria", required = false) Long idCategoria) {
         UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
-
         if (usuario == null) {
             return "redirect:/login";
         }
-
         VeterinariaModel veterinaria = null;
-
-        // SI EL USUARIO ES VETERINARIO
         if (usuario.getVeterinario() != null) {
             veterinaria = usuario.getVeterinario().getVeterinaria();
         }
-
-        // Asumo que listarTodos() llama a un repositorio o servicio que devuelve ProductoModel
         List<ProductoModel> lista = productoService.obtenerProductosActivos();
-
-        // 🔥 Convertimos foto (byte[]) → Base64 ANTES DE ENVIARLA A LA VISTA
         for (ProductoModel p : lista) {
             if (p.getFoto() != null) {
 
-                // 1. Conversión simple a Base64
                 String base64 = Base64.getEncoder().encodeToString(p.getFoto());
-
-                // 2.  Agregar el prefijo Data URL
-                // (Asumimos que el tipo de imagen es JPEG. Si usas PNG, cambia 'jpeg' a 'png')
                 String dataUrl = "data:image/jpeg;base64," + base64;
-
                 p.setFotoBase64(dataUrl);
             }
         }
-
         model.addAttribute("productos", lista);
-
         model.addAttribute("veterinaria", veterinaria);
+
+        try {
+            // Determinar si hay alguna búsqueda activa
+            boolean esBusqueda = (q != null && !q.trim().isEmpty()) || (idCategoria != null);
+
+            // Limpiar 'q' para el WS: si está vacío o solo con espacios, pásalo como null al WS
+            String queryParaWS = (q == null || q.trim().isEmpty()) ? null : q.trim();
+
+            // 2. Llamar al Web Service usando los parámetros (q, idCategoria)
+            List<ProductoBusquedaDto> resultados =
+                    productoService.obtenerProductosActivosFiltrados(queryParaWS, idCategoria); // <<<--- ¡AQUÍ ESTÁ EL CAMBIO!
+
+            // 3. Pasar todos los datos necesarios a la vista:
+
+            // Lista de productos (ya sea filtrada o completa)
+            model.addAttribute("productos", resultados);
+
+            // Lista de categorías para el dropdown de filtros
+            model.addAttribute("categorias", categoriaService.listarTodas());
+
+            // Contexto de la búsqueda (para mantener el estado y la lógica condicional en Thymeleaf)
+            model.addAttribute("consulta", q); // Valor original para mostrar en la caja de texto
+            model.addAttribute("categoriaSeleccionada", idCategoria); // ID seleccionado
+            model.addAttribute("esBusqueda", esBusqueda); // Bandera para la vista
+
+        } catch (Exception e) {
+            System.err.println("Error al cargar o buscar productos: " + e.getMessage());
+            model.addAttribute("errorBusqueda", "Error al procesar la solicitud de productos.");
+            model.addAttribute("productos", List.of());
+        }
 
         return "veterinario/TiendaPreview";
     }
@@ -408,7 +425,6 @@ public class VeterinarioController {
         model.addAttribute("servicio", new ServicioModel());
         return "veterinario/inventario";
     }
-
 
 
     @GetMapping("/productos")
@@ -427,23 +443,14 @@ public class VeterinarioController {
 
     @GetMapping("/ventas")
     public String verVentas(HttpSession session, Model model) {
-
         UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
-
         if (usuario == null || usuario.getVeterinario() == null) {
-            return "redirect:/login";
-        }
-
+            return "redirect:/login";}
         VeterinariaModel veterinaria = usuario.getVeterinario().getVeterinaria();
-
         List<FacturaModel> ventas = facturaService.obtenerVentasVeterinaria(veterinaria.getId());
-
         model.addAttribute("ventas", ventas);
         model.addAttribute("veterinaria", veterinaria);
-
         return "veterinario/Ventas";
-
-
     }
 
     @PostMapping("/ventas/estado")
@@ -473,6 +480,11 @@ public class VeterinarioController {
             return "redirect:/veterinario/productos";
         }
 
+        if (producto.getFoto() != null) {
+            String base64 = Base64.getEncoder().encodeToString(producto.getFoto());
+            producto.setFotoBase64(base64);
+        }
+
         List<CategoriaModel> todasCategorias = categoriaService.listarTodas();
 
         model.addAttribute("producto", producto);
@@ -497,8 +509,6 @@ public class VeterinarioController {
         return "redirect:/veterinario/GestionVentas";
     }
 
-
-
     // 1. Méto de Carga Inicial (Ya lo tienes, asegura que 'categoria' esté siempre inicializado)
     @GetMapping("/admin/categorias")
     public String administrarCategorias(Model model) {
@@ -514,33 +524,31 @@ public class VeterinarioController {
         return "veterinario/GestionVentas"; // Retorna tu vista principal de gestión
     }
 
-    // 2. Métod POST para Guardar/Actualizar (Se mantiene igual)
+    // 2. Métod POST para Guardar/Actualizar
     @PostMapping("/admin/guardarCategoria")
     public String guardarCategoria(@ModelAttribute CategoriaModel categoria, RedirectAttributes redirectAttributes) {
         try {
             categoriaService.guardar(categoria);
-            // Puedes añadir un mensaje de éxito
+
         } catch (Exception e) {
-            // Manejo de errores si aplica
+
             redirectAttributes.addFlashAttribute("categoria", categoria);
-            // ... (añadir errores) ...
+
             return "redirect:/veterinario/GestionVentas";
         }
         return "redirect:/veterinario/GestionVentas";
     }
     // 3. NUEVO: Endpoint para cargar datos de la categoría vía AJAX (Recomendado: devuelve JSON)
-// Nota: Usa @ResponseBody o @RestController para devolver JSON
     @GetMapping("/admin/categoria/{id}")
     @ResponseBody
     public CategoriaModel cargarDatosCategoria(@PathVariable Long id) {
-        // Si el ID es 0 o null, podrías devolver un objeto vacío para "Crear Nuevo"
+
         if (id == 0) {
             return new CategoriaModel();
         }
         return categoriaService.obtenerPorId(id);
     }
 
-    // 4. Eliminar (Se mantiene igual)
     @GetMapping("/admin/eliminarCategoria/{id}")
     public String eliminarCategoria(@PathVariable Long id) {
         categoriaService.eliminar(id);

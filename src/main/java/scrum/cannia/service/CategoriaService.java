@@ -1,10 +1,13 @@
 // src/main/java/scrum/cannia/service/CategoriaService.java
 package scrum.cannia.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import scrum.cannia.model.CategoriaModel;
 import scrum.cannia.repository.CategoriaRepository;
+import scrum.cannia.repository.ProductoRepository;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +17,8 @@ public class CategoriaService {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
+    @Autowired
+    private ProductoRepository productoRepository;
 
 
     /**
@@ -50,13 +55,15 @@ public class CategoriaService {
         return categoriaRepository.findAll();
     }
 
-    /**
-     * Elimina una categoría por su ID.
-     * @param id El ID de la categoría a eliminar.
-     */
-    public void eliminar(Long id) {
-        // Antes de eliminar, podrías añadir lógica para verificar si hay productos asociados.
-        categoriaRepository.deleteById(id);
+
+    @Transactional
+    public void eliminar(Long idCategoria) {
+
+        // Paso 1: Desasociar los productos (la función en el repository espera Long)
+        productoRepository.desasociarProductosDeCategoria(idCategoria);
+
+        // Paso 2: Eliminar la categoría (el deleteById en JpaRepository para Long funciona)
+        categoriaRepository.deleteById(idCategoria);
     }
 }
 
