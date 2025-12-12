@@ -57,7 +57,7 @@ public class PropietarioController {
         model.addAttribute("usuario", user);
         return "Propietario/index";
     }
-
+// Utilizar para mostrar las mascotas cargadas por la fundacion
     @GetMapping("/mascotas-adopcion")
     public String verMascotasParaAdoptar(Model model) {
 

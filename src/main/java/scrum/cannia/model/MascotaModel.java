@@ -2,7 +2,7 @@ package scrum.cannia.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
-import scrum.cannia.dto.MascotaCargaDTO;
+import scrum.cannia.Dto.MascotaCargaDTO;
 
 import java.util.Date;
 
@@ -59,9 +59,6 @@ public class MascotaModel {
     @Column(length = 250)
     private String foto;
 
-    @Column(nullable = false)
-    private boolean estado = true;
-
     @Enumerated(EnumType.STRING)
     @Column(length = 15, nullable = true)
     private TipoEstadoMascota tipoEstado;
@@ -89,9 +86,6 @@ public class MascotaModel {
         mascota.setFundacion(fundacion);
         mascota.setPropietario(null);
 
-        // Estado activo por defecto
-        mascota.setEstado(true);
-
         return mascota;
     }
 
@@ -113,7 +107,6 @@ public class MascotaModel {
         mascota.propietario = propietario;
         mascota.fundacion = null;
         mascota.tipoEstado = TipoEstadoMascota.PROPIA;
-        mascota.estado = true;
 
         return mascota;
     }

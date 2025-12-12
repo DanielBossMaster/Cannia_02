@@ -6,8 +6,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.multipart.MultipartFile;
-import scrum.cannia.dto.MascotaCargaDTO;
+import scrum.cannia.Dto.ErrorCargaDTO;
+import scrum.cannia.Dto.MascotaCargaDTO;
+import scrum.cannia.Dto.ResultadoCargaMascotasDTO;
+import scrum.cannia.model.MascotaModel;
 import scrum.cannia.service.MascotaService;
+import scrum.cannia.repository.MascotaRepository;
 import scrum.cannia.strategy.DataLoaderStrategy;
 import scrum.cannia.strategy.factory.DataLoaderFactory;
 
@@ -21,6 +25,9 @@ public class FundacionController {
 
     @Autowired
     private MascotaService mascotaService;
+
+    @Autowired
+    private MascotaRepository mascotaRepository;
 
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session, Model model) {
@@ -48,30 +55,64 @@ public class FundacionController {
     @PostMapping("/upload")
     public String cargarMascotasFundacion(
             @RequestParam("archivo") MultipartFile file,
-            Principal principal,
+            HttpSession session,
             Model model) {
 
         try {
-            String filename = file.getOriginalFilename();
 
+            // Obtener la fundación desde la sesión
+            Long fundacionId = (Long) session.getAttribute("fundacionId");
+
+            if (fundacionId == null) {
+                model.addAttribute("error", "Debe iniciar sesión para cargar mascotas.");
+                return "fundacion/CargarMascotas";
+            }
+
+            String filename = file.getOriginalFilename();
             DataLoaderStrategy strategy = DataLoaderFactory.getStrategy(filename);
 
             List<MascotaCargaDTO> mascotas = strategy.loadData(file);
 
-            mascotaService.guardarMascotasDesdeFundacion(
-                    mascotas,
-                    principal.getName()  // username logueado
-            );
+            ResultadoCargaMascotasDTO resultado =
+                    mascotaService.guardarMascotasDesdeFundacion(mascotas, fundacionId);
 
             model.addAttribute("mensaje",
-                    "Archivo cargado correctamente. Registros: " + mascotas.size());
+                    "Archivo procesado. Guardadas: " + resultado.getGuardadas().size());
+
+            if (!resultado.getErrores().isEmpty()) {
+                StringBuilder sb = new StringBuilder("Se encontraron errores:\n");
+
+                for (ErrorCargaDTO err : resultado.getErrores()) {
+                    sb.append("Fila ").append(err.getFila())
+                            .append(": ").append(err.getMensaje()).append("\n");
+                }
+
+                model.addAttribute("error", sb.toString());
+            }
 
         } catch (Exception e) {
-            model.addAttribute("mensaje",
-                    "Error: " + e.getMessage());
+            model.addAttribute("error", e.getMessage());
         }
 
-        return "fundacion/dashboard";
+        return "fundacion/CargarMascotas";
     }
+
+
+    @GetMapping("/mascotasCargadas")
+    public String mascotasCargadas(Model model, HttpSession session) {
+
+        Long fundacionId = (Long) session.getAttribute("fundacionId");
+
+        if (fundacionId == null) {
+            return "redirect:/login";
+        }
+
+        List<MascotaModel> mascotas = mascotaRepository.findByFundacion_Id(fundacionId);
+
+        model.addAttribute("mascotas", mascotas);
+
+        return "fundacion/MascotasCargadas";
+    }
+
 
 }

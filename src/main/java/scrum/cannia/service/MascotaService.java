@@ -2,17 +2,17 @@ package scrum.cannia.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import scrum.cannia.dto.MascotaCargaDTO;
-import scrum.cannia.model.Genero;
-import scrum.cannia.model.MascotaModel;
-import scrum.cannia.model.UsuarioModel;
+import scrum.cannia.Dto.ErrorCargaDTO;
+import scrum.cannia.Dto.MascotaCargaDTO;
+import scrum.cannia.Dto.ResultadoCargaMascotasDTO;
+import scrum.cannia.model.*;
 import scrum.cannia.repository.MascotaRepository;
-import scrum.cannia.model.FundacionModel;
 import scrum.cannia.repository.FundacionRepository;
 import scrum.cannia.repository.UsuarioRepository;
 
 //import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,30 +32,41 @@ public class MascotaService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public void guardarMascotasDesdeFundacion(List<MascotaCargaDTO> lista, String username) {
+    public ResultadoCargaMascotasDTO guardarMascotasDesdeFundacion(
+            List<MascotaCargaDTO> lista, Long fundacionId) {
 
-        UsuarioModel usuario = usuarioRepository.findByUsuario(username)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + username));
+        FundacionModel fundacion = fundacionRepository.findById(fundacionId)
+                .orElseThrow(() -> new RuntimeException("Fundación no encontrada."));
 
-        FundacionModel fundacion = fundacionRepository.findByUsuario(usuario)
-                .orElseThrow(() -> new RuntimeException("Fundación no encontrada para el usuario: " + usuario));
+        List<MascotaModel> guardadas = new ArrayList<>();
+        List<ErrorCargaDTO> errores = new ArrayList<>();
 
+        int fila = 1;
 
         for (MascotaCargaDTO dto : lista) {
+            fila++;
 
-            MascotaModel mascota = MascotaModel.crearDesdeFundacion(dto, fundacion);
+            try {
+                MascotaModel mascota = MascotaModel.crearDesdeFundacion(dto, fundacion);
 
-            mascotaRepository.save(mascota);
+                mascotaRepository.save(mascota);
+                guardadas.add(mascota);
+
+            } catch (Exception e) {
+                errores.add(new ErrorCargaDTO(fila, e.getMessage()));
+            }
         }
+
+        return new ResultadoCargaMascotasDTO(guardadas, errores);
     }
 
+
     public List<MascotaModel> listarMascotasDisponibles() {
-        return mascotaRepository
-                .findByPropietarioIsNullAndFundacionIsNotNullAndEstadoTrue();
+        return mascotaRepository.findByTipoEstado(TipoEstadoMascota.DISPONIBLE);
     }
 //---------------------------------------------------------------------------------------
 
-    // 🔹 Listar todas las mascotas
+//     🔹 Listar todas las mascotas
     public List<MascotaModel> listarTodas() {
         return mascotaRepository.findAll();
     }
@@ -75,14 +86,14 @@ public class MascotaService {
         return mascotaRepository.findByPropietarioId(propietarioId);
     }
 
-    //metodos para el crdu de mascotas en fundaciones
+//    metodos para el crdu de mascotas en fundaciones
 
-    // listar mascotas de una fundación
+//     listar mascotas de una fundación
     public List<MascotaModel> listarPorFundacion(Long fundacionId) {
-        return mascotaRepository.findByFundacionId(fundacionId);
+        return mascotaRepository.findByFundacion_Id(fundacionId);
     }
 
-    // guardar  nueva mascota asociada a una fundación
+//     guardar  nueva mascota asociada a una fundación
     public MascotaModel guardarEnFundacion(Long fundacionId, MascotaModel mascota) {
         FundacionModel f = fundacionRepository.findById(fundacionId)
                 .orElseThrow(() -> new RuntimeException("La Fundación no existe: " + fundacionId));
@@ -93,7 +104,7 @@ public class MascotaService {
         return mascotaRepository.save(mascota);
     }
 
-    //actualizar mascota en una fundación
+//    actualizar mascota en una fundación
     public MascotaModel actualizarMascota(Long id, MascotaModel mascota) {
         MascotaModel existente = mascotaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Mascota no encontrada"));
@@ -113,22 +124,13 @@ public class MascotaService {
         return mascotaRepository.save(existente);
     }
 
-    //eliminar una mascota de fundación
-
-    public void eliminarMascota(Long id) {
-        MascotaModel mascota = mascotaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Mascota no encontrada"));
-        mascota.setEstado(false);
-        mascotaRepository.save(mascota);
-    }
-
-    // metodo para la vista de adopción del Propietario
-    public List<MascotaModel> listarMascotasEnAdopcionPorEspecie(String especie) {
-        if (especie == null || especie.isEmpty() || especie.equalsIgnoreCase("Todos")) {
-            return mascotaRepository.findByFundacionIsNotNullAndEstadoTrue(); // Lista todas las activas en fundación
-        }
-
-        return mascotaRepository.findByFundacionIsNotNullAndEstadoTrueAndEspecie(especie);
-    }
+//     metodo para la vista de adopción del Propietario
+//    public List<MascotaModel> listarMascotasEnAdopcionPorEspecie(String especie) {
+//        if (especie == null || especie.isEmpty() || especie.equalsIgnoreCase("Todos")) {
+//            return mascotaRepository.findByFundacionIsNotNullAndEstadoTrue(); // Lista todas las activas en fundación
+//        }
+//
+//        return mascotaRepository.findByFundacionIsNotNullAndEstadoTrueAndEspecie(especie);
+//    }
 
 }

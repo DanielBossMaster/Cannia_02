@@ -29,6 +29,7 @@ public class DataInitializer {
                         true,
                         true,
                         null,
+                        null,
                         null,// ← este es fotoBase64
                         new ArrayList<>() // ← inventarios
                 );
@@ -46,6 +47,7 @@ public class DataInitializer {
                         true,
                         null,
                         null,
+                        null,
                         new ArrayList<>()
                 );
 
@@ -59,7 +61,7 @@ public class DataInitializer {
                         UnidadMedida.Kg,
                         true,
                         true,
-
+                        null,
                         null,
                         null,
                         new ArrayList<>()
@@ -76,7 +78,7 @@ public class DataInitializer {
                         true,
                         true,
                         null,
-
+                        null,
                         null,
                         new ArrayList<>()
                 );
@@ -91,7 +93,7 @@ public class DataInitializer {
                         UnidadMedida.Kg,
                         true,
                         true,
-
+                        null,
                         null,
                         null,
                         new ArrayList<>()
@@ -107,7 +109,7 @@ public class DataInitializer {
                         UnidadMedida.Kg,
                         true,
                         true,
-
+                        null,
                         null,
                         null,
                         new ArrayList<>()
@@ -123,7 +125,7 @@ public class DataInitializer {
                         UnidadMedida.Kg,
                         true,
                         true,
-
+                        null,
                         null,
                         null,
                         new ArrayList<>()
@@ -141,6 +143,7 @@ public class DataInitializer {
                         true,
                         null,
                         null,
+                        null,
                         new ArrayList<>()
                 );
 
@@ -154,7 +157,7 @@ public class DataInitializer {
                         UnidadMedida.Kg,
                         true,
                         true,
-
+                        null,
                         null,
                         null,
                         new ArrayList<>()
@@ -170,6 +173,7 @@ public class DataInitializer {
                         UnidadMedida.Kg,
                         true,
                         true,
+                        null,
                         null,
                         null,
                         new ArrayList<>()

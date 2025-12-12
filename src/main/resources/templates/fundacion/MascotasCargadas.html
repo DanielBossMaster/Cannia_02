@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mascotas Cargadas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<header class="bg-secondary text-white flex justify-between items-center px-6 py-3 shadow-md">
+    <div class="flex items-center space-x-3">
+        <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
+        <h1 class="text-lg font-bold">Cannia</h1>
+    </div>
+
+    <a th:href="@{/fundacion/dashboard}"
+       class="bg-primary hover:bg-secondary px-4 py-2 rounded-lg shadow text-white transition">
+        ⬅ Volver al inicio
+    </a>
+</header>
+
+<div class="max-w-5xl mx-auto mt-10 bg-white shadow-xl rounded-2xl p-8">
+
+    <h2 class="text-3xl font-bold text-darkText mb-6 text-center">
+        🐾 Mascotas Cargadas por la Fundación
+    </h2>
+
+    <table class="min-w-full bg-white rounded-lg shadow">
+        <thead>
+        <tr class="bg-secondary text-white text-left">
+            <th class="py-3 px-4">Nombre</th>
+            <th class="py-3 px-4">Especie</th>
+            <th class="py-3 px-4">Raza</th>
+            <th class="py-3 px-4">Género</th>
+            <th class="py-3 px-4 text-center">Acciones</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="m : ${mascotas}" class="border-b hover:bg-gray-100 transition">
+
+            <td class="py-3 px-4" th:text="${m.nomMascota}"></td>
+            <td class="py-3 px-4" th:text="${m.especie}"></td>
+            <td class="py-3 px-4" th:text="${m.raza}"></td>
+            <td class="py-3 px-4" th:text="${m.genero}"></td>
+
+            <td class="py-3 px-4 text-center">
+                <a th:href="@{/fundacion/mascota/{id}(id=${m.id})}"
+                   class="bg-primary hover:bg-secondary px-4 py-2 text-white rounded-lg shadow transition">
+                    Ver más
+                </a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>
