@@ -551,6 +551,15 @@
 
         console.log("Renderizando grafico de ventas:", tipoReporte, "Tipo:", tipoGrafico, "Datos:", datos.length);
 
+        // Paleta de colores para las barras
+        const coloresBarras = [
+            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
+            '#9966FF', '#FF9F40', '#8AC926', '#1982C4',
+            '#6A4C93', '#F15BB5', '#00BBF9', '#00F5D4',
+            '#FF6B6B', '#48D1CC', '#FFA726', '#7E57C2',
+            '#26C6DA', '#AB47BC', '#66BB6A', '#FF7043'
+        ];
+
         const config = {
             type: esTorta ? 'pie' : 'bar',
             data: {
@@ -562,8 +571,8 @@
                         '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
                         '#9966FF', '#FF9F40', '#8AC926', '#1982C4',
                         '#6A4C93', '#F15BB5', '#00BBF9', '#00F5D4'
-                    ] : 'rgba(54, 162, 235, 0.7)',
-                    borderColor: esTorta ? '#fff' : 'rgba(54, 162, 235, 1)',
+                    ] : coloresBarras.slice(0, datos.length), // Usar colores diferentes para cada barra
+                    borderColor: esTorta ? '#fff' : 'rgb(255,255,255)',
                     borderWidth: 2,
                     borderRadius: esTorta ? 0 : 5
                 }]
@@ -1095,7 +1104,9 @@
     // Funciones de exportación
     async function exportarPDF() {
         const tipoReporte = document.getElementById('filtroReporte').value;
-        console.log("Exportando PDF para:", tipoReporte);
+        const tipoGrafico = document.getElementById('tipoGrafico').value;
+
+        console.log("Exportando PDF para:", tipoReporte, "Tipo gráfico:", tipoGrafico);
 
         // Mostrar loading
         const btnPdf = document.querySelector('[onclick*="exportarPDF"]');
@@ -1104,8 +1115,19 @@
         btnPdf.disabled = true;
 
         try {
-            // Construir URL según el tipo de reporte
-            let url = '/inventario/reportes/exportar/pdf?reporte=' + tipoReporte;
+            // Construir URL CORRECTAMENTE
+            let url = '/inventario/reportes/exportar/pdf?reporte=' + tipoReporte +
+                '&tipoGrafico=' + tipoGrafico;
+
+            // Solo agregar estado si es necesario
+            if (tipoReporte === 'activos') {
+                url += '&estado=true';
+            } else if (tipoReporte === 'inactivos') {
+                url += '&estado=false';
+            }
+            // Si tipoReporte es 'productos', NO agregar estado (todos los productos)
+
+            console.log("URL de descarga:", url);
 
             // Crear enlace temporal para descarga
             const link = document.createElement('a');
@@ -1120,46 +1142,36 @@
 
         } catch (error) {
             console.error('Error al exportar PDF:', error);
-            mostrarNotificacion('Error al generar PDF', 'error');
+            mostrarNotificacion('Error al generar PDF: ' + error.message, 'error');
         } finally {
             // Restaurar botón
             btnPdf.innerHTML = originalText;
             btnPdf.disabled = false;
         }
     }
-
-    async function previsualizarPDF() {
-        const tipoReporte = document.getElementById('filtroReporte').value;
-        console.log("Previsualizando PDF para:", tipoReporte);
-
-        const url = '/inventario/reportes/ver/pdf?reporte=' + tipoReporte;
-
-        // Abrir en nueva pestaña
-        window.open(url, '_blank');
-    }
-
+    // Agrega esta función después de exportarPDF()
     function mostrarNotificacion(mensaje, tipo) {
-        console.log("Mostrando notificacion:", mensaje, "Tipo:", tipo);
+        // Crear elemento de notificación
+        const notificacion = document.createElement('div');
+        notificacion.className = `alert alert-${tipo === 'success' ? 'success' : 'danger'} alert-dismissible fade show`;
+        notificacion.style.position = 'fixed';
+        notificacion.style.top = '20px';
+        notificacion.style.right = '20px';
+        notificacion.style.zIndex = '9999';
+        notificacion.innerHTML = `
+        ${mensaje}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
 
-        // Crear notificación
-        const alertDiv = document.createElement('div');
-        alertDiv.className = 'alert alert-' + (tipo === 'success' ? 'success' : 'danger') +
-            ' alert-dismissible fade show position-fixed';
-        alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-        alertDiv.innerHTML = `
-            ${mensaje}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        `;
-        document.body.appendChild(alertDiv);
+        document.body.appendChild(notificacion);
 
-        // Auto-eliminar después de 3 segundos
+        // Autoremover después de 5 segundos
         setTimeout(() => {
-            if (alertDiv.parentNode) {
-                alertDiv.remove();
+            if (notificacion.parentNode) {
+                notificacion.parentNode.removeChild(notificacion);
             }
-        }, 3000);
+        }, 5000);
     }
-
     function imprimirReporte() {
         console.log("Imprimir reporte");
         // Solo imprime la sección del reporte
@@ -1190,6 +1202,26 @@
             </html>
         `);
         ventana.document.close();
+    }
+    // Agrega esta función después de exportarPDF()
+    function previsualizarPDF() {
+        const tipoReporte = document.getElementById('filtroReporte').value;
+        const tipoGrafico = document.getElementById('tipoGrafico').value;
+
+        console.log("Previsualizando PDF para:", tipoReporte);
+
+        // Construir URL para previsualización
+        let url = '/inventario/reportes/ver/pdf?reporte=' + tipoReporte +
+            '&tipoGrafico=' + tipoGrafico;
+
+        if (tipoReporte === 'activos') {
+            url += '&estado=true';
+        } else if (tipoReporte === 'inactivos') {
+            url += '&estado=false';
+        }
+
+        // Abrir en nueva pestaña
+        window.open(url, '_blank');
     }
 </script>
 </body>
