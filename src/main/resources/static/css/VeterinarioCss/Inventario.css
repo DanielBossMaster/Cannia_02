@@ -410,6 +410,7 @@ body {
 /* Botón Editar */
 .btn-editar {
     background-color: #2563eb; /* Azul */
+    text-decoration-line: none;
 }
 
 .btn-editar:hover {
@@ -461,6 +462,7 @@ textarea.form-control {
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
+
 }
 -container {
     display: flex;
