@@ -12,6 +12,7 @@ import scrum.cannia.Dto.ResultadoCargaMascotasDTO;
 import scrum.cannia.model.MascotaModel;
 import scrum.cannia.service.MascotaService;
 import scrum.cannia.repository.MascotaRepository;
+import scrum.cannia.service.MascotaServiceCreator;
 import scrum.cannia.strategy.DataLoaderStrategy;
 import scrum.cannia.strategy.factory.DataLoaderFactory;
 
@@ -28,6 +29,9 @@ public class FundacionController {
 
     @Autowired
     private MascotaRepository mascotaRepository;
+
+    @Autowired
+    private MascotaServiceCreator mascotaServiceCreator;
 
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session, Model model) {
@@ -58,37 +62,31 @@ public class FundacionController {
             HttpSession session,
             Model model) {
 
+        Long fundacionId = (Long) session.getAttribute("fundacionId");
+
+        if (fundacionId == null) {
+            model.addAttribute("error", "No hay fundación en sesión.");
+            return "redirect:/login";
+        }
+
         try {
-
-            // Obtener la fundación desde la sesión
-            Long fundacionId = (Long) session.getAttribute("fundacionId");
-
-            if (fundacionId == null) {
-                model.addAttribute("error", "Debe iniciar sesión para cargar mascotas.");
-                return "fundacion/CargarMascotas";
-            }
-
+            // 1️⃣ Obtener estrategia según extensión
             String filename = file.getOriginalFilename();
             DataLoaderStrategy strategy = DataLoaderFactory.getStrategy(filename);
 
-            List<MascotaCargaDTO> mascotas = strategy.loadData(file);
+            // 2️⃣ Leer archivo (Strategy)
+            List<MascotaCargaDTO> mascotasDTO = strategy.loadData(file);
 
+            // 3️⃣ Crear mascotas usando TEMPLATE METHOD
             ResultadoCargaMascotasDTO resultado =
-                    mascotaService.guardarMascotasDesdeFundacion(mascotas, fundacionId);
+                    mascotaServiceCreator.crearDesdeFundacion(
+                            mascotasDTO,
+                            fundacionId
+                    );
 
-            model.addAttribute("mensaje",
-                    "Archivo procesado. Guardadas: " + resultado.getGuardadas().size());
-
-            if (!resultado.getErrores().isEmpty()) {
-                StringBuilder sb = new StringBuilder("Se encontraron errores:\n");
-
-                for (ErrorCargaDTO err : resultado.getErrores()) {
-                    sb.append("Fila ").append(err.getFila())
-                            .append(": ").append(err.getMensaje()).append("\n");
-                }
-
-                model.addAttribute("error", sb.toString());
-            }
+            // 4️⃣ Enviar resultados a la vista
+            model.addAttribute("total", resultado.getGuardadas().size());
+            model.addAttribute("errores", resultado.getErrores());
 
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
@@ -98,21 +96,24 @@ public class FundacionController {
     }
 
 
+
     @GetMapping("/mascotasCargadas")
-    public String mascotasCargadas(Model model, HttpSession session) {
+    public String mascotasCargadas(HttpSession session, Model model) {
 
         Long fundacionId = (Long) session.getAttribute("fundacionId");
 
-        if (fundacionId == null) {
-            return "redirect:/login";
-        }
+//        if (fundacionId == null) {
+//            return "redirect:/login";
+//        }
 
-        List<MascotaModel> mascotas = mascotaRepository.findByFundacion_Id(fundacionId);
+        List<MascotaModel> mascotas =
+                mascotaRepository.findByFundacion_Id(fundacionId);
 
         model.addAttribute("mascotas", mascotas);
 
         return "fundacion/MascotasCargadas";
     }
+
 
 
 }

@@ -16,7 +16,7 @@ public class PropietarioModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_propietario")
-    private int id;
+    private Long id;
 
     @Column(length = 20, nullable = false)
     private String numDoc;

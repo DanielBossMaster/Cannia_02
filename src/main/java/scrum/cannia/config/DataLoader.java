@@ -34,28 +34,28 @@ public class DataLoader implements CommandLineRunner {
             List<PropietarioModel> propietarios = new ArrayList<>();
 
             // 🧍 Propietarios de ejemplo
-            propietarios.add(new PropietarioModel(0, "1001", "Ana", "Torres", "Calle 10 #5-22",
+            propietarios.add(new PropietarioModel(Long.valueOf(0), "1001", "Ana", "Torres", "Calle 10 #5-22",
                     "3001112233", "ana@gmail.com", true, new ArrayList<>(), null, null));
 
-            propietarios.add(new PropietarioModel(0, "1002", "Carlos", "Pérez", "Carrera 12 #8-40",
+            propietarios.add(new PropietarioModel(Long.valueOf(0), "1002", "Carlos", "Pérez", "Carrera 12 #8-40",
                     "3012223344", "carlos@gmail.com", true, new ArrayList<>(), null,null));
 
-            propietarios.add(new PropietarioModel(0, "1003", "Laura", "Gómez", "Av. 6 #20-11",
+            propietarios.add(new PropietarioModel(Long.valueOf(0), "1003", "Laura", "Gómez", "Av. 6 #20-11",
                     "3023334455", "laura@gmail.com", true, new ArrayList<>(), null,null));
 
-            propietarios.add(new PropietarioModel(0, "1004", "Pedro", "Ruiz", "Calle 15 #3-55",
+            propietarios.add(new PropietarioModel(Long.valueOf(0), "1004", "Pedro", "Ruiz", "Calle 15 #3-55",
                     "3034445566", "pedro@gmail.com", true, new ArrayList<>(), null,null));
 
-            propietarios.add(new PropietarioModel(0, "1005", "Sofía", "Castro", "Carrera 9 #12-33",
+            propietarios.add(new PropietarioModel(Long.valueOf(0), "1005", "Sofía", "Castro", "Carrera 9 #12-33",
                     "3045556677", "sofia@gmail.com", true, new ArrayList<>(), null,null));
 
-            propietarios.add(new PropietarioModel(0, "1006", "David", "Mora", "Av. 3 #45-22",
+            propietarios.add(new PropietarioModel(Long.valueOf(0), "1006", "David", "Mora", "Av. 3 #45-22",
                     "3056667788", "david@gmail.com", true, new ArrayList<>(), null,null));
 
-            propietarios.add(new PropietarioModel(0, "1007", "María", "López", "Calle 8 #9-21",
+            propietarios.add(new PropietarioModel(Long.valueOf(0), "1007", "María", "López", "Calle 8 #9-21",
                     "3067778899", "maria@gmail.com", true, new ArrayList<>(), null,null));
 
-            propietarios.add(new PropietarioModel(0, "1008", "Luis", "Rojas", "Carrera 4 #7-10",
+            propietarios.add(new PropietarioModel(Long.valueOf(0), "1008", "Luis", "Rojas", "Carrera 4 #7-10",
                     "3078889900", "luis@gmail.com", true, new ArrayList<>(), null,null));
 
 

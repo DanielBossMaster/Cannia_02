@@ -1,14 +1,12 @@
 package scrum.cannia.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import scrum.cannia.model.HistoriaClinicaModel;
-import scrum.cannia.model.VacunaModel;
-import scrum.cannia.model.PropietarioModel;
-import scrum.cannia.model.MascotaModel;
+import scrum.cannia.model.*;
 import scrum.cannia.repository.HistoriaClinicaRepository;
 import scrum.cannia.repository.VacunaRepository;
 import scrum.cannia.repository.MascotaRepository;
@@ -21,10 +19,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -43,6 +38,9 @@ public class HistoriaClinicaController {
 
     @Autowired
     private MascotaRepository mascotaRepository;
+
+
+
 
     // ★★★ ENDPOINT CORREGIDO PARA OBTENER HISTORIAS CLÍNICAS ★★★
     @GetMapping("/obtenerHistoriasClinicas/{mascotaId}")

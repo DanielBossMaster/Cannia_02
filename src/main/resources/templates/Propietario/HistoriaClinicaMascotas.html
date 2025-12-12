@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Historia Clínica - Mascotas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<header class="bg-secondary text-white flex justify-between items-center px-6 py-3 shadow-md">
+    <div class="flex items-center space-x-3">
+        <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
+        <h1 class="text-lg font-bold">Cannia</h1>
+    </div>
+
+    <a th:href="@{/propietario/index}"
+       class="bg-primary hover:bg-secondary px-4 py-2 rounded-lg shadow text-white transition">
+        ⬅ Volver
+    </a>
+</header>
+
+<div class="max-w-5xl mx-auto mt-10 bg-white shadow-xl rounded-2xl p-8">
+
+    <h2 class="text-3xl font-bold mb-6 text-center">
+        📗 Historia Clínica de tus Mascotas
+    </h2>
+
+    <table class="min-w-full bg-white rounded-lg shadow">
+        <thead>
+        <tr class="bg-secondary text-white text-left">
+            <th class="py-3 px-4">Nombre</th>
+            <th class="py-3 px-4">Especie</th>
+            <th class="py-3 px-4">Raza</th>
+            <th class="py-3 px-4">Género</th>
+            <th class="py-3 px-4 text-center">Acciones</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="m : ${mascotas}" class="border-b hover:bg-gray-100 transition">
+
+            <td class="py-3 px-4" th:text="${m.nomMascota}"></td>
+            <td class="py-3 px-4" th:text="${m.especie}"></td>
+            <td class="py-3 px-4" th:text="${m.raza}"></td>
+            <td class="py-3 px-4" th:text="${m.genero}"></td>
+
+            <td class="py-3 px-4 text-center">
+                <button
+                        class="bg-primary hover:bg-secondary px-4 py-2 text-white rounded-lg shadow transition"
+                        th:attr="onclick=|abrirModal(${m.id}, '${m.nomMascota}')|">
+                    Ver Historia Clínica
+                </button>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ================= MODAL ================= -->
+<div id="modalHistoria"
+     class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+
+    <div class="bg-white rounded-2xl shadow-xl w-11/12 max-w-4xl p-6 relative">
+
+        <!-- Botón cerrar -->
+        <button onclick="cerrarModal()"
+                class="absolute top-4 right-4 text-gray-500 hover:text-black text-2xl">
+            ✕
+        </button>
+
+        <h3 id="modalTitulo" class="text-2xl font-bold mb-4"></h3>
+
+        <!-- Contenido dinámico -->
+        <div id="contenidoHistoria" class="overflow-y-auto max-h-[60vh]">
+            <p class="text-center text-gray-500">Cargando historia clínica...</p>
+        </div>
+
+    </div>
+</div>
+
+<!-- ================= JS ================= -->
+<script>
+    function abrirModal(idMascota, nombreMascota) {
+        document.getElementById('modalTitulo').innerText =
+            'Historia Clínica de ' + nombreMascota;
+
+        document.getElementById('modalHistoria').classList.remove('hidden');
+        document.getElementById('modalHistoria').classList.add('flex');
+
+        // Cargar historia clínica vía fetch
+        fetch('/propietario/mascota/' + idMascota + '/historia')
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('contenidoHistoria').innerHTML = html;
+            })
+            .catch(() => {
+                document.getElementById('contenidoHistoria').innerHTML =
+                    '<p class="text-red-500 text-center">Error al cargar la historia clínica</p>';
+            });
+    }
+
+    function cerrarModal() {
+        document.getElementById('modalHistoria').classList.add('hidden');
+        document.getElementById('modalHistoria').classList.remove('flex');
+        document.getElementById('contenidoHistoria').innerHTML = '';
+    }
+</script>
+
+</body>
+</html>

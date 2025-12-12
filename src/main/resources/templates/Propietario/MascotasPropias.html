@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Mascotas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<!-- HEADER -->
+<header class="bg-secondary text-white flex justify-between items-center px-6 py-3 shadow-md">
+    <div class="flex items-center space-x-3">
+        <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
+        <h1 class="text-lg font-bold">Cannia</h1>
+    </div>
+
+    <a th:href="@{/propietario/index}"
+       class="bg-primary hover:bg-secondary px-4 py-2 rounded-lg shadow text-white transition">
+        ⬅ Volver
+    </a>
+</header>
+
+<!-- CONTENIDO -->
+<div class="max-w-6xl mx-auto mt-10 px-4">
+
+    <h2 class="text-3xl font-bold mb-8 text-center">
+        🐾 Mis Mascotas
+    </h2>
+
+    <!-- SIN MASCOTAS -->
+    <div th:if="${mascotas.isEmpty()}"
+         class="text-center text-gray-500">
+        No tienes mascotas registradas.
+    </div>
+
+    <!-- GRID DE CARDS -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <div th:each="m : ${mascotas}"
+             class="bg-white rounded-2xl shadow hover:shadow-lg transition p-6">
+
+            <!-- FOTO -->
+            <img th:if="${m.foto != null && !m.foto.isEmpty()}"
+                 th:src="${m.foto}"
+                 class="w-full h-40 object-cover rounded-lg mb-4"/>
+
+            <img th:if="${m.foto == null || m.foto.isEmpty()}"
+                 src="/img/mascota-default.png"
+                 class="w-full h-40 object-cover rounded-lg mb-4"/>
+
+            <!-- INFO -->
+            <h3 class="text-xl font-bold mb-1" th:text="${m.nomMascota}"></h3>
+            <p class="text-gray-600">
+                <span th:text="${m.especie}"></span> ·
+                <span th:text="${m.raza}"></span>
+            </p>
+            <p class="text-gray-500 text-sm">
+                Género: <span th:text="${m.genero}"></span>
+            </p>
+
+            <!-- ACCIONES -->
+            <div class="mt-4 flex justify-end">
+                <button
+                        class="bg-primary hover:bg-secondary text-white px-4 py-2 rounded-lg transition"
+                        th:attr="onclick=|abrirModal(
+                            ${m.id},
+                            '${m.nomMascota}',
+                            '${m.especie}',
+                            '${m.raza}',
+                            '${m.color}',
+                            '${m.genero}'
+                        )|">
+                    ✏️ Editar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================= MODAL EDITAR ================= -->
+<div id="modalEditar"
+     class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+
+    <div class="bg-white rounded-2xl shadow-xl w-11/12 max-w-lg p-6 relative">
+
+        <!-- CERRAR -->
+        <button onclick="cerrarModal()"
+                class="absolute top-4 right-4 text-gray-500 hover:text-black text-2xl">
+            ✕
+        </button>
+
+        <h3 class="text-2xl font-bold mb-4">Editar Mascota</h3>
+
+        <!-- FORM -->
+        <form th:action="@{/mascotas/editar}" method="post" class="space-y-4">
+
+            <input type="hidden" name="id" id="idMascota">
+
+            <div>
+                <label class="block text-sm font-medium">Nombre</label>
+                <input type="text" name="nomMascota" id="nomMascota"
+                       class="w-full border rounded-lg px-3 py-2" required>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium">Especie</label>
+                <input type="text" name="especie" id="especie"
+                       class="w-full border rounded-lg px-3 py-2" required>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium">Raza</label>
+                <input type="text" name="raza" id="raza"
+                       class="w-full border rounded-lg px-3 py-2">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium">Color</label>
+                <input type="text" name="color" id="color"
+                       class="w-full border rounded-lg px-3 py-2">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium">Género</label>
+                <select name="genero" id="genero"
+                        class="w-full border rounded-lg px-3 py-2">
+                    <option value="MACHO">MACHO</option>
+                    <option value="HEMBRA">HEMBRA</option>
+                </select>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4">
+                <button type="button" onclick="cerrarModal()"
+                        class="px-4 py-2 border rounded-lg">
+                    Cancelar
+                </button>
+
+                <button type="submit"
+                        class="bg-primary hover:bg-secondary text-white px-4 py-2 rounded-lg">
+                    Guardar cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ================= JS ================= -->
+<script>
+    function abrirModal(id, nombre, especie, raza, color, genero) {
+        document.getElementById('idMascota').value = id;
+        document.getElementById('nomMascota').value = nombre;
+        document.getElementById('especie').value = especie;
+        document.getElementById('raza').value = raza;
+        document.getElementById('color').value = color;
+        document.getElementById('genero').value = genero;
+
+        document.getElementById('modalEditar').classList.remove('hidden');
+        document.getElementById('modalEditar').classList.add('flex');
+    }
+
+    function cerrarModal() {
+        document.getElementById('modalEditar').classList.add('hidden');
+        document.getElementById('modalEditar').classList.remove('flex');
+    }
+</script>
+
+</body>
+</html>

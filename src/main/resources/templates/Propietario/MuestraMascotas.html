@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Mascotas en Adopción</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
+    <!-- Alpine.js para manejar modales -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 
 <body class="bg-gray-100">
+
+<!-- HEADER -->
 <header class="bg-secondary text-white flex justify-between items-center px-6 py-3 shadow-md">
     <div class="flex items-center space-x-3">
         <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
@@ -21,7 +25,7 @@
     </a>
 </header>
 
-<!-- Encabezado -->
+<!-- TÍTULO -->
 <div class="text-center py-10">
     <h1 class="text-4xl font-bold text-green-600">🐾 Mascotas en Adopción</h1>
     <p class="text-gray-600 mt-2">Mascotas disponibles subidas por fundaciones</p>
@@ -34,52 +38,134 @@
         No hay mascotas disponibles para adopción.
     </div>
 
-    <!-- Grid de cards -->
+    <!-- GRID DE CARDS -->
     <div th:if="${!#lists.isEmpty(mascotas)}"
          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
+        <!-- CARD DE MASCOTA -->
         <div th:each="mascota : ${mascotas}"
              x-data="{ open: false }"
              class="bg-white p-6 rounded-2xl shadow hover:shadow-xl transition border border-green-200">
 
+            <!-- ICONO -->
             <div class="flex justify-center mb-4">
                 <div class="text-green-600 text-6xl">🐶</div>
             </div>
 
+            <!-- NOMBRE -->
             <h2 class="text-2xl font-semibold text-gray-800 text-center"
                 th:text="${mascota.nomMascota}"></h2>
 
+            <!-- ESPECIE -->
             <p class="text-gray-600 text-center mt-1">
                 <span class="font-semibold">Especie:</span>
                 <span th:text="${mascota.especie}"></span>
             </p>
 
+            <!-- RAZA -->
             <p class="text-gray-600 text-center">
                 <span class="font-semibold">Raza:</span>
                 <span th:text="${mascota.raza}"></span>
             </p>
 
+            <!-- COLOR -->
             <p class="text-gray-600 text-center">
                 <span class="font-semibold">Color:</span>
                 <span th:text="${mascota.color}"></span>
             </p>
 
+            <!-- FUNDACIÓN -->
             <p class="text-gray-600 text-center">
                 <span class="font-semibold">Fundación:</span>
                 <span th:text="${mascota.fundacion.nombre}"></span>
             </p>
 
+            <!-- BOTONES -->
             <div class="mt-5 text-center">
-                <a href="#"
-                   class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full shadow-md transition">
-                    Ver más
-                </a>
 
-                <form th:action="@{/propietario/solicitar-adopcion/{id}(id=${mascota.id})}" method="post">
+                <!-- BOTÓN: ABRIR MODAL -->
+                <button @click="open = true"
+                        class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full shadow-md transition">
+                    Ver más
+                </button>
+
+                <!-- ADOPTAR -->
+                <form th:action="@{/propietario/solicitar-adopcion/{id}(id=${mascota.id})}"
+                      method="post">
                     <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full shadow-md transition mt-2">
                         Adoptar Mascota
                     </button>
                 </form>
+
+            </div>
+
+            <!-- MODAL -->
+            <div x-show="open"
+                 x-transition
+                 class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+
+                <div class="bg-white p-6 rounded-xl shadow-xl w-96 relative">
+
+                    <!-- CERRAR -->
+                    <button @click="open = false"
+                            class="absolute top-2 right-2 text-gray-600 hover:text-black">
+                        ✖
+                    </button>
+
+                    <h2 class="text-2xl font-bold text-center text-green-600 mb-4">
+                        Detalles de Mascota
+                    </h2>
+
+                    <div class="space-y-2 text-gray-700">
+
+                        <p><span class="font-semibold">Nombre:</span>
+                            <span th:text="${mascota.nomMascota}"></span>
+                        </p>
+
+                        <p><span class="font-semibold">Especie:</span>
+                            <span th:text="${mascota.especie}"></span>
+                        </p>
+
+                        <p><span class="font-semibold">Raza:</span>
+                            <span th:text="${mascota.raza}"></span>
+                        </p>
+
+                        <p><span class="font-semibold">Género:</span>
+                            <span th:text="${mascota.genero}"></span>
+                        </p>
+
+                        <p><span class="font-semibold">Color:</span>
+                            <span th:text="${mascota.color}"></span>
+                        </p>
+
+                        <p><span class="font-semibold">Edad Fundación:</span>
+                            <span th:text="${mascota.edadFundacion}"></span>
+                        </p>
+
+                        <p><span class="font-semibold">Medicamento:</span>
+                            <span th:text="${mascota.medicamento}"></span>
+                        </p>
+
+                        <p><span class="font-semibold">Fecha nacimiento:</span>
+                            <span th:text="${#dates.format(mascota.fechaNacimiento,'dd/MM/yyyy')}"></span>
+                        </p>
+
+                        <p><span class="font-semibold">Fundación:</span>
+                            <span th:text="${mascota.fundacion.nombre}"></span>
+                        </p>
+
+                    </div>
+
+                    <!-- ADOPTAR DENTRO DEL MODAL -->
+                    <div class="mt-4 text-center">
+                        <form th:action="@{/propietario/solicitar-adopcion/{id}(id=${mascota.id})}" method="post">
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full shadow-md transition">
+                                Adoptar Mascota
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
             </div>
 
         </div>
@@ -88,4 +174,5 @@
 
 </body>
 </html>
+
 
