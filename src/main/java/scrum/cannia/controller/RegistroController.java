@@ -12,9 +12,6 @@ import scrum.cannia.Dto.RegistroDTO;
 import scrum.cannia.model.*;
 import scrum.cannia.repository.*;
 
-import java.lang.IllegalArgumentException;
-
-
 @Controller
 @RequestMapping("/registro")
 public class RegistroController {
@@ -31,8 +28,9 @@ public class RegistroController {
     @Autowired
     private FundacionRepository fundacionRepository;
 
-  @Autowired
-  private VeterinariaRepository veterinariaRepository;
+    @Autowired
+    private VeterinariaRepository veterinariaRepository;
+
 
     @GetMapping
     public String mostrarFormulario(Model model) {
@@ -41,48 +39,42 @@ public class RegistroController {
         return "registro/registrar";
     }
 
+
     @PostMapping
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String registrarUsuario(@ModelAttribute("registro") RegistroDTO registroDTO, Model model) {
+
         try {
-            // Crear usuario
+
+            // ===========================
+            //   CREAR USUARIO BASE
+            // ===========================
             UsuarioModel usuario = new UsuarioModel();
             usuario.setUsuario(registroDTO.getUsuario());
             usuario.setContrasena(registroDTO.getContrasena());
             usuario.setRol(registroDTO.getRol());
-            usuarioRepository.save(usuario);
+
+            // NO se guarda aquí para evitar usuarios huérfanos
+            // usuarioRepository.save(usuario);
+
 
             // ===========================
             //   REGISTRO DE PROPIETARIO
             // ===========================
             if ("propietario".equalsIgnoreCase(registroDTO.getRol())) {
 
-                // 1. Validar la selección de Veterinaria
                 if (registroDTO.getIdVeterinariaSeleccionada() == null) {
                     throw new IllegalArgumentException("Debe seleccionar una veterinaria.");
                 }
 
-                // 2. Buscar la Veterinaria seleccionada
                 VeterinariaModel veterinariaSeleccionada = veterinariaRepository
                         .findById(registroDTO.getIdVeterinariaSeleccionada())
                         .orElseThrow(() -> new IllegalArgumentException("Veterinaria seleccionada no válida."));
 
-                // ... (Lógica de búsqueda de PropietarioExistente, igual que antes) ...
-                PropietarioModel propietarioExistente =
+                PropietarioModel propietario =
                         propietarioRepository.findByNumDoc(registroDTO.getNumDoc());
 
-                PropietarioModel propietario;
-
-                if (propietarioExistente != null) {
-                    propietario = propietarioExistente;
-
-                    // Asegurar que si ya existe un propietario, se asocie la veterinaria seleccionada
-                    // (O manejar la lógica si el propietario existente ya tiene una veterinaria diferente)
-                    if (propietario.getVeterinaria() == null) {
-                        propietario.setVeterinaria(veterinariaSeleccionada);
-                    }
-
-                } else {
+                if (propietario == null) {
                     propietario = new PropietarioModel();
                     propietario.setNumDoc(registroDTO.getNumDoc());
                     propietario.setNombrePro(registroDTO.getNombrePro());
@@ -90,22 +82,18 @@ public class RegistroController {
                     propietario.setDireccionPro(registroDTO.getDireccionPro());
                     propietario.setTelefonoPro(registroDTO.getTelefonoPro());
                     propietario.setCorreoPro(registroDTO.getCorreoPro());
-
-                    // **********************************
-                    // ** ASIGNACIÓN DE LA VETERINARIA SELECCIONADA **
-                    // **********************************
-                    propietario.setVeterinaria(veterinariaSeleccionada);
-
-                    propietarioRepository.save(propietario);
                 }
 
-                // Asociar usuario ↔ propietario
+                propietario.setVeterinaria(veterinariaSeleccionada);
                 propietario.setUsuario(usuario);
+
                 usuario.setPropietario(propietario);
 
-                propietarioRepository.save(propietario);
                 usuarioRepository.save(usuario);
+                propietarioRepository.save(propietario);
             }
+
+
             // ===========================
             //   REGISTRO DE VETERINARIO
             // ===========================
@@ -120,12 +108,18 @@ public class RegistroController {
                 veterinario.setCorreoVete(registroDTO.getCorreoVete());
                 veterinario.setUsuario(usuario);
 
-                veterinarioRepository.save(veterinario);
-
                 usuario.setVeterinario(veterinario);
-                usuarioRepository.save(usuario);
 
-            } else if ("fundacion".equalsIgnoreCase(registroDTO.getRol())) {
+                usuarioRepository.save(usuario);
+                veterinarioRepository.save(veterinario);
+            }
+
+
+            // ===========================
+            //   REGISTRO DE FUNDACIÓN
+            // ===========================
+            else if ("fundacion".equalsIgnoreCase(registroDTO.getRol())) {
+
                 FundacionModel fundacion = new FundacionModel();
                 fundacion.setNombre(registroDTO.getNombreFundacion());
                 fundacion.setDescripcion(registroDTO.getDescripcionFundacion());
@@ -134,21 +128,19 @@ public class RegistroController {
                 fundacion.setEmail(registroDTO.getEmailFundacion());
                 fundacion.setUsuario(usuario);
 
-                fundacionRepository.save(fundacion);
-
                 usuario.setFundacion(fundacion);
+
                 usuarioRepository.save(usuario);
+                fundacionRepository.save(fundacion);
             }
+
 
             model.addAttribute("mensaje", "Registro exitoso");
             return "login/login";
 
         } catch (Exception e) {
-            e.printStackTrace();
             model.addAttribute("error", "Error en el registro: " + e.getMessage());
-            return "registro/registrar";
+            throw e;   // permite que @Transactional haga rollback
         }
     }
-
 }
-
