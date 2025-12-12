@@ -5,19 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AppCannia - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#170022",
+                        secondary: "#290043",
+                        lightBg: "#e8ebff",
+                        lightSurface: "rgb(247,248,249)",
+                        darkText: "#1e293b",
+                        softText: "#475569",
+                        borderLight: "#e2e8f0",
+                    },
+                },
+            },
+        };
+    </script>
+    <style> body {font-family: 'Poppins', sans-serif;} </style>
 </head>
-<body class="bg-[#f6fdf7] text-gray-800">
+<body class="bg-lightBg text-gray-800">
 
 <!-- NAVBAR -->
-<nav class="w-full flex justify-between items-center px-8 py-4 bg-white shadow-sm">
-    <div class="flex items-center gap-2 text-green-600 font-semibold text-lg">
+<nav class="w-full flex justify-between items-center px-8 py-4 bg-primary shadow-sm">
+    <div class="flex items-center gap-2 text-bg-primary-600 font-semibold text-lg">
         <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
-        <h1 class="text-lg font-bold">Cannia</h1>
+        <h1 class="text-white font-bold">Cannia</h1>
     </div>
 
     <div class="flex items-center gap-3">
-        <a class="px-4 py-1 rounded-full bg-green-500 text-white" th:href="@{/cerrar-sesion}">
-            Cerrar Sesión
+        <a class="px-4 py-1  bg-secondary text-white" th:href="@{/cerrar-sesion}">
+            <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#ffffff"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-log-out-icon lucide-log-out">
+                <path d="m16 17 5-5-5-5"/>
+                <path d="M21 12H9"/>
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            </svg>
         </a>
     </div>
 </nav>
@@ -36,8 +69,25 @@
 
         <!-- CARD: Registrar Mascota -->
         <button onclick="abrirModal()"
-                class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-green-200 w-full text-left">
-            <div class="text-green-600 text-3xl">🐶</div>
+                class="bg-white p-6 -2xl shadow hover:shadow-lg transition border border-secondary w-full text-left">
+            <div class="text-primary text-3xl">
+                <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#000000"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-cat-icon lucide-cat">
+                    <path d="M12 5c.67 0 1.35.09 2 .26 1.78-2 5.03-2.84 6.42-2.26 1.4.58-.42 7-.42 7 .57 1.07 1 2.24 1 3.44C21 17.9 16.97 21 12 21s-9-3-9-7.56c0-1.25.5-2.4 1-3.44 0 0-1.89-6.42-.5-7 1.39-.58 4.72.23 6.5 2.23A9.04 9.04 0 0 1 12 5Z"/>
+                    <path d="M8 14v.5"/>
+                    <path d="M16 14v.5"/>
+                    <path d="M11.25 16.25h1.5L12 17l-.75-.75Z"/>
+                </svg>
+            </div>
             <h3 class="font-semibold mt-3 text-lg">Registrar Mascota</h3>
             <p class="text-sm text-gray-500">Añade un nuevo integrante a tu perfil familiar.</p>
         </button>
@@ -45,32 +95,98 @@
         <!-- Tus Mascotas -->
         <a th:if="${usuario.propietario != null}"
            th:href="@{/propietario/{id}/mascotas(id=${usuario.propietario.id})}"
-           class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-green-200">
-            <div class="text-green-600 text-3xl">📋</div>
+           class="bg-white p-6 -2xl shadow hover:shadow-lg transition border border-primary">
+            <div class="text-primary text-3xl">
+                <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#000000"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-paw-print-icon lucide-paw-print">
+                    <circle cx="11" cy="4" r="2"/>
+                    <circle cx="18" cy="8" r="2"/>
+                    <circle cx="20" cy="16" r="2"/>
+                    <path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"/>
+                </svg>
+
+            </div>
             <h3 class="font-semibold mt-3 text-lg">Tus Mascotas</h3>
             <p class="text-sm text-gray-500">Actualiza la información de tu amigo.</p>
         </a>
 
         <!-- Tienda -->
         <a th:href="@{/veterinario/Tienda}"
-           class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-green-200">
-            <div class="text-green-600 text-3xl">🛒</div>
+           class="bg-white p-6 -2xl shadow hover:shadow-lg transition border border-primary">
+            <div class="text-primary text-3xl">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="24"
+                     height="24"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="#000000"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     class="lucide lucide-store-icon lucide-store">
+                    <path d="M15 21v-5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v5"/>
+                    <path d="M17.774 10.31a1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.451 0 1.12 1.12 0 0 0-1.548 0 2.5 2.5 0 0 1-3.452 0 1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.77-3.248l2.889-4.184A2 2 0 0 1 7 2h10a2 2 0 0 1 1.653.873l2.895 4.192a2.5 2.5 0 0 1-3.774 3.244"/>
+                    <path d="M4 10.95V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8.05"/>
+                </svg>
+            </div>
             <h3 class="font-semibold mt-3 text-lg">Tienda</h3>
             <p class="text-sm text-gray-500">Los mejores productos para el bienestar.</p>
         </a>
 
         <!-- Historia Clínica -->
         <a th:href="@{/propietario/historia-clinica}"
-           class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-green-200">
-            <div class="text-green-600 text-3xl">📗</div>
+           class="bg-white p-6 -2xl shadow hover:shadow-lg transition border border-primary">
+            <div class="text-primary text-3xl">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="24"
+                     height="24"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="#000000"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round" class="lucide lucide-hospital-icon lucide-hospital">
+                    <path d="M12 7v4"/>
+                    <path d="M14 21v-3a2 2 0 0 0-4 0v3"/>
+                    <path d="M14 9h-4"/>
+                    <path d="M18 11h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2"/>
+                    <path d="M18 21V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16"/>
+                </svg>
+            </div>
             <h3 class="font-semibold mt-3 text-lg">Historia Clínica</h3>
             <p class="text-sm text-gray-500">Acceda a registros médicos y visitas pasadas.</p>
         </a>
 
         <!-- Adopción -->
         <a th:href="@{/propietario/mascotas/disponibles}"
-           class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition border border-green-200">
-            <div class="text-green-600 text-3xl">💚</div>
+           class="bg-white p-6 -2xl shadow hover:shadow-lg transition border border-primary">
+            <div class="text-primary-600 text-3xl">
+                <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#000000"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-heart-plus-icon lucide-heart-plus">
+                    <path d="m14.479 19.374-.971.939a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5a5.2 5.2 0 0 1-.219 1.49"/>
+                    <path d="M15 15h6"/>
+                    <path d="M18 12v6"/>
+                </svg>
+
+            </div>
             <h3 class="font-semibold mt-3 text-lg">Adopta una Mascota</h3>
             <p class="text-sm text-gray-500">Encuentra un nuevo amigo que necesite un hogar.</p>
         </a>
@@ -81,7 +197,23 @@
         <div class="flex justify-center gap-10">
             <a href="#">© 2025 App Cannia. Todos los derechos reservados.</a>
         </div>
-        <div class="mt-4 flex justify-center gap-4 text-green-600 text-xl">⛑️ 📷 🐶</div>
+        <div class="mt-4 flex justify-center gap-4 text-primary text-xl">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="#000000"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 class="lucide lucide-turtle-icon lucide-turtle">
+                <path d="m12 10 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a8 8 0 1 0-16 0v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3l2-4h4Z"/>
+                <path d="M4.82 7.9 8 10"/>
+                <path d="M15.18 7.9 12 10"/>
+                <path d="M16.93 10H20a2 2 0 0 1 0 4H2"/>
+            </svg>
+        </div>
     </footer>
 </main>
 
@@ -89,32 +221,32 @@
 <div id="modalAgregarMascota"
      class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
 
-    <div class="bg-white p-6 rounded-2xl shadow-xl w-96">
+    <div class="bg-white p-6 -2xl shadow-xl w-96">
 
-        <h2 class="text-xl font-bold mb-4 text-green-700">Registrar Mascota</h2>
+        <h2 class="text-xl font-bold mb-4 text-primary-700">Registrar Mascota</h2>
 
         <!-- FORMULARIO -->
         <form th:action="@{/mascotas/guardar}" method="post">
 
             <label class="block mb-2 font-semibold">Nombre</label>
             <input type="text" name="nomMascota" required
-                   class="w-full p-2 border border-green-300 rounded mb-3"/>
+                   class="w-full p-2 border border-primary-300  mb-3"/>
 
             <label class="block mb-2 font-semibold">Especie</label>
             <input type="text" name="especie" required
-                   class="w-full p-2 border border-green-300 rounded mb-3"/>
+                   class="w-full p-2 border border-primary-300  mb-3"/>
 
             <label class="block mb-2 font-semibold">Raza</label>
             <input type="text" name="raza" required
-                   class="w-full p-2 border border-green-300 rounded mb-3"/>
+                   class="w-full p-2 border border-primary-300  mb-3"/>
 
             <label class="block mb-2 font-semibold">Color</label>
             <input type="text" name="color" required
-                   class="w-full p-2 border border-green-300 rounded mb-3"/>
+                   class="w-full p-2 border border-primary-300  mb-3"/>
 
             <label class="block mb-2 font-semibold">Género</label>
             <select name="genero" required
-                    class="w-full p-2 border border-green-300 rounded mb-3">
+                    class="w-full p-2 border border-primary-300  mb-3">
                 <option value="MACHO">MACHO</option>
                 <option value="HEMBRA">HEMBRA</option>
             </select>
@@ -125,16 +257,16 @@
             <label class="block mb-2 font-semibold">Fecha de nacimiento</label>
             <input type="date" name="fechaNacimiento" required
                    th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
-                   class="w-full p-2 border border-green-300 rounded mb-3"/>
+                   class="w-full p-2 border border-primary-300  mb-3"/>
 
             <div class="flex justify-end pt-2 space-x-2">
                 <button type="button" onclick="cerrarModal()"
-                        class="px-4 py-2 bg-gray-400 text-white rounded">
+                        class="px-4 py-2 bg-gray-400 text-white ">
                     Cancelar
                 </button>
 
                 <button type="submit"
-                        class="px-4 py-2 bg-green-600 text-white rounded shadow">
+                        class="px-4 py-2 bg-primary text-white  shadow">
                     Guardar
                 </button>
             </div>

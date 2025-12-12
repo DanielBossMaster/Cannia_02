@@ -4,30 +4,59 @@
 <head>
     <meta charset="UTF-8">
     <title>Mascotas en Adopción</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-
     <!-- Alpine.js para manejar modales -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-</head>
+    <script src="https://cdn.tailwindcss.com"></script>
 
-<body class="bg-gray-100">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#170022",
+                        secondary: "#290043",
+                        lightBg: "#e8ebff",
+                        lightSurface: "rgb(247,248,249)",
+                        darkText: "#1e293b",
+                        softText: "#475569",
+                        borderLight: "#e2e8f0",
+                    },
+                },
+            },
+        };
+    </script>
+    <style> body {font-family: 'Poppins', sans-serif;} </style>
+</head>
+<body class="bg-lightBg text-gray-800">
 
 <!-- HEADER -->
-<header class="bg-[#f6fdf7] text-green-500 flex justify-between items-center px-6 py-3 shadow-md">
-    <div class="flex items-center space-x-3">
+<header class="w-full flex justify-between items-center px-8 py-4 bg-primary shadow-sm">
+    <div class="flex items-center gap-2 text-bg-primary-600 font-semibold text-lg">
         <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
-        <h1 class="text-lg font-bold">Cannia</h1>
+        <h1 class="text-white font-bold">Cannia</h1>
     </div>
 
     <a th:href="@{/propietario/index}"
-       class="bg-green-600 hover:bg-secondary px-4 py-2 rounded-lg shadow text-white transition">
-        Volver al inicio
+       class="bg-primary hover:bg-secondary px-4 py-2  shadow text-white transition">
+        <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#ffffff"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-chevron-left-icon lucide-chevron-left">
+            <path d="m15 18-6-6 6-6"/>
+        </svg>
     </a>
 </header>
 
 <!-- TÍTULO -->
 <div class="text-center py-10">
-    <h1 class="text-4xl font-bold text-green-600">🐾 Mascotas en Adopción</h1>
+    <h1 class="text-4xl font-bold text-primary">Mascotas en Adopción</h1>
     <p class="text-gray-600 mt-2">Mascotas disponibles subidas por fundaciones</p>
 </div>
 
@@ -45,11 +74,25 @@
         <!-- CARD DE MASCOTA -->
         <div th:each="mascota : ${mascotas}"
              x-data="{ open: false }"
-             class="bg-white p-6 rounded-2xl shadow hover:shadow-xl transition border border-green-200">
+             class="bg-white p-6  shadow hover:shadow-xl transition border border-primary">
 
             <!-- ICONO -->
             <div class="flex justify-center mb-4">
-                <div class="text-green-600 text-6xl">🐶</div>
+                <div class="text-primary text-6xl">
+                    <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="44"
+                            height="44"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#000000"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="lucide lucide-bone-icon lucide-bone">
+                        <path d="M17 10c.7-.7 1.69 0 2.5 0a2.5 2.5 0 1 0 0-5 .5.5 0 0 1-.5-.5 2.5 2.5 0 1 0-5 0c0 .81.7 1.8 0 2.5l-7 7c-.7.7-1.69 0-2.5 0a2.5 2.5 0 0 0 0 5c.28 0 .5.22.5.5a2.5 2.5 0 1 0 5 0c0-.81-.7-1.8 0-2.5Z"/>
+                    </svg>
+                </div>
             </div>
 
             <!-- NOMBRE -->
@@ -85,14 +128,14 @@
 
                 <!-- BOTÓN: ABRIR MODAL -->
                 <button @click="open = true"
-                        class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full shadow-md transition">
+                        class="bg-primary hover:bg-secondary text-white px-6 py-2 -full shadow-md transition">
                     Ver más
                 </button>
 
                 <!-- ADOPTAR -->
                 <form th:action="@{/propietario/solicitar-adopcion/{id}(id=${mascota.id})}"
                       method="post">
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full shadow-md transition mt-2">
+                    <button class="bg-primary hover:bg-secondary text-white px-6 py-2 -full shadow-md transition mt-2">
                         Adoptar Mascota
                     </button>
                 </form>
@@ -104,7 +147,7 @@
                  x-transition
                  class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
 
-                <div class="bg-white p-6 rounded-xl shadow-xl w-96 relative">
+                <div class="bg-white p-6 -xl shadow-xl w-96 relative">
 
                     <!-- CERRAR -->
                     <button @click="open = false"
@@ -112,7 +155,7 @@
                         ✖
                     </button>
 
-                    <h2 class="text-2xl font-bold text-center text-green-600 mb-4">
+                    <h2 class="text-2xl font-bold text-center text-primary mb-4">
                         Detalles de Mascota
                     </h2>
 
@@ -159,7 +202,7 @@
                     <!-- ADOPTAR DENTRO DEL MODAL -->
                     <div class="mt-4 text-center">
                         <form th:action="@{/propietario/solicitar-adopcion/{id}(id=${mascota.id})}" method="post">
-                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full shadow-md transition">
+                            <button class="bg-primary hover:bg-secondary text-white px-6 py-2 -full shadow-md transition">
                                 Adoptar Mascota
                             </button>
                         </form>

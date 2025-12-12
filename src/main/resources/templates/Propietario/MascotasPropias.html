@@ -4,20 +4,51 @@
     <meta charset="UTF-8">
     <title>Mis Mascotas</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#170022",
+                        secondary: "#290043",
+                        lightBg: "#e8ebff",
+                        lightSurface: "rgb(247,248,249)",
+                        darkText: "#1e293b",
+                        softText: "#475569",
+                        borderLight: "#e2e8f0",
+                    },
+                },
+            },
+        };
+    </script>
+    <style> body {font-family: 'Poppins', sans-serif;} </style>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-lightBg text-gray-800">
 
 <!-- HEADER -->
-<header class="bg-[#f6fdf7] text-gray-800  flex justify-between items-center px-6 py-3 shadow-md">
-    <div class="flex items-center space-x-3">
+<header class="bg-primary text-gray-800  flex justify-between items-center px-6 py-3 shadow-md">
+    <div class="flex items-center gap-2 text-bg-primary-600 font-semibold text-lg">
         <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
-        <h1 class="text-lg font-bold">Cannia</h1>
+        <h1 class="text-white font-bold">Cannia</h1>
     </div>
 
     <a th:href="@{/propietario/index}"
-       class="bg-primary hover:bg-secondary px-4 py-2 rounded-lg shadow bg-green-500 text-white transition">
-        ⬅ Volver
+       class="bg-primary hover:bg-secondary px-4 py-2  shadow bg-green-500 text-white transition">
+        <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#ffffff"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-chevron-left-icon lucide-chevron-left">
+            <path d="m15 18-6-6 6-6"/>
+        </svg>
     </a>
 </header>
 
@@ -38,16 +69,16 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
         <div th:each="m : ${mascotas}"
-             class="bg-white rounded-2xl shadow hover:shadow-lg transition p-6">
+             class="bg-white -2xl shadow hover:shadow-lg transition p-6">
 
             <!-- FOTO -->
             <img th:if="${m.foto != null && !m.foto.isEmpty()}"
                  th:src="${m.foto}"
-                 class="w-full h-40 object-cover rounded-lg mb-4"/>
+                 class="w-full h-40 object-cover -lg mb-4"/>
 
             <img th:if="${m.foto == null || m.foto.isEmpty()}"
                  src="/img/mascota-default.png"
-                 class="w-full h-40 object-cover rounded-lg mb-4"/>
+                 class="w-full h-40 object-cover -lg mb-4"/>
 
             <!-- INFO -->
             <h3 class="text-xl font-bold mb-1" th:text="${m.nomMascota}"></h3>
@@ -62,7 +93,7 @@
             <!-- ACCIONES -->
             <div class="mt-4 flex justify-end">
                 <button
-                        class="bg-primary hover:bg-secondary text-white px-4 py-2 rounded-lg transition"
+                        class="bg-primary hover:bg-secondary text-white px-4 py-2 -lg transition"
                         th:attr="onclick=|abrirModal(
                             ${m.id},
                             '${m.nomMascota}',
@@ -70,8 +101,7 @@
                             '${m.raza}',
                             '${m.color}',
                             '${m.genero}'
-                        )|">
-                    ✏️ Editar
+                        )|">Editar
                 </button>
             </div>
         </div>
@@ -82,7 +112,7 @@
 <div id="modalEditar"
      class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
 
-    <div class="bg-white rounded-2xl shadow-xl w-11/12 max-w-lg p-6 relative">
+    <div class="bg-white -2xl shadow-xl w-11/12 max-w-lg p-6 relative">
 
         <!-- CERRAR -->
         <button onclick="cerrarModal()"
@@ -100,31 +130,31 @@
             <div>
                 <label class="block text-sm font-medium">Nombre</label>
                 <input type="text" name="nomMascota" id="nomMascota"
-                       class="w-full border rounded-lg px-3 py-2" required>
+                       class="w-full border -lg px-3 py-2" required>
             </div>
 
             <div>
                 <label class="block text-sm font-medium">Especie</label>
                 <input type="text" name="especie" id="especie"
-                       class="w-full border rounded-lg px-3 py-2" required>
+                       class="w-full border -lg px-3 py-2" required>
             </div>
 
             <div>
                 <label class="block text-sm font-medium">Raza</label>
                 <input type="text" name="raza" id="raza"
-                       class="w-full border rounded-lg px-3 py-2">
+                       class="w-full border -lg px-3 py-2">
             </div>
 
             <div>
                 <label class="block text-sm font-medium">Color</label>
                 <input type="text" name="color" id="color"
-                       class="w-full border rounded-lg px-3 py-2">
+                       class="w-full border -lg px-3 py-2">
             </div>
 
             <div>
                 <label class="block text-sm font-medium">Género</label>
                 <select name="genero" id="genero"
-                        class="w-full border rounded-lg px-3 py-2">
+                        class="w-full border -lg px-3 py-2">
                     <option value="MACHO">MACHO</option>
                     <option value="HEMBRA">HEMBRA</option>
                 </select>
@@ -132,12 +162,12 @@
 
             <div class="flex justify-end gap-3 pt-4">
                 <button type="button" onclick="cerrarModal()"
-                        class="px-4 py-2 border rounded-lg">
+                        class="px-4 py-2 border -lg">
                     Cancelar
                 </button>
 
                 <button type="submit"
-                        class="bg-primary hover:bg-secondary text-white px-4 py-2 rounded-lg">
+                        class="bg-primary hover:bg-secondary text-white px-4 py-2 -lg">
                     Guardar cambios
                 </button>
             </div>
