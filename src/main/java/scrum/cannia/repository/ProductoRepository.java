@@ -1,5 +1,7 @@
 package scrum.cannia.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -57,6 +59,9 @@ public interface ProductoRepository extends JpaRepository<ProductoModel, Integer
             "AND c.id = :idCategoria " +
             "AND p.estado = TRUE")
     List<ProductoModel> findByNombreOrDescripcionAndCategoriaIdAndEstadoTrue(@Param("q") String q, @Param("idCategoria") Long idCategoria);
+
+
+    Page<ProductoModel> findByEstadoTrue(Pageable pageable);
 
 }
 

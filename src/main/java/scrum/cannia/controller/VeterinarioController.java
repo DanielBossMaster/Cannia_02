@@ -2,6 +2,7 @@ package scrum.cannia.controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -46,6 +47,8 @@ public class VeterinarioController {
     private ConsumidorBusquedaService consumidorBusquedaService;
     @Autowired
     private CategoriaService categoriaService;
+    @Autowired
+    private ServicioService servicioService;
 
     public VeterinarioController(
             VeterinarioRepository veterinarioRepository,
@@ -61,20 +64,37 @@ public class VeterinarioController {
     //               DASHBOARD PRINCIPAL
     // ============================================
     @GetMapping
-    public String Index(HttpSession session, Model model) {
+    public String Index(@RequestParam(required = false) Integer page, HttpSession session, Model model) {
 
         UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        if (page == null) {
+            page = 0;
+        }
+
         VeterinarioModel veterinario = usuario.getVeterinario();
 
+        // 🔹 PAGINACIÓN PROPIETARIOS
+        Page<PropietarioModel> propietariosPage =
+                propietarioService.listarPaginado(page, 8);
+
         model.addAttribute("veterinario", veterinario);
+        model.addAttribute("propietarios", propietariosPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", propietariosPage.getTotalPages());
+
+        // 🔹 LO DEMÁS
         model.addAttribute("veterinarios", veterinarioRepository.findAll());
-        model.addAttribute("propietarios", propietarioRepository.findByEstadoTrue());
         model.addAttribute("mascotas", mascotaRepository.findAll());
         model.addAttribute("propietario", new PropietarioModel());
         model.addAttribute("mascota", new MascotaModel());
 
         return "veterinario/Index";
     }
+
 
     // ============================================
 //        REGISTRAR NUEVO PROPIETARIO
@@ -234,36 +254,44 @@ public class VeterinarioController {
         return "veterinario/CrearVeterinaria";
     }
 
-    // ============================================
-//              GESTIÓN DE VENTAS
-// ============================================
-    @GetMapping("/GestionVentas")
-    public String gestionVentas(HttpSession session, Model model) {
 
-        // --- Lógica de Seguridad y Carga de Entidades Principales ---
+    // ============================================
+    //              GESTIÓN DE VENTAS
+    // ============================================
+    @GetMapping("/GestionVentas")
+    public String gestionVentas(
+            @RequestParam(defaultValue = "0") int pageProductos,
+            @RequestParam(defaultValue = "0") int pageServicios,
+            @RequestParam(defaultValue = "productos") String vista,
+            HttpSession session,
+            Model model) {
+
         UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
         VeterinarioModel veterinario = usuario.getVeterinario();
         VeterinariaModel veterinaria = veterinario.getVeterinaria();
 
-        // 1. Cargar Productos (Necesario para la tabla principal)
-        model.addAttribute("productos", productoService.obtenerProductosActivos());
+        Page<ProductoModel> productosPage =
+                productoService.listarActivosPaginado(pageProductos, 9);
 
-        // 2. Cargar Veterinaria (Necesario para el encabezado)
+        Page<ServicioModel> serviciosPage =
+                servicioService.listarActivoPaginado(pageServicios, 9);
+
+        model.addAttribute("productos", productosPage.getContent());
+        model.addAttribute("currentPageProductos", pageProductos);
+        model.addAttribute("totalPagesProductos", productosPage.getTotalPages());
+
+        model.addAttribute("servicios", serviciosPage.getContent());
+        model.addAttribute("currentPageServicios", pageServicios);
+        model.addAttribute("totalPagesServicios", serviciosPage.getTotalPages());
+
+        model.addAttribute("vistaActiva", vista);
+
         model.addAttribute("veterinaria", veterinaria);
-
-        // --- 🚨 ATRIBUTOS FALTANTES PARA EL MODAL DE CATEGORÍAS 🚨 ---
-
-        // 3. Cargar TODAS las Categorías (Necesario para la tabla dentro del modal)
-        // Se asume que tienes inyectado y funcionando 'categoriaService'.
         model.addAttribute("categorias", categoriaService.listarTodas());
 
-        // 4. Inicializar un objeto CategoriaModel vacío
-        // (Necesario para el th:object="${categoria}" del formulario POST en el modal)
         if (!model.containsAttribute("categoria")) {
             model.addAttribute("categoria", new CategoriaModel());
         }
-
-        // -----------------------------------------------------------
 
         return "veterinario/GestionVentas";
     }
@@ -354,7 +382,7 @@ public class VeterinarioController {
     }
 
     // ============================================
-    //                 TIENDA DE VETERINARIO
+    //             TIENDA DE VETERINARIO
     // ============================================
 
     @GetMapping("/TiendaPreview")
@@ -415,39 +443,15 @@ public class VeterinarioController {
         return "veterinario/TiendaPreview";
     }
 
-    // ============================================
-    //          EDICION DE INVENTARIO
-    // ============================================
-    @GetMapping("/inventario")
-    public String mostrarInventarioVentas(Model model) {
-        model.addAttribute("productos", productoService.listarTodos());
-        model.addAttribute("producto", new ProductoModel());
-        model.addAttribute("servicio", new ServicioModel());
-        return "veterinario/inventario";
-    }
-
-
-    @GetMapping("/productos")
-    public String listarProductosVeterinario(Model model) {
-        // Usar el método correcto que ahora existe
-        model.addAttribute("productos", productoService.listarTodos());
-        return "veterinario/productos";
-    }
-
-    @GetMapping("/productos/activos")
-    public String listarProductosActivos(Model model) {
-        // O usar este método si quieres solo los activos
-        model.addAttribute("productos", productoService.obtenerProductosActivos());
-        return "veterinario/productos";
-    }
-
     @GetMapping("/ventas")
     public String verVentas(HttpSession session, Model model) {
         UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
         if (usuario == null || usuario.getVeterinario() == null) {
             return "redirect:/login";}
+
         VeterinariaModel veterinaria = usuario.getVeterinario().getVeterinaria();
         List<FacturaModel> ventas = facturaService.obtenerVentasVeterinaria(veterinaria.getId());
+
         model.addAttribute("ventas", ventas);
         model.addAttribute("veterinaria", veterinaria);
         return "veterinario/Ventas";
@@ -554,4 +558,58 @@ public class VeterinarioController {
         categoriaService.eliminar(id);
         return "redirect:/veterinario/GestionVentas";
     }
+
+    @GetMapping("/ServiciosPreview")
+    public String servicios(HttpSession session, Model model ) {
+
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+
+
+        VeterinariaModel veterinaria = null;
+        if (usuario.getVeterinario() != null) {
+            veterinaria = usuario.getVeterinario().getVeterinaria();
+        }
+
+
+        model.addAttribute("servicios",servicioService.listarTodosActivos());
+        model.addAttribute("veterinaria", veterinaria);
+
+        return "veterinario/ServiciosPreview";
+    }
+    @GetMapping("/Servicios")
+    public String serviciosPropietario(HttpSession session, Model model) {
+
+        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+
+        // Seguridad básica
+        if (usuario == null || usuario.getPropietario() == null) {
+            return "redirect:/login";
+        }
+
+        VeterinariaModel veterinari = null;
+
+        if (usuario.getPropietario() != null) {
+            veterinari = usuario.getPropietario().getVeterinaria();
+            model.addAttribute("direccion", usuario.getPropietario().getDireccionPro());
+        }
+
+        if (veterinari == null) {
+            System.out.println("❌ El usuario NO pertenece a ninguna veterinaria");
+            return "redirect:/";
+        }
+
+        // Obtener propietario y veterinaria
+        PropietarioModel propietario = usuario.getPropietario();
+        VeterinariaModel veterinaria = propietario.getVeterinaria();
+
+        // Servicios SOLO de esa veterinaria
+        List<ServicioModel> servicios = servicioService
+                .listarActivosPorVeterinaria(veterinaria.getId());
+
+        model.addAttribute("servicios", servicios);
+        model.addAttribute("veterinaria", veterinaria);
+
+        return "veterinario/Servicios"; // 👈 vista SOLO para propietarios
+    }
+
 }

@@ -37,185 +37,185 @@
             <img src="/img/logo.png" alt="logo" style="width:100px;">
             <h1 class="text-3xl font-bold text-primary">Registro de Usuario</h1>
 
-    <form th:action="@{/registro}" method="post" th:object="${registro}">
+            <form th:action="@{/registro}" method="post" th:object="${registro}">
 
-        <!-- Usuario -->
-        <div class="mb-4">
-            <label for="usuario" class="block font-semibold mb-1">Usuario</label>
-            <input type="text" id="usuario" th:field="*{usuario}"
-                   class="w-full border -lg px-3 py-2 focus:ring focus:ring-blue-300"
-                   required>
-        </div>
-
-        <!-- Contraseña -->
-        <div class="mb-4">
-            <label for="contrasena" class="block font-semibold mb-1">Contraseña</label>
-            <input type="password" id="contrasena" th:field="*{contrasena}"
-                   class="w-full border -lg px-3 py-2 focus:ring focus:ring-blue-300"
-                   required>
-        </div>
-
-        <!-- Rol -->
-        <div class="mb-4">
-            <label for="rol" class="block font-semibold mb-1">Selecciona tu rol:</label>
-            <select th:field="*{rol}" id="rol"
-                    class="w-full border -lg px-3 py-2 focus:ring focus:ring-blue-300"
-                    required onchange="mostrarCamposAdicionales()">
-                <option value="">-- Selecciona --</option>
-                <option value="propietario">Propietario</option>
-                <option value="veterinario">Veterinario</option>
-                <option value="fundacion">Fundación</option>
-            </select>
-        </div>
-
-        <!-- CAMPOS PROPIETARIO -->
-        <div id="camposPropietario" class="hidden">
-            <h3 class="text-lg font-semibold mb-2 mt-3">Datos del Propietario</h3>
-
-            <div class="grid grid-cols-1 gap-4">
-
-                <div>
-                    <label class="font-semibold">Número de Documento</label>
-                    <input type="text" th:field="*{numDoc}"
-                           class="w-full border -lg px-3 py-2">
+                <!-- Usuario -->
+                <div class="mb-4">
+                    <label for="usuario" class="block font-semibold mb-1">Usuario</label>
+                    <input type="text" id="usuario" th:field="*{usuario}"
+                           class="w-full border -lg px-3 py-2 focus:ring focus:ring-blue-300"
+                           required>
                 </div>
 
-                <div>
-                    <label class="font-semibold">Nombre Propietario</label>
-                    <input type="text" th:field="*{nombrePro}"
-                           class="w-full border -lg px-3 py-2">
+                <!-- Contraseña -->
+                <div class="mb-4">
+                    <label for="contrasena" class="block font-semibold mb-1">Contraseña</label>
+                    <input type="password" id="contrasena" th:field="*{contrasena}"
+                           class="w-full border -lg px-3 py-2 focus:ring focus:ring-blue-300"
+                           required>
                 </div>
 
-                <div>
-                    <label class="font-semibold">Apellido Propietario</label>
-                    <input type="text" th:field="*{apellidoPro}"
-                           class="w-full border -lg px-3 py-2">
-                </div>
-
-                <div>
-                    <label class="font-semibold">Dirección</label>
-                    <input type="text" th:field="*{direccionPro}"
-                           class="w-full border -lg px-3 py-2">
-                </div>
-
-                <div>
-                    <label class="font-semibold">Teléfono</label>
-                    <input type="text" th:field="*{telefonoPro}"
-                           class="w-full border -lg px-3 py-2">
-                </div>
-
-                <div>
-                    <label class="font-semibold">Correo</label>
-                    <input type="email" th:field="*{correoPro}"
-                           class="w-full border -lg px-3 py-2">
-                </div>
-
-                <div>
-                    <label for="idVeterinariaSeleccionada" class="font-semibold">Veterinaria para la Tienda</label>
-                    <select th:field="*{idVeterinariaSeleccionada}" id="idVeterinariaSeleccionada"
-                            class="w-full border -lg px-3 py-2" >
-                        <option value="">-- Selecciona una Veterinaria --</option>
-                        <option th:each="veterinaria : ${veterinarias}"
-                                th:value="${veterinaria.id}"
-                                th:text="${veterinaria.nombre}">
-                            Nombre de Veterinaria
-                        </option>
+                <!-- Rol -->
+                <div class="mb-4">
+                    <label for="rol" class="block font-semibold mb-1">Selecciona tu rol:</label>
+                    <select th:field="*{rol}" id="rol"
+                            class="w-full border -lg px-3 py-2 focus:ring focus:ring-blue-300"
+                            required onchange="mostrarCamposAdicionales()">
+                        <option value="">-- Selecciona --</option>
+                        <option value="propietario">Propietario</option>
+                        <option value="veterinario">Veterinario</option>
+                        <option value="fundacion">Fundación</option>
                     </select>
                 </div>
 
-            </div>
-        </div>
+                <!-- CAMPOS PROPIETARIO -->
+                <div id="camposPropietario" class="hidden">
+                    <h3 class="text-lg font-semibold mb-2 mt-3">Datos del Propietario</h3>
 
-        <!-- CAMPOS VETERINARIO -->
-        <div id="camposVeterinario" class="hidden">
-            <h3 class="text-lg font-semibold mb-2 mt-3">Datos del Veterinario</h3>
+                    <div class="grid grid-cols-1 gap-4">
 
-            <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <label class="font-semibold">Número de Documento</label>
+                            <input type="text" th:field="*{numDoc}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
 
-                <div>
-                    <label class="font-semibold">Número de Licencia Profesional</label>
-                    <input type="text" th:field="*{numLicencia}"
-                           class="w-full border -lg px-3 py-2">
+                        <div>
+                            <label class="font-semibold">Nombre Propietario</label>
+                            <input type="text" th:field="*{nombrePro}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold">Apellido Propietario</label>
+                            <input type="text" th:field="*{apellidoPro}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold">Dirección</label>
+                            <input type="text" th:field="*{direccionPro}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold">Teléfono</label>
+                            <input type="text" th:field="*{telefonoPro}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold">Correo</label>
+                            <input type="email" th:field="*{correoPro}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label for="idVeterinariaSeleccionada" class="font-semibold">Veterinaria para la Tienda</label>
+                            <select th:field="*{idVeterinariaSeleccionada}" id="idVeterinariaSeleccionada"
+                                    class="w-full border -lg px-3 py-2" >
+                                <option value="">-- Selecciona una Veterinaria --</option>
+                                <option th:each="veterinaria : ${veterinarias}"
+                                        th:value="${veterinaria.id}"
+                                        th:text="${veterinaria.nombre}">
+                                    Nombre de Veterinaria
+                                </option>
+                            </select>
+                        </div>
+
+                    </div>
                 </div>
 
-                <div>
-                    <label class="font-semibold">Nombre Veterinario</label>
-                    <input type="text" th:field="*{nombreVete}"
-                           class="w-full border -lg px-3 py-2">
+                <!-- CAMPOS VETERINARIO -->
+                <div id="camposVeterinario" class="hidden">
+                    <h3 class="text-lg font-semibold mb-2 mt-3">Datos del Veterinario</h3>
+
+                    <div class="grid grid-cols-1 gap-4">
+
+                        <div>
+                            <label class="font-semibold">Número de Licencia Profesional</label>
+                            <input type="text" th:field="*{numLicencia}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold">Nombre Veterinario</label>
+                            <input type="text" th:field="*{nombreVete}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold">Apellido Veterinario</label>
+                            <input type="text" th:field="*{apellidoVete}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold">Dirección</label>
+                            <input type="text" th:field="*{direccionVete}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold">Teléfono</label>
+                            <input type="text" th:field="*{telefonoVete}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold">Correo</label>
+                            <input type="email" th:field="*{correoVete}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
+
+                    </div>
                 </div>
 
-                <div>
-                    <label class="font-semibold">Apellido Veterinario</label>
-                    <input type="text" th:field="*{apellidoVete}"
-                           class="w-full border -lg px-3 py-2">
+                <!-- CAMPOS FUNDACION -->
+                <div id="camposFundacion" class="hidden">
+                    <h3 class="text-lg font-semibold mb-2 mt-3">Datos de la Fundación</h3>
+
+                    <div class="grid grid-cols-1 gap-4">
+
+                        <div>
+                            <label class="font-semibold">Nombre Fundación</label>
+                            <input type="text" th:field="*{nombreFundacion}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold">Descripción</label>
+                            <input type="text" th:field="*{descripcionFundacion}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold">Dirección</label>
+                            <input type="text" th:field="*{direccionFundacion}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold">Teléfono</label>
+                            <input type="text" th:field="*{telefonoFundacion}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label class="font-semibold">Correo</label>
+                            <input type="email" th:field="*{emailFundacion}"
+                                   class="w-full border -lg px-3 py-2">
+                        </div>
+
+                    </div>
                 </div>
 
-                <div>
-                    <label class="font-semibold">Dirección</label>
-                    <input type="text" th:field="*{direccionVete}"
-                           class="w-full border -lg px-3 py-2">
-                </div>
-
-                <div>
-                    <label class="font-semibold">Teléfono</label>
-                    <input type="text" th:field="*{telefonoVete}"
-                           class="w-full border -lg px-3 py-2">
-                </div>
-
-                <div>
-                    <label class="font-semibold">Correo</label>
-                    <input type="email" th:field="*{correoVete}"
-                           class="w-full border -lg px-3 py-2">
-                </div>
-
-            </div>
-        </div>
-
-        <!-- CAMPOS FUNDACION -->
-        <div id="camposFundacion" class="hidden">
-            <h3 class="text-lg font-semibold mb-2 mt-3">Datos de la Fundación</h3>
-
-            <div class="grid grid-cols-1 gap-4">
-
-                <div>
-                    <label class="font-semibold">Nombre Fundación</label>
-                    <input type="text" th:field="*{nombreFundacion}"
-                           class="w-full border -lg px-3 py-2">
-                </div>
-
-                <div>
-                    <label class="font-semibold">Descripción</label>
-                    <input type="text" th:field="*{descripcionFundacion}"
-                           class="w-full border -lg px-3 py-2">
-                </div>
-
-                <div>
-                    <label class="font-semibold">Dirección</label>
-                    <input type="text" th:field="*{direccionFundacion}"
-                           class="w-full border -lg px-3 py-2">
-                </div>
-
-                <div>
-                    <label class="font-semibold">Teléfono</label>
-                    <input type="text" th:field="*{telefonoFundacion}"
-                           class="w-full border -lg px-3 py-2">
-                </div>
-
-                <div>
-                    <label class="font-semibold">Correo</label>
-                    <input type="email" th:field="*{emailFundacion}"
-                           class="w-full border -lg px-3 py-2">
-                </div>
-
-            </div>
-        </div>
-
-        <!-- BOTÓN -->
-        <button type="submit"
-                class=" w-full text-center font-bold mt-8 bg-primary text-white px-6 py-3 -md transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black">
-            Registrarse
-        </button>
-    </form>
+                <!-- BOTÓN -->
+                <button type="submit"
+                        class=" w-full text-center font-bold mt-8 bg-primary text-white px-6 py-3 -md transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black">
+                    Registrarse
+                </button>
+            </form>
         </div>
     </div>
 </div>

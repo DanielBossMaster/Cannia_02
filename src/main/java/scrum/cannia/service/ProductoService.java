@@ -1,5 +1,8 @@
 package scrum.cannia.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import scrum.cannia.Dto.ProductoBusquedaDto;
 import scrum.cannia.model.ProductoModel;
@@ -18,11 +21,14 @@ public class ProductoService {
     @Autowired
     private final ProductoRepository productoRepository;
 
-    public ProductoService(ProductoRepository productoRepository) {this.productoRepository = productoRepository;}
+    public ProductoService(ProductoRepository productoRepository)
+    {this.productoRepository = productoRepository;}
 
-    public  List<ProductoModel> listarTodos() { return productoRepository.findAll();}
+    public  List<ProductoModel> listarTodos()
+    { return productoRepository.findAll();}
 
-    public static <Producto> void guardar (Producto producto, MultipartFile archivo) {}
+    public static <Producto> void guardar
+            (Producto producto, MultipartFile archivo) {}
 
     public List<ProductoModel> obtenerProductosActivos() {
         return productoRepository.findByEstadoTrue();
@@ -31,11 +37,18 @@ public class ProductoService {
     public ProductoModel guardarProducto(ProductoModel producto) {
         return productoRepository.save(producto);
     }
-    // Se utiliza en el carrito de compras, no tocar  | |
+    //========================================================
+    // Se utiliza en el carrito de compras, no tocar _| |_
     //                                               \   /
-    //                                                \ /
-    public ProductoModel buscarPorId(Integer id)
-    {return productoRepository.findById(id).orElse(null);}
+    //=============================================== \ /
+         public ProductoModel buscarPorId(Integer id)
+         {return productoRepository.findById(id).orElse(null);}
+
+
+
+    public Page<ProductoModel> listarPaginado(int pagina, int tamanio) {
+        return productoRepository.findAll(PageRequest.of(pagina, tamanio));
+    }
 
 
 
@@ -55,9 +68,7 @@ public class ProductoService {
             // Caso base: Obtener TODOS los productos con estado=TRUE
             productosModel = productoRepository.findByEstadoTrue();
         }
-
         // --- 2. Mapeo a DTO (en memoria) ---
-        // Usamos el constructor que creaste en ProductoBusquedaDto
         return productosModel.stream()
                 .map(ProductoBusquedaDto::new)
                 .collect(Collectors.toList()); // Usar .toList() si estás en Java 16+
@@ -128,5 +139,9 @@ public class ProductoService {
         productoRepository.save(original);
     }
 
+    public Page<ProductoModel> listarActivosPaginado(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productoRepository.findByEstadoTrue(pageable);
+    }
 
 }

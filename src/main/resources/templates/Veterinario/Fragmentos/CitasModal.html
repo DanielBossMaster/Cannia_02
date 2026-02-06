@@ -1,0 +1,36 @@
+<div th:fragment="contenido">
+
+    <h2 class="text-xl font-bold mb-4">Mis citas agendadas</h2>
+
+    <div th:if="${#lists.isEmpty(citas)}"
+         class="text-center text-gray-500">
+        No tienes citas agendadas
+    </div>
+
+    <table th:if="${!#lists.isEmpty(citas)}"
+           class="w-full text-sm border shadow-md">
+
+        <thead class="bg-gray-100">
+        <tr>
+            <th class="p-2 text-left">Servicio</th>
+            <th class="p-2 text-center" >Fecha</th>
+            <th class="p-2 text-center">Hora</th>
+            <th class="p-2 text-center">Estado</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cita : ${citas}" class="border-t">
+
+            <td class="p-2 text-left"  th:text="${cita.servicio.nombre}"></td>
+
+            <td class="p-2 text-center"  th:text="${cita.fecha}"></td>
+
+            <td class="p-2 text-center"  th:text="${cita.hora}"></td>
+
+            <td class="p-2 font-semibold text-center"  th:text="${cita.estado}"></td>
+        </tr>
+        </tbody>
+
+    </table>
+
+</div>

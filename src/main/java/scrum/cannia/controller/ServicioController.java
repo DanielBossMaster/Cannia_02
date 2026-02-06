@@ -76,7 +76,7 @@ public class ServicioController {
 
         servicioRepository.save(servicio);
 
-        return "redirect:/inventario/servicios";
+        return "redirect:/inventario/productos";
         // ruta de la paginba, para que vuelva a la misma pagina
     }
 

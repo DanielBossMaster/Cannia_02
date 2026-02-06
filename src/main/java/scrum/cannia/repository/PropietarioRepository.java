@@ -1,5 +1,7 @@
 package scrum.cannia.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import scrum.cannia.model.PropietarioModel;
@@ -9,7 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PropietarioRepository extends JpaRepository<PropietarioModel,Long> {
-List<PropietarioModel> findByEstadoTrue();
+
+    List<PropietarioModel> findByEstadoTrue();
+    Page<PropietarioModel> findByEstadoTrue(Pageable pageable);
     PropietarioModel findByNumDoc(String numDoc);
     Optional<PropietarioModel> findByUsuario(UsuarioModel usuario);
 

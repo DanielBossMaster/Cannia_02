@@ -12,7 +12,7 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: "#290043",
+                        primary: "#350159",
                         secondary: "#170022",
                         lightBg: "#e8ebff",
                         lightSurface: "rgb(247,248,249)",
@@ -39,64 +39,31 @@
         }
     </style>
 </head>
-<body class="bg-lightBg text-darkText flex flex-col">
-<div class="h-screen flex flex-col">
-    <!-- Header -->
-    <header class="bg-secondary text-white flex justify-between items-center px-6 py-2 shadow-md">
-        <div class="flex items-center space-x-3">
-            <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
-            <h1 class="text-lg font-bold">Cannia</h1>
-        </div>
-        <div>
-            <h1 class="text-4xl font-bold mb-3 text-white">
-                Veterinaria <span th:text="${veterinaria.nombre}" ></span>
-            </h1>
-        </div>
-        <div class="flex items-center space-x-3 gap-8">
-            <a th:href="@{/veterinario}">
-                <button class="text-sm hover:font-bold">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                         class="lucide lucide-house-icon lucide-house">
-                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
-                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    </svg>
-                </button>
-            </a>
-        </div>
-    </header>
-
-
+<body class="bg-lightBg text-darkText h-screen overflow-x-hidden">
+<div class="h-full flex">
     <div class="flex flex-1  relative">
         <!-- SIDEBAR -->
-        <aside id="sidebar"
-               class="bg-secondary text-white w-16 transition-all duration-300 h-full flex flex-col overflow-hidden">
+        <aside id="sidebar" class="bg-secondary text-white  transition-all duration-300 h-full flex flex-col justify-between ">
+            <div>
                 <!-- Header + botón -->
-                <div class="flex items-center justify-between p-4">
+                <div class="flex items-center justify-between p-3">
                     <span class="text-xl font-bold whitespace-nowrap hidden sidebar-text">Menu</span>
-                    <button onclick="toggleSidebar()" class="text-white">
+                    <button onclick="toggleSidebar()" class="text-white group relative">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                              class="lucide lucide-circle-chevron-right-icon lucide-circle-chevron-right"><circle cx="12" cy="12" r="10"/>
                             <path d="m10 8 4 4-4 4"/>
                         </svg>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Menu
+                        </span>
                     </button>
                 </div>
 
                 <!-- Tienda -->
-                <nav class="flex flex-col gap-4 mt-4">
-                    <a th:href="@{/veterinario/ventas}"class="flex items-center gap-3 px-4 py-2 hover:bg-primary -md">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                 class="lucide lucide-badge-dollar-sign-icon lucide-badge-dollar-sign">
-                                <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/>
-                                <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/>
-                            </svg>
-                        <span class="sidebar-text hidden"> Ventas </span>
-                    </a>
-
-                    <a th:href="@{/veterinario/TiendaPreview}" class="flex items-center gap-3 px-4 py-2 hover:bg-primary ">
+                <nav class="flex flex-col gap-1  mt-4">
+                    <a th:href="@{/veterinario/TiendaPreview}"
+                       class=" group relative flex items-center gap-3 px-3 py-1 hover:bg-primary">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                              class="lucide lucide-shopping-bag-icon lucide-shopping-bag"><path d="M16 10a4 4 0 0 1-8 0"/>
@@ -105,18 +72,26 @@
                             0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"/>
                         </svg>
                         <span class="sidebar-text hidden">Tienda Preview </span>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Tienda Preview
+                        </span>
                     </a>
 
-                    <a th:href="@{/veterinario/FormularioPublicidad}" class="flex items-center gap-3 px-4 py-2 hover:bg-primary ">
+                    <a th:href="@{/veterinario/FormularioPublicidad}"
+                       class=" group relative flex items-center gap-3 px-3 py-1 hover:bg-primary ">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                              class="lucide lucide-mail-icon lucide-mail"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/>
                             <rect x="2" y="4" width="20" height="16" rx="2"/>
                             </svg>
                         <span class="sidebar-text hidden"> Cargar Publicidad </span>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Cargar Publicidad
+                        </span>
                     </a>
 
-                    <a href="#" onclick="abrirModalTabla(event)" class="flex items-center gap-3 px-4 py-2 hover:bg-primary ">
+                    <a href="#" onclick="abrirModalTabla(event)"
+                       class=" group relative flex items-center gap-3 px-3 py-1 hover:bg-primary ">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                              class="lucide lucide-square-pen-icon lucide-square-pen">
@@ -124,54 +99,226 @@
                             <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/>
                         </svg>
                         <span class="sidebar-text hidden">Editar Categoria</span>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Editar Categoria
+                        </span>
+                    </a>
+
+                    <button onclick="mostrarVista('productos')"
+                            class=" group relative flex items-center gap-3 px-3 text-white py-1 hover:bg-primary ">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-package-search-icon lucide-package-search">
+                            <path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"/>
+                            <path d="m7.5 4.27 9 5.15"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/><circle cx="18.5" cy="15.5" r="2.5"/>
+                            <path d="M20.27 17.27 22 19"/>
+                        </svg>
+                        <span class="sidebar-text hidden">Productos</span>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Productos
+                        </span>
+                    </button>
+                    <button onclick="mostrarVista('servicios')"
+                            class=" group relative flex items-center gap-3 px-3 text-white py-1 hover:bg-primary ">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                             viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-square-bottom-dashed-scissors-icon lucide-square-bottom-dashed-scissors"><line x1="5" y1="3" x2="19" y2="3"/><line x1="3" y1="5" x2="3" y2="19"/><line x1="21" y1="5" x2="21" y2="19"/><line x1="9" y1="21" x2="10" y2="21"/><line x1="14" y1="21" x2="15" y2="21"/>
+                            <path d="M 3 5 A2 2 0 0 1 5 3"/>
+                            <path d="M 19 3 A2 2 0 0 1 21 5"/>
+                            <path d="M 5 21 A2 2 0 0 1 3 19"/>
+                            <path d="M 21 19 A2 2 0 0 1 19 21"/><circle cx="8.5" cy="8.5" r="1.5"/><line x1="9.56066" y1="9.56066" x2="12" y2="12"/><line x1="17" y1="17" x2="14.82" y2="14.82"/><circle cx="8.5" cy="15.5" r="1.5"/><line x1="9.56066" y1="14.43934" x2="17" y2="7"/>
+                        </svg>
+                        <span class="sidebar-text hidden">Servicios</span>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Servicios
+                        </span>
+                    </button>
+
+                    <a th:href="@{/veterinario/ventas}"
+                       class=" group relative flex items-center gap-3 px-3 py-1 hover:bg-primary -md">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-badge-dollar-sign-icon lucide-badge-dollar-sign">
+                            <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/>
+                            <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/>
+                        </svg>
+                        <span class="sidebar-text hidden"> Ventas </span>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Ventas
+                        </span>
                     </a>
                 </nav>
+            </div>
+
+            <!-- Bloque inferior (2 items) -->
+            <div class="mb-6">
+                <nav class="flex flex-col gap-4">
+                    <a th:href="@{/cerrar-sesion}"
+                       class=" group relative flex items-center text-white gap-3 px-3 py-1 hover:bg-primary ">
+                        <i class="fa-solid fa-circle-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out">
+                                <path d="m16 17 5-5-5-5"/>
+                                <path d="M21 12H9"/>
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            </svg>
+                        </i>
+                        <span class="sidebar-text hidden">Cerrar Sesion</span>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Cerrar Sesion
+                        </span>
+                    </a>
+                </nav>
+            </div>
         </aside>
-        <main class="flex-grow ml-16 px-6 py-8 transition-all duration-300">
-            <section id="tab-admin" class="tab-content">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold">Gestión de Productos</h2>
-                    </div>
-                <div class="bg-lightSurface w-4/5 max-w-6xl mx-auto
-            p-6 shadow-xl border border-borderLight overflow-x-auto">
-
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-gray-100 text-softText  uppercase text-xs">
-                        <tr>
-
-                            <th class="p-3">Producto</th>
-                            <th class="p-3">Precio</th>
-
-                            <th class="p-3">Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="prod : ${productos}"  class="border-t border-borderLight hover:bg-gray-100 transition">
-
-                            <td th:text="${prod.nombre}" class="px-4 py-3"></td>
-                            <td th:text="${prod.valor}" class="px-4 py-3"></td>
-
-
-                            <td class="p-3">
-                                <a th:href="@{/veterinario/productos/editar/{id}(id=${prod.id})}">
-                                    <button class="bg-blue-600 text-white px-3 py-2 hover:bg-blue-700">Editar</button>
-                                </a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+        <div class="flex flex-col flex-1 h-full transition-all duration-300">
+        <!-- Header -->
+            <header class="bg-secondary text-white flex justify-between items-center px-2 py-1 shadow-md overflow-visible">
+            <div class="flex items-center space-x-3">
+                <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
+                <h1 class="text-lg font-bold">Cannia</h1>
+            </div>
+<!--            <div>-->
+<!--                <h1 class="text-3xl font-bold mb-3 text-white">-->
+<!--                    Veterinaria <span th:text="${veterinaria.nombre}" ></span>-->
+<!--                </h1>-->
+<!--            </div>-->
+                <div class="flex items-center space-x-3 gap-8">
+                    <a th:href="@{/veterinario}" class="group relative ">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-house-icon lucide-house">
+                            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                            <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        </svg>
+                        <span class="absolute top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-black text-white text-xs px-2 py-1 whitespace-nowrap z-50">
+                            Inicio
+                        </span>
+                    </a>
                 </div>
-            </section>
+            </header>
+            <main class="flex-1 overflow-y-auto px-6 py-8">
+                <section id="vista-productos" class="vista-activa">
+                    <!-- CONTENEDOR DEL TÍTULO -->
+                    <div class="w-4/5 max-w-6xl mx-auto mb-4">
+                        <h1 class="text-4xl text-left font-bold text-gray-700">
+                            Gestión de Productos <span th:text="${veterinaria.nombre}" ></span>
+                        </h1>
+                    </div>
+                    <!-- CONTENEDOR DE LA TABLA -->
+                    <div class="bg-lightSurface w-4/5 max-w-6xl mx-auto p-6 shadow-xl border border-borderLight overflow-x-auto">
 
-            <footer class="text-center text-sm text-primary py-3 w-full border-t">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-gray-100 text-softText uppercase text-xs">
+                            <tr>
+                                <th class="p-3 text-left">Producto</th>
+                                <th class="p-3 text-left">Descripción</th>
+                                <th class="p-3 text-center">Precio</th>
+                                <th class="p-3 text-center">Unidad</th>
+                                <th class="p-3 text-center">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="prod : ${productos}"
+                                class="border-t border-borderLight hover:bg-gray-100 transition">
+                                <td th:text="${prod.nombre}" class="px-4 py-3 text-left"></td>
+                                <td th:text="${prod.descripcion}" class="px-4 py-3 text-left"></td>
+                                <td th:text="${prod.valor}" class="px-4 py-3 text-center"></td>
+                                <td th:text="${prod.unidadMedida}" class="px-4 py-3 text-center"></td>
+                                <td class="text-center">
+                                    <a th:href="@{/veterinario/productos/editar/{id}(id=${prod.id})}"
+                                       class="bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 transition">
+                                        Editar
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- PAGINACIÓN PRODUCTOS -->
+                        <div class="flex justify-center gap-2 mt-6">
+                            <a th:if="${currentPageProductos > 0}"
+                               th:href="@{/veterinario/GestionVentas(pageProductos=${currentPageProductos - 1})}"
+                               class="px-3 py-1 bg-gray-200  hover:bg-gray-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-left-dash-icon lucide-arrow-big-left-dash"><path d="M13 9a1 1 0 0 1-1-1V5.061a1 1 0 0 0-1.811-.75l-6.835 6.836a1.207 1.207 0 0 0 0 1.707l6.835 6.835a1 1 0 0 0 1.811-.75V16a1 1 0 0 1 1-1h2a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1z"/><path d="M20 9v6"/></svg>
+                            </a>
+                            <span th:each="i : ${#numbers.sequence(0, totalPagesProductos - 1)}">
+                                <a th:href="@{/veterinario/GestionVentas(pageProductos=${i})}"
+                                   th:text="${i + 1}" class="px-3 py-1 "
+                                   th:classappend="${i == currentPageProductos} ? 'bg-secondary text-white font-bold': 'bg-gray-200 hover:bg-gray-300'">
+                                </a>
+                            </span>
+                            <a th:if="${currentPageProductos < totalPagesProductos - 1}"
+                               th:href="@{/veterinario/GestionVentas(pageProductos=${currentPageProductos + 1})}"
+                               class="px-3 py-1 bg-gray-200  hover:bg-gray-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-right-dash-icon lucide-arrow-big-right-dash"><path d="M11 9a1 1 0 0 0 1-1V5.061a1 1 0 0 1 1.811-.75l6.836 6.836a1.207 1.207 0 0 1 0 1.707l-6.836 6.835a1 1 0 0 1-1.811-.75V16a1 1 0 0 0-1-1H9a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z"/><path d="M4 9v6"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                <!-- Servicios -->
+                <section id="vista-servicios" class="hidden">
+                    <div class="items-center ">
+                        <!-- CONTENEDOR DEL TÍTULO -->
+                        <div class="w-4/5 max-w-6xl mx-auto mb-4">
+                            <h1 class="text-4xl font-bold text-gray-700">
+                             Servicios Disponibles <span th:text="${veterinaria.nombre}" ></span>
+                            </h1>
+                        </div>
+                        <!-- TABLA -->
+                        <div class="bg-lightSurface w-4/5 max-w-6xl mx-auto p-6 shadow-xl border border-borderLight overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-gray-100 text-softText  uppercase text-xs">
+                                <tr>
+                                    <th class="p-3 text-left">Nombre</th>
+                                    <th class="p-3 text-left">Descripción</th>
+                                    <th class="p-3 text-center">Duración</th>
+                                    <th class="p-3 text-center">Precio</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="serv : ${servicios}" class="border-t border-borderLight hover:bg-gray-100 transition">
+                                    <td th:text="${serv.nombre}" class="px-4 py-3 text-left"></td>
+                                    <td th:text="${serv.descripcion}" class="px-4 py-3 text-left"></td>
+                                    <td th:text="${serv.duracionEstimada} + ' min'" class="px-4 py-3 text-center"></td>
+                                    <td th:text="${serv.precio}" class="px-4 py-3 text-center"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <!-- PAGINACIÓN SERVICIOS -->
+                            <div class="flex justify-center gap-2 mt-6">
+                                <!-- Anterior -->
+                                <a th:if="${currentPageServicios > 0}"
+                                   th:href="@{/veterinario/GestionVentas(pageServicios=${currentPageServicios - 1},vista='servicios')}"
+                                   class="px-3 py-1 bg-gray-200  hover:bg-gray-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-left-dash-icon lucide-arrow-big-left-dash"><path d="M13 9a1 1 0 0 1-1-1V5.061a1 1 0 0 0-1.811-.75l-6.835 6.836a1.207 1.207 0 0 0 0 1.707l6.835 6.835a1 1 0 0 0 1.811-.75V16a1 1 0 0 1 1-1h2a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1z"/><path d="M20 9v6"/></svg>
+                                </a>
+
+                                <!-- Números -->
+                                <span th:each="i : ${#numbers.sequence(0, totalPagesServicios - 1)}">
+                            <a th:href="@{/veterinario/GestionVentas(pageServicios=${i},vista='servicios')}"
+                               th:text="${i + 1}" class="px-3 py-1 "
+                               th:classappend="${i == currentPageServicios}? 'bg-secondary text-white font-bold': 'bg-gray-200 hover:bg-gray-300'">
+                            </a>
+                        </span>
+                                <!-- Siguiente -->
+                                <a th:if="${currentPageServicios < totalPagesServicios - 1}"
+                                   th:href="@{/veterinario/GestionVentas(pageServicios=${currentPageServicios + 1},vista='servicios')}"
+                                   class="px-3 py-1 bg-gray-200  hover:bg-gray-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-right-dash-icon lucide-arrow-big-right-dash"><path d="M11 9a1 1 0 0 0 1-1V5.061a1 1 0 0 1 1.811-.75l6.836 6.836a1.207 1.207 0 0 1 0 1.707l-6.836 6.835a1 1 0 0 1-1.811-.75V16a1 1 0 0 0-1-1H9a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z"/><path d="M4 9v6"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <footer class="text-center text-sm text-primary py-3 w-full border-t">
                 © 2025 App Cannia. Todos los derechos reservados.
             </footer>
-        </main>
-    </div>
+            </main>
+        </div>
 </div>
-
-
-
 
 <div id="modalTablaCategorias" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white p-6 -lg shadow-2xl max-h-[80vh] w-11/12 md:w-3/4 lg:w-1/2 overflow-y-auto relative">
@@ -263,32 +410,20 @@
     </div>
 </div>
 
-<script>
-
-    // Dentro de tu bloque <script>
+    <script th:inline="javascript">
 
     function toggleSidebar() {
         const sidebar = document.getElementById("sidebar");
-        const mainContent = document.querySelector("main");
         const texts = document.querySelectorAll(".sidebar-text");
 
-        const isExpanded = sidebar.classList.toggle("w-64");
-
-        if (isExpanded) {
-            mainContent.classList.remove("ml-16");
-            mainContent.classList.add("ml-20"); // ✅ MENOS agresivo
-        } else {
-            mainContent.classList.remove("ml-20");
-            mainContent.classList.add("ml-16");
-        }
+        const expanded = sidebar.classList.toggle("w-64");
+        sidebar.classList.toggle("w-12", !expanded);
 
         texts.forEach(t => {
-            t.classList.toggle("hidden", !isExpanded);
+            t.classList.toggle("hidden", !expanded);
         });
 
-
     }
-    // Dentro de tu bloque <script>
     // Función genérica para abrir/cerrar cualquier modal
     function toggleModal(id) {
         const modal = document.getElementById(id);
@@ -314,11 +449,7 @@
         toggleModal('modalCrearCategoria');
     }
 
-    /**
-     * Carga los datos de una categoría (AJAX) y abre el modal de edición.
-     * @param {number} id El ID de la categoría a editar.
-     * @param {Event} event El objeto evento.
-     */
+
     function cargarModalEdicion(id, event) {
         if (event) event.preventDefault();
 
@@ -352,6 +483,18 @@
                 toggleModal('modalTablaCategorias');
             });
     }
+
+    function mostrarVista(vista) {
+        document.getElementById("vista-productos").classList.add("hidden");
+        document.getElementById("vista-servicios").classList.add("hidden");
+
+        document.getElementById("vista-" + vista).classList.remove("hidden");
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const vista = /*[[${vistaActiva}]]*/ 'productos';
+        mostrarVista(vista);
+    });
 </script>
 
 </body>

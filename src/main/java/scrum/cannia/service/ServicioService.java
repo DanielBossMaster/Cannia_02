@@ -1,13 +1,13 @@
 package scrum.cannia.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import scrum.cannia.model.ProductoModel;
 import scrum.cannia.model.ServicioModel;
 import scrum.cannia.repository.ServicioRepository;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -20,16 +20,17 @@ public class ServicioService {
         this.servicioRepository = servicioRepository;
     }
 
-    public List<ServicioModel>listarTodos() {
+    public List<ServicioModel> listarTodos() {
         return servicioRepository.findAll();
     }
-    public static <Servicio> void guardar
-            (Servicio servicio) {
 
+    public static <Servicio> void guardar
+    (Servicio servicio) {
     }
+
     // ============================================
-//         EDITAR SERVICIO
-// ============================================
+    //         EDITAR SERVICIO
+    // ============================================
     public void actualizar(ServicioModel servicio) {
         ServicioModel original = servicioRepository.findById(servicio.getId()).orElse(null);
         if (original == null) return;
@@ -42,9 +43,25 @@ public class ServicioService {
 
         servicioRepository.save(original);
     }
+
     public ServicioModel buscarPorId(Integer id) {
         return servicioRepository.findById(id).orElse(null);
     }
 
-}
+    public Page<ServicioModel> listarPaginado(int pagina, int tamanio) {
+        Pageable pageable = PageRequest.of(pagina, tamanio);
+        return servicioRepository.findAll(pageable);
 
+    }
+    public Page<ServicioModel> listarActivoPaginado(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return servicioRepository.findByEstadoTrue(pageable);
+    }
+    public List<ServicioModel> listarTodosActivos() {
+        return servicioRepository.findByEstadoTrue();
+    }
+    public List<ServicioModel> listarActivosPorVeterinaria(Integer idVeterinaria) {
+        return servicioRepository.findByVeterinariaIdAndEstadoTrue(idVeterinaria);
+    }
+
+}

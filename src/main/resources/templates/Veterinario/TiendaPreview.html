@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda </title>
+    <title>Tienda - Veterinario </title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link th:href="@{/dist/output.css}" rel="stylesheet">
@@ -12,8 +12,8 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: "#170022",
-                        secondary: "#290043",
+                        primary: "#350159",
+                        secondary: "#170022",
                         lightBg: "#e8ebff",
                         lightSurface: "rgb(247,248,249)",
                         darkText: "#1e293b",
@@ -26,70 +26,151 @@
     </script>
     <style> body {font-family: 'Poppins', sans-serif;} </style>
 </head>
-<body class="bg-lightBg">
-<header class="bg-primary text-white flex justify-between items-center px-6 py-3 shadow-md">
-    <div class="flex items-center space-x-3">
-        <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
-        <h1 class="text-lg font-bold">Cannia</h1>
-    </div>
-    <div>
-        <h1 class="text-4xl font-bold mb-3 text-white">
-            Veterinaria <span th:text="${veterinaria.nombre}" ></span>
-        </h1>
-    </div>
-    <div class="flex items-center space-x-3 gap-8">
-        <button onclick="abrirCarrito()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                 class="lucide lucide-shopping-cart-icon lucide-shopping-cart">
-                <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
-                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-        </button>
-        <a th:href="@{/propietario/index}">
-            <button class="text-sm hover:font-bold">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                     class="lucide lucide-house-icon lucide-house">
-                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
-                    <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                </svg>
-            </button>
-        </a>
-    </div>
-</header>
+<body class="bg-lightBg text-darkText h-screen overflow-x-hidden">
+<div class="h-full flex">
+    <div class="flex flex-1  relative">
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="bg-secondary text-white w-12 transition-all duration-300 h-full flex flex-col justify-between ">
+            <div>
+                <!-- Header + botón -->
+                <div class="flex items-center justify-between p-3">
+                    <span class="text-xl font-bold whitespace-nowrap hidden sidebar-text">Menu</span>
+                    <button onclick="toggleSidebar()" class="text-white group relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-circle-chevron-right-icon lucide-circle-chevron-right"><circle cx="12" cy="12" r="10"/>
+                            <path d="m10 8 4 4-4 4"/>
+                        </svg>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Menu
+                        </span>
+                    </button>
+                </div>
+                <nav class="flex flex-col gap-1 mt-4">
+                    <a th:href="@{/veterinario/GestionVentas}" class="group relative flex items-center gap-3 px-3 py-1 hover:bg-primary ">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                 class="lucide lucide-undo2-icon lucide-undo-2"><path d="M9 14 4 9l5-5"/>
+                                <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/>
+                            </svg>
+                        <span class="sidebar-text hidden">Volver</span>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Volver
+                        </span>
+                    </a>
+                    <a th:href="@{/veterinario/ServiciosPreview}" class="group relative flex items-center gap-3 px-3 py-1 hover:bg-primary">
+                        <button class="text-sm hover:font-bold">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                 class="lucide lucide-shield-plus-icon lucide-shield-plus">
+                                <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+                                <path d="M9 12h6"/>
+                                <path d="M12 9v6"/>
+                            </svg>
+                        </button>
+                        <span class="sidebar-text hidden">Servicios</span>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Servicios
+                        </span>
+                    </a>
+                    <button onclick="abrirCarrito()" class="group relative flex items-center gap-3 px-3 py-1 hover:bg-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-shopping-cart-icon lucide-shopping-cart">
+                            <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+                            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+                        </svg>
+                        <span class="sidebar-text hidden">Carrito de compras</span>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Carrito de Compras
+                        </span>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Bloque inferior (2 items) -->
+            <div class="mb-6">
+                <nav class="flex flex-col gap-4">
+                    <a th:href="@{/cerrar-sesion}" class="group relative flex items-center text-white gap-3 px-3 py-1 hover:bg-primary ">
+                        <i class="fa-solid fa-circle-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out">
+                            <path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            </svg>
+                        </i>
+                        <span class="sidebar-text hidden">Cerrar Sesion</span>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Cerrar Sesion
+                        </span>
+                    </a>
+                </nav>
+            </div>
+
+        </aside>
+        <div class="flex flex-col flex-1 h-full overflow-y-auto">
+
+        <!-- Header -->
+            <header class="bg-secondary text-white flex justify-between items-center px-2 py-1 shadow-md">
+                <div class="flex items-center space-x-3">
+                    <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
+                    <h1 class="text-lg font-bold">Cannia</h1>
+                </div>
+                <div class="flex items-center space-x-3 gap-8">
+                    <a th:href="@{/veterinario}" class="group relative ">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-house-icon lucide-house">
+                            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                            <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        </svg>
+                        <span class="absolute top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-black text-white text-xs px-2 py-1 whitespace-nowrap z-50">
+                            Inicio
+                        </span>
+                    </a>
+                </div>
+            </header>
 <!-- Contenedor principal -->
-<div class="text-center mx-auto p-8">
+<div class="text-center mx-auto p-6">
     <!-- Encabezado -->
-
-
         <div th:unless="${esBusqueda}">
-            <p class="text-gray-600 mb-8">
+            <div class="max-w-7xl mx-auto mb-3 ">
+                <h1 class="text-5xl font-bold text-gray-700">
+                    Veterinaria <span th:text="${veterinaria.nombre}" ></span>
+                </h1>
+            <p class="text-gray-600 text-sm">
                 Esta es la experiencia de compra final para tus usuarios. Debes revisar detalladamente que la información del producto
-                <br>(incluyendo especificaciones, valor monetario y detalles clave) se alinee perfectamente con lo planificado para garantizar una transacción fluida y sin confusiones para el comprador.
+                (incluyendo especificaciones, valor monetario y detalles clave) <br> se alinee perfectamente con lo planificado para garantizar una transacción fluida y sin confusiones para el comprador.
             </p>
+            </div>
         </div>
 
         <div th:if="${esBusqueda}">
-            <p class="text-gray-600 mb-8">
-                Mostrando resultados para: "<b th:text="${consulta}"></b>"
+            <p class="text-gray-600 mb-2">Mostrando resultados para: "<b th:text="${consulta}"></b>"
                 <span th:if="${categoriaSeleccionada != null}">en la categoría seleccionada.</span>
-                <a th:href="@{/veterinario/Tienda}" class="bg-primary text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">Ver Catálogo Completo</a>
+                <a th:href="@{/veterinario/TiendaPreview}"
+                   class="bg-primary text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
+                    Ver Catálogo Completo
+                </a>
             </p>
         </div>
 
-        <div class=" p-4 max-w-4xl mx-auto mb-6">
+        <div class=" p-1 max-w-4xl mx-auto mb-3">
             <div class="sidebar-filtros">
-                <form th:action="@{/veterinario/Tienda}" method="GET" class="flex flex-row gap-4 w-full items-end">
+                <form th:action="@{/veterinario/TiendaPreview}" method="GET" class="flex flex-row gap-4 w-full items-end">
 
-                    <div class="form-group mb-0 flex-grow">
-                        <label for="searchInput" class="sr-only">Buscar por nombre:</label>
-                        <input type="text" name="q" id="searchInput"
-                               th:value="${consulta}"
-                               class="w-full p-2 border border-gray-300  focus:ring-primary focus:border-primary"
-                               placeholder="Buscar por nombre...">
-                    </div>
+                    <button type="submit"
+                            class="p-2 h-10 bg-primary text-white  hover:bg-secondary transition duration-150 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-search-icon lucide-search">
+                            <path d="m21 21-4.34-4.34"/>
+                            <circle cx="11" cy="11" r="8"/>
+                        </svg>
+                    </button>
 
                     <div class="form-group mb-0 w-1/3 min-w-0">
                         <label for="categoriaInput" class="sr-only">Categoría:</label>
@@ -104,10 +185,14 @@
                         </select>
                     </div>
 
-                    <button type="submit"
-                            class="p-2 h-10 bg-primary text-white  hover:bg-secondary transition duration-150 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
-                    </button>
+
+                    <div class="form-group mb-0 flex-grow">
+                    <label for="searchInput" class="sr-only">Buscar por nombre:</label>
+                    <input type="text" name="q" id="searchInput"
+                           th:value="${consulta}"
+                           class="w-full p-2 border border-gray-300  focus:ring-primary focus:border-primary"
+                           placeholder="Buscar por nombre...">
+                    </div>
                 </form>
             </div>
         </div>
@@ -187,8 +272,25 @@
             </div>
         </div>
     </div>
+            <script th:inline="javascript">
+                function toggleSidebar() {
+                    const sidebar = document.getElementById("sidebar");
+                    const texts = document.querySelectorAll(".sidebar-text");
 
-    <script>
+                    const expanded = sidebar.classList.toggle("w-64");
+                    sidebar.classList.toggle("w-12", !expanded);
+
+                    texts.forEach(t => {
+                        t.classList.toggle("hidden", !expanded);
+                    });
+
+                }
+                // Función genérica para abrir/cerrar cualquier modal
+                function toggleModal(id) {
+                    const modal = document.getElementById(id);
+                    modal.classList.toggle("hidden");
+                }
+
         function abrirCarrito() {
             document.getElementById("carritoModal").classList.remove("hidden");
             cargarCarrito();
