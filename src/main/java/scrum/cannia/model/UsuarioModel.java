@@ -35,4 +35,7 @@ public class UsuarioModel {
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
     private FundacionModel fundacion;
 
+    @Column(nullable = false)
+    private String estado; // ACTIVO, PENDIENTE, RECHAZADO
+
 }
