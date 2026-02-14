@@ -1,16 +1,15 @@
 package scrum.cannia.controller;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import scrum.cannia.model.*;
-import scrum.cannia.repository.HistoriaClinicaRepository;
-import scrum.cannia.repository.VacunaRepository;
-import scrum.cannia.repository.MascotaRepository;
-import scrum.cannia.repository.PropietarioRepository;
+import scrum.cannia.repository.*;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -23,22 +22,22 @@ import java.util.*;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import scrum.cannia.service.MascotaService;
+import scrum.cannia.service.PropietarioService;
 
+
+@AllArgsConstructor
 @Controller
 public class HistoriaClinicaController {
 
-    @Autowired
-    private VacunaRepository vacunaRepository;
-
-    @Autowired
-    private HistoriaClinicaRepository historiaRepository;
-
-    @Autowired
-    private PropietarioRepository propietarioRepository;
-
-    @Autowired
-    private MascotaRepository mascotaRepository;
-
+    private final HistoriaClinicaRepository historiaRepository;
+    private final VacunaRepository vacunaRepository;
+    private final VeterinarioRepository veterinarioRepository;
+    private final PropietarioRepository propietarioRepository;
+    private final MascotaRepository mascotaRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final MascotaService mascotaService;
+    private final PropietarioService propietarioService;
 
 
 
@@ -115,13 +114,29 @@ public class HistoriaClinicaController {
      * Ver propietario con sus mascotas
      */
     @GetMapping("/propietario/{id}")
-    public String verPropietario(@PathVariable Long id, Model model) {
-        PropietarioModel propietario = propietarioRepository.findById(id).orElse(null);
-        List<MascotaModel> mascotas = mascotaRepository.findByPropietarioId(id);
+    public String verPropietario(
+            @PathVariable Long id,
+            Authentication authentication,
+            Model model
+    ) {
+
+        // 1. Veterinario en sesión
+        String username = authentication.getName();
+        UsuarioModel usuario = usuarioRepository.findByUsuario(username).orElseThrow();
+        VeterinarioModel veterinario = usuario.getVeterinario();
+
+        // 2. Propietario VALIDADO
+        PropietarioModel propietario =
+                propietarioService.obtenerPorIdYVeterinario(id, veterinario);
+
+        // 3. Mascotas del propietario (service recomendado)
+        List<MascotaModel> mascotas =
+                mascotaService.listarPorPropietario(propietario);
+
+
 
         model.addAttribute("propietario", propietario);
         model.addAttribute("mascotas", mascotas);
-        // 👇 agregar el objeto vacío para que el formulario no falle
         model.addAttribute("historiaClinica", new HistoriaClinicaModel());
 
         return "veterinario/historiaclinica";

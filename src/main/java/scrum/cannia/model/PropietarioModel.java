@@ -51,4 +51,8 @@ public class PropietarioModel {
     @JoinColumn(name = "id_veterinaria")
     private VeterinariaModel veterinaria;
 
+    @ManyToOne
+    @JoinColumn(name = "veterinario_id", nullable = false)
+    private VeterinarioModel veterinario;
+
 }

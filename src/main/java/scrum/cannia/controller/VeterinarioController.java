@@ -28,9 +28,6 @@ import java.util.List;
 @RequestMapping("/veterinario")
 public class VeterinarioController {
 
-    private final VeterinarioRepository veterinarioRepository;
-    private final PropietarioRepository propietarioRepository;
-    private final MascotaRepository mascotaRepository;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -52,6 +49,11 @@ public class VeterinarioController {
     private CategoriaService categoriaService;
     @Autowired
     private ServicioService servicioService;
+
+
+    private final VeterinarioRepository veterinarioRepository;
+    private final PropietarioRepository propietarioRepository;
+    private final MascotaRepository mascotaRepository;
 
     public VeterinarioController(
             VeterinarioRepository veterinarioRepository,
@@ -83,7 +85,7 @@ public class VeterinarioController {
 
         //  PAGINACIÓN PROPIETARIOS
         Page<PropietarioModel> propietariosPage =
-                propietarioService.listarPaginado(page, 8);
+                propietarioService.listarPorVeterinario(veterinario, page, 8);
 
         model.addAttribute("veterinario", veterinario);
         model.addAttribute("propietarios", propietariosPage.getContent());
@@ -96,44 +98,38 @@ public class VeterinarioController {
         model.addAttribute("propietario", new PropietarioModel());
         model.addAttribute("mascota", new MascotaModel());
 
-
-        System.out.println("ENTRANDO AL CONTROLLER VETERINARIO");
         return "veterinario/index";
     }
 
     // ============================================
-//        REGISTRAR NUEVO PROPIETARIO
-// ============================================
+    //        REGISTRAR NUEVO PROPIETARIO
+    // ============================================
+
     @PostMapping("/nuevo")
     public String nuevo(
-            @Validated @ModelAttribute("propietarioModel") PropietarioModel propietarioModel,
+            @Validated @ModelAttribute PropietarioModel propietarioModel,
             BindingResult br,
-            HttpSession session,
-            Model model) {
+            Authentication authentication,
+            RedirectAttributes redirectAttributes
+    ) {
 
-        // Validación del formulario
         if (br.hasErrors()) {
-            model.addAttribute("mensajeError", "Por favor corrige los campos marcados.");
-            return "veterinario/Index";
+            redirectAttributes.addFlashAttribute("mensajeError",
+                    "Por favor corrige los campos");
+            return "redirect:/veterinario/index";
         }
 
-        // Obtener el usuario en sesión
-        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
-        if (usuario == null) {
-            return "redirect:/login";  // Seguridad
-        }
+        String username = authentication.getName();
+        UsuarioModel usuario = usuarioRepository.findByUsuario(username).orElseThrow();
 
-        // Obtener veterinario y veterinaria asociada
         VeterinarioModel veterinario = usuario.getVeterinario();
-        VeterinariaModel veterinaria = veterinario.getVeterinaria();
 
-        // Asignar automáticamente la veterinaria al propietario que se está registrando
-        propietarioModel.setVeterinaria(veterinaria);
+        // 🔑 ASOCIACIÓN CORRECTA
+        propietarioModel.setVeterinario(veterinario);
 
-        // Guardar propietario
         propietarioRepository.save(propietarioModel);
 
-        return "redirect:/veterinario";  // Volver al listado
+        return "redirect:/veterinario/index";
     }
 
 
@@ -149,7 +145,7 @@ public class VeterinarioController {
         mascota.setPropietario(propietario);
         mascotaService.guardar(mascota);
 
-        return "redirect:/veterinario";
+        return "redirect:/veterinario/index";
     }
 
     // ============================================
@@ -202,13 +198,25 @@ public class VeterinarioController {
         propietarioRepository.save(existente);
         return "redirect:/veterinario";
     }
-
     // ============================================
     //        MÓDULO DE HISTORIA CLÍNICA
     // ============================================
     @GetMapping("/HistoriaClinica")
-    public String mostrarPropietarioVH(Model model) {
-        model.addAttribute("propietarios", propietarioRepository.findByEstadoTrue());
+    public String mostrarPropietarioVH(
+            Authentication authentication,
+            Model model
+    ) {
+        // 1. Veterinario en sesión (Spring Security)
+        String username = authentication.getName();
+        UsuarioModel usuario = usuarioRepository.findByUsuario(username).orElseThrow();
+        VeterinarioModel veterinario = usuario.getVeterinario();
+
+        // 2. SOLO propietarios del veterinario y activos
+        model.addAttribute(
+                "propietarios",
+                propietarioService.listarPorVeterinario(veterinario)
+        );
+
         return "veterinario/HistoriaClinica";
     }
 

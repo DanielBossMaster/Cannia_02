@@ -206,21 +206,21 @@
 
                                 <!-- Anterior -->
                                 <a th:if="${currentPage > 0}"
-                                   th:href="@{/veterinario(page=${currentPage - 1})}"
+                                   th:href="@{/veterinario/index(page=${currentPage - 1})}"
                                    class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition">
                                     «
                                 </a>
 
                                 <!-- Números -->
                                 <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-                                    <a th:href="@{/veterinario(page=${i})}"
+                                    <a th:href="@{/veterinario/index(page=${i})}"
                                        th:text="${i + 1}" class="px-3 py-1 rounded transition"
                                        th:classappend="${i == currentPage}? 'bg-secondary text-white font-bold': 'bg-gray-200 hover:bg-gray-300'"></a>
                                 </span>
 
                                 <!-- Siguiente -->
                                 <a th:if="${currentPage < totalPages - 1}"
-                                   th:href="@{/veterinario(page=${currentPage + 1})}"
+                                   th:href="@{/veterinario/index(page=${currentPage + 1})}"
                                    class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition">
                                     »
                                 </a>
