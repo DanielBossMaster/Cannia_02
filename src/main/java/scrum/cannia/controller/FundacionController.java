@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.multipart.MultipartFile;
-import scrum.cannia.Dto.ErrorCargaDTO;
 import scrum.cannia.Dto.MascotaCargaDTO;
 import scrum.cannia.Dto.ResultadoCargaMascotasDTO;
 import scrum.cannia.model.MascotaModel;
@@ -16,7 +15,6 @@ import scrum.cannia.service.MascotaServiceCreator;
 import scrum.cannia.strategy.DataLoaderStrategy;
 import scrum.cannia.strategy.factory.DataLoaderFactory;
 
-import java.security.Principal;
 import java.util.List;
 
 
@@ -33,7 +31,7 @@ public class FundacionController {
     @Autowired
     private MascotaServiceCreator mascotaServiceCreator;
 
-    @GetMapping("/dashboard")
+    @GetMapping("/index")
     public String dashboard(HttpSession session, Model model) {
 
         // Validar sesión
@@ -48,7 +46,7 @@ public class FundacionController {
         model.addAttribute("fundacionId", fundacionId);
         model.addAttribute("fundacionNombre", fundacionNombre);
 
-        return "fundacion/dashboard";
+        return "index";
     }
 
     @GetMapping("/CargarMascotas")

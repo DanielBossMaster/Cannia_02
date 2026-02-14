@@ -34,9 +34,7 @@
     </style>
 </head>
 <div class="h-screen bg-[url('/img/gato_dos_login.jpg')] bg-cover bg-center flex items-end justify-center">
-
-
-    <a href="/" class="fixed top-4 left-4 z-50">
+    <a href="/inicio" class="fixed top-4 left-4 z-50">
         <div class="w-12 h-12 rounded-full text-primary bg-white shadow-lg flex items-center justify-center
                 transition-all duration-300 hover:scale-110 hover:bg-primary group hover:text-white">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -59,12 +57,55 @@
                     <form method="post" th:action="@{/login}" class="w-full space-y-4">
                         <div>
                             <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1" for="usuario">Usuario</label>
-                            <input class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 -md focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500" id="usuario" name="usuario" placeholder="Tu nombre de usuario" type="text"  required/>
+                            <input class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 -md focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500" id="usuario" name="username" placeholder="Tu nombre de usuario" type="text"  required/>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1" for="contrasena">Contraseña</label>
-                            <input class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 -md focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500" id="contrasena" name="contrasena" placeholder="Tu contraseña" type="password"  required/>
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1" for="contrasena">
+                                Contraseña
+                            </label>
+
+                            <div class="relative">
+                                <input class="w-full px-6 py-3 pr-14 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-md focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500"
+                                        id="contrasena"
+                                        name="password"
+                                        placeholder="Tu contraseña"
+                                        type="password"
+                                        required
+                                />
+                                <button
+                                        type="button"
+                                        onclick="togglePassword()"
+                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary transition"
+                                >
+                                    <!-- OJO ABIERTO -->
+                                    <svg id="iconEyeOpen"
+                                         xmlns="http://www.w3.org/2000/svg"
+                                         class="w-5 h-5"
+                                         fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke="currentColor"
+                                         stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+
+                                    <!-- OJO CERRADO -->
+                                    <svg id="iconEyeClosed"
+                                         xmlns="http://www.w3.org/2000/svg"
+                                         class="w-5 h-5 hidden"
+                                         fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke="currentColor"
+                                         stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M17.94 17.94A10.94 10.94 0 0112 20C5 20 1 12 1 12a21.86 21.86 0 015.06-6.94M9.9 4.24A10.94 10.94 0 0112 4c7 0 11 8 11 8a21.82 21.82 0 01-2.16 3.19M1 1l22 22"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
+
+
                         <button class=" w-full text-center font-bold mt-8 bg-primary text-white px-6 py-3 -md transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black">
                             Ingresar
                         </button>
@@ -74,7 +115,10 @@
                                 Registrarse
                             </div>
                         </a>
-                        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                        <div th:if="${param.error}" class="text-red-500 text-sm">
+                            Usuario o contraseña incorrectos
+                        </div>
+
                     </form>
                     <div class="text-center w-full space-y-2 pt-2">
                         <a class="text-sm text-primary hover:underline"
@@ -89,5 +133,25 @@
             <p class="text-xs text-zinc-500 dark:text-zinc-400">© 2025 app cannia. Todos los derechos reservados.</p>
         </footer>
     </div>
+
+    <script>
+        function togglePassword() {
+            const input = document.getElementById("contrasena");
+            const openIcon = document.getElementById("iconEyeOpen");
+            const closedIcon = document.getElementById("iconEyeClosed");
+
+            if (input.type === "password") {
+                input.type = "text";
+                openIcon.classList.add("hidden");
+                closedIcon.classList.remove("hidden");
+            } else {
+                input.type = "password";
+                openIcon.classList.remove("hidden");
+                closedIcon.classList.add("hidden");
+            }
+        }
+    </script>
+
+
 </div>
 </html>

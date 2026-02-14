@@ -17,13 +17,13 @@ public class UsuarioModel {
     @Column(name = "id_usuario")
     private Long idUsuario;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 30, nullable = false, unique = true)
     private String usuario;
 
-    @Column(length = 20, nullable = false)
+    @Column( nullable = false)
     private String contrasena;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 30, nullable = false)
     private String rol;
 
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)

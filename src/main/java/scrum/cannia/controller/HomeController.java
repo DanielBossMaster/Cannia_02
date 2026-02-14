@@ -13,7 +13,7 @@ public class HomeController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @GetMapping("/")
+    @GetMapping("/inicio")
     public String mostrarIndex() {
         return "login/index";
     }

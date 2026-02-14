@@ -1,8 +1,11 @@
 package scrum.cannia.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -63,21 +66,22 @@ public class VeterinarioController {
     // ============================================
     //               DASHBOARD PRINCIPAL
     // ============================================
-    @GetMapping
-    public String Index(@RequestParam(required = false) Integer page, HttpSession session, Model model) {
 
-        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
-        if (usuario == null) {
-            return "redirect:/login";
-        }
+    @GetMapping("/index")
+    public String Index(@RequestParam(required = false) Integer page, Authentication authentication, Model model) {
 
+        String username = authentication.getName();
+
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(username)
+                .orElseThrow();
+
+        VeterinarioModel veterinario = usuario.getVeterinario();
         if (page == null) {
             page = 0;
         }
 
-        VeterinarioModel veterinario = usuario.getVeterinario();
-
-        // 🔹 PAGINACIÓN PROPIETARIOS
+        //  PAGINACIÓN PROPIETARIOS
         Page<PropietarioModel> propietariosPage =
                 propietarioService.listarPaginado(page, 8);
 
@@ -92,9 +96,10 @@ public class VeterinarioController {
         model.addAttribute("propietario", new PropietarioModel());
         model.addAttribute("mascota", new MascotaModel());
 
-        return "veterinario/Index";
-    }
 
+        System.out.println("ENTRANDO AL CONTROLLER VETERINARIO");
+        return "veterinario/index";
+    }
 
     // ============================================
 //        REGISTRAR NUEVO PROPIETARIO

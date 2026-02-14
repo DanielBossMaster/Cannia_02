@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Tu cuenta debe ser verificada</h1>
+
+<p>
+    Por seguridad debemos validar tu información antes de activar tu cuenta.
+</p>
+
+<form th:action="@{/verificacion/solicitar}" method="post">
+    <button type="submit">
+        Activar mi cuenta
+    </button>
+</form>
+
+</body>
+</html>
