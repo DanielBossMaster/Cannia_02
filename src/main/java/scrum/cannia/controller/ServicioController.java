@@ -1,6 +1,7 @@
 package scrum.cannia.controller;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,38 +15,13 @@ import scrum.cannia.repository.ServicioRepository;
 
 import scrum.cannia.service.ServicioService;
 
+@AllArgsConstructor
 @Controller
 @RequestMapping("/inventario/servicios")
 public class ServicioController {
 
     private final ServicioRepository servicioRepository;
-
-    public ServicioController(
-            ServicioRepository servicioRepository) {
-
-        this.servicioRepository = servicioRepository;
-    }
-
-        @Autowired
-        private ServicioService servicioService;
-
-        // ============================================
-        //   LISTAR INVENTARIO Y MOSTRAR FORMULARIOS
-        // ============================================
-        @GetMapping
-        public String servicio(Model model, HttpSession session) {
-            // Obtener el usuario en sesión
-            UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
-            if (usuario == null) {
-                return "redirect:/login";  // Seguridad
-            }
-
-            model.addAttribute("servicio", new ServicioModel());
-            model.addAttribute("servicios", servicioService.listarTodos());
-
-            return "Inventario/Servicio";
-
-        }
+    private final ServicioService servicioService;
 
     // ============================================
     //         GUARDAR SERVICIO
@@ -77,7 +53,7 @@ public class ServicioController {
         servicioRepository.save(servicio);
 
         return "redirect:/inventario/productos";
-        // ruta de la paginba, para que vuelva a la misma pagina
+        // ruta de la pagina, para que vuelva a la misma pagina
     }
 
     @GetMapping("/editar/{id}")

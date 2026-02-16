@@ -90,7 +90,7 @@
                         </span>
                     </a>
 
-                    <a href="#" onclick="abrirModalTabla(event)"
+                    <a onclick="abrirModalTabla(event)"
                        class=" group relative flex items-center gap-3 px-3 py-1 hover:bg-primary ">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -175,17 +175,17 @@
         <div class="flex flex-col flex-1 h-full transition-all duration-300">
         <!-- Header -->
             <header class="bg-secondary text-white flex justify-between items-center px-2 py-1 shadow-md overflow-visible">
-            <div class="flex items-center space-x-3">
-                <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
-                <h1 class="text-lg font-bold">Cannia</h1>
-            </div>
-<!--            <div>-->
+                <div class="flex items-center space-x-3">
+                    <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
+                    <h1 class="text-lg font-bold">Cannia</h1>
+                </div>
+<!--           <div>-->
 <!--                <h1 class="text-3xl font-bold mb-3 text-white">-->
 <!--                    Veterinaria <span th:text="${veterinaria.nombre}" ></span>-->
 <!--                </h1>-->
 <!--            </div>-->
                 <div class="flex items-center space-x-3 gap-8">
-                    <a th:href="@{/veterinario}" class="group relative ">
+                    <a th:href="@{/veterinario/index}" class="group relative ">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                              viewBox="0 0 24 24" fill="none" stroke="currentColor"
                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -297,11 +297,11 @@
 
                                 <!-- Números -->
                                 <span th:each="i : ${#numbers.sequence(0, totalPagesServicios - 1)}">
-                            <a th:href="@{/veterinario/GestionVentas(pageServicios=${i},vista='servicios')}"
-                               th:text="${i + 1}" class="px-3 py-1 "
-                               th:classappend="${i == currentPageServicios}? 'bg-secondary text-white font-bold': 'bg-gray-200 hover:bg-gray-300'">
-                            </a>
-                        </span>
+                                    <a th:href="@{/veterinario/GestionVentas(pageServicios=${i},vista='servicios')}"
+                                       th:text="${i + 1}" class="px-3 py-1 "
+                                       th:classappend="${i == currentPageServicios}? 'bg-secondary text-white font-bold': 'bg-gray-200 hover:bg-gray-300'">
+                                    </a>
+                                </span>
                                 <!-- Siguiente -->
                                 <a th:if="${currentPageServicios < totalPagesServicios - 1}"
                                    th:href="@{/veterinario/GestionVentas(pageServicios=${currentPageServicios + 1},vista='servicios')}"
@@ -312,12 +312,13 @@
                         </div>
                     </div>
                 </section>
-
-                <footer class="text-center text-sm text-primary py-3 w-full border-t">
-                © 2025 App Cannia. Todos los derechos reservados.
-            </footer>
             </main>
+            <!-- Footer -->
+            <footer class="text-center text-sm text-primary py-3 w-full border-t">
+              © 2025 App Cannia. Todos los derechos reservados.
+            </footer>
         </div>
+    </div>
 </div>
 
 <div id="modalTablaCategorias" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

@@ -1,11 +1,11 @@
 package scrum.cannia.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.AllArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,46 +24,24 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 
+@AllArgsConstructor
 @Controller
 @RequestMapping("/veterinario")
 public class VeterinarioController {
 
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-    @Autowired
-    private PropietarioService propietarioService;
-    @Autowired
-    private MascotaService mascotaService;
-    @Autowired
-    private VeterinarioService veterinarioService;
-    @Autowired
-    private ProductoService productoService;
-    @Autowired
-    private FacturaService facturaService;
-    @Autowired
-    private FacturaRepository facturaRepository;
-    @Autowired
-    private ConsumidorBusquedaService consumidorBusquedaService;
-    @Autowired
-    private CategoriaService categoriaService;
-    @Autowired
-    private ServicioService servicioService;
-
-
+    private final UsuarioRepository usuarioRepository;
+    private final PropietarioService propietarioService;
+    private final MascotaService mascotaService;
+    private final VeterinarioService veterinarioService;
+    private final ProductoService productoService;
+    private final FacturaService facturaService;
+    private final FacturaRepository facturaRepository;
+    private final ConsumidorBusquedaService consumidorBusquedaService;
+    private final CategoriaService categoriaService;
+    private final ServicioService servicioService;
     private final VeterinarioRepository veterinarioRepository;
     private final PropietarioRepository propietarioRepository;
     private final MascotaRepository mascotaRepository;
-
-    public VeterinarioController(
-            VeterinarioRepository veterinarioRepository,
-            PropietarioRepository propietarioRepository,
-            MascotaRepository mascotaRepository) {
-
-        this.propietarioRepository = propietarioRepository;
-        this.veterinarioRepository = veterinarioRepository;
-        this.mascotaRepository = mascotaRepository;
-    }
 
     // ============================================
     //               DASHBOARD PRINCIPAL
@@ -91,10 +69,6 @@ public class VeterinarioController {
         model.addAttribute("propietarios", propietariosPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", propietariosPage.getTotalPages());
-
-        // 🔹 LO DEMÁS
-        model.addAttribute("veterinarios", veterinarioRepository.findAll());
-        model.addAttribute("mascotas", mascotaRepository.findAll());
         model.addAttribute("propietario", new PropietarioModel());
         model.addAttribute("mascota", new MascotaModel());
 
@@ -154,7 +128,7 @@ public class VeterinarioController {
     @PostMapping("/borrar/{id}")
     public String eliminarPropietario(@PathVariable Long id) {
         propietarioService.eliminarPropietario(id);
-        return "redirect:/veterinario";
+        return "redirect:/veterinario/index";
     }
 
     // ============================================
@@ -172,6 +146,7 @@ public class VeterinarioController {
     // ============================================
     //    GUARDAR EDICIÓN DE PROPIETARIO
     // ============================================
+
     @PostMapping("/editar/{id}")
     public String actualizar(@PathVariable Long id,
                              @ModelAttribute PropietarioModel cambios) {
@@ -196,11 +171,12 @@ public class VeterinarioController {
             existente.setCorreoPro(cambios.getCorreoPro());
 
         propietarioRepository.save(existente);
-        return "redirect:/veterinario";
+        return "redirect:/veterinario/index";
     }
     // ============================================
     //        MÓDULO DE HISTORIA CLÍNICA
     // ============================================
+
     @GetMapping("/HistoriaClinica")
     public String mostrarPropietarioVH(
             Authentication authentication,
@@ -267,7 +243,6 @@ public class VeterinarioController {
         return "veterinario/CrearVeterinaria";
     }
 
-
     // ============================================
     //              GESTIÓN DE VENTAS
     // ============================================
@@ -276,19 +251,28 @@ public class VeterinarioController {
             @RequestParam(defaultValue = "0") int pageProductos,
             @RequestParam(defaultValue = "0") int pageServicios,
             @RequestParam(defaultValue = "productos") String vista,
-            HttpSession session,
-            Model model) {
+            Authentication authentication,
+            Model model
+    ) {
 
-        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        // 1. Usuario autenticado (Spring Security)
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
+
         VeterinarioModel veterinario = usuario.getVeterinario();
+
+        // ⚠️ Puede que aún NO tenga veterinaria
         VeterinariaModel veterinaria = veterinario.getVeterinaria();
 
+        // 2. Paginación de productos y servicios
         Page<ProductoModel> productosPage =
                 productoService.listarActivosPaginado(pageProductos, 9);
 
         Page<ServicioModel> serviciosPage =
                 servicioService.listarActivoPaginado(pageServicios, 9);
 
+        // 3. Datos para la vista
         model.addAttribute("productos", productosPage.getContent());
         model.addAttribute("currentPageProductos", pageProductos);
         model.addAttribute("totalPagesProductos", productosPage.getTotalPages());
@@ -298,7 +282,6 @@ public class VeterinarioController {
         model.addAttribute("totalPagesServicios", serviciosPage.getTotalPages());
 
         model.addAttribute("vistaActiva", vista);
-
         model.addAttribute("veterinaria", veterinaria);
         model.addAttribute("categorias", categoriaService.listarTodas());
 
@@ -312,81 +295,70 @@ public class VeterinarioController {
     // ============================================
     //              FORMULARIO PUBLICIDAD
     // ============================================
-    @GetMapping("/FormularioPublicidad")
-    public String publicidad(HttpSession session, Model model) {
 
-        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+    @GetMapping("/FormularioPublicidad")
+    public String publicidad(Authentication authentication, Model model) {
+
+        // 1. Usuario autenticado (Spring Security)
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
+
         VeterinarioModel veterinario = usuario.getVeterinario();
         VeterinariaModel veterinaria = veterinario.getVeterinaria();
 
+        // 2. Datos para la vista
         model.addAttribute("publicidad", new PublicidadModel());
         model.addAttribute("veterinaria", veterinaria);
 
         return "veterinario/FormularioPublicidad";
-
     }
 
     // ============================================
-    //                 TIENDA DE PROPIETARIO
+    //             TIENDA DE PROPIETARIO
     // ============================================
+
     @GetMapping("/Tienda")
     public String tienda(
-            HttpSession session,
+            Authentication authentication,
             Model model,
-            // 1. Aceptar parámetros de URL: q (query) e idCategoria
             @RequestParam(value = "q", required = false) String q,
             @RequestParam(value = "idCategoria", required = false) Long idCategoria
     ) {
 
-        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
 
-        if (usuario == null) {
+        // Seguridad: solo propietarios
+        if (usuario.getPropietario() == null) {
             return "redirect:/login";
         }
 
-        VeterinariaModel veterinaria = null;
-        // ... (Tu lógica de obtención de usuario/veterinaria se mantiene igual) ...
-        if (usuario.getPropietario() != null) {
-            veterinaria = usuario.getPropietario().getVeterinaria();
-            model.addAttribute("direccion", usuario.getPropietario().getDireccionPro());
-        }
+        PropietarioModel propietario = usuario.getPropietario();
+        VeterinariaModel veterinaria = propietario.getVeterinaria();
 
         if (veterinaria == null) {
-            System.out.println("❌ El usuario NO pertenece a ninguna veterinaria");
             return "redirect:/";
         }
+
+        model.addAttribute("direccion", propietario.getDireccionPro());
         model.addAttribute("veterinaria", veterinaria);
 
-        // ------------------------------------------------------------------
-        // LÓGICA DE CARGA DEL CATÁLOGO (COMPLETO O FILTRADO)
-        // ------------------------------------------------------------------
-
         try {
-            // Determinar si hay alguna búsqueda activa
             boolean esBusqueda = (q != null && !q.trim().isEmpty()) || (idCategoria != null);
-
-            // Limpiar 'q' para el WS: si está vacío o solo con espacios, pásalo como null al WS
             String queryParaWS = (q == null || q.trim().isEmpty()) ? null : q.trim();
 
-            // 2. Llamar al Web Service usando los parámetros (q, idCategoria)
             List<ProductoBusquedaDto> resultados =
-                    productoService.obtenerProductosActivosFiltrados(queryParaWS, idCategoria); // <<<--- ¡AQUÍ ESTÁ EL CAMBIO!
+                    productoService.obtenerProductosActivosFiltrados(queryParaWS, idCategoria);
 
-            // 3. Pasar todos los datos necesarios a la vista:
-
-            // Lista de productos (ya sea filtrada o completa)
             model.addAttribute("productos", resultados);
-
-            // Lista de categorías para el dropdown de filtros
             model.addAttribute("categorias", categoriaService.listarTodas());
-
-            // Contexto de la búsqueda (para mantener el estado y la lógica condicional en Thymeleaf)
-            model.addAttribute("consulta", q); // Valor original para mostrar en la caja de texto
-            model.addAttribute("categoriaSeleccionada", idCategoria); // ID seleccionado
-            model.addAttribute("esBusqueda", esBusqueda); // Bandera para la vista
+            model.addAttribute("consulta", q);
+            model.addAttribute("categoriaSeleccionada", idCategoria);
+            model.addAttribute("esBusqueda", esBusqueda);
 
         } catch (Exception e) {
-            System.err.println("Error al cargar o buscar productos: " + e.getMessage());
             model.addAttribute("errorBusqueda", "Error al procesar la solicitud de productos.");
             model.addAttribute("productos", List.of());
         }
@@ -399,56 +371,39 @@ public class VeterinarioController {
     // ============================================
 
     @GetMapping("/TiendaPreview")
-    public String tiendaPreview(HttpSession session,
-                                Model model,
-                                @RequestParam(value = "q", required = false) String q,
-                                @RequestParam(value = "idCategoria", required = false) Long idCategoria) {
-        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
-        if (usuario == null) {
+    public String tiendaPreview(
+            Authentication authentication,
+            Model model,
+            @RequestParam(value = "q", required = false) String q,
+            @RequestParam(value = "idCategoria", required = false) Long idCategoria
+    ) {
+
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
+
+        // Seguridad: solo veterinarios
+        if (usuario.getVeterinario() == null) {
             return "redirect:/login";
         }
-        VeterinariaModel veterinaria = null;
-        if (usuario.getVeterinario() != null) {
-            veterinaria = usuario.getVeterinario().getVeterinaria();
-        }
-        List<ProductoModel> lista = productoService.obtenerProductosActivos();
-        for (ProductoModel p : lista) {
-            if (p.getFoto() != null) {
 
-                String base64 = Base64.getEncoder().encodeToString(p.getFoto());
-                String dataUrl = "data:image/jpeg;base64," + base64;
-                p.setFotoBase64(dataUrl);
-            }
-        }
-        model.addAttribute("productos", lista);
+        VeterinariaModel veterinaria = usuario.getVeterinario().getVeterinaria();
         model.addAttribute("veterinaria", veterinaria);
 
         try {
-            // Determinar si hay alguna búsqueda activa
             boolean esBusqueda = (q != null && !q.trim().isEmpty()) || (idCategoria != null);
-
-            // Limpiar 'q' para el WS: si está vacío o solo con espacios, pásalo como null al WS
             String queryParaWS = (q == null || q.trim().isEmpty()) ? null : q.trim();
 
-            // 2. Llamar al Web Service usando los parámetros (q, idCategoria)
             List<ProductoBusquedaDto> resultados =
-                    productoService.obtenerProductosActivosFiltrados(queryParaWS, idCategoria); // <<<--- ¡AQUÍ ESTÁ EL CAMBIO!
+                    productoService.obtenerProductosActivosFiltrados(queryParaWS, idCategoria);
 
-            // 3. Pasar todos los datos necesarios a la vista:
-
-            // Lista de productos (ya sea filtrada o completa)
             model.addAttribute("productos", resultados);
-
-            // Lista de categorías para el dropdown de filtros
             model.addAttribute("categorias", categoriaService.listarTodas());
-
-            // Contexto de la búsqueda (para mantener el estado y la lógica condicional en Thymeleaf)
-            model.addAttribute("consulta", q); // Valor original para mostrar en la caja de texto
-            model.addAttribute("categoriaSeleccionada", idCategoria); // ID seleccionado
-            model.addAttribute("esBusqueda", esBusqueda); // Bandera para la vista
+            model.addAttribute("consulta", q);
+            model.addAttribute("categoriaSeleccionada", idCategoria);
+            model.addAttribute("esBusqueda", esBusqueda);
 
         } catch (Exception e) {
-            System.err.println("Error al cargar o buscar productos: " + e.getMessage());
             model.addAttribute("errorBusqueda", "Error al procesar la solicitud de productos.");
             model.addAttribute("productos", List.of());
         }
@@ -456,56 +411,102 @@ public class VeterinarioController {
         return "veterinario/TiendaPreview";
     }
 
+    // ============================================
+    //                 VENTAS
+    // ============================================
+
     @GetMapping("/ventas")
-    public String verVentas(HttpSession session, Model model) {
-        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
-        if (usuario == null || usuario.getVeterinario() == null) {
-            return "redirect:/login";}
+    public String verVentas(Authentication authentication, Model model) {
+
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
+
+        // Seguridad: solo veterinarios
+        if (usuario.getVeterinario() == null) {
+            return "redirect:/login";
+        }
 
         VeterinariaModel veterinaria = usuario.getVeterinario().getVeterinaria();
-        List<FacturaModel> ventas = facturaService.obtenerVentasVeterinaria(veterinaria.getId());
+
+        // Puede no tener veterinaria aún
+        if (veterinaria == null) {
+            return "redirect:/veterinario/index";
+        }
+
+        List<FacturaModel> ventas =
+                facturaService.obtenerVentasVeterinaria(veterinaria.getId());
 
         model.addAttribute("ventas", ventas);
         model.addAttribute("veterinaria", veterinaria);
+
         return "veterinario/Ventas";
     }
+
+
+    // ============================================
+    //            VENTAS / ESTADO
+    // ============================================
 
     @PostMapping("/ventas/estado")
     @ResponseBody
     public void cambiarEstado(
             @RequestParam Long id,
-            @RequestParam EstadoFactura estado
+            @RequestParam EstadoFactura estado,
+            Authentication authentication
     ) {
-        FacturaModel factura = facturaRepository.findById(id).orElseThrow();
+
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
+
+        if (usuario.getVeterinario() == null ||
+                usuario.getVeterinario().getVeterinaria() == null) {
+            throw new RuntimeException("No autorizado");
+        }
+
+        Integer veterinariaId = usuario.getVeterinario().getVeterinaria().getId();
+
+        FacturaModel factura = facturaRepository
+                .findByIdAndVeterinaria_Id(id, veterinariaId)
+                .orElseThrow(() -> new RuntimeException("Factura no autorizada"));
+
         factura.setEstado(estado);
         facturaRepository.save(factura);
     }
 
+    // ============================================
+    //           PRODUCTOS / EDITAR
+    // ============================================
+
     @GetMapping("/productos/editar/{id}")
     public String mostrarFormularioEditar(
-            @PathVariable Integer id,
+            @PathVariable int id,
             Model model,
-            HttpSession session
+            Authentication authentication
     ) {
-        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
-        if (usuario == null || usuario.getVeterinario() == null) {
+
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
+
+        if (usuario.getVeterinario() == null ||
+                usuario.getVeterinario().getVeterinaria() == null) {
             return "redirect:/login";
         }
 
-        ProductoModel producto = productoService.buscarPorId(id);
-        if (producto == null) {
-            return "redirect:/veterinario/productos";
-        }
+        Integer veterinariaId = usuario.getVeterinario().getVeterinaria().getId();
+
+        ProductoModel producto =
+                productoService.obtenerProductoVeterinaria(id, veterinariaId);
 
         if (producto.getFoto() != null) {
             String base64 = Base64.getEncoder().encodeToString(producto.getFoto());
             producto.setFotoBase64(base64);
         }
 
-        List<CategoriaModel> todasCategorias = categoriaService.listarTodas();
-
         model.addAttribute("producto", producto);
-        model.addAttribute("todasCategorias", todasCategorias);
+        model.addAttribute("todasCategorias", categoriaService.listarTodas());
 
         return "veterinario/EditarProducto";
     }
@@ -514,48 +515,54 @@ public class VeterinarioController {
     public String actualizarProducto(
             @ModelAttribute ProductoModel producto,
             @RequestParam(required = false) MultipartFile imagen,
-            HttpSession session
+            Authentication authentication
     ) throws IOException {
 
-        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
-        if (usuario == null || usuario.getVeterinario() == null) {
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
+
+        if (usuario.getVeterinario() == null ||
+                usuario.getVeterinario().getVeterinaria() == null) {
             return "redirect:/login";
         }
 
-        productoService.actualizarC(producto, imagen);
+        Integer veterinariaId = usuario.getVeterinario()
+                .getVeterinaria()
+                .getId();
+
+        productoService.actualizarProductoVeterinaria(
+                producto,
+                imagen,
+                veterinariaId
+        );
+
         return "redirect:/veterinario/GestionVentas";
     }
 
-    // 1. Méto de Carga Inicial (Ya lo tienes, asegura que 'categoria' esté siempre inicializado)
+
     @GetMapping("/admin/categorias")
     public String administrarCategorias(Model model) {
-        // ... (Tu lógica de seguridad y carga de veterinaria si aplica) ...
 
         model.addAttribute("categorias", categoriaService.listarTodas());
-        // Inicializa el objeto para que el formulario POST no falle al crear uno nuevo
         if (!model.containsAttribute("categoria")) {
             model.addAttribute("categoria", new CategoriaModel());
         }
-
-        // Si vienes de un error de validación, Thymeleaf ya habrá puesto el objeto 'categoria'
-        return "veterinario/GestionVentas"; // Retorna tu vista principal de gestión
+        return "veterinario/GestionVentas";
     }
 
-    // 2. Métod POST para Guardar/Actualizar
+
     @PostMapping("/admin/guardarCategoria")
     public String guardarCategoria(@ModelAttribute CategoriaModel categoria, RedirectAttributes redirectAttributes) {
         try {
             categoriaService.guardar(categoria);
-
         } catch (Exception e) {
-
             redirectAttributes.addFlashAttribute("categoria", categoria);
-
             return "redirect:/veterinario/GestionVentas";
         }
         return "redirect:/veterinario/GestionVentas";
     }
-    // 3. NUEVO: Endpoint para cargar datos de la categoría vía AJAX (Recomendado: devuelve JSON)
+
     @GetMapping("/admin/categoria/{id}")
     @ResponseBody
     public CategoriaModel cargarDatosCategoria(@PathVariable Long id) {
@@ -572,57 +579,67 @@ public class VeterinarioController {
         return "redirect:/veterinario/GestionVentas";
     }
 
+    // ============================================
+    //         SERVICIOS (VISTA VETERINARIO)
+    // ============================================
+
     @GetMapping("/ServiciosPreview")
-    public String servicios(HttpSession session, Model model ) {
+    public String serviciosPreview(
+            Authentication authentication,
+            Model model
+    ) {
 
-        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
 
-
-        VeterinariaModel veterinaria = null;
-        if (usuario.getVeterinario() != null) {
-            veterinaria = usuario.getVeterinario().getVeterinaria();
+        // Seguridad: solo veterinarios
+        if (usuario.getVeterinario() == null) {
+            return "redirect:/login";
         }
 
+        VeterinariaModel veterinaria = usuario.getVeterinario().getVeterinaria();
 
-        model.addAttribute("servicios",servicioService.listarTodosActivos());
+        model.addAttribute("servicios", servicioService.listarTodosActivos());
         model.addAttribute("veterinaria", veterinaria);
 
         return "veterinario/ServiciosPreview";
     }
+
+
+    // ============================================
+    //        SERVICIOS (VISTA PROPIETARIO)
+    // ============================================
+
     @GetMapping("/Servicios")
-    public String serviciosPropietario(HttpSession session, Model model) {
+    public String serviciosPropietario(
+            Authentication authentication,
+            Model model
+    ) {
 
-        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
 
-        // Seguridad básica
-        if (usuario == null || usuario.getPropietario() == null) {
+        // Seguridad: solo propietarios
+        if (usuario.getPropietario() == null) {
             return "redirect:/login";
         }
 
-        VeterinariaModel veterinari = null;
-
-        if (usuario.getPropietario() != null) {
-            veterinari = usuario.getPropietario().getVeterinaria();
-            model.addAttribute("direccion", usuario.getPropietario().getDireccionPro());
-        }
-
-        if (veterinari == null) {
-            System.out.println("❌ El usuario NO pertenece a ninguna veterinaria");
-            return "redirect:/";
-        }
-
-        // Obtener propietario y veterinaria
         PropietarioModel propietario = usuario.getPropietario();
         VeterinariaModel veterinaria = propietario.getVeterinaria();
 
-        // Servicios SOLO de esa veterinaria
-        List<ServicioModel> servicios = servicioService
-                .listarActivosPorVeterinaria(veterinaria.getId());
+        if (veterinaria == null) {
+            return "redirect:/";
+        }
+
+        List<ServicioModel> servicios =
+                servicioService.listarActivosPorVeterinaria(veterinaria.getId());
 
         model.addAttribute("servicios", servicios);
         model.addAttribute("veterinaria", veterinaria);
+        model.addAttribute("direccion", propietario.getDireccionPro());
 
         return "veterinario/Servicios"; // 👈 vista SOLO para propietarios
     }
-
 }

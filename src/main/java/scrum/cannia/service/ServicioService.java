@@ -1,5 +1,6 @@
 package scrum.cannia.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,23 +10,14 @@ import scrum.cannia.model.ServicioModel;
 import scrum.cannia.repository.ServicioRepository;
 
 import java.util.List;
-
+@AllArgsConstructor
 @Service
 public class ServicioService {
 
-    @Autowired
     private final ServicioRepository servicioRepository;
-
-    public ServicioService(ServicioRepository servicioRepository) {
-        this.servicioRepository = servicioRepository;
-    }
 
     public List<ServicioModel> listarTodos() {
         return servicioRepository.findAll();
-    }
-
-    public static <Servicio> void guardar
-    (Servicio servicio) {
     }
 
     // ============================================

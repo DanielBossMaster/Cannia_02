@@ -45,7 +45,7 @@ public class CarritoService {
     }
 
     // =========================================================
-    // AGREGAR PRODUCTO
+    //                  AGREGAR PRODUCTO
     // =========================================================
     public void agregar(Integer idProducto) {
         List<ItemCarrito> carrito = getCarrito();

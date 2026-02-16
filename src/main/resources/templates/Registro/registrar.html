@@ -137,7 +137,10 @@
 
                         <div>
                             <label class="font-semibold">Número de Documento</label>
-                            <input type="text" th:field="*{numDoc}"
+                            <input type="text"
+                                   inputmode="numeric"
+                                   pattern="[0-9]{12}"
+                                   th:field="*{numDoc}"
                                    class="w-full border -lg px-3 py-2">
                         </div>
 
@@ -161,13 +164,18 @@
 
                         <div>
                             <label class="font-semibold">Teléfono</label>
-                            <input type="text" th:field="*{telefonoPro}"
+                            <input type="text"
+                                   inputmode="numeric"
+                                   pattern="[0-9]{10}"
+                                   th:field="*{telefonoPro}"
                                    class="w-full border -lg px-3 py-2">
                         </div>
 
                         <div>
                             <label class="font-semibold">Correo</label>
-                            <input type="email" th:field="*{correoPro}"
+                            <input type="email"   pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                                   title="Ingresa un correo válido (ej: usuario@correo.com)"
+                                   th:field="*{correoPro}"
                                    class="w-full border -lg px-3 py-2">
                         </div>
 
@@ -219,13 +227,18 @@
 
                         <div>
                             <label class="font-semibold">Teléfono</label>
-                            <input type="text" th:field="*{telefonoVete}"
+                            <input type="text"
+                                   inputmode="numeric"
+                                   pattern="[0-9]{10}"
+                                   th:field="*{telefonoVete}"
                                    class="w-full border -lg px-3 py-2">
                         </div>
 
                         <div>
                             <label class="font-semibold">Correo</label>
-                            <input type="email" th:field="*{correoVete}"
+                            <input type="email"   pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                                   title="Ingresa un correo válido (ej: usuario@correo.com)"
+                                   th:field="*{correoVete}"
                                    class="w-full border -lg px-3 py-2">
                         </div>
 
@@ -258,13 +271,19 @@
 
                         <div>
                             <label class="font-semibold">Teléfono</label>
-                            <input type="text" th:field="*{telefonoFundacion}"
+                            <input type="text"
+                                   inputmode="numeric"
+                                   pattern="[0-9]{10}"
+                                   th:field="*{telefonoFundacion}"
                                    class="w-full border -lg px-3 py-2">
                         </div>
 
                         <div>
                             <label class="font-semibold">Correo</label>
-                            <input type="email" th:field="*{emailFundacion}"
+                            <input type="email"
+                                   pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                                   title="Ingresa un correo válido (ej: usuario@correo.com)"
+                                   th:field="*{emailFundacion}"
                                    class="w-full border -lg px-3 py-2">
                         </div>
 

@@ -125,9 +125,3 @@ public class PagoController {
     }
 }
 
-/** A. Envío de Solicitud	Session sessionStripe = Session.create(params);
- * El método estático Session.create() de la librería de Stripe (stripe-java) toma el objeto Java params
- * (el JSON construido en el paso anterior) y realiza una llamada HTTP/POST a la API de Stripe.
- B. Recepción del Link de Pago	sessionStripe.getUrl()	Stripe recibe el JSON, lo procesa, crea una
- sesión de pago temporal en sus servidores y devuelve la respuesta a tu backend. Esta respuesta contiene
- una propiedad esencial: la URL de redirección a la pasarela de pagos. **/

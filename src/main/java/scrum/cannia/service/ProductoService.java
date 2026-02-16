@@ -1,93 +1,116 @@
 package scrum.cannia.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import scrum.cannia.Dto.ProductoBusquedaDto;
 import scrum.cannia.model.ProductoModel;
+import scrum.cannia.model.VeterinariaModel;
 import scrum.cannia.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import scrum.cannia.repository.VeterinariaRepository;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Service
 public class ProductoService {
 
-    @Autowired
     private final ProductoRepository productoRepository;
+    private final VeterinariaRepository veterinariaRepository;
 
-    public ProductoService(ProductoRepository productoRepository)
-    {this.productoRepository = productoRepository;}
+    // ===============================
+    //    PARA CARRITO CONTROLLER
+    // ===============================
 
-    public  List<ProductoModel> listarTodos()
-    { return productoRepository.findAll();}
+    public ProductoModel buscarPorId(Integer id) {
+        return productoRepository.findById(id).orElse(null);}
 
-    public static <Producto> void guardar
-            (Producto producto, MultipartFile archivo) {}
+    // ===============================
+    //           GUARDAR
+    // ===============================
 
-    public List<ProductoModel> obtenerProductosActivos() {
-        return productoRepository.findByEstadoTrue();
+    public void guardarProductoVeterinaria(
+            ProductoModel producto,
+            MultipartFile archivo,
+            VeterinariaModel veterinaria
+    ) {
+
+        try {
+            // 1. Asociar veterinaria (CRÍTICO)
+            producto.setVeterinaria(veterinaria);
+
+            // 2. Valores por defecto (opcional pero recomendado)
+            producto.setEstado(true);
+
+            if (producto.getCategorias() == null) {
+                producto.setCategorias(List.of());
+            }
+
+            // 3. Imagen
+            if (archivo != null && !archivo.isEmpty()) {
+                producto.setFoto(archivo.getBytes());
+            }
+
+            // 4. Guardar
+            productoRepository.save(producto);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error al guardar producto", e);
+        }
     }
 
-    public ProductoModel guardarProducto(ProductoModel producto) {
-        return productoRepository.save(producto);
-    }
-    //========================================================
-    // Se utiliza en el carrito de compras, no tocar _| |_
-    //                                               \   /
-    //=============================================== \ /
-         public ProductoModel buscarPorId(Integer id)
-         {return productoRepository.findById(id).orElse(null);}
-
-
-
-    public Page<ProductoModel> listarPaginado(int pagina, int tamanio) {
-        return productoRepository.findAll(PageRequest.of(pagina, tamanio));
+    // ===============================
+    //        LISTAR INVENTARIO
+    // ===============================
+    public Page<ProductoModel> listarPorVeterinaria(
+            Integer veterinariaId,
+            int page,
+            int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productoRepository.findByVeterinaria_Id(veterinariaId, pageable);
     }
 
+    public Page<ProductoModel> listarActivosPaginado(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productoRepository.findByEstadoTrue(pageable);
+    }
 
 
     public List<ProductoBusquedaDto> obtenerProductosActivosFiltrados(String q, Long idCategoria) {
 
         List<ProductoModel> productosModel;
 
-        // --- 1. Lógica de Filtrado (en la BD) ---
-        // Usamos los métodos del Repository que creamos en el paso anterior
         if (q != null && idCategoria != null) {
-            productosModel = productoRepository.findByNombreOrDescripcionAndCategoriaIdAndEstadoTrue(q, idCategoria);
+            productosModel = productoRepository
+                    .findByNombreOrDescripcionAndCategoriaIdAndEstadoTrue(q, idCategoria);
         } else if (q != null) {
-            productosModel = productoRepository.findByNombreOrDescripcionContainingAndEstadoTrue(q);
+            productosModel = productoRepository
+                    .findByNombreOrDescripcionContainingAndEstadoTrue(q);
         } else if (idCategoria != null) {
-            productosModel = productoRepository.findByCategoriaIdAndEstadoTrue(idCategoria);
+            productosModel = productoRepository
+                    .findByCategoriaIdAndEstadoTrue(idCategoria);
         } else {
             // Caso base: Obtener TODOS los productos con estado=TRUE
-            productosModel = productoRepository.findByEstadoTrue();
+            productosModel = productoRepository
+                    .findByEstadoTrue();
         }
         // --- 2. Mapeo a DTO (en memoria) ---
         return productosModel.stream()
                 .map(ProductoBusquedaDto::new)
-                .collect(Collectors.toList()); // Usar .toList() si estás en Java 16+
+                .collect(Collectors.toList());
     }
 
-    //Guardar productos
-    public void guardar(ProductoModel producto, MultipartFile archivo) {
-        try {
-            if (!archivo.isEmpty()) {
-                producto.setFoto(archivo.getBytes());
-            }
-            productoRepository.save(producto);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     // ============================================
-    //         EDITAR PRODUCTO
+    //              EDITAR PRODUCTO
     // ============================================
     public void actualizar(ProductoModel producto, MultipartFile archivo) {
         ProductoModel original = productoRepository.findById(producto.getId()).orElse(null);
@@ -111,37 +134,40 @@ public class ProductoService {
         productoRepository.save(original);
     }
 
-    public void actualizarC(ProductoModel producto, MultipartFile archivo) {
 
-        ProductoModel original = productoRepository.findById(producto.getId()).orElse(null);
-        if (original == null) return;
+    // ===============================
+    //      ACTUALIZAR PRODUCTO
+    // ===============================
+    public void actualizarProductoVeterinaria(
+            ProductoModel productoForm,
+            MultipartFile imagen,
+            Integer veterinariaId
+    ) throws IOException {
 
-        original.setNombre(producto.getNombre());
-        original.setDescripcion(producto.getDescripcion());
+        ProductoModel existente = productoRepository
+                .findByIdAndVeterinaria_Id(productoForm.getId(), veterinariaId)
+                .orElseThrow(() ->
+                        new RuntimeException("Producto no autorizado"));
 
-        original.setValor(producto.getValor());
+        existente.setNombre(productoForm.getNombre());
+        existente.setDescripcion(productoForm.getDescripcion());
+        existente.setValor(productoForm.getValor());
+        existente.setCategorias(productoForm.getCategorias());
 
-
-
-        if (producto.getCategorias() != null) {
-            original.setCategorias(producto.getCategorias());
+        if (imagen != null && !imagen.isEmpty()) {
+            existente.setFoto(imagen.getBytes());
         }
 
-        if (archivo != null && !archivo.isEmpty()) {
-            try {
-                original.setFoto(archivo.getBytes());
-            } catch (IOException e) {
-                throw new RuntimeException("Error procesando la imagen", e);
-            }
-        }
-
-        // 5. Guardar los cambios (JPA gestiona la tabla @ManyToMany)
-        productoRepository.save(original);
+        productoRepository.save(existente);
     }
 
-    public Page<ProductoModel> listarActivosPaginado(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return productoRepository.findByEstadoTrue(pageable);
-    }
 
+    public ProductoModel obtenerProductoVeterinaria(
+            int productoId,
+            Integer veterinariaId
+    ) {
+        return productoRepository
+                .findByIdAndVeterinaria_Id(productoId, veterinariaId)
+                .orElseThrow(() -> new RuntimeException("Producto no autorizado"));
+    }
 }

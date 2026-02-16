@@ -235,8 +235,9 @@
             <footer class=" text-center text-sm text-primary py-3">
                 © 2025 Cannia Todos los derechos reservados.
             </footer>
-</div>
+        </div>
     </div>
+</div>
 <!-- MODAL REGISTRAR PROPIETARIO -->
 <div id="modalPropietario" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-lightSurface w-full  max-w-md  shadow-lg p-6 relative">
@@ -244,7 +245,10 @@
         <form th:action="@{/veterinario/nuevo}" method="post" th:object="${propietario}" class="space-y-4">
             <div>
                 <label class="block text-sm font-semibold text-softText">Numero de Documento</label>
-                <input type="text" th:field="*{numDoc}" class="w-full border border-borderLight  px-3 py-2 " required>
+                <input type="text"
+                       inputmode="numeric"
+                       pattern="[0-9]{12}"
+                       th:field="*{numDoc}" class="w-full border border-borderLight  px-3 py-2 " required>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-softText">Nombre</label>
@@ -260,11 +264,16 @@
             </div>
             <div>
                 <label class="block text-sm font-semibold text-softText">Teléfono</label>
-                <input type="text" th:field="*{telefonoPro}"  class="w-full  border-borderLight  px-3 py-2 " required>
+                <input type="text"
+                       inputmode="numeric"
+                       pattern="[0-9]{10}"
+                       th:field="*{telefonoPro}"  class="w-full  border-borderLight  px-3 py-2 " required>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-softText">Correo</label>
-                <input type="email" th:field="*{correoPro}" class="w-full  border-borderLight  px-3 py-2 " required>
+                <input type="email"   pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                       title="Ingresa un correo válido (ej: usuario@correo.com)"
+                       th:field="*{correoPro}" class="w-full  border-borderLight  px-3 py-2 " required>
             </div>
             <div class="flex justify-end space-x-3 pt-4">
                 <button type="button" onclick="toggleModal('modalPropietario')" class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Cancelar</button>
