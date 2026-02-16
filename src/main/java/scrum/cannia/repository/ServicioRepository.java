@@ -11,8 +11,20 @@ import java.util.List;
 @Repository
 public interface ServicioRepository extends JpaRepository<ServicioModel, Integer> {
 
-    Page<ServicioModel> findByEstadoTrue(Pageable pageable);
-    List<ServicioModel> findByEstadoTrue();
-    List<ServicioModel> findByVeterinariaIdAndEstadoTrue(Integer idVeterinaria);
+    Page<ServicioModel> findByVeterinaria_IdAndEstadoTrue(
+            Integer veterinariaId,
+            Pageable pageable
+    );
 
+    List<ServicioModel> findByVeterinaria_IdAndEstadoTrue(
+            Integer veterinariaId);
+
+    ServicioModel findByIdAndVeterinaria_Id(
+            Integer id,
+            Integer veterinariaId);
+
+    Page<ServicioModel> findByVeterinariaIdAndEstadoTrue(
+            Integer veterinariaId,
+            Pageable pageable
+    );
 }

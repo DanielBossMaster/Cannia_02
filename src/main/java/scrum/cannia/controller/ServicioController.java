@@ -3,6 +3,7 @@ package scrum.cannia.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,8 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import scrum.cannia.model.ServicioModel;
 import scrum.cannia.model.UsuarioModel;
 
+import scrum.cannia.model.VeterinariaModel;
 import scrum.cannia.repository.ServicioRepository;
 
+import scrum.cannia.repository.UsuarioRepository;
 import scrum.cannia.service.ServicioService;
 
 @AllArgsConstructor
@@ -20,53 +23,83 @@ import scrum.cannia.service.ServicioService;
 @RequestMapping("/inventario/servicios")
 public class ServicioController {
 
-    private final ServicioRepository servicioRepository;
     private final ServicioService servicioService;
+    private final UsuarioRepository usuarioRepository;
 
     // ============================================
-    //         GUARDAR SERVICIO
+    //           GUARDAR SERVICIO
     // ============================================
 
     @PostMapping("/guardar")
-    public String guardar(@Validated @ModelAttribute ServicioModel servicio,
-                          BindingResult br,
-                          HttpSession session,
-                          Model model
+    public String guardarServicio(
+            @Validated @ModelAttribute ServicioModel servicio,
+            BindingResult br,
+            Authentication authentication,
+            Model model
     ) {
 
-
-        // Obtener el usuario en sesión
-        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
-        if (usuario == null) {
-            return "redirect:/login";  // Seguridad
-        }
-
-        // Validación del formulario
         if (br.hasErrors()) {
-            model.addAttribute("mensaje", "Error al insertar los datos.");
-            model.addAttribute("servicio", new ServicioModel());
-            model.addAttribute("servicios", servicioService.listarTodos());
-            return "/Inventario/Servicio";
-
+            model.addAttribute("mensaje", "Error en los datos del servicio");
+            return "Inventario/Servicio";
         }
 
-        servicioRepository.save(servicio);
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
+
+        if (usuario.getVeterinario() == null ||
+                usuario.getVeterinario().getVeterinaria() == null) {
+            return "redirect:/login";
+        }
+
+        VeterinariaModel veterinaria =
+                usuario.getVeterinario().getVeterinaria();
+
+        servicioService.guardarServicioVeterinaria(servicio, veterinaria);
 
         return "redirect:/inventario/productos";
-        // ruta de la pagina, para que vuelva a la misma pagina
     }
 
+    // ============================================
+    //           EDITAR SERVICIO
+    // ============================================
+
     @GetMapping("/editar/{id}")
-    public String editarServicio(@PathVariable Integer id, Model model) {
-        ServicioModel serv = servicioService.buscarPorId(id);
-        model.addAttribute("servicio", serv);
+    public String editarServicio(
+            @PathVariable Integer id,
+            Authentication authentication,
+            Model model
+    ) {
+
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
+
+        Integer veterinariaId =
+                usuario.getVeterinario().getVeterinaria().getId();
+
+        ServicioModel servicio =
+                servicioService.obtenerServicioVeterinaria(id, veterinariaId);
+
+        model.addAttribute("servicio", servicio);
         return "Inventario/EditarServicio";
     }
 
     @PostMapping("/actualizar")
-    public String actualizar(@ModelAttribute ServicioModel servicio) {
-        servicioService.actualizar(servicio);
+    public String actualizarServicio(
+            @ModelAttribute ServicioModel servicio,
+            Authentication authentication
+    ) {
+
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
+
+        Integer veterinariaId =
+                usuario.getVeterinario().getVeterinaria().getId();
+
+        servicioService.actualizarServicioVeterinaria(servicio, veterinariaId);
+
         return "redirect:/inventario/servicios";
     }
-
 }

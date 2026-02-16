@@ -267,10 +267,17 @@ public class VeterinarioController {
 
         // 2. Paginación de productos y servicios
         Page<ProductoModel> productosPage =
-                productoService.listarActivosPaginado(pageProductos, 9);
+                productoService.listarActivosPaginado(
+                        pageProductos,
+                        9
+                );
 
         Page<ServicioModel> serviciosPage =
-                servicioService.listarActivoPaginado(pageServicios, 9);
+                servicioService.listarActivosPorVeterinaria(
+                        veterinaria.getId(),
+                        pageServicios,
+                        9
+                );
 
         // 3. Datos para la vista
         model.addAttribute("productos", productosPage.getContent());
@@ -600,7 +607,7 @@ public class VeterinarioController {
 
         VeterinariaModel veterinaria = usuario.getVeterinario().getVeterinaria();
 
-        model.addAttribute("servicios", servicioService.listarTodosActivos());
+        model.addAttribute("servicios", servicioService.listarActivosPorVeterinaria(veterinaria.getId()));
         model.addAttribute("veterinaria", veterinaria);
 
         return "veterinario/ServiciosPreview";

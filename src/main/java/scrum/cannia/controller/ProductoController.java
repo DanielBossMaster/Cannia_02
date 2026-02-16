@@ -59,7 +59,11 @@ public class ProductoController {
                 );
 
         Page<ServicioModel> serviciosPage =
-                servicioService.listarActivoPaginado(pageServicios, 9);
+                servicioService.listarActivosPorVeterinaria(
+                        veterinaria.getId(),
+                        pageServicios,
+                        9
+                );
 
         // 🖼️ Fotos
         productosPage.forEach(p -> {
