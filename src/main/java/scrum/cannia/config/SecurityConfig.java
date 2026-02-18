@@ -1,5 +1,6 @@
 package scrum.cannia.config;
 
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,16 +11,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import scrum.cannia.security.LoginSuccessHandler;
 
-
+@AllArgsConstructor
 @Configuration
 public class SecurityConfig {
 
     private final LoginSuccessHandler loginSuccessHandler;
-
-    public SecurityConfig(LoginSuccessHandler loginSuccessHandler) {
-        this.loginSuccessHandler = loginSuccessHandler;
-    }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -64,7 +60,10 @@ public class SecurityConfig {
 
 
                 .logout(logout -> logout
+                        .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                 );
 
         return http.build();

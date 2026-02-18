@@ -36,8 +36,6 @@ public class ServicioService {
     //      LISTAR SERVICIOS POR VETERINARIA
     // ============================================
 
-
-
     public Page<ServicioModel> listarActivosPorVeterinaria(
             Integer veterinariaId,
             int page,
@@ -47,6 +45,17 @@ public class ServicioService {
         return servicioRepository
                 .findByVeterinariaIdAndEstadoTrue(veterinariaId, pageable);
     }
+    public Page<ServicioModel>listarTodosPorVeterinaria(
+            Integer veterinariaId,
+            int page,
+            int size
+    ){
+        Pageable pageable = PageRequest.of(page,size);
+        return servicioRepository
+                .findByVeterinaria_Id(veterinariaId, pageable);
+    }
+
+
 
     public List<ServicioModel> listarActivosPorVeterinaria(Integer veterinariaId) {
         return servicioRepository.findByVeterinaria_IdAndEstadoTrue(veterinariaId);

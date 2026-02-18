@@ -1,21 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>CANNIA</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>AOS.init();</script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(30px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    },
+                    animation: {
+                        fadeIn: 'fadeIn 1s ease-in-out',
+                        slideUp: 'slideUp 0.8s ease-out',
+                    },
+                    colors: {
+                        primary: "#170022",
+                        secondary: "#e8ebff",// Deep Purple
+                        "background-light": "#e8ebff",
+                        "background-dark": "#170022",
+                        "text-light": "#111827",
+                        "text-dark": "#F9FAFB",
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'DEFAULT': '0.5rem',
+                    },
+                },
+            },
+        };
+    </script>
 </head>
-<body>
-<h1>Tu cuenta debe ser verificada</h1>
-
-<p>
-    Por seguridad debemos validar tu información antes de activar tu cuenta.
-</p>
-
-<form th:action="@{/verificacion/solicitar}" method="post">
-    <button type="submit">
-        Activar mi cuenta
-    </button>
-</form>
-
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans">
+<main class="flex justify-center">
+    <div class="relative flex flex-col items-center justify-center text-center h-screen p-8">
+        <div class="md:w-1/2 flex justify-center mt-10 md:mt-0">
+            <img src="/img/logo.png" alt="Equipo de desarrollo Cannia"
+                 class="w-80 md:w-96  shadow-xl hover:scale-105 rounded-full transition-transform duration-500">
+        </div>
+        <h2 class="text-6xl font-bold animate-fadeIn text-primary ">¡Bienvenido nuestro equipo!</h2>
+        <p class="mt-4 text-lg animate-slideUp">
+            Por seguridad debemos validar tu información antes de activar tu cuenta. </p>
+        <form th:action="@{/verificacion/solicitar}" method="post">
+            <button type="submit"
+                    class=" mx-auto text-xl w-64 text-center font-bold mt-8 bg-primary text-white px-6 py-3  transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black">
+                Activar mi cuenta
+            </button>
+        </form>
+    </div>
+</main>
 </body>
 </html>

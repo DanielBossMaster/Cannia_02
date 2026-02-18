@@ -55,11 +55,12 @@ public class ProductoController {
         // 📦 Paginación SOLO de la veterinaria
         Page<ProductoModel> productosPage =
                 productoService.listarPorVeterinaria(
-                        veterinaria.getId(), pageProductos, 5
+                        veterinaria.getId(),
+                        pageProductos, 5
                 );
 
         Page<ServicioModel> serviciosPage =
-                servicioService.listarActivosPorVeterinaria(
+                servicioService.listarTodosPorVeterinaria(
                         veterinaria.getId(),
                         pageServicios,
                         9

@@ -1,5 +1,6 @@
 package scrum.cannia.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +14,7 @@ import scrum.cannia.Dto.RegistroDTO;
 import scrum.cannia.model.*;
 import scrum.cannia.repository.*;
 import scrum.cannia.service.UsuarioService;
-
+@AllArgsConstructor
 @Controller
 @RequestMapping("/registro")
 public class RegistroController {
@@ -21,11 +22,6 @@ public class RegistroController {
     private final UsuarioService usuarioService;
     private final VeterinariaRepository veterinariaRepository;
 
-    public RegistroController(UsuarioService usuarioService,
-                              VeterinariaRepository veterinariaRepository) {
-        this.usuarioService = usuarioService;
-        this.veterinariaRepository = veterinariaRepository;
-    }
 
     @GetMapping
     public String mostrarFormulario(Model model) {
