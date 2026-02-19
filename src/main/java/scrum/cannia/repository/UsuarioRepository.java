@@ -1,6 +1,7 @@
 package scrum.cannia.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import scrum.cannia.model.UsuarioModel;
 
@@ -20,6 +21,13 @@ public interface UsuarioRepository extends JpaRepository<UsuarioModel, Long> {
             String estado,
             List<String> roles
     );
+    @Query("""
+    SELECT u FROM UsuarioModel u
+    LEFT JOIN FETCH u.veterinario
+    LEFT JOIN FETCH u.fundacion
+    WHERE u.estado = 'PENDIENTE'
+""")
+    List<UsuarioModel> findUsuariosPendientesConDatos();
 
 
 }

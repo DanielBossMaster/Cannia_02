@@ -1,5 +1,6 @@
 package scrum.cannia.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
@@ -15,13 +16,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.util.List;
-
+@AllArgsConstructor
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
-    @Autowired
-    private  AdminService adminService;
+    private final AdminService adminService;
 
     @GetMapping("/index")
     public String dashboard(Model model) {

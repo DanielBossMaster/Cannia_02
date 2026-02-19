@@ -1,44 +1,47 @@
 package scrum.cannia.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import scrum.cannia.model.UsuarioModel;
 import scrum.cannia.repository.UsuarioRepository;
 
 import java.util.List;
 
-@Service
-public class AdminService {
+    @Service
+    @AllArgsConstructor
+    public class AdminService {
 
-    private final UsuarioRepository usuarioRepository;
+        private final UsuarioRepository usuarioRepository;
 
-    public AdminService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+        // Usuarios pendientes CON datos
+        public List<UsuarioModel> obtenerPendientes() {
+            return usuarioRepository.findUsuariosPendientesConDatos();
+        }
+
+        public void aprobarUsuario(Long id) {
+            UsuarioModel usuario = usuarioRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+            if (!"PENDIENTE".equals(usuario.getEstado())) {
+                throw new IllegalStateException("El usuario no está pendiente");
+            }
+
+            usuario.setEstado("ACTIVO");
+            usuarioRepository.save(usuario);
+        }
+
+        public void rechazarUsuario(Long id) {
+            UsuarioModel usuario = usuarioRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+            if (!"PENDIENTE".equals(usuario.getEstado())) {
+                throw new IllegalStateException("El usuario no está pendiente");
+            }
+
+            usuario.setEstado("RECHAZADO");
+            usuarioRepository.save(usuario);
+        }
     }
 
-    // Obtener usuarios pendientes
-    public List<UsuarioModel> obtenerPendientes() {
-        return usuarioRepository.findByEstadoAndRolIn(
-                "PENDIENTE",
-                List.of("VETERINARIO", "FUNDACION")
-        );
-    }
 
-    // Aprobar usuario
-    public void aprobarUsuario(Long id) {
-        UsuarioModel usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        usuario.setEstado("ACTIVO");
-        usuarioRepository.save(usuario);
-
-    }
-
-    // Rechazar usuario
-    public void rechazarUsuario(Long id) {
-        UsuarioModel usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        usuario.setEstado("RECHAZADO");
-        usuarioRepository.save(usuario);
-    }
-}

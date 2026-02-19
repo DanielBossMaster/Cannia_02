@@ -153,27 +153,62 @@
 
                                 <table class="w-full text-left text-sm" >
                                     <thead class="bg-gray-100 text-softText  uppercase text-xs">
-                                        <tr>
-                                            <th class="px-4 py-3">Usuario</th>
-                                            <th class="px-4 py-3">Rol</th>
-                                            <th class="px-4 py-3">Acciones</th>
-                                        </tr>
+                                    <th class="px-4 py-3">Usuario</th>
+                                    <th class="px-4 py-3">Rol</th>
+                                    <th class="px-4 py-3">Datos</th>
+                                    <th class="px-4 py-3">Acciones</th>
+
                                     </thead>
                                     <tbody>
-                                        <tr th:each="user : ${pendientes}" class="border-t border-borderLight hover:bg-gray-100 transition">
-                                            <td th:text="${user.usuario}" class="px-4 py-3"></td>
-                                            <td th:text="${user.rol}" class="px-4 py-3"></td>
-                                            <td>
-                                                <div class="flex flex-col sm:flex-row items-center gap-2 justify-center sm:justify-start">
-                                                    <form th:action="@{'/admin/aprobar/' + ${user.idUsuario}}" method="post" class="flex flex-col sm:flex-row items-center gap-2 justify-center sm:justify-start">
-                                                        <button type="submit" class="bg-blue-600 px-3 py-1  text-sm text-white hover:bg-blue-700 transition">Aprobar</button>
-                                                    </form>
-                                                    <form th:action="@{'/admin/rechazar/' + ${user.idUsuario}}" method="post" class="flex flex-col sm:flex-row items-center gap-2 justify-center sm:justify-start">
-                                                        <button type="submit" class="bg-red-600 px-3 py-1  text-sm text-white hover:bg-red-700 transition">Rechazar</button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                    <tr th:each="user : ${pendientes}"
+                                        class="border-t border-borderLight hover:bg-gray-100 transition">
+
+                                        <!-- USUARIO -->
+                                        <td class="px-4 py-3" th:text="${user.usuario}"></td>
+
+                                        <!-- ROL -->
+                                        <td class="px-4 py-3" th:text="${user.rol}"></td>
+
+                                        <!-- DATOS COMPLETOS -->
+                                        <td class="px-4 py-3 text-sm text-gray-700 space-y-1">
+
+                                            <!-- VETERINARIO -->
+                                            <div th:if="${user.rol == 'VETERINARIO'}">
+                                                <p><b>Nombre:</b> <span th:text="${user.veterinario.nombreVete}"></span></p>
+                                                <p><b>Apellido:</b> <span th:text="${user.veterinario.apellidoVete}"></span></p>
+                                                <p><b>Licencia:</b> <span th:text="${user.veterinario.numLicencia}"></span></p>
+                                                <p><b>Correo:</b> <span th:text="${user.veterinario.correoVete}"></span></p>
+                                                <p><b>Teléfono:</b> <span th:text="${user.veterinario.telefonoVete}"></span></p>
+                                            </div>
+
+                                            <!-- FUNDACIÓN -->
+                                            <div th:if="${user.rol == 'FUNDACION'}">
+                                                <p><b>Nombre:</b> <span th:text="${user.fundacion.nombre}"></span></p>
+                                                <p><b>Email:</b> <span th:text="${user.fundacion.email}"></span></p>
+                                                <p><b>Teléfono:</b> <span th:text="${user.fundacion.telefono}"></span></p>
+                                                <p><b>Dirección:</b> <span th:text="${user.fundacion.direccion}"></span></p>
+                                            </div>
+
+                                        </td>
+
+                                        <!-- ACCIONES -->
+                                        <td class="px-4 py-3">
+                                            <div class="flex flex-col sm:flex-row gap-2">
+                                                <form th:action="@{'/admin/aprobar/' + ${user.idUsuario}}" method="post">
+                                                    <button class="bg-blue-600 px-3 py-1 text-white hover:bg-blue-700">
+                                                        Aprobar
+                                                    </button>
+                                                </form>
+
+                                                <form th:action="@{'/admin/rechazar/' + ${user.idUsuario}}" method="post">
+                                                    <button class="bg-red-600 px-3 py-1 text-white hover:bg-red-700">
+                                                        Rechazar
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+
                                     </tbody>
                                 </table>
                             </div>
