@@ -7,10 +7,12 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import scrum.cannia.model.*;
+import scrum.cannia.repository.UsuarioRepository;
 import scrum.cannia.service.CarritoService;
 import scrum.cannia.service.PagoService;
 
@@ -24,7 +26,8 @@ public class PagoController {
 
     private final PagoService pagoService;
     private final CarritoService carritoService;
-    private final HttpSession session;
+    private final UsuarioRepository usuarioRepository;
+
 
     // inyectar API key desde application.properties
     @Value("${stripe.api.key}")
@@ -37,9 +40,19 @@ public class PagoController {
 
     @PostMapping("/crearCheckout")
     @ResponseBody
-    public Map<String, String> crearCheckout() throws Exception {
+    public Map<String, String> crearCheckout(Authentication authentication) throws Exception {
 
-        List<ItemCarrito> carrito = carritoService.getItems();
+        String username = authentication.getName();
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
+
+        PropietarioModel propietario = usuario.getPropietario();
+        if (propietario == null) {
+            throw new IllegalStateException("Solo propietarios pueden pagar");
+        }
+
+        List<ItemCarrito> carrito = carritoService.getItems(username);
 
         if (carrito == null || carrito.isEmpty()) {
             throw new RuntimeException("El carrito está vacío");
@@ -76,52 +89,55 @@ public class PagoController {
     }
 
 
+    // ============================================
+    //        PAGO EXITOSO
+    // ============================================
     @GetMapping("/exitoso")
-    public String pagoExitoso(HttpSession session, Model model) {
+    public String pagoExitoso(Authentication authentication, Model model) {
+        String username = authentication.getName();
 
-        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
 
-        if (usuario == null) {
+        PropietarioModel propietario = usuario.getPropietario();
+        if (propietario == null) {
             return "redirect:/login";
         }
 
-        // Recuperar propietario
-        PropietarioModel propietario = usuario.getPropietario();
-        if (propietario == null) {
-            model.addAttribute("mensaje", "No se encontró un propietario asociado al usuario.");
-            return "veterinario/CompraExitosa";
-        }
+        VeterinariaModel veterinaria =
+                propietario.getVeterinario().getVeterinaria();
 
-        // Recuperar veterinaria desde el propietario
-        VeterinariaModel veterinaria = propietario.getVeterinaria();
         if (veterinaria == null) {
-            model.addAttribute("mensaje", "No hay veterinaria asociada al propietario.");
-            return "veterinario/CompraExitosa";
+            model.addAttribute("mensaje",
+                    "No hay veterinaria asociada a tu cuenta.");
+            return "tienda/CompraExitosa";
         }
 
-        // Carrito en sesión
-        List<ItemCarrito> carrito = (List<ItemCarrito>) session.getAttribute("carrito");
+        List<ItemCarrito> carrito = carritoService.getItems(username);
 
-        if (carrito == null || carrito.isEmpty()) {
-            model.addAttribute("mensaje", "El pago fue exitoso pero el carrito está vacío.");
-            return "veterinario/CompraExitosa";
+        if (carrito.isEmpty()) {
+            model.addAttribute("mensaje",
+                    "El pago fue exitoso, pero el carrito estaba vacío.");
+            return "tienda/CompraExitosa";
         }
 
-        // Crear factura
-        FacturaModel factura = pagoService.registrarFactura(propietario, veterinaria, carrito);
+        FacturaModel factura =
+                pagoService.registrarFactura(propietario, veterinaria, carrito);
 
-        // Pasar datos a la vista
         model.addAttribute("factura", factura);
 
-        // Limpiar carrito
-        session.removeAttribute("carrito");
+        carritoService.limpiar(username);
 
-        return "veterinario/CompraExitosa";
+        return "tienda/CompraExitosa";
     }
 
+    // ============================================
+    //        PAGO CANCELADO
+    // ============================================
     @GetMapping("/cancelado")
     public String pagoCancelado() {
-        return "veterinario/CompraCancelada";
+        return "tienda/CompraCancelada";
     }
 }
 

@@ -11,9 +11,9 @@ import java.util.Optional;
 @Repository
 public interface UsuarioRepository extends JpaRepository<UsuarioModel, Long> {
 
-    UsuarioModel findByUsuarioAndContrasena(String usuario, String contrasena);
-
     Optional<UsuarioModel> findByUsuario(String usuario);
+
+    boolean existsByUsuario(String usuario);
 
     boolean existsByRol(String rol);
 
@@ -28,6 +28,5 @@ public interface UsuarioRepository extends JpaRepository<UsuarioModel, Long> {
     WHERE u.estado = 'PENDIENTE'
 """)
     List<UsuarioModel> findUsuariosPendientesConDatos();
-
 
 }

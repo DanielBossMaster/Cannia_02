@@ -39,6 +39,9 @@ public class PropietarioModel {
     @Column(nullable = false)
     private boolean estado = true;
 
+    @Column(nullable = false)
+    private boolean cuentaCreada = false;
+
     // Relación con Mascota
     @OneToMany(mappedBy = "propietario", fetch = FetchType.LAZY) // Cambiar a EAGER
     private List<MascotaModel> mascotas;

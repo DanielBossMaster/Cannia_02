@@ -1,5 +1,6 @@
 package scrum.cannia.security;
 
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,14 +11,11 @@ import scrum.cannia.repository.UsuarioRepository;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Service
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     private final UsuarioRepository usuarioRepository;
-
-    public UserDetailsService(UsuarioRepository usuarioRepository)   {
-        this.usuarioRepository = usuarioRepository;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username)

@@ -1,12 +1,13 @@
 package scrum.cannia.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import scrum.cannia.Dto.RegistroDTO;
 import scrum.cannia.model.*;
 import scrum.cannia.repository.*;
-
+@AllArgsConstructor
 @Service
 public class UsuarioService {
 
@@ -16,22 +17,6 @@ public class UsuarioService {
     private final FundacionRepository fundacionRepository;
     private final VeterinariaRepository veterinariaRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public UsuarioService(
-            UsuarioRepository usuarioRepository,
-            PropietarioRepository propietarioRepository,
-            VeterinarioRepository veterinarioRepository,
-            FundacionRepository fundacionRepository,
-            VeterinariaRepository veterinariaRepository,
-            PasswordEncoder passwordEncoder
-    ) {
-        this.usuarioRepository = usuarioRepository;
-        this.propietarioRepository = propietarioRepository;
-        this.veterinarioRepository = veterinarioRepository;
-        this.fundacionRepository = fundacionRepository;
-        this.veterinariaRepository = veterinariaRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Transactional(rollbackFor = Exception.class)
     public void registrarUsuario(RegistroDTO registroDTO) {
@@ -53,32 +38,8 @@ public class UsuarioService {
         // LOGICA SEGÚN ROL
         // =====================
 
-        if ("PROPIETARIO".equalsIgnoreCase(registroDTO.getRol())) {
 
-            usuario.setEstado("ACTIVO"); //  Propietario activo
-
-            VeterinariaModel veterinaria = veterinariaRepository
-                    .findById(registroDTO.getIdVeterinariaSeleccionada())
-                    .orElseThrow(() ->
-                            new IllegalArgumentException("Veterinaria no válida"));
-
-            PropietarioModel propietario = new PropietarioModel();
-            propietario.setNumDoc(registroDTO.getNumDoc());
-            propietario.setNombrePro(registroDTO.getNombrePro());
-            propietario.setApellidoPro(registroDTO.getApellidoPro());
-            propietario.setDireccionPro(registroDTO.getDireccionPro());
-            propietario.setTelefonoPro(registroDTO.getTelefonoPro());
-            propietario.setCorreoPro(registroDTO.getCorreoPro());
-            propietario.setVeterinaria(veterinaria);
-            propietario.setUsuario(usuario);
-
-            usuario.setPropietario(propietario);
-
-            usuarioRepository.save(usuario);
-            propietarioRepository.save(propietario);
-        }
-
-        else if ("VETERINARIO".equalsIgnoreCase(registroDTO.getRol())) {
+         if ("VETERINARIO".equalsIgnoreCase(registroDTO.getRol())) {
 
             usuario.setEstado("INACTIVO"); // Requiere aprobación admin
 
@@ -140,6 +101,30 @@ public class UsuarioService {
         return usuarioRepository.findByUsuario(username)
                 .orElseThrow(() ->
                         new RuntimeException("Usuario no encontrado"));
+    }
+
+    // ============================================
+    //      CREAR USUARIO PARA PROPIETARIO
+    // ============================================
+    @Transactional
+    public UsuarioModel crearUsuarioPropietario(
+            String username,
+            String contrasena
+    ) {
+
+
+        if (usuarioRepository.existsByUsuario(username)) {
+            throw new IllegalArgumentException("El nombre de usuario ya existe");
+        }
+
+
+        UsuarioModel usuario = new UsuarioModel();
+        usuario.setUsuario(username);
+        usuario.setContrasena(passwordEncoder.encode(contrasena));
+        usuario.setEstado("ACTIVO");
+        usuario.setRol("PROPIETARIO"); // o enum si usas enum
+
+        return usuarioRepository.save(usuario);
     }
 }
 

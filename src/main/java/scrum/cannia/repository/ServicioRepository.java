@@ -16,7 +16,6 @@ public interface ServicioRepository extends JpaRepository<ServicioModel, Integer
             Pageable pageable
     );
 
-
     List<ServicioModel> findByVeterinaria_IdAndEstadoTrue(
             Integer veterinariaId);
 

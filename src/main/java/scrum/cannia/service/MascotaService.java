@@ -1,5 +1,6 @@
 package scrum.cannia.service;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,38 +17,45 @@ import scrum.cannia.repository.UsuarioRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class MascotaService {
 
     private final MascotaRepository mascotaRepository;
-    private final FundacionRepository fundacionRepository;
-    private final UsuarioRepository usuarioRepository;
 
-
+    // Mascotas disponibles (adopción)
     public List<MascotaModel> listarMascotasDisponibles() {
         return mascotaRepository.findByTipoEstado(TipoEstadoMascota.DISPONIBLE);
     }
 
+    // Registrar mascota (solo propietario en sesión)
+    @Transactional
+    public void registrarMascota(MascotaModel mascota, PropietarioModel propietario) {
 
-    // 🔹 Guardar o actualizar una mascota
-    public void guardar(MascotaModel mascota) {
+        if (propietario == null) {
+            throw new IllegalStateException("Propietario no válido");
+        }
+
+        mascota.setPropietario(propietario);
         mascotaRepository.save(mascota);
     }
 
-
-    // 🔹 (Opcional) Listar mascotas de un propietario específico
-    public List<MascotaModel> listarPorPropietario(Long propietarioId) {
-        return mascotaRepository.findByPropietarioId(propietarioId);
-    }
-
+    // Listar SOLO las mascotas del propietario en sesión
     public List<MascotaModel> listarPorPropietario(PropietarioModel propietario) {
-        return mascotaRepository.findByPropietarioAndTipoEstadoTrue(propietario);
+        return mascotaRepository.findByPropietarioId(propietario.getId());
     }
 
+    // Obtener mascota segura (para historia clínica)
+    public MascotaModel obtenerMascotaPropietario(
+            Long mascotaId,
+            PropietarioModel propietario
+    ) {
+        return mascotaRepository
+                .findByIdAndPropietario_Id(mascotaId, propietario.getId())
+                .orElseThrow(() ->
+                        new IllegalStateException("Mascota no autorizada"));
+    }
 }
-
-
 
 
 

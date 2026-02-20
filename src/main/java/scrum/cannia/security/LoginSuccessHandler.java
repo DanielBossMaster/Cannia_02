@@ -3,6 +3,7 @@ package scrum.cannia.security;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -10,15 +11,11 @@ import scrum.cannia.model.UsuarioModel;
 import scrum.cannia.repository.UsuarioRepository;
 
 import java.io.IOException;
-
+@AllArgsConstructor
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final UsuarioRepository usuarioRepository;
-
-    public LoginSuccessHandler(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,

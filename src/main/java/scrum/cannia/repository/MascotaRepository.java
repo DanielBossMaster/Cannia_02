@@ -7,6 +7,7 @@ import scrum.cannia.model.PropietarioModel;
 import scrum.cannia.model.TipoEstadoMascota;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MascotaRepository extends JpaRepository<MascotaModel, Long> {
@@ -19,4 +20,8 @@ public interface MascotaRepository extends JpaRepository<MascotaModel, Long> {
     List<MascotaModel> findByTipoEstado(TipoEstadoMascota tipo);
 
     List<MascotaModel> findByPropietarioAndTipoEstadoTrue(PropietarioModel propietario);
+
+    List<MascotaModel> findByPropietario_Id(Long propietarioId);
+
+    Optional<MascotaModel> findByIdAndPropietario_Id(Long mascotaId, Long propietarioId);
 }

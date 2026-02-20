@@ -57,14 +57,17 @@
         </div>
         <div class="hidden md:flex items-center space-x-8">
             <nav class="space-x-8">
-                <a class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary" href="#">
-                    VETERINARIA
+                <a th:href="@{registro/registroPropietario}" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary" href="#">
+                    PROPIETARIO
                 </a>
                 <a class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary" href="#">
                     FUNDACION
                 </a>
             </nav>
-            <a class=" rounded-md transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black" th:href="@{/login}">INICIAR SESIÒN</a>
+            <a class=" rounded-md transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black"
+               th:href="@{/login}">
+                INICIAR SESIÒN
+            </a>
         </div>
         <div class="md:hidden">
             <button class="text-gray-800 dark:text-white">

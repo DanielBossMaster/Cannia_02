@@ -30,7 +30,7 @@
 
 
 <body class="h-screen bg-[url('/img/gato-registro.jpg')] ">
-<a href="/inicio" class="fixed top-4 left-4 z-50">
+<a th:href="@{/inicio}" class="fixed top-4 left-4 z-50">
     <div class="w-12 h-12 rounded-full text-primary bg-white shadow-lg flex items-center justify-center
                 transition-all duration-300 hover:scale-110 hover:bg-primary group hover:text-white">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -138,8 +138,6 @@
                         <div>
                             <label class="font-semibold">Número de Documento</label>
                             <input type="text"
-                                   inputmode="numeric"
-                                   pattern="[0-9]{12}"
                                    th:field="*{numDoc}"
                                    class="w-full border -lg px-3 py-2">
                         </div>

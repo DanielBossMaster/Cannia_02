@@ -107,8 +107,6 @@ public class ProductoService {
                 .map(ProductoBusquedaDto::new)
                 .collect(Collectors.toList());
     }
-
-
     // ============================================
     //              EDITAR PRODUCTO
     // ============================================
@@ -169,5 +167,41 @@ public class ProductoService {
         return productoRepository
                 .findByIdAndVeterinaria_Id(productoId, veterinariaId)
                 .orElseThrow(() -> new RuntimeException("Producto no autorizado"));
+    }
+
+    public List<ProductoBusquedaDto> obtenerProductosActivosFiltradosPorVeterinaria(
+            VeterinariaModel veterinaria,
+            String q,
+            Long idCategoria
+    ) {
+
+        Integer veterinariaId = veterinaria.getId();
+        List<ProductoModel> productos;
+
+        boolean tieneTexto = q != null && !q.isBlank();
+
+        if (tieneTexto && idCategoria != null) {
+            productos = productoRepository
+                    .findActivosPorVeterinariaTextoYCategoria(
+                            veterinariaId, q, idCategoria);
+
+        } else if (tieneTexto) {
+            productos = productoRepository
+                    .findActivosPorVeterinariaYTexto(
+                            veterinariaId, q);
+
+        } else if (idCategoria != null) {
+            productos = productoRepository
+                    .findActivosPorVeterinariaYCategoria(
+                            veterinariaId, idCategoria);
+
+        } else {
+            productos = productoRepository
+                    .findActivosPorVeterinaria(veterinariaId);
+        }
+
+        return productos.stream()
+                .map(ProductoBusquedaDto::new)
+                .collect(Collectors.toList());
     }
 }

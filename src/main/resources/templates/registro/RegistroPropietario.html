@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Propietario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen flex items-center justify-center bg-gray-100">
+
+<div class="bg-white p-8 rounded shadow-md w-full max-w-md">
+
+    <h2 class="text-2xl font-bold text-center mb-6 text-purple-800">
+        Crear cuenta de propietario
+    </h2>
+
+    <a th:href="@{/inicio}" class="fixed top-4 left-4 z-50">
+        <div class="w-12 h-12 rounded-full text-primary bg-white shadow-lg flex items-center justify-center
+                transition-all duration-300 hover:scale-110 hover:bg-primary group hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 class="lucide lucide-house-icon lucide-house">
+                <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            </svg>
+        </div>
+    </a>
+
+    <form th:action="@{/registro/propietario}" method="post">
+
+        <!-- Usuario -->
+        <div class="mb-4">
+            <label class="block font-semibold mb-1">Usuario</label>
+            <input type="text" name="usuario" required
+                   class="w-full border px-3 py-2 rounded">
+        </div>
+
+        <!-- Contraseña -->
+        <div class="mb-4">
+            <label class="block font-semibold mb-1">Contraseña</label>
+            <input type="password" name="contrasena"
+                   class="w-full border px-3 py-2 rounded">
+        </div>
+
+
+        <!-- Documento -->
+        <div class="mb-4">
+            <label class="block font-semibold mb-1">Número de documento</label>
+            <input type="text" name="numDoc"
+                   pattern="[0-9]+"
+                   inputmode="numeric"
+                   required
+                   class="w-full border px-3 py-2 rounded">
+        </div>
+
+        <!-- Código -->
+        <div class="mb-6">
+            <label class="block font-semibold mb-1">Código de vinculación</label>
+            <input type="text" name="codigo"
+                   required
+                   class="w-full border px-3 py-2 rounded">
+        </div>
+
+        <!-- Errores -->
+        <div th:if="${error}" class="text-red-600 text-sm mb-4">
+            <p th:text="${error}"></p>
+        </div>
+
+        <!-- Botón -->
+        <button type="submit"
+                class="w-full bg-purple-800 text-white py-2 rounded hover:bg-purple-900">
+            Crear cuenta
+        </button>
+
+    </form>
+
+    <p class="text-sm text-center mt-4 text-gray-600">
+        ¿No tienes código? Solicítalo a tu veterinario.
+    </p>
+
+</div>
+
+</body>
+</html>

@@ -36,13 +36,22 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/inicio",
                                 "/login",
-                                "/registro",
+                                "/registro/**",
                                 "/css/**",
                                 "/js/**",
                                 "/img/**"
 
                         ).permitAll()
 
+
+                        // ===== PAGO =====
+                        .requestMatchers("/pago/**").hasRole("PROPIETARIO")
+                        // ===== TIENDA =====
+                        .requestMatchers("/carrito/**").hasRole("PROPIETARIO")
+                        .requestMatchers("/tienda/propietario/**").hasRole("PROPIETARIO")
+                        .requestMatchers("/tienda/veterinario/**").hasRole("VETERINARIO")
+
+                        // ===== RUTAS POR ROL =====
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/propietario/**").hasRole("PROPIETARIO")
                         .requestMatchers("/veterinario/**").hasRole("VETERINARIO")

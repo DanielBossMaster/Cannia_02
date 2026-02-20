@@ -14,14 +14,18 @@ import java.util.Optional;
 public interface PropietarioRepository extends JpaRepository<PropietarioModel,Long> {
 
     List<PropietarioModel> findByVeterinarioAndEstadoTrue(VeterinarioModel veterinario);
+
     Page<PropietarioModel> findByVeterinarioAndEstadoTrue(VeterinarioModel veterinario,Pageable pageable);
-    Optional<PropietarioModel> findByIdAndVeterinarioAndEstadoTrue(
-            Long id,
-            VeterinarioModel veterinario);
 
+    Optional<PropietarioModel> findByIdAndVeterinarioAndEstadoTrue(Long id, VeterinarioModel veterinario);
 
+    Optional<PropietarioModel> findByNumDoc(String numDoc);
+
+    List<PropietarioModel> findByVeterinarioId(Long veterinarioId);
 
     @Query("SELECT p.correoPro FROM PropietarioModel p WHERE p.correoPro IS NOT NULL")
     List<String> obtenerCorreosDePropietarios();
+
+
 }
 

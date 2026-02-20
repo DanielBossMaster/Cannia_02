@@ -92,12 +92,10 @@
         </button>
 
         <!-- Tus Mascotas -->
-        <a th:if="${usuario.propietario != null}"
-           th:href="@{/propietario/{id}/mascotas(id=${usuario.propietario.id})}"
+        <a th:href="@{/propietario/mascotas}"
            class="bg-white p-6 -2xl shadow hover:shadow-lg transition border border-primary">
             <div class="text-primary text-3xl">
-                <svg
-                        xmlns="http://www.w3.org/2000/svg"
+                <svg xmlns="http://www.w3.org/2000/svg"
                         width="24"
                         height="24"
                         viewBox="0 0 24 24"
@@ -119,7 +117,7 @@
         </a>
 
         <!-- Tienda -->
-        <a th:href="@{/veterinario/Tienda}"
+        <a th:href="@{/tienda/propietario/tienda}"
            class="bg-white p-6 -2xl shadow hover:shadow-lg transition border border-primary">
             <div class="text-primary text-3xl">
                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -224,7 +222,7 @@
         <h2 class="text-xl font-bold mb-4 text-primary-700">Registrar Mascota</h2>
 
         <!-- FORMULARIO -->
-        <form th:action="@{/mascotas/guardar}" method="post">
+        <form th:action="@{/propietario/guardar}" method="post">
 
             <label class="block mb-2 font-semibold">Nombre</label>
             <input type="text" name="nomMascota" required

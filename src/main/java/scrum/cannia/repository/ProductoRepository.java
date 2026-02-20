@@ -55,6 +55,64 @@ public interface ProductoRepository extends JpaRepository<ProductoModel, Integer
             "AND c.id = :idCategoria " +
             "AND p.estado = TRUE")
     List<ProductoModel> findByNombreOrDescripcionAndCategoriaIdAndEstadoTrue(@Param("q") String q, @Param("idCategoria") Long idCategoria);
+
+    @Query("""
+    SELECT p FROM ProductoModel p
+    WHERE p.estado = true
+      AND p.veterinaria.id = :veterinariaId
+""")
+    List<ProductoModel> findActivosPorVeterinaria(
+            @Param("veterinariaId") Integer veterinariaId
+    );
+
+    // Texto + estado + veterinaria
+    @Query("""
+    SELECT p FROM ProductoModel p
+    WHERE p.estado = true
+      AND p.veterinaria.id = :veterinariaId
+      AND (
+           UPPER(p.nombre) LIKE UPPER(CONCAT('%', :q, '%'))
+        OR UPPER(p.descripcion) LIKE UPPER(CONCAT('%', :q, '%'))
+      )
+""")
+    List<ProductoModel> findActivosPorVeterinariaYTexto(
+            @Param("veterinariaId") Integer veterinariaId,
+            @Param("q") String q
+    );
+
+    // Categoría + estado + veterinaria
+    @Query("""
+    SELECT p FROM ProductoModel p
+    JOIN p.categorias c
+    WHERE p.estado = true
+      AND p.veterinaria.id = :veterinariaId
+      AND c.id = :idCategoria
+""")
+    List<ProductoModel> findActivosPorVeterinariaYCategoria(
+            @Param("veterinariaId") Integer veterinariaId,
+            @Param("idCategoria") Long idCategoria
+    );
+
+    // Texto + categoría + estado + veterinaria
+    @Query("""
+    SELECT p FROM ProductoModel p
+    JOIN p.categorias c
+    WHERE p.estado = true
+      AND p.veterinaria.id = :veterinariaId
+      AND c.id = :idCategoria
+      AND (
+           UPPER(p.nombre) LIKE UPPER(CONCAT('%', :q, '%'))
+        OR UPPER(p.descripcion) LIKE UPPER(CONCAT('%', :q, '%'))
+      )
+""")
+    List<ProductoModel> findActivosPorVeterinariaTextoYCategoria(
+            @Param("veterinariaId") Integer veterinariaId,
+            @Param("q") String q,
+            @Param("idCategoria") Long idCategoria
+    );
+
+
+
 }
 
 

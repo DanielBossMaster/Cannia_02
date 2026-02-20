@@ -21,6 +21,7 @@ import scrum.cannia.repository.*;
 import scrum.cannia.service.*;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Base64;
 import java.util.List;
 
@@ -42,6 +43,8 @@ public class VeterinarioController {
     private final VeterinarioRepository veterinarioRepository;
     private final PropietarioRepository propietarioRepository;
     private final MascotaRepository mascotaRepository;
+    private final CodigoVinculacionService codigoVinculacionService;
+
 
     // ============================================
     //               DASHBOARD PRINCIPAL
@@ -117,7 +120,7 @@ public class VeterinarioController {
 
         PropietarioModel propietario = propietarioService.obtenerPorId(propietarioId);
         mascota.setPropietario(propietario);
-        mascotaService.guardar(mascota);
+        mascotaService.registrarMascota(mascota,propietario);
 
         return "redirect:/veterinario/index";
     }
@@ -321,57 +324,6 @@ public class VeterinarioController {
         return "veterinario/FormularioPublicidad";
     }
 
-    // ============================================
-    //             TIENDA DE PROPIETARIO
-    // ============================================
-
-    @GetMapping("/Tienda")
-    public String tienda(
-            Authentication authentication,
-            Model model,
-            @RequestParam(value = "q", required = false) String q,
-            @RequestParam(value = "idCategoria", required = false) Long idCategoria
-    ) {
-
-        UsuarioModel usuario = usuarioRepository
-                .findByUsuario(authentication.getName())
-                .orElseThrow();
-
-        // Seguridad: solo propietarios
-        if (usuario.getPropietario() == null) {
-            return "redirect:/login";
-        }
-
-        PropietarioModel propietario = usuario.getPropietario();
-        VeterinariaModel veterinaria = propietario.getVeterinaria();
-
-        if (veterinaria == null) {
-            return "redirect:/";
-        }
-
-        model.addAttribute("direccion", propietario.getDireccionPro());
-        model.addAttribute("veterinaria", veterinaria);
-
-        try {
-            boolean esBusqueda = (q != null && !q.trim().isEmpty()) || (idCategoria != null);
-            String queryParaWS = (q == null || q.trim().isEmpty()) ? null : q.trim();
-
-            List<ProductoBusquedaDto> resultados =
-                    productoService.obtenerProductosActivosFiltrados(queryParaWS, idCategoria);
-
-            model.addAttribute("productos", resultados);
-            model.addAttribute("categorias", categoriaService.listarTodas());
-            model.addAttribute("consulta", q);
-            model.addAttribute("categoriaSeleccionada", idCategoria);
-            model.addAttribute("esBusqueda", esBusqueda);
-
-        } catch (Exception e) {
-            model.addAttribute("errorBusqueda", "Error al procesar la solicitud de productos.");
-            model.addAttribute("productos", List.of());
-        }
-
-        return "veterinario/Tienda";
-    }
 
     // ============================================
     //             TIENDA DE VETERINARIO
@@ -618,35 +570,58 @@ public class VeterinarioController {
     //        SERVICIOS (VISTA PROPIETARIO)
     // ============================================
 
-    @GetMapping("/Servicios")
-    public String serviciosPropietario(
-            Authentication authentication,
-            Model model
+//    @GetMapping("/Servicios")
+//    public String serviciosPropietario(
+//            Authentication authentication,
+//            Model model
+//    ) {
+//
+//        UsuarioModel usuario = usuarioRepository
+//                .findByUsuario(authentication.getName())
+//                .orElseThrow();
+//
+//        // Seguridad: solo propietarios
+//        if (usuario.getPropietario() == null) {
+//            return "redirect:/login";
+//        }
+//
+//        PropietarioModel propietario = usuario.getPropietario();
+////        VeterinariaModel veterinaria = propietario.getVeterinaria();
+//
+//        if (veterinaria == null) {
+//            return "redirect:/";
+//        }
+//
+//        List<ServicioModel> servicios =
+//                servicioService.listarActivosPorVeterinaria(veterinaria.getId());
+//
+//        model.addAttribute("servicios", servicios);
+//        model.addAttribute("veterinaria", veterinaria);
+//        model.addAttribute("direccion", propietario.getDireccionPro());
+//
+//        return "veterinario/Servicios"; // 👈 vista SOLO para propietarios
+//
+//    }
+
+    @PostMapping("/generarCodigo/{id}")
+    public String generarCodigo(
+            @PathVariable("id") Long idPropietario,
+            Principal principal,
+            RedirectAttributes redirect
     ) {
 
-        UsuarioModel usuario = usuarioRepository
-                .findByUsuario(authentication.getName())
-                .orElseThrow();
+        VeterinarioModel veterinario = veterinarioService
+                .buscarPorUsuario(principal.getName());
 
-        // Seguridad: solo propietarios
-        if (usuario.getPropietario() == null) {
-            return "redirect:/login";
-        }
+        PropietarioModel propietario = propietarioService
+                .obtenerPorId(idPropietario);
 
-        PropietarioModel propietario = usuario.getPropietario();
-        VeterinariaModel veterinaria = propietario.getVeterinaria();
+        CodigoVinculacionModel codigo = codigoVinculacionService
+                .generarCodigo(propietario, veterinario);
 
-        if (veterinaria == null) {
-            return "redirect:/";
-        }
+        redirect.addFlashAttribute("codigoGenerado", codigo.getCodigo());
+        redirect.addFlashAttribute("propietarioCodigoId", propietario.getId());
 
-        List<ServicioModel> servicios =
-                servicioService.listarActivosPorVeterinaria(veterinaria.getId());
-
-        model.addAttribute("servicios", servicios);
-        model.addAttribute("veterinaria", veterinaria);
-        model.addAttribute("direccion", propietario.getDireccionPro());
-
-        return "veterinario/Servicios"; // 👈 vista SOLO para propietarios
+        return "redirect:/veterinario/index";
     }
 }

@@ -4,8 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import scrum.cannia.model.PropietarioModel;
 import scrum.cannia.model.VeterinarioModel;
 
-//Pondemos usar las funciones del jpa... como guardar
+import java.util.Optional;
+
 public interface VeterinarioRepository extends JpaRepository<VeterinarioModel,Long> {
 
-    VeterinarioModel findByUsuario_IdUsuario(Long idUsuario);
+    Optional<VeterinarioModel> findByUsuarioUsuario(String usuario);
 }
