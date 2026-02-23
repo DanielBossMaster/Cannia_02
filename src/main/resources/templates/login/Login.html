@@ -49,34 +49,41 @@
 
 
     <div class="flex flex-col items-center justify-center min-h-screen px-4 py-8">
-        <main class="w-full max-w-sm">
-            <div class="bg-white dark:bg-zinc-900/50 shadow-lg -xl p-8">
+        <main class="w-full  max-w-sm">
+            <div class="bg-white dark:bg-zinc-900/50 shadow-lg p-8">
                 <div class="flex flex-col items-center space-y-6">
                     <img src="/img/logo.png" alt="logo" style="width:100px;">
                     <h1 class="text-3xl font-bold text-primary">Iniciar Sesión</h1>
-                    <form method="post" th:action="@{/login}" class="w-full space-y-4">
+                    <form method="post" th:action="@{/login}"
+                          class="w-full space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1" for="usuario">Usuario</label>
-                            <input class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 -md focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500" id="usuario" name="username" placeholder="Tu nombre de usuario" type="text"  required/>
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1"
+                                   for="usuario">
+                                Usuario</label>
+                            <input class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500"
+                                   id="usuario"
+                                   name="username"
+                                   placeholder="Tu nombre de usuario"
+                                   type="text"
+                                   required/>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1" for="contrasena">
+                            <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1"
+                                   for="contrasena">
                                 Contraseña
                             </label>
 
                             <div class="relative">
-                                <input class="w-full px-6 py-3 pr-14 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 rounded-md focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500"
+                                <input class="w-full px-6 py-3 pr-14 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700  focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500"
                                         id="contrasena"
                                         name="password"
                                         placeholder="Tu contraseña"
                                         type="password"
-                                        required
-                                />
-                                <button
-                                        type="button"
+                                        required />
+
+                                <button type="button"
                                         onclick="togglePassword()"
-                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary transition"
-                                >
+                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary transition">
                                     <!-- OJO ABIERTO -->
                                     <svg id="iconEyeOpen"
                                          xmlns="http://www.w3.org/2000/svg"
@@ -105,13 +112,12 @@
                             </div>
                         </div>
 
-
-                        <button class=" w-full text-center font-bold mt-8 bg-primary text-white px-6 py-3 -md transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black">
+                        <button class=" w-full text-center font-bold mt-3 bg-primary text-white px-6 py-3 -md transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black">
                             Ingresar
                         </button>
 
                         <a th:href="@{/registro}">
-                            <div class=" w-full text-center font-bold mt-8 bg-primary text-white px-6 py-3 -md transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black">
+                            <div class=" w-full text-center font-bold mt-3 bg-primary text-white px-6 py-3 -md transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black">
                                 Registrarse
                             </div>
                         </a>
@@ -120,9 +126,10 @@
                         </div>
 
                     </form>
-                    <div class="text-center w-full space-y-2 pt-2">
+                    <div class="text-center w-full space-y-2 ">
                         <a class="text-sm text-primary hover:underline"
-                           th:href="@{/recuperar}"> ¿Olvidaste tu contraseña?
+                           th:href="@{/recuperar}">
+                            ¿Olvidaste tu contraseña?
                         </a>
                     </div>
                 </div>
@@ -130,7 +137,9 @@
         </main>
 
         <footer class="mt-8 text-center">
-            <p class="text-xs text-zinc-500 dark:text-zinc-400">© 2025 app cannia. Todos los derechos reservados.</p>
+            <p class="text-xs text-white">
+                © 2025 app cannia. Todos los derechos reservados.
+            </p>
         </footer>
     </div>
 
@@ -151,7 +160,5 @@
             }
         }
     </script>
-
-
 </div>
 </html>

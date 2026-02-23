@@ -603,25 +603,31 @@ public class VeterinarioController {
 //
 //    }
 
-    @PostMapping("/generarCodigo/{id}")
-    public String generarCodigo(
-            @PathVariable("id") Long idPropietario,
-            Principal principal,
-            RedirectAttributes redirect
-    ) {
+@PostMapping("/generarCodigo/{id}")
+public String generarCodigo(
+        @PathVariable Long id,
+        Principal principal,
+        RedirectAttributes redirect
+) {
 
-        VeterinarioModel veterinario = veterinarioService
-                .buscarPorUsuario(principal.getName());
+    try {
+        VeterinarioModel veterinario =
+                veterinarioService.buscarPorUsuario(principal.getName());
 
-        PropietarioModel propietario = propietarioService
-                .obtenerPorId(idPropietario);
+        PropietarioModel propietario =
+                propietarioService.obtenerPorId(id);
 
-        CodigoVinculacionModel codigo = codigoVinculacionService
-                .generarCodigo(propietario, veterinario);
+        CodigoVinculacionModel codigo =
+                codigoVinculacionService.generarCodigo(propietario, veterinario);
 
         redirect.addFlashAttribute("codigoGenerado", codigo.getCodigo());
         redirect.addFlashAttribute("propietarioCodigoId", propietario.getId());
 
-        return "redirect:/veterinario/index";
+    } catch (IllegalStateException e) {
+        redirect.addFlashAttribute("errorCodigo", e.getMessage());
+        redirect.addFlashAttribute("propietarioCodigoId", id);
     }
+
+    return "redirect:/veterinario/index";
+}
 }

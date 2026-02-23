@@ -1,7 +1,6 @@
 package scrum.cannia.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -23,7 +22,6 @@ public class RegistroController {
     private final CodigoVinculacionService codigoVinculacionService;
     private final PropietarioService propietarioService;
 
-
     @GetMapping
     public String mostrarFormulario(Model model) {
         model.addAttribute("registro", new RegistroDTO());
@@ -32,7 +30,8 @@ public class RegistroController {
     }
 
     @PostMapping
-    public String registrarUsuario(@ModelAttribute("registro") RegistroDTO registroDTO,
+    public String registrarUsuario(
+            @ModelAttribute("registro") RegistroDTO registroDTO,
                                    Model model, RedirectAttributes redirectAttributes) {
 
         try {
@@ -64,35 +63,35 @@ public class RegistroController {
 
         try {
 
-            // 2️⃣ Validar código y obtener propietario
+            //  Validar código y obtener propietario
             CodigoVinculacionModel codigoVinculo =
                     codigoVinculacionService.validarCodigo(codigo);
 
             PropietarioModel propietario = codigoVinculo.getPropietario();
 
-            // 3️⃣ Validar documento
+            //  Validar documento
             if (!propietario.getNumDoc().equals(numDoc)) {
                 redirect.addFlashAttribute("error", "El documento no corresponde al propietario");
                 return "redirect:/registro/propietario";
             }
 
-            // 4️⃣ Validar si ya tiene cuenta
+            //  Validar si ya tiene cuenta
             if (propietario.isCuentaCreada()) {
                 redirect.addFlashAttribute("error", "Este propietario ya tiene una cuenta creada");
                 return "redirect:/registro/propietario";
             }
 
-            // 5️⃣ Crear usuario
+            //  Crear usuario
             UsuarioModel usuarioNuevo =
                     usuarioService.crearUsuarioPropietario(usuario, contrasena);
 
-            // 6️⃣ Asociar usuario al propietario
+            // Asociar usuario al propietario
             propietarioService.asociarUsuario(propietario, usuarioNuevo);
 
-            // 7️⃣ Marcar código como usado
+            // Marcar código como usado
             codigoVinculacionService.marcarComoUsado(codigoVinculo);
 
-            // 8️⃣ Éxito → login
+            // Éxito → login
             return "redirect:/login";
 
         } catch (IllegalArgumentException | IllegalStateException e) {

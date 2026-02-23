@@ -124,7 +124,6 @@
                     <h1 class="text-2xl font-bold">  Admin<span  ></span>  <span  ></span> </h1>
                 </div>
                 <div class="flex items-center space-x-3 gap-8">
-
 <!--                    <a>-->
 <!--                        <button class="text-sm hover:font-bold">-->
 <!--                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"-->
@@ -141,23 +140,30 @@
             <!-- CONTENIDO PRINCIPAL -->
             <main class=" ml-32 mb-32 flex-grow mx-auto  px-6 py-8 mr-32" >
                 <section id="tab-admin" class="tab-content">
-                    <div class="items-center ">
-                        <div class="flex justify-between items-center mb-6">
-                            <div class="bg-lightSurface w-full p-6 shadow-xl border border-borderLight  overflow-x-auto ">
-
-                                <h1 class="text-3xl text-center font-bold text-gray-700"> Usuarios Pendientes</h1>
+                    <div class="justify-center ">
+                        <h1 class="text-3xl text-center p-4 font-bold text-gray-700">
+                            Usuarios Pendientes
+                        </h1>
+                        <div class="flex justify-center items-center mb-6">
+                            <div class="bg-lightSurface w-full p-4 shadow-xl border border-borderLight  overflow-x-auto ">
                                 <div th:if="${mensaje}"
                                      class="bg-green-200 text-green-800 p-3 rounded mb-4">
                                     <span th:text="${mensaje}"></span>
                                 </div>
+                                <h1 th:if="${#lists.isEmpty(pendientes)}"
+                                    class="text-center text-2xl text-gray-500 py-8">
+                                    No tienes solicitudes pendientes.
+                                </h1>
 
-                                <table class="w-full text-left text-sm" >
+                                <table th:if="${!#lists.isEmpty(pendientes)}"
+                                        class="w-full text-left text-sm" >
                                     <thead class="bg-gray-100 text-softText  uppercase text-xs">
+                                    <tr>
                                     <th class="px-4 py-3">Usuario</th>
                                     <th class="px-4 py-3">Rol</th>
                                     <th class="px-4 py-3">Datos</th>
                                     <th class="px-4 py-3">Acciones</th>
-
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     <tr th:each="user : ${pendientes}"
@@ -215,14 +221,14 @@
                         </div>
                     </div>
                 </section>
-                <!-- Footer -->
-                <footer class=" text-center text-sm text-primary py-3">
-                    © 2025 App Cannia. Todos los derechos reservados.
-                </footer>
             </main>
+            <!-- Footer -->
+            <footer class=" text-center text-sm text-primary py-3">
+                © 2025 App Cannia. Todos los derechos reservados.
+            </footer>
         </div>
     </div>
-
+</div>
     <script>
         //SIDEBAR
         function toggleSidebar() {

@@ -209,8 +209,12 @@
                     </div>
                     <!-- CONTENEDOR DE LA TABLA -->
                     <div class="bg-lightSurface w-4/5 max-w-6xl mx-auto p-6 shadow-xl border border-borderLight overflow-x-auto">
-
-                        <table class="w-full text-left text-sm">
+                        <h1 th:if="${#lists.isEmpty(productos)}"
+                            class="text-center text-2xl text-gray-500 py-8">
+                            No tienes productos disponibles.
+                        </h1>
+                        <table th:if="${!#lists.isEmpty(productos)}"
+                               class="w-full text-left text-sm">
                             <thead class="bg-gray-100 text-softText uppercase text-xs">
                             <tr>
                                 <th class="p-3 text-left">Producto</th>
@@ -268,7 +272,12 @@
                         </div>
                         <!-- TABLA -->
                         <div class="bg-lightSurface w-4/5 max-w-6xl mx-auto p-6 shadow-xl border border-borderLight overflow-x-auto">
-                            <table class="w-full text-left text-sm">
+                            <h1 th:if="${#lists.isEmpty(servicios)}"
+                                class="text-center text-2xl text-gray-500 py-8">
+                                No tienes servicios disponibles.
+                            </h1>
+                            <table th:if="${!#lists.isEmpty(servicios)}"
+                                    class="w-full text-left text-sm">
                                 <thead class="bg-gray-100 text-softText  uppercase text-xs">
                                 <tr>
                                     <th class="p-3 text-left">Nombre</th>
@@ -287,7 +296,7 @@
                                 </tbody>
                             </table>
                             <!-- PAGINACIÓN SERVICIOS -->
-                            <div class="flex justify-center gap-2 mt-6">
+                            <div  class="flex justify-center gap-2 mt-6">
                                 <!-- Anterior -->
                                 <a th:if="${currentPageServicios > 0}"
                                    th:href="@{/veterinario/GestionVentas(pageServicios=${currentPageServicios - 1},vista='servicios')}"

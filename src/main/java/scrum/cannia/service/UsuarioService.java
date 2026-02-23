@@ -64,7 +64,6 @@ public class UsuarioService {
 
             FundacionModel fundacion = new FundacionModel();
             fundacion.setNombre(registroDTO.getNombreFundacion());
-            fundacion.setDescripcion(registroDTO.getDescripcionFundacion());
             fundacion.setDireccion(registroDTO.getDireccionFundacion());
             fundacion.setTelefono(registroDTO.getTelefonoFundacion());
             fundacion.setEmail(registroDTO.getEmailFundacion());

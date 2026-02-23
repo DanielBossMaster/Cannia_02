@@ -192,7 +192,12 @@
                     </div>
                     <!-- TABLA -->
                     <div class="bg-lightSurface w-full p-6 shadow-xl border border-borderLight  overflow-x-hidden ">
-                        <table class="w-full  text-sm">
+                        <h1 th:if="${#lists.isEmpty(productos)}"
+                            class="text-center text-2xl text-gray-500 py-8">
+                            Aún no has registrado productos
+                        </h1>
+                        <table th:if="${!#lists.isEmpty(productos)}"
+                                class="w-full  text-sm">
                             <thead class="bg-gray-100 text-softText  uppercase text-xs">
                             <tr>
                                 <th class="p-3 text-left">Foto</th>
@@ -276,7 +281,12 @@
                 </div>
                 <!-- TABLA -->
                 <div class="bg-lightSurface w-full p-6 shadow-xl border border-borderLight  overflow-x-hidden ">
-                    <table class="w-full  text-sm">
+                    <h1 th:if="${#lists.isEmpty(servicios)}"
+                        class="text-center text-2xl text-gray-500 py-8">
+                        Aún no has registrado servicios
+                    </h1>
+                    <table th:if="${!#lists.isEmpty(servicios)}"
+                            class="w-full  text-sm">
                         <thead class="bg-gray-100 text-softText  uppercase text-xs">
                         <tr>
                             <th class="p-3 text-left">Nombre</th>
@@ -391,9 +401,13 @@
                 </label>
             </div>
 
-            <div class="flex justify-end space-x-3 pt-4">
-                <button type="button" onclick="toggleModal('modalProducto')" class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Cancelar</button>
-                <button type="submit" class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Guardar</button>
+            <div class="flex justify-center space-x-3 pt-4">
+                <button type="button" onclick="toggleModal('modalProducto')" class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                    Cancelar
+                </button>
+                <button type="submit" class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                    Guardar
+                </button>
             </div>
         </form>
         <button onclick="toggleModal('modalProducto')" class="absolute top-3 right-3 text-softText hover:text-primary">
@@ -438,7 +452,7 @@
                 </label>
             </div>
 
-            <div class="flex justify-end space-x-3 pt-4">
+            <div class="flex justify-center space-x-3 pt-4">
                 <button type="button" onclick="toggleModal('modalServicio')"
                         class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
                     Cancelar

@@ -29,7 +29,7 @@ public class CodigoVinculacionService {
             VeterinarioModel veterinario
     ) {
 
-        // Regla 1: propietario debe pertenecer al veterinario
+        // Seguridad: verificar pertenencia
         if (!Objects.equals(
                 propietario.getVeterinario().getId(),
                 veterinario.getId()
@@ -38,14 +38,27 @@ public class CodigoVinculacionService {
                     "El propietario no pertenece a este veterinario"
             );
         }
-        // Regla 2: invalidar códigos anteriores no usados
-        codigoRepository
-                .findByPropietarioIdAndUsadoFalse(propietario.getId())
-                .forEach(c -> {
-                    c.setUsado(true);
-                    codigoRepository.save(c);
-                });
 
+        // Si el propietario YA USÓ un código → bloqueo total
+        if (codigoRepository
+                .existsByPropietarioIdAndUsadoTrue(propietario.getId())) {
+
+            throw new IllegalStateException(
+                    "Este propietario ya utilizó un código de vinculación"
+            );
+        }
+
+        // Si existe un código activo, reutilizarlo
+        Optional<CodigoVinculacionModel> codigoActivo =
+                codigoRepository
+                        .findFirstByPropietarioIdAndUsadoFalseAndFechaExpiracionAfter(
+                                propietario.getId(),
+                                LocalDateTime.now()
+                        );
+
+        if (codigoActivo.isPresent()) {
+            return codigoActivo.get();
+        }
 
         // Crear nuevo código
         CodigoVinculacionModel codigo = new CodigoVinculacionModel();

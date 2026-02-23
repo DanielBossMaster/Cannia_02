@@ -1,35 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <title>Registro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Registro de Usuario</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
         tailwind.config = {
+            darkMode: "class",
             theme: {
                 extend: {
                     colors: {
                         primary: "#170022",
-                        secondary: "#290043",
-                        lightBg: "#e8ebff",
-                        lightSurface: "rgb(247,248,249)",
-                        darkText: "#1e293b",
-                        softText: "#475569",
-                        borderLight: "#e2e8f0",
+                        "background-light": "#F3E8FF",
+                        "background-dark": "#18181B",
+                    },
+                    fontFamily: {
+                        display: ["Poppins", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
                     },
                 },
             },
         };
     </script>
-    <style> body {font-family: 'Poppins', sans-serif;} </style>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
 
+<body>
 
-
-<body class="h-screen bg-[url('/img/gato-registro.jpg')] ">
 <a th:href="@{/inicio}" class="fixed top-4 left-4 z-50">
     <div class="w-12 h-12 rounded-full text-primary bg-white shadow-lg flex items-center justify-center
                 transition-all duration-300 hover:scale-110 hover:bg-primary group hover:text-white">
@@ -42,286 +48,208 @@
         </svg>
     </div>
 </a>
+<!-- ===== CONTENEDOR PADRE CON FONDO ===== -->
+<div class="min-h-screen bg-[url('/img/gato-registro.jpg')] bg-cover bg-center flex items-center justify-center ">
 
+    <!-- ===== FORMULARIO (HIJO) ===== -->
+    <div class="flex flex-col  w-full max-w-md bg-white justify-center items-center p-6">
 
-<div class=" flex flex-col items-center justify-center p-6">
-    <div class="bg-white  shadow-lg -xl p-8">
-        <div class="flex flex-col items-center space-y-6">
-            <img src="/img/logo.png" alt="logo" style="width:100px;">
-            <h1 class="text-3xl font-bold text-primary">Registro de Usuario</h1>
+        <!-- LOGO -->
+        <img src="/img/logo.png" style="width:120px;" class="w-20 mb-4" alt="Logo">
 
-            <form th:action="@{/registro}" method="post" th:object="${registro}">
+        <h1 class="text-2xl font-extrabold text-primary mb-1">
+            Crear cuenta
+        </h1>
 
-                <!-- Usuario -->
-                <div class="mb-4">
-                    <label for="usuario" class="block font-semibold mb-1">Usuario</label>
-                    <input type="text" id="usuario"
-                           th:field="*{usuario}"
-                           class="w-full border -lg px-3 py-2 focus:ring focus:ring-blue-300"
-                           required>
-                    <div th:if="${errorUsuario}"
-                         class="text-red-500 text-sm mt-1">
-                        <span th:text="${errorUsuario}"></span>
-                    </div>
+        <p class="text-gray-500 mb-5 text-md">
+            Regístrate como veterinario o fundación.
+        </p>
 
-                </div>
+        <form th:action="@{/registro}" method="post" th:object="${registro}">
+            <input type="hidden" th:field="*{rol}" id="rol">
 
-                <!-- Contraseña -->
-                <div class="mb-4">
-                    <label for="contrasena" class="block font-semibold mb-1">
-                        Contraseña
-                    </label>
+            <!-- USUARIO -->
+            <div class="mb-3">
+                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                    Usuario
+                </label>
+                <input type="text" th:field="*{usuario}"
+                       class="w-full border px-3 py-2 "
+                       placeholder="Tu nombre de usuario"
+                       required />
+            </div>
 
-                    <div class="relative">
-                        <input
-                                type="password"
-                                id="contrasena"
-                                th:field="*{contrasena}"
-                                placeholder="Tu contraseña"
-                                class="w-full px-6 py-3 pr-12 border rounded-md focus:ring focus:ring-blue-300"
-                                required
-                        />
+            <!-- CONTRASEÑA -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                    Contraseña
+                </label>
+                <div class="relative">
+                <input type="password" th:field="*{contrasena}"
+                       class="w-full border px-3 py-2"
+                       placeholder="Tu contraseña"
+                       required />
+                <button type="button"
+                        onclick="togglePassword()"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary transition">
+                    <!-- OJO ABIERTO -->
+                    <svg id="iconEyeOpen"
+                         xmlns="http://www.w3.org/2000/svg"
+                         class="w-5 h-5"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke="currentColor"
+                         stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
 
-                        <button
-                                type="button"
-                                onclick="togglePassword()"
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary transition"
-                        >
-                            <!-- OJO ABIERTO -->
-                            <svg id="iconEyeOpen"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 class="w-5 h-5"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 stroke="currentColor"
-                                 stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/>
-                                <circle cx="12" cy="12" r="3"/>
-                            </svg>
-
-                            <!-- OJO CERRADO -->
-                            <svg id="iconEyeClosed"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 class="w-5 h-5 hidden"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 stroke="currentColor"
-                                 stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M17.94 17.94A10.94 10.94 0 0112 20C5 20 1 12 1 12a21.86 21.86 0 015.06-6.94M9.9 4.24A10.94 10.94 0 0112 4c7 0 11 8 11 8a21.82 21.82 0 01-2.16 3.19M1 1l22 22"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-
-
-                <!-- Rol -->
-                <div class="mb-4">
-                    <label for="rol" class="block font-semibold mb-1">Selecciona tu rol:</label>
-                    <select th:field="*{rol}" id="rol"
-                            class="w-full border -lg px-3 py-2 focus:ring focus:ring-blue-300"
-                            required onchange="mostrarCamposAdicionales()">
-                        <option value="">-- Selecciona --</option>
-                        <option value="propietario">Propietario</option>
-                        <option value="veterinario">Veterinario</option>
-                        <option value="fundacion">Fundación</option>
-                    </select>
-                </div>
-
-                <!-- CAMPOS PROPIETARIO -->
-                <div id="camposPropietario" class="hidden">
-                    <h3 class="text-lg font-semibold mb-2 mt-3">Datos del Propietario</h3>
-
-                    <div class="grid grid-cols-1 gap-4">
-
-                        <div>
-                            <label class="font-semibold">Número de Documento</label>
-                            <input type="text"
-                                   th:field="*{numDoc}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                        <div>
-                            <label class="font-semibold">Nombre Propietario</label>
-                            <input type="text" th:field="*{nombrePro}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                        <div>
-                            <label class="font-semibold">Apellido Propietario</label>
-                            <input type="text" th:field="*{apellidoPro}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                        <div>
-                            <label class="font-semibold">Dirección</label>
-                            <input type="text" th:field="*{direccionPro}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                        <div>
-                            <label class="font-semibold">Teléfono</label>
-                            <input type="text"
-
-                                   th:field="*{telefonoPro}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                        <div>
-                            <label class="font-semibold">Correo</label>
-                            <input type="email"   pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
-                                   title="Ingresa un correo válido (ej: usuario@correo.com)"
-                                   th:field="*{correoPro}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                        <div>
-                            <label for="idVeterinariaSeleccionada" class="font-semibold">Veterinaria para la Tienda</label>
-                            <select th:field="*{idVeterinariaSeleccionada}" id="idVeterinariaSeleccionada"
-                                    class="w-full border -lg px-3 py-2" >
-                                <option value="">-- Selecciona una Veterinaria --</option>
-                                <option th:each="veterinaria : ${veterinarias}"
-                                        th:value="${veterinaria.id}"
-                                        th:text="${veterinaria.nombre}">
-                                    Nombre de Veterinaria
-                                </option>
-                            </select>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- CAMPOS VETERINARIO -->
-                <div id="camposVeterinario" class="hidden">
-                    <h3 class="text-lg font-semibold mb-2 mt-3">Datos del Veterinario</h3>
-
-                    <div class="grid grid-cols-1 gap-4">
-
-                        <div>
-                            <label class="font-semibold">Número de Licencia Profesional</label>
-                            <input type="text" th:field="*{numLicencia}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                        <div>
-                            <label class="font-semibold">Nombre Veterinario</label>
-                            <input type="text" th:field="*{nombreVete}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                        <div>
-                            <label class="font-semibold">Apellido Veterinario</label>
-                            <input type="text" th:field="*{apellidoVete}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                        <div>
-                            <label class="font-semibold">Dirección</label>
-                            <input type="text" th:field="*{direccionVete}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                        <div>
-                            <label class="font-semibold">Teléfono</label>
-                            <input type="text"
-
-                                   th:field="*{telefonoVete}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                        <div>
-                            <label class="font-semibold">Correo</label>
-                            <input type="email"   pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
-                                   title="Ingresa un correo válido (ej: usuario@correo.com)"
-                                   th:field="*{correoVete}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- CAMPOS FUNDACION -->
-                <div id="camposFundacion" class="hidden">
-                    <h3 class="text-lg font-semibold mb-2 mt-3">Datos de la Fundación</h3>
-
-                    <div class="grid grid-cols-1 gap-4">
-
-                        <div>
-                            <label class="font-semibold">Nombre Fundación</label>
-                            <input type="text" th:field="*{nombreFundacion}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                        <div>
-                            <label class="font-semibold">Descripción</label>
-                            <input type="text" th:field="*{descripcionFundacion}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                        <div>
-                            <label class="font-semibold">Dirección</label>
-                            <input type="text" th:field="*{direccionFundacion}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                        <div>
-                            <label class="font-semibold">Teléfono</label>
-                            <input type="text"
-
-                                   th:field="*{telefonoFundacion}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                        <div>
-                            <label class="font-semibold">Correo</label>
-                            <input type="email"
-                                   pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
-                                   title="Ingresa un correo válido (ej: usuario@correo.com)"
-                                   th:field="*{emailFundacion}"
-                                   class="w-full border -lg px-3 py-2">
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- BOTÓN -->
-                <button type="submit"
-                        class=" w-full text-center font-bold mt-8 bg-primary text-white px-6 py-3 -md transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black">
-                    Registrarse
+                    <!-- OJO CERRADO -->
+                    <svg id="iconEyeClosed"
+                         xmlns="http://www.w3.org/2000/svg"
+                         class="w-5 h-5 hidden"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke="currentColor"
+                         stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M17.94 17.94A10.94 10.94 0 0112 20C5 20 1 12 1 12a21.86 21.86 0 015.06-6.94M9.9 4.24A10.94 10.94 0 0112 4c7 0 11 8 11 8a21.82 21.82 0 01-2.16 3.19M1 1l22 22"/>
+                    </svg>
                 </button>
-            </form>
-        </div>
+            </div>
+            </div>
+
+            <!-- TABS -->
+            <div class="flex mb-4 justify-center border-b text-sm">
+                <button type="button" id="tabVet"
+                        onclick="mostrarTab('veterinario')"
+                        class="px-3 py-2 font-semibold border-b-2 border-primary text-primary">
+                    Veterinario
+                </button>
+
+                <button type="button" id="tabFun"
+                        onclick="mostrarTab('fundacion')"
+                        class="px-3 py-2 font-semibold border-b-2 border-primary text-primary">
+                    Fundación
+                </button>
+            </div>
+
+            <!-- VETERINARIO -->
+            <div id="camposVeterinario" class="grid grid-cols-2 gap-3 text-sm">
+
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">N° Licencia</label>
+                    <input type="text" th:field="*{numLicencia}"
+                           placeholder="Tu Numero de Licencia"
+                           class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Teléfono</label>
+                    <input type="text" th:field="*{telefonoVete}"
+                           placeholder="Tu telefono"
+                           class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Nombre</label>
+                    <input type="text" th:field="*{nombreVete}"
+                           placeholder="Tu nombre"
+                           class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Apellido</label>
+                    <input type="text" th:field="*{apellidoVete}"
+                           placeholder="Tu apellido"
+                           class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500">
+                </div>
+
+                <div >
+                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Direccion</label>
+                    <input type="text" th:field="*{direccionVete}"
+                           placeholder="Direccion de tu consultorio"
+                           class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500">
+                </div>
+
+                <div >
+                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Correo</label>
+                    <input type="email" th:field="*{correoVete}"
+                           placeholder="Tu correo"
+                           class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500">
+                </div>
+            </div>
+
+            <!-- FUNDACIÓN -->
+            <div id="camposFundacion" class="hidden grid grid-cols-2 gap-3 text-sm">
+
+                <div class="col-span-2" >
+                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Nombre Fundación</label>
+                    <input type="text" th:field="*{nombreFundacion}"
+                           placeholder="El nombre de tu fundacion"
+                           class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Teléfono</label>
+                    <input type="text" th:field="*{telefonoFundacion}"
+                           placeholder="El telefono de tu fundacion"
+                           class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500">
+                </div>
+
+                <div >
+                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Direccion</label>
+                    <input type="text" th:field="*{direccionFundacion}"
+                           placeholder="La direccion de tu fundacion"
+                           class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500">
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Correo</label>
+                    <input type="email" th:field="*{emailFundacion}"
+                       placeholder="El correo de tu fundacion"
+                       pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                       title="Ingresa un correo válido (ej: usuario@correo.com)"
+                       class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500">
+                </div>
+            </div>
+
+            <!-- BOTÓN -->
+            <button type="submit"
+                    class=" w-full text-center font-bold mt-3 bg-primary text-white px-6 py-3 -md transition-all duration-300 ease-in-out hover:scale-105 hover:bg-white hover:text-black">
+                Registrarse
+            </button>
+
+        </form>
     </div>
 </div>
-<!-- SCRIPTS -->
+
+<!-- ===== JS ===== -->
 <script>
-    function mostrarCamposAdicionales() {
-        const rol = document.getElementById("rol").value;
-        const camposProp = document.getElementById("camposPropietario");
-        const camposVet = document.getElementById("camposVeterinario");
-        const camposFun = document.getElementById("camposFundacion");
+    function mostrarTab(rol) {
+        const vet = document.getElementById("camposVeterinario");
+        const fun = document.getElementById("camposFundacion");
+        const tabVet = document.getElementById("tabVet");
+        const tabFun = document.getElementById("tabFun");
 
-        camposProp.classList.add("hidden");
-        camposVet.classList.add("hidden");
-        camposFun.classList.add("hidden");
+        document.getElementById("rol").value = rol;
 
-        document.querySelectorAll("#camposPropietario input, #camposVeterinario input, #camposFundacion input")
-            .forEach(input => input.removeAttribute("required"));
+        vet.classList.add("hidden");
+        fun.classList.add("hidden");
 
-        if (rol === "propietario") {
-            camposProp.classList.remove("hidden");
-            camposProp.querySelectorAll("input").forEach(i => i.setAttribute("required", true));
-        } else if (rol === "veterinario") {
-            camposVet.classList.remove("hidden");
-            camposVet.querySelectorAll("input").forEach(i => i.setAttribute("required", true));
-        } else if (rol === "fundacion") {
-            camposFun.classList.remove("hidden");
-            camposFun.querySelectorAll("input").forEach(i => i.setAttribute("required", true));
+        tabVet.classList.remove("border-primary", "text-primary");
+        tabFun.classList.remove("border-primary", "text-primary");
+
+        if (rol === "veterinario") {
+            vet.classList.remove("hidden");
+            tabVet.classList.add("border-primary", "text-primary");
+        } else {
+            fun.classList.remove("hidden");
+            tabFun.classList.add("border-primary", "text-primary");
         }
     }
 
-    window.onload = mostrarCamposAdicionales;
+    window.onload = () => mostrarTab("veterinario");
 </script>
 <script>
     function togglePassword() {
@@ -340,7 +268,6 @@
         }
     }
 </script>
-
 
 </body>
 </html>

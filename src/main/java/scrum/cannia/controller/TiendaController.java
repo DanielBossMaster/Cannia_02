@@ -67,6 +67,7 @@ public class TiendaController {
         model.addAttribute("veterinaria", veterinaria);
         model.addAttribute("consulta", q);
         model.addAttribute("categoriaSeleccionada", idCategoria);
+        model.addAttribute("direccion", propietario.getDireccionPro());
 
         return "tienda/Tienda";
     }
