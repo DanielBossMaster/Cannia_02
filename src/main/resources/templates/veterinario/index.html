@@ -414,8 +414,14 @@
             </div>
 
             <div class="flex justify-center space-x-3 pt-4">
-                <button type="button" onclick="toggleModal('modalMascota')" class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Cancelar</button>
-                <button type="submit" class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Guardar</button>
+                <button type="button" onclick="toggleModal('modalMascota')"
+                        class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                    Cancelar
+                </button>
+                <button type="submit"
+                        class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                    Guardar
+                </button>
             </div>
         </form>
             <button onclick="toggleModal('modalMascota')" class="absolute top-3 right-3 text-softText hover:text-primary">
@@ -469,10 +475,6 @@ function toggleSidebar() {
     modalMascota.addEventListener('click', (e) => {
         if (e.target === modalMascota) cerrarModalMascota();
     });
-
-    // Ya no es necesario que el listener detecte todos los botones
-    // porque ahora cada botón tiene su propio onclick con el id correcto
-
 </script>
 </body>
 </html>

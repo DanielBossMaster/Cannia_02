@@ -26,28 +26,24 @@ public class PropietarioController {
     // ============================================
 
     @GetMapping("/index")
-    public String indexPropietario(Authentication authentication, Model model) {
+    public String indexPropietario(
+
+            Authentication authentication,
+            Model model
+
+    ) {
         PropietarioModel propietario = obtenerPropietario(authentication);
-        model.addAttribute("propietario", propietario);
-        return "Propietario/index";
-    }
 
-    // ============================================
-    //            MIS MASCOTAS
-    // ============================================
-
-    @GetMapping("/mascotas")
-    public String verMisMascotas(Authentication authentication, Model model) {
-
-        PropietarioModel propietario = obtenerPropietario(authentication);
 
         List<MascotaModel> mascotas =
                 mascotaService.listarPorPropietario(propietario);
 
+
         model.addAttribute("mascotas", mascotas);
         model.addAttribute("mascota", new MascotaModel());
+        model.addAttribute("propietario", propietario);
 
-        return "Propietario/MascotasPropias";
+        return "propietario/index";
     }
 
     // ============================================
@@ -64,26 +60,6 @@ public class PropietarioController {
         mascotaService.registrarMascota(mascota, propietario);
 
         return "redirect:/propietario/index";
-    }
-
-    // ============================================
-    //        HISTORIA CLÍNICA (LISTA)
-    // ============================================
-
-    @GetMapping("/historia-clinica")
-    public String seleccionarMascotaHistoria(
-            Authentication authentication,
-            Model model
-    ) {
-
-        PropietarioModel propietario = obtenerPropietario(authentication);
-
-        model.addAttribute(
-                "mascotas",
-                mascotaService.listarPorPropietario(propietario)
-        );
-
-        return "Propietario/HistoriaClinicaMascotas";
     }
 
     // ============================================
@@ -108,7 +84,7 @@ public class PropietarioController {
                 historiaRepository.findByMascotaIdOrderByFechaHoraDesc(id)
         );
 
-        return "Propietario/HistoriaClinicaDetalle";
+        return "propietario/index";
     }
 
     // ======================================================
@@ -128,4 +104,5 @@ public class PropietarioController {
 
         return usuario.getPropietario();
     }
+
 }

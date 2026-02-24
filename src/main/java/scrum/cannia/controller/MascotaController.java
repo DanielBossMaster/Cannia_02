@@ -130,8 +130,7 @@ public class MascotaController {
 
         mascotaRepository.save(mascota);
 
-        return "redirect:/propietario/" +
-                mascota.getPropietario().getId() + "/mascotas";
+        return "redirect:/propietario/index";
     }
 
 
