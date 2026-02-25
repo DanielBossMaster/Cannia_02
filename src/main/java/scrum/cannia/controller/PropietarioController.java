@@ -36,12 +36,12 @@ public class PropietarioController {
 
 
         List<MascotaModel> mascotas =
-                mascotaService.listarPorPropietario(propietario);
-
+                mascotaService.listarConHistoriaYVacunas(propietario);
 
         model.addAttribute("mascotas", mascotas);
         model.addAttribute("mascota", new MascotaModel());
         model.addAttribute("propietario", propietario);
+
 
         return "propietario/index";
     }
@@ -79,10 +79,7 @@ public class PropietarioController {
                 mascotaService.obtenerMascotaPropietario(id, propietario);
 
         model.addAttribute("mascota", mascota);
-        model.addAttribute(
-                "historias",
-                historiaRepository.findByMascotaIdOrderByFechaHoraDesc(id)
-        );
+        model.addAttribute("historias", historiaRepository.findByMascotaIdOrderByFechaHoraDesc(id));
 
         return "propietario/index";
     }

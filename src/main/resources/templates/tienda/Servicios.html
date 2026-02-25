@@ -137,7 +137,8 @@
 
                     <div class="max-w-7xl mx-auto mb-3">
                         <h1 class="text-5xl font-bold text-gray-700">
-                            Servicios Veterinarios  <span th:text="${veterinaria.nombre}" ></span>
+                            Servicios Veterinarios
+                            <span th:text="${veterinaria.nombre}" ></span>
                         </h1>
                         <p class="text-sm text-gray-500">
                             Selecciona un servicio y agenda una cita
@@ -169,7 +170,18 @@
                     </div>
 
 
-                    <div class="max-w-9xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14">
+                    <!-- ================= SIN SERVICIOS ================= -->
+                    <div th:if="${servicios == null || servicios.isEmpty()}"
+                         class="flex justify-center items-center py-32">
+
+                        <p class="text-3xl font-semibold text-gray-500 text-center">
+                            No hay servicios disponibles en este momento
+                        </p>
+
+                    </div>
+
+                    <div th:if="${servicios != null && !servicios.isEmpty()}"
+                         class="max-w-9xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14">
 
                         <div th:each="serv : ${servicios}"
                              class="bg-white border border-borderLight  shadow-md hover:shadow-lg transition p-8 flex flex-col justify-between">

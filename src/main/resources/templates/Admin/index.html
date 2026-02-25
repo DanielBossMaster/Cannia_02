@@ -44,75 +44,75 @@
 <div class="h-full flex">
     <div class="flex flex-1  relative">
         <!-- SIDEBAR -->
-        <aside id="sidebar" class="bg-secondary text-white  transition-all duration-300 h-full flex flex-col justify-between ">
-            <div>
-                <!-- Header + botón -->
-                <div class="flex items-center justify-between p-3">
-                    <span class="text-xl font-bold whitespace-nowrap hidden sidebar-text">Menu</span>
-                    <button onclick="toggleSidebar()"
-                            class="text-white group relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                             class="lucide lucide-circle-chevron-right-icon lucide-circle-chevron-right"><circle cx="12" cy="12" r="10"/>
-                            <path d="m10 8 4 4-4 4"/>
-                        </svg>
-                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
-                            Menu
-                        </span>
-                    </button>
-                </div>
-                <!-- Vista historia clinica -->
-                <nav class="flex flex-col gap-1 mt-4">
-                    <a class="  group relative flex items-center gap-3 px-3 text-white py-1 hover:bg-primary ">
-                        <i class="fa-solid fa-house">
-                            <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                  stroke-linecap="round" stroke-linejoin="round" class="  lucide lucide-paw-print-icon lucide-paw-print">
-                                <circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/>
-                                <path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"/>
-                            </svg>
-                        </i>
-                        <span class="sidebar-text hidden"></span>
-                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
-                        </span>
-                    </a>
-                    <a class="group relative flex text-white items-center gap-3 px-3 py-1 hover:bg-primary ">
-                        <i class="fa-solid fa-user">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                 stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-open-icon lucide-package-open">
-                                <path d="M12 22v-9"/>
-                                <path d="M15.17 2.21a1.67 1.67 0 0 1 1.63 0L21 4.57a1.93 1.93 0 0 1 0 3.36L8.82 14.79a1.655 1.655 0 0 1-1.64 0L3 12.43a1.93 1.93 0 0 1 0-3.36z"/>
-                                <path d="M20 13v3.87a2.06 2.06 0 0 1-1.11 1.83l-6 3.08a1.93 1.93 0 0 1-1.78 0l-6-3.08A2.06 2.06 0 0 1 4 16.87V13"/>
-                                <path d="M21 12.43a1.93 1.93 0 0 0 0-3.36L8.83 2.2a1.64 1.64 0 0 0-1.63 0L3 4.57a1.93 1.93 0 0 0 0 3.36l12.18 6.86a1.636 1.636 0 0 0 1.63 0z"/></svg></i>
-                        <span class="sidebar-text hidden"></span>
-                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
-                        </span>
-                    </a>
-                </nav>
-            </div>
-            <!-- Bloque inferior (2 items) -->
-            <div class="mb-6">
-                <nav class="flex flex-col gap-4">
-                    <a th:href="@{/cerrar-sesion}"
-                       class=" group relative flex items-center text-white gap-3 px-3 py-1 hover:bg-primary ">
-                        <i class="fa-solid fa-circle-info">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out">
-                                <path d="m16 17 5-5-5-5"/>
-                                <path d="M21 12H9"/>
-                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                            </svg>
-                        </i>
-                        <span class="sidebar-text hidden">Cerrar Sesion</span>
-                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
-                            Cerrar Sesion
-                        </span>
-                    </a>
-                </nav>
-            </div>
-        </aside>
+<!--        <aside id="sidebar" class="bg-secondary text-white  transition-all duration-300 h-full flex flex-col justify-between ">-->
+<!--            <div>-->
+<!--                &lt;!&ndash; Header + botón &ndash;&gt;-->
+<!--                <div class="flex items-center justify-between p-3">-->
+<!--                    <span class="text-xl font-bold whitespace-nowrap hidden sidebar-text">Menu</span>-->
+<!--                    <button onclick="toggleSidebar()"-->
+<!--                            class="text-white group relative">-->
+<!--                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"-->
+<!--                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"-->
+<!--                             class="lucide lucide-circle-chevron-right-icon lucide-circle-chevron-right"><circle cx="12" cy="12" r="10"/>-->
+<!--                            <path d="m10 8 4 4-4 4"/>-->
+<!--                        </svg>-->
+<!--                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">-->
+<!--                            Menu-->
+<!--                        </span>-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--                &lt;!&ndash; Vista historia clinica &ndash;&gt;-->
+<!--                <nav class="flex flex-col gap-1 mt-4">-->
+<!--                    <a class="  group relative flex items-center gap-3 px-3 text-white py-1 hover:bg-primary ">-->
+<!--                        <i class="fa-solid fa-house">-->
+<!--                            <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"-->
+<!--                                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"-->
+<!--                                  stroke-linecap="round" stroke-linejoin="round" class="  lucide lucide-paw-print-icon lucide-paw-print">-->
+<!--                                <circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/>-->
+<!--                                <path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"/>-->
+<!--                            </svg>-->
+<!--                        </i>-->
+<!--                        <span class="sidebar-text hidden"></span>-->
+<!--                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">-->
+<!--                        </span>-->
+<!--                    </a>-->
+<!--                    <a class="group relative flex text-white items-center gap-3 px-3 py-1 hover:bg-primary ">-->
+<!--                        <i class="fa-solid fa-user">-->
+<!--                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"-->
+<!--                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"-->
+<!--                                 stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-open-icon lucide-package-open">-->
+<!--                                <path d="M12 22v-9"/>-->
+<!--                                <path d="M15.17 2.21a1.67 1.67 0 0 1 1.63 0L21 4.57a1.93 1.93 0 0 1 0 3.36L8.82 14.79a1.655 1.655 0 0 1-1.64 0L3 12.43a1.93 1.93 0 0 1 0-3.36z"/>-->
+<!--                                <path d="M20 13v3.87a2.06 2.06 0 0 1-1.11 1.83l-6 3.08a1.93 1.93 0 0 1-1.78 0l-6-3.08A2.06 2.06 0 0 1 4 16.87V13"/>-->
+<!--                                <path d="M21 12.43a1.93 1.93 0 0 0 0-3.36L8.83 2.2a1.64 1.64 0 0 0-1.63 0L3 4.57a1.93 1.93 0 0 0 0 3.36l12.18 6.86a1.636 1.636 0 0 0 1.63 0z"/></svg></i>-->
+<!--                        <span class="sidebar-text hidden"></span>-->
+<!--                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">-->
+<!--                        </span>-->
+<!--                    </a>-->
+<!--                </nav>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; Bloque inferior (2 items) &ndash;&gt;-->
+<!--            <div class="mb-6">-->
+<!--                <nav class="flex flex-col gap-4">-->
+<!--                    <a th:href="@{/cerrar-sesion}"-->
+<!--                       class=" group relative flex items-center text-white gap-3 px-3 py-1 hover:bg-primary ">-->
+<!--                        <i class="fa-solid fa-circle-info">-->
+<!--                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"-->
+<!--                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"-->
+<!--                                 stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out">-->
+<!--                                <path d="m16 17 5-5-5-5"/>-->
+<!--                                <path d="M21 12H9"/>-->
+<!--                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>-->
+<!--                            </svg>-->
+<!--                        </i>-->
+<!--                        <span class="sidebar-text hidden">Cerrar Sesion</span>-->
+<!--                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">-->
+<!--                            Cerrar Sesion-->
+<!--                        </span>-->
+<!--                    </a>-->
+<!--                </nav>-->
+<!--            </div>-->
+<!--        </aside>-->
 
         <div class="flex flex-col flex-1 h-full transition-all duration-300">
             <!-- Header -->
@@ -124,17 +124,21 @@
                     <h1 class="text-2xl font-bold">  Admin<span  ></span>  <span  ></span> </h1>
                 </div>
                 <div class="flex items-center space-x-3 gap-8">
-<!--                    <a>-->
-<!--                        <button class="text-sm hover:font-bold">-->
-<!--                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"-->
-<!--                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"-->
-<!--                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"-->
-<!--                                 class="lucide lucide-house-icon lucide-house">-->
-<!--                                <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>-->
-<!--                                <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>-->
-<!--                            </svg>-->
-<!--                        </button>-->
-<!--                    </a>-->
+                    <a th:href="@{/cerrar-sesion}">
+                        <i class="fa-solid fa-circle-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out">
+                                <path d="m16 17 5-5-5-5"/>
+                                <path d="M21 12H9"/>
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            </svg>
+                        </i>
+                        <span class="sidebar-text hidden">Cerrar Sesion</span>
+                        <span class="pointer-events-none absolute bottom-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Cerrar Sesion
+                        </span>
+                    </a>
                 </div>
             </header>
             <!-- CONTENIDO PRINCIPAL -->

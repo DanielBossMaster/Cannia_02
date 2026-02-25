@@ -1,20 +1,17 @@
 package scrum.cannia.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import scrum.cannia.model.VacunaModel;
 import scrum.cannia.repository.VacunaRepository;
 import java.util.*;
-
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api")
 public class VacunaController {
 
     private final VacunaRepository vacunaRepository;
-
-    public VacunaController(VacunaRepository vacunaRepository) {
-        this.vacunaRepository = vacunaRepository;
-    }
 
     @GetMapping("/obtenerVacunas/{mascotaId}")
     @ResponseBody

@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import scrum.cannia.Dto.MascotaCargaDTO;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "mascota")
@@ -111,4 +112,19 @@ public class MascotaModel {
         return mascota;
     }
 
+
+    @OneToMany(
+            mappedBy = "mascota",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<HistoriaClinicaModel> historiasClinicas;
+
+    @OneToMany(
+            mappedBy = "mascota",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<VacunaModel> vacunas;
 }

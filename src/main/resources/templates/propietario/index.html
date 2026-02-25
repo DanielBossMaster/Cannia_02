@@ -231,54 +231,97 @@
             </header>
             <main class="flex-1 overflow-y-auto px-6 py-8">
                 <section id="vista-Inicio"
-                         class="flex flex-col md:flex-row items-center justify-center px-8 py-16">
-                    <!-- Columna Izquierda: Texto -->
-                    <div class="md:w-1/2 text-center md:text-left space-y-6">
-                        <h2 class="text-7xl font-extrabold text-secondary animate-fadeIn">
-                            Bienvenido a Cannia <span th:text="${propietario.nombrePro}"></span>
+                         class="max-w-7xl mx-auto px-6 py-12 h-full flex flex-col justify-center">
+                    <!-- FRASE PRINCIPAL -->
+                    <div class="max-w-4xl">
+                        <h2 class="text-[4.2rem] leading-[1.05] font-extrabold text-secondary">
+                         Hola   <span th:text="${propietario.nombrePro}">
+                        </span>
+                            El cuidado de tus mascotas,
+                            <span class="block text-primary"> en un solo lugar.</span>
                         </h2>
-                        <p class="text-lg text-secondary leading-relaxed animate-slideUp">
-                            Somos un grupo de estudiantes apasionados por la tecnología y los animales.
-                            En <span class="font-bold text-primary">Cannia</span>, combinamos desarrollo web con empatía,
-                            creando soluciones que conectan a dueños de mascotas, veterinarios y fundaciones.
-                        </p>
-                        <p class="text-md secondary ">
-                            Este proyecto nació como parte de nuestro proceso de formación en el SENA,
-                            con el propósito de aplicar lo aprendido y aportar algo positivo a nuestra comunidad.
+                        <p class="mt-4 text-lg text-softText max-w-2xl">
+                            Gestiona la información de tus mascotas, su historia clínica
+                            y los servicios disponibles en Cannia de forma simple.
                         </p>
                     </div>
+                    <!-- RESUMEN -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+                        <!-- MASCOTAS -->
+                        <div class="bg-white p-4 shadow-sm">
+                            <p class="text-sm text-softText">Mascotas</p>
+                            <p class="text-2xl font-semibold"
+                               th:text="${mascotas.size()}">0</p>
+                        </div>
+                        <!-- HISTORIAS -->
+                        <div class="bg-white p-4 shadow-sm">
+                            <p class="text-sm text-softText">Historias clínicas</p>
+                            <p class="text-2xl font-semibold"
+                               th:text="${mascotas.size()}">0</p>
+                        </div>
+                        <!-- TIENDA -->
+                        <div class="bg-white p-4 shadow-sm">
+                            <p class="text-sm text-softText">Tienda</p>
+                            <p class="text-sm font-medium text-primary">
+                                Disponible
+                            </p>
+                        </div>
+                    </div>
+                    <!-- ACCIÓN PRINCIPAL (CONTEXTO) -->
+                    <div class="mt-12">
+                        <!-- SIN MASCOTAS -->
+                        <div th:if="${mascotas.isEmpty()}"
+                             class="bg-lightSurface border border-borderLight p-6">
+                            <p class="font-semibold">
+                                Aún no tienes mascotas registradas
+                            </p>
+                            <p class="text-sm text-softText mt-1">
+                                Registra tu primera mascota para comenzar a usar todos los servicios.
+                            </p>
+                            <button onclick="abrirModalMascota(event)"
+                                    class="mt-4 bg-primary text-white px-5 py-2 hover:bg-secondary transition">
+                                Registrar mi primera mascota
+                            </button>
+                        </div>
+                        <!-- CON MASCOTAS -->
+                        <div th:if="${!mascotas.isEmpty()}"
+                             class="bg-lightSurface border border-borderLight p-6">
 
+                            <p class="font-semibold">
+                                Todo listo
+                            </p>
+                            <p class="text-sm text-softText mt-1">
+                                Usa el menú lateral para gestionar tus mascotas, revisar su historia clínica
+                                o acceder a la tienda Cannia.
+                            </p>
+                        </div>
+                    </div>
+                    <p class="mt-16 text-xs text-softText text-center">
+                        Cannia · Plataforma para el cuidado y bienestar de tus mascotas
+                    </p>
                 </section>
-                <!-- Servicios -->
                 <section id="vista-Mascotas" class="hidden">
                     <div class="items-center ">
                         <div class="max-w-6xl  text-gray-800 mx-auto mt-10 px-4">
-
                             <h2 class="text-3xl font-bold mb-8 text-center">
                                 Mis Mascotas
                             </h2>
-
                             <!-- SIN MASCOTAS -->
                             <div th:if="${mascotas.isEmpty()}"
                                  class="text-center text-gray-500">
                                 No tienes mascotas registradas.
                             </div>
-
                             <!-- GRID DE CARDS -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
                                 <div th:each="m : ${mascotas}"
                                      class="bg-white -2xl shadow hover:shadow-lg transition p-6">
-
                                     <!-- FOTO -->
                                     <img th:if="${m.foto != null && !m.foto.isEmpty()}"
                                          th:src="${m.foto}"
                                          class="w-full h-40 object-cover -lg mb-4"/>
-
                                     <img th:if="${m.foto == null || m.foto.isEmpty()}"
                                          src="/img/mascota-default.png"
                                          class="w-full h-40 object-cover -lg mb-4"/>
-
                                     <!-- INFO -->
                                     <h3 class="text-xl font-bold mb-1" th:text="${m.nomMascota}"></h3>
                                     <p class="text-gray-600">
@@ -288,7 +331,6 @@
                                     <p class="text-gray-500 text-sm">
                                         Género: <span th:text="${m.genero}"></span>
                                     </p>
-
                                     <!-- ACCIONES -->
                                     <div class="mt-4 flex justify-end">
                                         <button
@@ -311,75 +353,139 @@
                 </section>
 
                 <section id="vista-Historia" class="hidden">
-                    <div class="max-w-5xl mx-auto mt-10 bg-white shadow-xl  p-8">
-
-                        <h2 class="text-3xl font-bold mb-6 text-center">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="34"
-                                 height="34"
-                                 viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="#000000"
-                                 stroke-width="2"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 class="lucide lucide-file-text-icon lucide-file-text">
-                                <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/>
-                                <path d="M14 2v5a1 1 0 0 0 1 1h5"/>
-                                <path d="M10 9H8"/>
-                                <path d="M16 13H8"/>
-                                <path d="M16 17H8"/>
-                            </svg>
+                    <div class="max-w-6xl mx-auto mt-4 space-y-6">
+                        <h2 class="text-3xl font-bold text-center text-secondary">
                             Historia Clínica de tus Mascotas
                         </h2>
+                        <!-- SIN MASCOTAS -->
+                        <div th:if="${mascotas.isEmpty()}"
+                             class="text-center text-softText">
+                            No tienes mascotas registradas.
+                        </div>
+                        <!-- HISTORIA POR CADA MASCOTA -->
+                        <div th:each="m : ${mascotas}"
+                             class="bg-white shadow p-8 space-y-2">
+                            <!-- HEADER MASCOTA -->
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-center gap-4">
+                                <div>
+                                    <h3 class="text-2xl justify-center flex font-bold">
+                                        <span th:text="${m.nomMascota}"></span>
+                                    </h3>
+                                    <p class="text-softText">
+                                        <span th:text="${m.especie}"></span> ·
+                                        <span th:text="${m.raza}"></span> ·
+                                        <span th:text="${m.genero}"></span>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- TABLA HISTORIA CLÍNICA -->
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full border border-borderLight">
+                                    <thead class="bg-lightSurface">
+                                    <tr>
+                                        <th class="py-2 px-3 text-left">Fecha</th>
+                                        <th class="py-2 px-3 text-left">Diagnóstico</th>
+                                        <th class="py-2 px-3 text-left">Tratamiento</th>
+                                        <th class="py-2 px-3 text-left">Peso</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!-- CON HISTORIA -->
+                                    <tr th:each="h : ${m.historiasClinicas}"
+                                        class="border-t">
+                                        <td class="py-2 px-3"
+                                            th:text="${#temporals.format(h.fechaHora, 'dd/MM/yyyy HH:mm')}">
+                                        </td>
+                                        <td class="py-2 px-3"
+                                            th:text="${h.diagnostico}">
+                                        </td>
+                                        <td class="py-2 px-3"
+                                            th:text="${h.tratamiento}">
+                                        </td>
+                                        <td class="py-2 px-3"
+                                            th:text="${h.peso}">
+                                        </td>
+                                    </tr>
+                                    <!-- SIN HISTORIA -->
+                                    <tr th:if="${m.historiasClinicas.isEmpty()}">
+                                        <td colspan="4"
+                                            class="py-4 text-center text-softText">
+                                            Esta mascota no tiene historia clínica registrada.
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-10">
+                                <h4 class="text-xl font-semibold justify-center mb-4 flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-syringe-icon lucide-syringe"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg>
+                                    Vacunas
+                                </h4>
 
-                        <table class="min-w-full bg-white">
-                            <thead>
-                            <tr class="bg-secondary text-white text-left">
-                                <th class="py-3 px-4">Nombre</th>
-                                <th class="py-3 px-4">Especie</th>
-                                <th class="py-3 px-4">Raza</th>
-                                <th class="py-3 px-4">Género</th>
-                                <th class="py-3 px-4 text-center">Acciones</th>
-                            </tr>
-                            </thead>
+                                <div class="overflow-x-auto">
 
-                            <tbody>
-                            <tr th:each="m : ${mascotas}" class=" hover:bg-gray-100 transition">
+                                    <table class="min-w-full border border-borderLight bg-white">
 
-                                <td class="py-3 px-4" th:text="${m.nomMascota}"></td>
-                                <td class="py-3 px-4" th:text="${m.especie}"></td>
-                                <td class="py-3 px-4" th:text="${m.raza}"></td>
-                                <td class="py-3 px-4" th:text="${m.genero}"></td>
+                                        <thead class="bg-lightSurface">
+                                        <tr>
+                                            <th class="py-2 px-3 text-left">Lote</th>
+                                            <th class="py-2 px-3 text-left">Aplicación</th>
+                                            <th class="py-2 px-3 text-left">Refuerzo</th>
+                                            <th class="py-2 px-3 text-left">Vencimiento</th>
+                                            <th class="py-2 px-3 text-left">Laboratorio</th>
+                                        </tr>
+                                        </thead>
 
-                                <td class="py-3 px-4 text-center">
-                                    <button class="bg-primary hover:bg-secondary px-4 py-2 text-white -lg shadow transition"
-                                            th:attr="onclick=|abrirModalHistoria(${m.id}, '${m.nomMascota}')|">
-                                        <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                width="24"
-                                                height="24"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="#ffffff"
-                                                stroke-width="2"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                class="lucide lucide-eye-icon lucide-eye">
-                                            <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/>
-                                            <circle cx="12" cy="12" r="3"/>
-                                        </svg>
-                                    </button>
-                                </td>
+                                        <tbody>
 
-                            </tr>
-                            </tbody>
-                        </table>
+                                        <!-- CON VACUNAS -->
+                                        <tr th:each="v : ${m.vacunas}"
+                                            class="border-t hover:bg-lightSurface transition">
+
+                                            <td class="py-2 px-3"
+                                                th:text="${v.Lote}">
+                                            </td>
+
+                                            <td class="py-2 px-3"
+                                                th:text="${#temporals.format(v.FechaAplicacion, 'dd/MM/yyyy')}">
+                                            </td>
+
+                                            <td class="py-2 px-3"
+                                                th:text="${#temporals.format(v.FechaRefuerzo, 'dd/MM/yyyy')}">
+                                            </td>
+
+                                            <td class="py-2 px-3"
+                                                th:text="${#temporals.format(v.FechaVencimiento, 'dd/MM/yyyy')}">
+                                            </td>
+
+                                            <td class="py-2 px-3"
+                                                th:text="${v.laboratorio}">
+                                            </td>
+
+                                        </tr>
+
+                                        <!-- SIN VACUNAS -->
+                                        <tr th:if="${m.vacunas == null || m.vacunas.isEmpty()}">
+                                            <td colspan="5"
+                                                class="py-4 text-center text-softText">
+                                                No hay vacunas registradas para esta mascota.
+                                            </td>
+                                        </tr>
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+
+                            </div>
+                        </div>
+
                     </div>
                 </section>
             </main>
-            <footer class="text-center text-sm text-primary py-3 w-full border-t">
-                © 2025 App Cannia. Todos los derechos reservados.
+            <footer class="text-center text-sm text-primary py-3 w-full ">
+                © 2025 Cannia Todos los derechos reservados.
             </footer>
         </div>
     </div>

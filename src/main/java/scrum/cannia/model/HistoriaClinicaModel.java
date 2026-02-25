@@ -19,11 +19,6 @@ public class HistoriaClinicaModel {
     @Column(name = "id_historia_clinica")
     private Long idHistoriaClinica;
 
-    /**
-     * Relación con la mascota.
-     * Esto te permite acceder a los campos de Mascota desde la historia clínica,
-     * ej: historia.getMascota().getNomMascota().
-     */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_mascota", nullable = false)
     private MascotaModel mascota;

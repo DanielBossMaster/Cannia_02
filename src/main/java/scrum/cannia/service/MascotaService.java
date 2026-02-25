@@ -55,7 +55,13 @@ public class MascotaService {
                 .orElseThrow(() ->
                         new IllegalStateException("Mascota no autorizada"));
     }
+
+    public List<MascotaModel> listarConHistoriaYVacunas(
+            PropietarioModel propietario) {
+        return mascotaRepository.findByPropietarioConHistoria(propietario);
+    }
 }
+
 
 
 
