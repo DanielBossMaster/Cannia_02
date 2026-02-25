@@ -25,7 +25,7 @@ public class RegistroController {
     @GetMapping
     public String mostrarFormulario(Model model) {
         model.addAttribute("registro", new RegistroDTO());
-        model.addAttribute("veterinarias", veterinariaRepository.findAll());
+
         return "registro/registrar";
     }
 

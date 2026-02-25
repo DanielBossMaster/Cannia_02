@@ -60,7 +60,7 @@ public class UsuarioService {
 
         else if ("FUNDACION".equalsIgnoreCase(registroDTO.getRol())) {
 
-            usuario.setEstado("INACTIVO"); // equiere aprobación admin
+            usuario.setEstado("INACTIVO");
 
             FundacionModel fundacion = new FundacionModel();
             fundacion.setNombre(registroDTO.getNombreFundacion());
@@ -68,7 +68,7 @@ public class UsuarioService {
             fundacion.setTelefono(registroDTO.getTelefonoFundacion());
             fundacion.setEmail(registroDTO.getEmailFundacion());
             fundacion.setUsuario(usuario);
-
+            fundacion.setDescripcion(registroDTO.getDescripcionFundacion());
             usuario.setFundacion(fundacion);
 
             usuarioRepository.save(usuario);
@@ -121,7 +121,7 @@ public class UsuarioService {
         usuario.setUsuario(username);
         usuario.setContrasena(passwordEncoder.encode(contrasena));
         usuario.setEstado("ACTIVO");
-        usuario.setRol("PROPIETARIO"); // o enum si usas enum
+        usuario.setRol("PROPIETARIO");
 
         return usuarioRepository.save(usuario);
     }

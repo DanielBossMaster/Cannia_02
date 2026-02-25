@@ -1,5 +1,7 @@
 package scrum.cannia.controller;
 
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +10,10 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.web.multipart.MultipartFile;
 import scrum.cannia.Dto.MascotaCargaDTO;
 import scrum.cannia.Dto.ResultadoCargaMascotasDTO;
+import scrum.cannia.model.FundacionModel;
 import scrum.cannia.model.MascotaModel;
+import scrum.cannia.model.UsuarioModel;
+import scrum.cannia.repository.UsuarioRepository;
 import scrum.cannia.service.MascotaService;
 import scrum.cannia.repository.MascotaRepository;
 import scrum.cannia.service.MascotaServiceCreator;
@@ -17,36 +22,32 @@ import scrum.cannia.strategy.factory.DataLoaderFactory;
 
 import java.util.List;
 
-
+@AllArgsConstructor
 @Controller
 @RequestMapping("/fundacion")
 public class FundacionController {
 
-    @Autowired
-    private MascotaService mascotaService;
-
-    @Autowired
-    private MascotaRepository mascotaRepository;
-
-    @Autowired
-    private MascotaServiceCreator mascotaServiceCreator;
+    private final MascotaService mascotaService;
+    private final MascotaRepository mascotaRepository;
+    private final MascotaServiceCreator mascotaServiceCreator;
+    private final UsuarioRepository usuarioRepository;;
 
     @GetMapping("/index")
-    public String dashboard(HttpSession session, Model model) {
+    public String dashboard(Authentication authentication, Model model) {
 
-        // Validar sesión
-        Object fundacionId = session.getAttribute("fundacionId");
-        Object fundacionNombre = session.getAttribute("fundacionNombre");
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
 
-        if (fundacionId == null) {
+        FundacionModel fundacion = usuario.getFundacion();
+
+        if (fundacion == null) {
             return "redirect:/login";
         }
 
-        // Enviar datos básicos a la vista
-        model.addAttribute("fundacionId", fundacionId);
-        model.addAttribute("fundacionNombre", fundacionNombre);
+        model.addAttribute("fundacion", fundacion);
 
-        return "index";
+        return "fundacion/index";
     }
 
     @GetMapping("/CargarMascotas")
