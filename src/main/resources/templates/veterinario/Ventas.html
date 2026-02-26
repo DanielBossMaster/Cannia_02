@@ -68,7 +68,11 @@
                 </h1>
             </div>
             <div class="bg-lightSurface w-full p-6 shadow-xl border border-borderLight  overflow-x-auto ">
-                <table class="w-full text-left text-sm">
+                <div th:if="${#lists.isEmpty(ventas)}" class="text-center text-2xl text-gray-500 mt-6">
+                    Aún no se han registrado ventas.
+                </div>
+                <table th:if="${!#lists.isEmpty(ventas)}"
+                        class="w-full text-left text-sm">
                     <thead class="bg-gray-100 text-softText  uppercase text-xs">
                     <tr>
                         <th class="p-3 text-left">Fecha</th>
@@ -129,9 +133,6 @@
                     </tr>
                     </tbody>
                 </table>
-                <div th:if="${#lists.isEmpty(ventas)}" class="text-center text-gray-500 mt-6">
-                    Aún no se han registrado ventas.
-                </div>
             </div>
         </section>
     </main>

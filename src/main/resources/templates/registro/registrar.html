@@ -65,6 +65,14 @@
             Regístrate como veterinario o fundación.
         </p>
 
+        <!-- ERROR DE REGISTRO -->
+        <div th:if="${errorUsuario}"
+             class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-center">
+
+            <p th:text="${errorUsuario}"></p>
+
+        </div>
+
         <form th:action="@{/registro}" method="post" th:object="${registro}">
             <input type="hidden" th:field="*{rol}" id="rol">
 
@@ -227,6 +235,13 @@
             </button>
 
         </form>
+
+        <div th:if="${errorUsuario}"
+             class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+
+            <p th:text="${errorUsuario}"></p>
+
+        </div>
     </div>
 </div>
 
@@ -256,8 +271,7 @@
     }
 
     window.onload = () => mostrarTab("veterinario");
-</script>
-<script>
+
     function togglePassword() {
         const input = document.getElementById("contrasena");
         const openIcon = document.getElementById("iconEyeOpen");

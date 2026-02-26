@@ -58,7 +58,7 @@
                             Volver
                         </span>
                     </a>
-                    <a th:href="@{/veterinario/ServiciosPreview}" class="group relative flex items-center gap-3 px-3 py-1 hover:bg-primary">
+                    <a th:href="@{/tienda/veterinario/servicios/preview}" class="group relative flex items-center gap-3 px-3 py-1 hover:bg-primary">
                         <button class="text-sm hover:font-bold">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                  viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -151,7 +151,7 @@
         <div th:if="${esBusqueda}">
             <p class="text-gray-600 mb-2">Mostrando resultados para: "<b th:text="${consulta}"></b>"
                 <span th:if="${categoriaSeleccionada != null}">en la categoría seleccionada.</span>
-                <a th:href="@{/veterinario/TiendaPreview}"
+                <a th:href="@{/tienda/veterinario/tienda/preview}"
                    class="bg-primary text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
                     Ver Catálogo Completo
                 </a>
@@ -160,7 +160,7 @@
 
         <div class=" p-1 max-w-4xl mx-auto mb-3">
             <div class="sidebar-filtros">
-                <form th:action="@{/veterinario/TiendaPreview}" method="GET" class="flex flex-row gap-4 w-full items-end">
+                <form th:action="@{/tienda/veterinario/tienda/preview}" method="GET" class="flex flex-row gap-4 w-full items-end">
 
                     <button type="submit"
                             class="p-2 h-10 bg-primary text-white  hover:bg-secondary transition duration-150 flex items-center justify-center">
@@ -259,7 +259,7 @@
                     </label>
                 </div>
 
-                <div id="carritoItems" th:insert="veterinario/Fragmentos/CarritoItems :: items"></div>
+                <div id="carritoItems" th:insert="Fragmentos/CarritoItems :: items"></div>
 
             </div>
             <div class="flex justify-center mt-4">

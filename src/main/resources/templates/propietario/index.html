@@ -697,31 +697,6 @@
         abrirModal("modalAgregarMascota");
     }
 
-    /* ===============================
-       MODAL: HISTORIA CLÍNICA
-    =============================== */
-    function abrirModalHistoria(idMascota, nombreMascota) {
-        const titulo = document.getElementById("modalTitulo");
-        const contenido = document.getElementById("contenidoHistoria");
-
-        if (titulo) {
-            titulo.innerText = 'Historia Clínica de ' + nombreMascota;
-        }
-
-        abrirModal("modalHistoria");
-
-        fetch('/propietario/mascota/' + idMascota + '/historia')
-            .then(res => res.text())
-            .then(html => {
-                if (contenido) contenido.innerHTML = html;
-            })
-            .catch(() => {
-                if (contenido) {
-                    contenido.innerHTML =
-                        '<p class="text-red-500 text-center">Error al cargar la historia clínica</p>';
-                }
-            });
-    }
 
     /* ===============================
        CERRAR MODAL AL CLICK FUERA

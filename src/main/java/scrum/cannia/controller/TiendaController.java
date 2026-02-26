@@ -114,4 +114,82 @@ public class TiendaController {
 
         return "tienda/Servicios"; // 👈 vista del propietario
     }
+
+    // ============================================
+    //             TIENDA DE VETERINARIO
+    // ============================================
+
+    @GetMapping("/veterinario/tienda/preview")
+    public String tiendaPreview(
+            Authentication authentication,
+            Model model,
+            @RequestParam(value = "q", required = false) String q,
+            @RequestParam(value = "idCategoria", required = false) Long idCategoria
+    ) {
+
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
+
+        // Seguridad: solo veterinarios
+        if (usuario.getVeterinario() == null) {
+            return "redirect:/login";
+        }
+
+        VeterinariaModel veterinaria = usuario.getVeterinario().getVeterinaria();
+        model.addAttribute("veterinaria", veterinaria);
+
+        try {
+            boolean esBusqueda = (q != null && !q.trim().isEmpty()) || (idCategoria != null);
+            String queryParaWS = (q == null || q.trim().isEmpty()) ? null : q.trim();
+
+            List<ProductoBusquedaDto> resultados =
+                    productoService.obtenerProductosActivosFiltradosPorVeterinaria(
+                            veterinaria,
+                            queryParaWS,
+                            idCategoria
+                    );
+
+            model.addAttribute("productos", resultados);
+            model.addAttribute("categorias", categoriaService.listarTodas());
+            model.addAttribute("consulta", q);
+            model.addAttribute("categoriaSeleccionada", idCategoria);
+            model.addAttribute("esBusqueda", esBusqueda);
+
+        } catch (Exception e) {
+            model.addAttribute("errorBusqueda", "Error al procesar la solicitud de productos.");
+            model.addAttribute("productos", List.of());
+            model.addAttribute("direccion", "Vista previa (sin dirección)");
+        }
+
+        return "tienda/TiendaPreview";
+    }
+
+
+    // ============================================
+    //         SERVICIOS (VISTA VETERINARIO)
+    // ============================================
+
+    @GetMapping("/veterinario/servicios/preview")
+    public String serviciosPreview(
+            Authentication authentication,
+            Model model
+    ) {
+
+        UsuarioModel usuario = usuarioRepository
+                .findByUsuario(authentication.getName())
+                .orElseThrow();
+
+        // Seguridad: solo veterinarios
+        if (usuario.getVeterinario() == null) {
+            return "redirect:/login";
+        }
+
+        VeterinariaModel veterinaria = usuario.getVeterinario().getVeterinaria();
+
+        model.addAttribute("servicios", servicioService.listarActivosPorVeterinaria(veterinaria.getId()));
+        model.addAttribute("veterinaria", veterinaria);
+
+        return "tienda/ServiciosPreview";
+    }
 }

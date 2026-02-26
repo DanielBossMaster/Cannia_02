@@ -227,17 +227,26 @@
                                     <span th:classappend="${prod.estado} ? 'estado-dot on' : 'estado-dot off'"></span>
                                 </td>
                                 <td class="p-3 text-center">
-                                    <a th:href="@{/inventario/productos/editar/{id}(id=${prod.id})}">
-                                        <button class=" bg-blue-600 px-3 py-1  text-sm text-white hover:bg-blue-700 transition">
+                                        <button type="button"
+                                                class="bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 transition"
+                                                onclick="abrirModalEditarProducto(this)"
+
+                                                th:data-id="${prod.id}"
+                                                th:data-nombre="${prod.nombre}"
+                                                th:data-descripcion="${prod.descripcion}"
+                                                th:data-cantidad="${prod.cantidad}"
+                                                th:data-valor="${prod.valor}"
+                                                th:data-unidad="${prod.unidadMedida}"
+                                                th:data-estado="${prod.estado}">
                                             Editar
                                         </button>
-                                    </a>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
                         <!-- PAGINACIÓN -->
-                        <div class="flex justify-center items-center gap-2 mt-6">
+                        <div th:if="${!#lists.isEmpty(productos)}"
+                                class="flex justify-center items-center gap-2 mt-6">
 
                             <!-- Botón Anterior -->
                             <a th:if="${currentPageProductos > 0}"
@@ -307,17 +316,25 @@
                                 <!-- PUNTO VERDE / ROJO -->
                                 <span th:classappend="${serv.estado} ? 'estado-dot on' : 'estado-dot off'"></span>
                             </td>
-                            <td class="px-4 py-3 text-center">
-                                <a th:href="@{/inventario/servicios/editar/{id}(id=${serv.id})}"
-                                     class=" bg-blue-600 px-3 py-1  text-sm text-white hover:bg-blue-700 transition">
-                                        Editar
-                                </a>
+                            <td class="p-3 text-center">
+                                <button type="button"
+                                        class="bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 transition"
+                                        onclick="abrirModalEditarServicio(this)"
+
+                                        th:data-id="${serv.id}"
+                                        th:data-nombre="${serv.nombre}"
+                                        th:data-descripcion="${serv.descripcion}"
+                                        th:data-duracion="${serv.duracionEstimada}"
+                                        th:data-precio="${serv.precio}"
+                                        th:data-estado="${serv.estado}">
+                                    Editar
+                                </button>
                             </td>
-                        </tr>
                         </tbody>
                     </table>
                     <!-- PAGINACIÓN SERVICIOS -->
-                    <div class="flex justify-center gap-2 mt-6">
+                    <div th:if="${!#lists.isEmpty(servicios)}"
+                            class="flex justify-center gap-2 mt-6">
                         <!-- Anterior -->
                         <a th:if="${currentPageServicios > 0}"
                            th:href="@{/inventario/productos(pageServicios=${currentPageServicios - 1},vista='servicios')}"
@@ -347,7 +364,9 @@
         © 2025 App Cannia. Todos los derechos reservados.
     </footer>
 </div>
-</div>
+
+
+
 <!-- MODAL REGISTRAR producto -->
 <div id="modalProducto" class="hidden fixed inset-0 modal-overlay bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-lightSurface w-full  max-w-md  shadow-lg p-6 relative">
@@ -418,7 +437,9 @@
 <!-- MODAL REGISTRAR Servicio -->
 <div id="modalServicio" class="hidden fixed inset-0 modal-overlay bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-lightSurface w-full  max-w-md  shadow-lg p-6 relative">
-        <h3 class="text-lg font-bold text-center text-secondary mb-4">Agregar Nuevo Servicio</h3>
+        <h3 class="text-lg font-bold text-center text-secondary mb-4">
+            Agregar Nuevo Servicio
+        </h3>
 
         <form th:action="@{/inventario/servicios/guardar}"
               th:object="${servicio}" method="post"
@@ -470,6 +491,164 @@
         </button>
     </div>
 </div>
+</div>
+
+    <!-- ================= MODAL EDITAR PRODUCTO ================= -->
+    <div id="modalEditarProducto"
+         class="modal-overlay fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+
+        <div onclick="event.stopPropagation()"
+             class="bg-lightSurface w-full  max-w-md  shadow-lg p-6 relative">
+
+            <!-- CERRAR -->
+            <button onclick="cerrarModalEditarProducto()"
+                    class="absolute top-4 right-4 text-gray-500 hover:text-black text-2xl">
+                ✕
+            </button>
+
+            <h3 class="text-lg font-bold text-center text-secondary mb-4">
+                Editar Producto</h3>
+
+            <form th:action="@{/inventario/productos/actualizar}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  class="space-y-4">
+
+                <input type="hidden" name="id" id="editId">
+
+                <div class="block text-sm font-semibold text-softText">
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" id="editNombre"
+                           class="w-full border px-3 py-2" required>
+                </div>
+
+                <div class="block text-sm font-semibold text-softText">
+                    <label>Descripción</label>
+                    <input type="text" name="descripcion" id="editDescripcion"
+                           class="w-full border px-3 py-2" required>
+                </div>
+
+                <div class="block text-sm font-semibold text-softText">
+                    <label>Cantidad</label>
+                    <input type="number" name="cantidad" id="editCantidad"
+                           class="w-full border px-3 py-2" required>
+                </div>
+
+                <div class="block text-sm font-semibold text-softText">
+                    <label>Valor</label>
+                    <input type="number" name="valor" id="editValor"
+                           step="0.01"
+                           class="w-full border px-3 py-2" required>
+                </div >
+
+                <div class="block text-sm font-semibold text-softText" >
+                    <label>Unidad</label>
+                    <select name="unidadMedida" id="editUnidad"
+                            class="w-full border px-3 py-2">
+                        <option value="Kg">Kg</option>
+                        <option value="g">g</option>
+                        <option value="l">l</option>
+                        <option value="mL">mL</option>
+                    </select>
+                </div>
+
+                <div class="block text-sm font-semibold text-softText">
+                    <label>
+                        <input type="checkbox" name="estado" id="editEstado">
+                        Activo
+                    </label>
+                </div>
+
+                <div class="block text-sm font-semibold text-softText">
+                    <label>Cambiar foto</label>
+                    <input type="file" name="archivoImagen" class="w-full border px-3 py-2">
+                </div>
+
+                <div class="flex justify-center space-x-3 pt-4">
+                    <button type="button"
+                            onclick="cerrarModalEditarProducto()"
+                            class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                        Cancelar
+                    </button>
+
+                    <button type="submit"
+                            class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                        Guardar cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL EDITAR SERVICIO ================= -->
+    <div id="modalEditarServicio"
+         class="modal-overlay fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+
+        <div onclick="event.stopPropagation()"
+             class="bg-lightSurface w-full  max-w-md  shadow-lg p-6 relative">
+
+            <button onclick="cerrarModalEditarServicio()"
+                    class="absolute top-4 right-4 text-gray-500 hover:text-black text-2xl">
+                ✕
+            </button>
+
+            <h3 class="text-lg font-bold text-center text-secondary mb-4">
+                Editar Servicio
+            </h3>
+
+            <form th:action="@{/inventario/servicios/actualizar}"
+                  method="post"
+                  class="space-y-4">
+
+                <input type="hidden" name="id" id="editServicioId">
+
+                <div class="block text-sm font-semibold text-softText">
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" id="editServicioNombre"
+                           class="w-full border px-3 py-2" required>
+                </div>
+
+                <div class="block text-sm font-semibold text-softText">
+                    <label>Descripción</label>
+                    <input type="text" name="descripcion" id="editServicioDescripcion"
+                           class="w-full border px-3 py-2" required>
+                </div>
+
+                <div>
+                    <label>Duración (min)</label>
+                    <input type="number" name="duracionEstimada" id="editServicioDuracion"
+                           class="w-full border px-3 py-2" required>
+                </div>
+
+                <div class="block text-sm font-semibold text-softText">
+                    <label>Precio</label>
+                    <input type="number" name="precio" id="editServicioPrecio"
+                           step="0.01"
+                           class="w-full border px-3 py-2" required>
+                </div>
+
+                <div class="block text-sm font-semibold text-softText">
+                    <label>
+                        <input type="checkbox" name="estado" id="editServicioEstado">
+                        Activo
+                    </label>
+                </div>
+
+                <div class="flex justify-center gap-3 pt-4">
+                    <button type="button"
+                            onclick="cerrarModalEditarServicio()"
+                            class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                        Cancelar
+                    </button>
+
+                    <button type="submit"
+                            class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                        Guardar cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 <script th:inline="javascript">
 
@@ -533,7 +712,58 @@
         mostrarVista(vista);
     });
 
-</script>
+    //=====================================
+    //   MODALES DE EDICION DE  PRODUCTOS Y SERVICIOS
+    //=====================================
 
+
+    function abrirModalEditarProducto(btn) {
+
+            document.getElementById('editId').value        = btn.dataset.id;
+            document.getElementById('editNombre').value    = btn.dataset.nombre;
+            document.getElementById('editDescripcion').value = btn.dataset.descripcion;
+            document.getElementById('editCantidad').value  = btn.dataset.cantidad;
+            document.getElementById('editValor').value     = btn.dataset.valor;
+            document.getElementById('editUnidad').value    = btn.dataset.unidad;
+            document.getElementById('editEstado').checked  = (btn.dataset.estado === "true");
+
+            const modal = document.getElementById('modalEditarProducto');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function cerrarModalEditarProducto() {
+            const modal = document.getElementById('modalEditarProducto');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function abrirModalEditarServicio(btn) {
+
+            document.getElementById('editServicioId').value        = btn.dataset.id;
+            document.getElementById('editServicioNombre').value    = btn.dataset.nombre;
+            document.getElementById('editServicioDescripcion').value = btn.dataset.descripcion;
+            document.getElementById('editServicioDuracion').value  = btn.dataset.duracion;
+            document.getElementById('editServicioPrecio').value    = btn.dataset.precio;
+            document.getElementById('editServicioEstado').checked  = (btn.dataset.estado === "true");
+
+            const modal = document.getElementById('modalEditarServicio');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function cerrarModalEditarServicio() {
+            const modal = document.getElementById('modalEditarServicio');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            });
+        });
+    </script>
 </body>
 </html>

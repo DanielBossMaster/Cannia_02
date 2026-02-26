@@ -135,45 +135,13 @@ public class VeterinarioController {
     }
 
     // ============================================
-    //      FORMULARIO DE ACTUALIZACIÓN
-    // ============================================
-    @GetMapping("/actualizar/{id}")
-    public String actualizarform(@PathVariable Long id, Model model) {
-
-        var propietarioEncontrado = propietarioRepository.findById(id).orElseThrow();
-        model.addAttribute("propietario", propietarioEncontrado);
-
-        return "veterinario/EditarPropietario";
-    }
-
-    // ============================================
     //    GUARDAR EDICIÓN DE PROPIETARIO
     // ============================================
 
-    @PostMapping("/editar/{id}")
-    public String actualizar(@PathVariable Long id,
-                             @ModelAttribute PropietarioModel cambios) {
-
-        PropietarioModel existente = propietarioRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Propietario no encontrado"));
-
-        // Actualizar solo campos llenos
-        if (cambios.getNombrePro() != null && !cambios.getNombrePro().isBlank())
-            existente.setNombrePro(cambios.getNombrePro());
-
-        if (cambios.getApellidoPro() != null && !cambios.getApellidoPro().isBlank())
-            existente.setApellidoPro(cambios.getApellidoPro());
-
-        if (cambios.getDireccionPro() != null && !cambios.getDireccionPro().isBlank())
-            existente.setDireccionPro(cambios.getDireccionPro());
-
-        if (cambios.getTelefonoPro() != null && !cambios.getTelefonoPro().isBlank())
-            existente.setTelefonoPro(cambios.getTelefonoPro());
-
-        if (cambios.getCorreoPro() != null && !cambios.getCorreoPro().isBlank())
-            existente.setCorreoPro(cambios.getCorreoPro());
-
-        propietarioRepository.save(existente);
+    @PostMapping("/editar")
+    public String actualizar(@RequestParam Long id,
+                             @ModelAttribute PropietarioModel propietario) {
+        propietarioService.actualizarPropietario(id,propietario);
         return "redirect:/veterinario/index";
     }
     // ============================================
@@ -325,50 +293,7 @@ public class VeterinarioController {
     }
 
 
-    // ============================================
-    //             TIENDA DE VETERINARIO
-    // ============================================
 
-    @GetMapping("/TiendaPreview")
-    public String tiendaPreview(
-            Authentication authentication,
-            Model model,
-            @RequestParam(value = "q", required = false) String q,
-            @RequestParam(value = "idCategoria", required = false) Long idCategoria
-    ) {
-
-        UsuarioModel usuario = usuarioRepository
-                .findByUsuario(authentication.getName())
-                .orElseThrow();
-
-        // Seguridad: solo veterinarios
-        if (usuario.getVeterinario() == null) {
-            return "redirect:/login";
-        }
-
-        VeterinariaModel veterinaria = usuario.getVeterinario().getVeterinaria();
-        model.addAttribute("veterinaria", veterinaria);
-
-        try {
-            boolean esBusqueda = (q != null && !q.trim().isEmpty()) || (idCategoria != null);
-            String queryParaWS = (q == null || q.trim().isEmpty()) ? null : q.trim();
-
-            List<ProductoBusquedaDto> resultados =
-                    productoService.obtenerProductosActivosFiltrados(queryParaWS, idCategoria);
-
-            model.addAttribute("productos", resultados);
-            model.addAttribute("categorias", categoriaService.listarTodas());
-            model.addAttribute("consulta", q);
-            model.addAttribute("categoriaSeleccionada", idCategoria);
-            model.addAttribute("esBusqueda", esBusqueda);
-
-        } catch (Exception e) {
-            model.addAttribute("errorBusqueda", "Error al procesar la solicitud de productos.");
-            model.addAttribute("productos", List.of());
-        }
-
-        return "veterinario/TiendaPreview";
-    }
 
     // ============================================
     //                 VENTAS
@@ -537,71 +462,6 @@ public class VeterinarioController {
         categoriaService.eliminar(id);
         return "redirect:/veterinario/GestionVentas";
     }
-
-    // ============================================
-    //         SERVICIOS (VISTA VETERINARIO)
-    // ============================================
-
-    @GetMapping("/ServiciosPreview")
-    public String serviciosPreview(
-            Authentication authentication,
-            Model model
-    ) {
-
-        UsuarioModel usuario = usuarioRepository
-                .findByUsuario(authentication.getName())
-                .orElseThrow();
-
-        // Seguridad: solo veterinarios
-        if (usuario.getVeterinario() == null) {
-            return "redirect:/login";
-        }
-
-        VeterinariaModel veterinaria = usuario.getVeterinario().getVeterinaria();
-
-        model.addAttribute("servicios", servicioService.listarActivosPorVeterinaria(veterinaria.getId()));
-        model.addAttribute("veterinaria", veterinaria);
-
-        return "veterinario/ServiciosPreview";
-    }
-
-
-    // ============================================
-    //        SERVICIOS (VISTA PROPIETARIO)
-    // ============================================
-
-//    @GetMapping("/Servicios")
-//    public String serviciosPropietario(
-//            Authentication authentication,
-//            Model model
-//    ) {
-//
-//        UsuarioModel usuario = usuarioRepository
-//                .findByUsuario(authentication.getName())
-//                .orElseThrow();
-//
-//        // Seguridad: solo propietarios
-//        if (usuario.getPropietario() == null) {
-//            return "redirect:/login";
-//        }
-//
-//        PropietarioModel propietario = usuario.getPropietario();
-////        VeterinariaModel veterinaria = propietario.getVeterinaria();
-//
-//        if (veterinaria == null) {
-//            return "redirect:/";
-//        }
-//
-//        List<ServicioModel> servicios =
-//                servicioService.listarActivosPorVeterinaria(veterinaria.getId());
-//
-//        model.addAttribute("servicios", servicios);
-//        model.addAttribute("veterinaria", veterinaria);
-//        model.addAttribute("direccion", propietario.getDireccionPro());
-//
-//        return "veterinario/Servicios"; // 👈 vista SOLO para propietarios
-//
-//    }
 
 @PostMapping("/generarCodigo/{id}")
 public String generarCodigo(

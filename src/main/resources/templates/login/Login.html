@@ -54,6 +54,15 @@
                 <div class="flex flex-col items-center space-y-6">
                     <img src="/img/logo.png" alt="logo" style="width:100px;">
                     <h1 class="text-3xl font-bold text-primary">Iniciar Sesión</h1>
+
+                    <!-- MENSAJE DE ÉXITO -->
+                    <div th:if="${mensaje}"
+                         class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+
+                        <p th:text="${mensaje}"></p>
+
+                    </div>
+
                     <form method="post" th:action="@{/login}"
                           class="w-full space-y-4">
                         <div>

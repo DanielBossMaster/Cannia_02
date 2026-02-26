@@ -60,30 +60,6 @@ public class ServicioController {
         return "redirect:/inventario/productos";
     }
 
-    // ============================================
-    //           EDITAR SERVICIO
-    // ============================================
-
-    @GetMapping("/editar/{id}")
-    public String editarServicio(
-            @PathVariable Integer id,
-            Authentication authentication,
-            Model model
-    ) {
-
-        UsuarioModel usuario = usuarioRepository
-                .findByUsuario(authentication.getName())
-                .orElseThrow();
-
-        Integer veterinariaId =
-                usuario.getVeterinario().getVeterinaria().getId();
-
-        ServicioModel servicio =
-                servicioService.obtenerServicioVeterinaria(id, veterinariaId);
-
-        model.addAttribute("servicio", servicio);
-        return "Inventario/EditarServicio";
-    }
 
     @PostMapping("/actualizar")
     public String actualizarServicio(
@@ -100,6 +76,6 @@ public class ServicioController {
 
         servicioService.actualizarServicioVeterinaria(servicio, veterinariaId);
 
-        return "redirect:/inventario/servicios";
+        return "redirect:/inventario/productos";
     }
 }

@@ -93,4 +93,36 @@ public class PropietarioService {
         propietario.setCuentaCreada(true);
         propietarioRepository.save(propietario);
     }
+
+    // ============================================
+    // ACTUALIZAR PROPIETARIO
+    // ============================================
+    @Transactional
+    public void actualizarPropietario(Long id, PropietarioModel cambios) {
+
+        PropietarioModel existente = propietarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Propietario no encontrado"));
+
+        if (cambios.getNombrePro() != null && !cambios.getNombrePro().isBlank()) {
+            existente.setNombrePro(cambios.getNombrePro());
+        }
+
+        if (cambios.getApellidoPro() != null && !cambios.getApellidoPro().isBlank()) {
+            existente.setApellidoPro(cambios.getApellidoPro());
+        }
+
+        if (cambios.getDireccionPro() != null && !cambios.getDireccionPro().isBlank()) {
+            existente.setDireccionPro(cambios.getDireccionPro());
+        }
+
+        if (cambios.getTelefonoPro() != null && !cambios.getTelefonoPro().isBlank()) {
+            existente.setTelefonoPro(cambios.getTelefonoPro());
+        }
+
+        if (cambios.getCorreoPro() != null && !cambios.getCorreoPro().isBlank()) {
+            existente.setCorreoPro(cambios.getCorreoPro());
+        }
+
+        propietarioRepository.save(existente);
+    }
 }

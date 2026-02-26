@@ -228,60 +228,60 @@
             </main>
             <!-- Footer -->
             <footer class=" text-center text-sm text-primary py-3">
-                © 2025 App Cannia. Todos los derechos reservados.
+                © 2025 Cannia Todos los derechos reservados.
             </footer>
         </div>
     </div>
 </div>
-    <script>
-        //SIDEBAR
-        function toggleSidebar() {
-            const sidebar = document.getElementById("sidebar");
-            const texts = document.querySelectorAll(".sidebar-text");
+<!--       <script>
+   //SIDEBAR
+function toggleSidebar() {
+       const sidebar = document.getElementById("sidebar");
+       const texts = document.querySelectorAll(".sidebar-text");
 
-            sidebar.classList.toggle("w-64");
+       sidebar.classList.toggle("w-64");
 
-            texts.forEach(t => {
-                if (sidebar.classList.contains("w-64")) {
-                    t.classList.remove("hidden");
-                } else {
-                    t.classList.add("hidden");
-                }
-            });
-        }
+       texts.forEach(t => {
+           if (sidebar.classList.contains("w-64")) {
+               t.classList.remove("hidden");
+           } else {
+               t.classList.add("hidden");
+           }
+       });
+   }
 
-        function toggleModal(id) {
-            const modal = document.getElementById(id);
-            modal.classList.toggle("hidden");
-        }
+   function toggleModal(id) {
+       const modal = document.getElementById(id);
+       modal.classList.toggle("hidden");
+   }
 
-        // Vincular botones del dashboard
-        document.querySelectorAll("button").forEach(btn => {
-            if (btn.textContent.includes("Agregar Propietario")) {
-                btn.addEventListener("click", () => toggleModal('modalPropietario'));
-            }
-        });
-        const modalMascota = document.getElementById('modalMascota');
-        const inputPropietario = document.getElementById('propietarioId');
+   // Vincular botones del dashboard
+   document.querySelectorAll("button").forEach(btn => {
+       if (btn.textContent.includes("Agregar Propietario")) {
+           btn.addEventListener("click", () => toggleModal('modalPropietario'));
+       }
+   });
+   const modalMascota = document.getElementById('modalMascota');
+   const inputPropietario = document.getElementById('propietarioId');
 
-        function abrirModalMascota(idPropietario) {
-            // Asigna el ID del propietario al input oculto
-            inputPropietario.value = idPropietario;
-            // Muestra el modal
-            modalMascota.classList.remove('hidden');
-        }
-        function cerrarModalMascota() {
-            modalMascota.classList.add('hidden');
-        }
+   function abrirModalMascota(idPropietario) {
+       // Asigna el ID del propietario al input oculto
+       inputPropietario.value = idPropietario;
+       // Muestra el modal
+       modalMascota.classList.remove('hidden');
+   }
+   function cerrarModalMascota() {
+       modalMascota.classList.add('hidden');
+   }
 
-        // Opcional: cerrar modal al hacer clic fuera del contenido
-        modalMascota.addEventListener('click', (e) => {
-            if (e.target === modalMascota) cerrarModalMascota();
-        });
+   // Opcional: cerrar modal al hacer clic fuera del contenido
+   modalMascota.addEventListener('click', (e) => {
+       if (e.target === modalMascota) cerrarModalMascota();
+   });
 
-        // Ya no es necesario que el listener detecte todos los botones
-        // porque ahora cada botón tiene su propio onclick con el id correcto
+   // Ya no es necesario que el listener detecte todos los botones
+   // porque ahora cada botón tiene su propio onclick con el id correcto
 
-    </script>
+</script> -->
 </body>
 </html>

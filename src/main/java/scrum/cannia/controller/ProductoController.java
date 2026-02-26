@@ -164,7 +164,8 @@ public class ProductoController {
         }
 
         model.addAttribute("producto", producto);
-        return "Inventario/editarProducto";
+
+        return "redirect:/inventario/productos";
     }
 
     // ============================================

@@ -62,7 +62,7 @@
 
                 <!-- Tienda -->
                 <nav class="flex flex-col gap-1  mt-4">
-                    <a th:href="@{/veterinario/TiendaPreview}"
+                    <a th:href="@{/tienda/veterinario/tienda/preview}"
                        class=" group relative flex items-center gap-3 px-3 py-1 hover:bg-primary">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -241,7 +241,8 @@
                             </tbody>
                         </table>
                         <!-- PAGINACIÓN PRODUCTOS -->
-                        <div class="flex justify-center gap-2 mt-6">
+                        <div th:if="${!#lists.isEmpty(productos)}"
+                                class="flex justify-center gap-2 mt-6">
                             <a th:if="${currentPageProductos > 0}"
                                th:href="@{/veterinario/GestionVentas(pageProductos=${currentPageProductos - 1})}"
                                class="px-3 py-1 bg-gray-200  hover:bg-gray-300">
@@ -296,7 +297,8 @@
                                 </tbody>
                             </table>
                             <!-- PAGINACIÓN SERVICIOS -->
-                            <div  class="flex justify-center gap-2 mt-6">
+                            <div th:if="${!#lists.isEmpty(servicios)}"
+                                    class="flex justify-center gap-2 mt-6">
                                 <!-- Anterior -->
                                 <a th:if="${currentPageServicios > 0}"
                                    th:href="@{/veterinario/GestionVentas(pageServicios=${currentPageServicios - 1},vista='servicios')}"
@@ -345,7 +347,13 @@
         </button>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm border-collapse">
+            <h1 th:if="${#lists.isEmpty(categorias)}"
+                class="text-center text-2xl text-gray-500 py-8">
+                Aun no has registrado ninguna categoria.
+            </h1>
+
+            <table th:if="${!#lists.isEmpty(categorias)}"
+                    class="w-full text-left text-sm border-collapse">
                 <thead>
                 <tr class="bg-gray-100 text-softText uppercase text-xs">
                     <th class="border p-2">ID</th>

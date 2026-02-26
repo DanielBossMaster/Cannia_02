@@ -182,8 +182,18 @@
                                     <td th:text="${prop.telefonoPro}" class="px-4 py-3"></td>
                                     <td class="px-1 py-0.5 overflow-visible align-middle">
                                         <div class="flex items-center justify-center gap-3">
-                                            <a th:href="@{/veterinario/actualizar/{id}(id=${prop.id})}">
-                                                <button class=" relative group py-1 transform hover:scale-105 text-sm text-primary transition">
+                                            <button type="button"
+                                                    class=" relative group py-1 transform hover:scale-105 text-sm text-primary transition"
+                                                    onclick="abrirModalEditarPropietario(this)"
+
+                                                    th:data-id="${prop.id}"
+                                                    th:data-numdoc="${prop.numDoc}"
+                                                    th:data-nombre="${prop.nombrePro}"
+                                                    th:data-apellido="${prop.apellidoPro}"
+                                                    th:data-direccion="${prop.direccionPro}"
+                                                    th:data-telefono="${prop.telefonoPro}"
+                                                    th:data-correo="${prop.correoPro}">
+
                                                     <svg xmlns="http://www.w3.org/2000/svg"
                                                          width="24"
                                                          height="24"
@@ -200,8 +210,8 @@
                                                     <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
                                                         Editar
                                                     </span>
-                                                </button>
-                                            </a>
+
+                                            </button>
                                             <form method="post"
                                                   th:action="@{/veterinario/borrar/{id}(id=${prop.id})}">
                                                 <button onclick="return confirm('¿Desea Eliminar?')"
@@ -430,6 +440,81 @@
         </div>
     </div>
 </div>
+
+<div id="modalEditarPropietario"
+     class="modal-overlay fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+
+    <div class="bg-lightSurface w-full max-w-md shadow-lg p-6 relative"
+         onclick="event.stopPropagation()">
+
+        <h3 class="text-lg font-bold text-center text-secondary mb-4">
+            Editar Propietario
+        </h3>
+
+        <form th:action="@{/veterinario/editar}"
+              method="post"
+              class="space-y-4">
+
+            <input type="hidden" name="id" id="editPropietarioId">
+
+            <div>
+                <label class="block text-sm font-semibold">Documento</label>
+                <input type="text" id="editNumDoc" name="numDoc"
+                       class="w-full border px-3 py-2"
+                       readonly
+                       required>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold">Nombre</label>
+                <input type="text" id="editNombre" name="nombrePro"
+                       class="w-full border px-3 py-2" required>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold">Apellido</label>
+                <input type="text" id="editApellido" name="apellidoPro"
+                       class="w-full border px-3 py-2" required>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold">Dirección</label>
+                <input type="text" id="editDireccion" name="direccionPro"
+                       class="w-full border px-3 py-2" required>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold">Teléfono</label>
+                <input type="text" id="editTelefono" name="telefonoPro"
+                       class="w-full border px-3 py-2" required>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold">Correo</label>
+                <input type="email" id="editCorreo" name="correoPro"
+                       class="w-full border px-3 py-2" required>
+            </div>
+
+            <div class="flex justify-center space-x-3 pt-4">
+                <button type="button"
+                        onclick="cerrarModalEditarPropietario()"
+                        class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                Cancelar
+                </button>
+
+                <button type="submit"
+                        class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                Guardar
+                </button>
+            </div>
+        </form>
+
+        <button onclick="cerrarModalEditarPropietario()"
+                class="absolute top-3 right-3 text-softText hover:text-primary">
+            <span class="material-icons">close</span>
+        </button>
+    </div>
+</div>
 <script>
 //SIDEBAR
 function toggleSidebar() {
@@ -475,6 +560,30 @@ function toggleSidebar() {
     modalMascota.addEventListener('click', (e) => {
         if (e.target === modalMascota) cerrarModalMascota();
     });
+
+function abrirModalEditarPropietario(btn) {
+    document.getElementById('editPropietarioId').value = btn.dataset.id;
+
+    document.getElementById('editNumDoc').value    = btn.dataset.numdoc;
+    document.getElementById('editNombre').value    = btn.dataset.nombre;
+    document.getElementById('editApellido').value  = btn.dataset.apellido;
+    document.getElementById('editDireccion').value = btn.dataset.direccion;
+    document.getElementById('editTelefono').value  = btn.dataset.telefono;
+    document.getElementById('editCorreo').value    = btn.dataset.correo;
+
+    document.getElementById('modalEditarPropietario').classList.remove('hidden');
+    document.getElementById('modalEditarPropietario').classList.add('flex');
+}
+
+    function cerrarModalEditarPropietario() {
+        const modal = document.getElementById('modalEditarPropietario');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
+    // Cerrar al hacer click fuera
+    document.getElementById('modalEditarPropietario')
+        .addEventListener('click', () => cerrarModalEditarPropietario());
 </script>
 </body>
 </html>

@@ -41,7 +41,7 @@ public class RegistroController {
             redirectAttributes.addFlashAttribute("mensaje",
                     "Registro exitoso. Ahora puedes iniciar sesión.");
 
-            return "login/login";
+            return "redirect:/login";
 
         } catch (IllegalArgumentException e) {
 
@@ -100,7 +100,7 @@ public class RegistroController {
         }
     }
 
-    @GetMapping("/registroPropietario")
+    @GetMapping("/propietario")
     public String mostrarRegistroPropietario(Model model) {
 
 
