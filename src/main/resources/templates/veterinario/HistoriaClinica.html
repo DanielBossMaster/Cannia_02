@@ -9,7 +9,7 @@
 
 <header>
     <div class="logo">
-        <img src="/img/HistoriaClinica.png" alt="logo">
+        <img src="/img/logo.png" alt="logo">
     </div>
     <h1>Mascotas</h1>
     <div class="Barra" style="position: relative;">
@@ -89,14 +89,17 @@
             <label>Lote:</label>
             <input type="text" name="lote" required>
 
+            <label>Nombre:</label>
+            <input type="text" name="nombre" required>
+
             <label>Fecha Aplicación:</label>
-            <input type="date" name="fechaAplicacion" required>
+            <input type="date" name="fechaAplicacion" th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" required>
 
             <label>Fecha Refuerzo:</label>
-            <input type="date" name="fechaRefuerzo">
+            <input type="date" name="fechaRefuerzo" th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
 
             <label>Fecha Vencimiento:</label>
-            <input type="date" name="fechaVencimiento">
+            <input type="date" name="fechaVencimiento" th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" >
 
             <label>Laboratorio:</label>
             <input type="text" name="laboratorio">
@@ -642,6 +645,10 @@
                         <span style="background: ${badgeColor}; color: white; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: bold;">
                             Lote: ${lote}
                         </span>
+
+                        <span style="background: ${badgeColor}; color: white; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: bold;">
+                            Nombre: ${nombre}
+                        </span>
                         <span style="color: #7f8c8d; font-size: 14px;">${fechaAplicacion}</span>
                     </div>
                 </div>
@@ -759,6 +766,7 @@
 
                 const formData = new FormData(this);
                 const lote = this.querySelector('[name="lote"]').value;
+                const nombre = this.querySelector('[name="nombre"]').value;
                 const fechaAplicacion = this.querySelector('[name="fechaAplicacion"]').value;
 
                 if (!lote || !fechaAplicacion) {

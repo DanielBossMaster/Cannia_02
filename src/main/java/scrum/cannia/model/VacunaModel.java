@@ -18,6 +18,9 @@ public class VacunaModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name ="Nombre", nullable = false)
+    private String nombre;
+
     @Column(name = "Lote")
     private String Lote;
 
