@@ -132,14 +132,25 @@
                     </a>
                 </div>
             </header>
+
+            <!-- Mensaje de error -->
+            <div th:if="${error}"
+                 class=" mt-4 max-w-4xl mx-auto bg-yellow-100 border border-yellow-400 text-yellow-700 p-4 text-center rounded">
+                <p th:text="${error}"></p>
+            </div>
+
+
             <div class="text-center mx-auto p-6">
                 <section class="w-full px-6 py-1">
 
                     <div class="max-w-7xl mx-auto mb-3">
-                        <h1 class="text-5xl font-bold text-gray-700">
-                            Servicios Veterinarios
-                            <span th:text="${veterinaria.nombre}" ></span>
-                        </h1>
+
+                        <div th:if="${veterinaria != null}">
+                            <h1 class="text-5xl font-bold text-gray-700">
+                                Veterinaria <span th:text="${veterinaria.nombre}"></span>
+                            </h1>
+                        </div>
+
                         <p class="text-sm text-gray-500">
                             Selecciona un servicio y agenda una cita
                         </p>

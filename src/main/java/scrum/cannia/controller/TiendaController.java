@@ -51,7 +51,9 @@ public class TiendaController {
 
         if (veterinaria == null) {
             model.addAttribute("error",
-                    "No tienes una veterinaria asignada.");
+                    "La veterinaria aún no ha sido configurada por el veterinario.");
+            model.addAttribute("productos", List.of());
+            model.addAttribute("categorias", List.of());
             return "tienda/Tienda";
         }
 
@@ -93,15 +95,17 @@ public class TiendaController {
 
         PropietarioModel propietario = usuario.getPropietario();
 
-        // 🔑 RELACIÓN CORRECTA
         VeterinariaModel veterinaria =
                 propietario.getVeterinario().getVeterinaria();
 
         if (veterinaria == null) {
             model.addAttribute("error",
-                    "No tienes una veterinaria asignada.");
+                    "La veterinaria aún no ha sido configurada por el veterinario.");
+            model.addAttribute("productos", List.of());
+            model.addAttribute("categorias", List.of());
             return "tienda/Servicios";
         }
+
 
         List<ServicioModel> servicios =
                 servicioService.listarActivosPorVeterinaria(

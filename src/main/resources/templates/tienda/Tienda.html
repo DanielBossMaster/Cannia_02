@@ -120,13 +120,25 @@
                     </a>
                 </div>
             </header>
+
+            <!-- Mensaje de error -->
+            <div th:if="${error}"
+                 class=" mt-4 max-w-4xl mx-auto bg-yellow-100 border border-yellow-400 text-yellow-700 p-4 text-center rounded">
+                <p th:text="${error}"></p>
+            </div>
+
+
             <!-- Contenedor principal -->
             <div class="text-center mx-auto p-6">
                 <div th:unless="${esBusqueda}">
                     <div class="max-w-7xl mx-auto mb-3 ">
-                        <h1 class="text-5xl font-bold text-gray-700">
-                            Veterinaria <span th:text="${veterinaria.nombre}" ></span>
-                        </h1>
+
+                        <div th:if="${veterinaria != null}">
+                            <h1 class="text-5xl font-bold text-gray-700">
+                                Veterinaria <span th:text="${veterinaria.nombre}"></span>
+                            </h1>
+                        </div>
+
                         <p class="text-sm text-gray-600">
                             Aqui podras encontrar un amplio catalogo de los productos de tu veterinaria de confianza y
                             tenerlos siempre a la mano y disponibles.
