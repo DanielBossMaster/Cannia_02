@@ -1,5 +1,6 @@
 package scrum.cannia.service;
 
+import org.springframework.stereotype.Service;
 import scrum.cannia.Dto.RecordatorioVacunaDto;
 import scrum.cannia.model.MascotaModel;
 import scrum.cannia.model.PropietarioModel;
@@ -8,35 +9,58 @@ import scrum.cannia.model.VacunaModel;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
+@Service
 public class VacunaService {
 
-    public List<RecordatorioVacunaDto> obtenerRecordatoriosVacunas(PropietarioModel propietario) {
+    private static final int DIAS_AVISO = 1000;
 
-        LocalDate hoy = LocalDate.now();
+    public List<RecordatorioVacunaDto> obtenerRecordatoriosVacunas(
+            PropietarioModel propietario
+    ) {
+
         List<RecordatorioVacunaDto> recordatorios = new ArrayList<>();
 
-        for (MascotaModel m : propietario.getMascotas()) {
-            for (VacunaModel v : m.getVacunas()) {
+        if (propietario == null || propietario.getMascotas() == null) {
+            return recordatorios;
+        }
 
-                if (v.getFechaRefuerzo() == null) continue;
+        LocalDate hoy = LocalDate.now();
 
-                long dias = ChronoUnit.DAYS.between(hoy, v.getFechaRefuerzo());
+        for (MascotaModel mascota : propietario.getMascotas()) {
 
-                // mostrar si vence en los próximos 30 días o ya venció
-                if (dias <= 30) {
+            if (mascota.getVacunas() == null) continue;
+
+            for (VacunaModel vacuna : mascota.getVacunas()) {
+
+                if (vacuna.getFechaRefuerzo() == null) continue;
+
+                long diasRestantes =
+                        ChronoUnit.DAYS.between(hoy, vacuna.getFechaRefuerzo());
+
+                // 👉 mostrar solo vencidas o próximas
+                if (diasRestantes <= DIAS_AVISO) {
+
                     RecordatorioVacunaDto dto = new RecordatorioVacunaDto();
-                    dto.setNombreMascota(m.getNomMascota());
-                    dto.setNombreVacuna(v.getNombre());
-                    dto.setFechaRefuerzo(v.getFechaRefuerzo());
-                    dto.setDiasRestantes(dias);
-                    dto.setVencida(dias < 0);
+                    dto.setNombreMascota(mascota.getNomMascota());
+                    dto.setNombreVacuna(vacuna.getNombre());
+                    dto.setFechaRefuerzo(vacuna.getFechaRefuerzo());
+                    dto.setDiasRestantes(diasRestantes);
+                    dto.setVencida(diasRestantes < 0);
 
                     recordatorios.add(dto);
                 }
             }
         }
+
+        // 🔥 Ordenar: primero vencidas, luego las más próximas
+        recordatorios.sort(
+                Comparator
+                        .comparing(RecordatorioVacunaDto::isVencida).reversed()
+                        .thenComparing(RecordatorioVacunaDto::getFechaRefuerzo)
+        );
 
         return recordatorios;
     }

@@ -5,10 +5,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import scrum.cannia.Dto.RecordatorioVacunaDto;
 import scrum.cannia.model.*;
 import scrum.cannia.repository.HistoriaClinicaRepository;
 import scrum.cannia.repository.UsuarioRepository;
 import scrum.cannia.service.MascotaService;
+import scrum.cannia.service.VacunaService;
 
 import java.util.List;
 
@@ -17,6 +19,7 @@ import java.util.List;
 @RequestMapping("/propietario")
 public class PropietarioController {
 
+    private final VacunaService vacunaService;
     private final UsuarioRepository usuarioRepository;
     private final MascotaService mascotaService;
     private final HistoriaClinicaRepository historiaRepository;
@@ -37,6 +40,11 @@ public class PropietarioController {
 
         List<MascotaModel> mascotas =
                 mascotaService.listarConHistoriaYVacunas(propietario);
+
+        List<RecordatorioVacunaDto> recordatoriosVacunas =
+                vacunaService.obtenerRecordatoriosVacunas(propietario);
+
+        model.addAttribute("recordatoriosVacunas", recordatoriosVacunas);
 
         model.addAttribute("mascotas", mascotas);
         model.addAttribute("mascota", new MascotaModel());

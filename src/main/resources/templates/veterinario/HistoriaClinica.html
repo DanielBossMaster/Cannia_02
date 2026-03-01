@@ -628,11 +628,14 @@
         vacunas.sort((a, b) => new Date(b.fechaAplicacion || 0) - new Date(a.fechaAplicacion || 0));
 
         vacunas.forEach((vacuna, index) => {
+
+
             const fechaAplicacion = formatNiceDate(vacuna.fechaAplicacion);
             const fechaRefuerzo = vacuna.fechaRefuerzo ? formatNiceDate(vacuna.fechaRefuerzo) : 'No programado';
             const fechaVencimiento = vacuna.fechaVencimiento ? formatNiceDate(vacuna.fechaVencimiento) : 'No especificado';
             const lote = vacuna.lote || 'No registrado';
             const laboratorio = vacuna.laboratorio || 'No especificado';
+
 
             const esVencida = vacuna.fechaVencimiento && new Date(vacuna.fechaVencimiento) < new Date();
             const badgeColor = esVencida ? '#f44336' : '#4CAF50';
@@ -646,19 +649,16 @@
                             Lote: ${lote}
                         </span>
 
-                        <span style="background: ${badgeColor}; color: white; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: bold;">
-                            Nombre: ${nombre}
-                        </span>
                         <span style="color: #7f8c8d; font-size: 14px;">${fechaAplicacion}</span>
                     </div>
                 </div>
 
                 <div style="display: grid; gap: 12px;">
+
                     <div>
                         <div style="font-weight: 600; color: #555; margin-bottom: 4px; font-size: 14px;">Laboratorio</div>
                         <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; font-size: 14px; line-height: 1.5;">${laboratorio}</div>
                     </div>
-
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <div>
                             <div style="font-weight: 600; color: #555; margin-bottom: 4px; font-size: 14px;">Fecha Refuerzo</div>

@@ -12,6 +12,6 @@ public interface VacunaRepository extends JpaRepository<VacunaModel, Long> {
     List<VacunaModel> findByMascotaId(Long mascotaId);
 
     // ★★★ VERSIÓN ALTERNATIVA CON @Query ★★★
-    @Query("SELECT v FROM VacunaModel v WHERE v.mascota.id = :mascotaId ORDER BY v.FechaAplicacion DESC")
+    @Query("SELECT v FROM VacunaModel v WHERE v.mascota.id = :mascotaId ORDER BY v.fechaAplicacion DESC")
     List<VacunaModel> findVacunasByMascotaIdOrderByFechaAplicacionDesc(@Param("mascotaId") Long mascotaId);
 }

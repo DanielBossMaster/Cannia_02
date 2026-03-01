@@ -25,13 +25,13 @@ public class VacunaModel {
     private String Lote;
 
     @Column(name = "Fecha_aplicacion", nullable = false)
-    private LocalDate FechaAplicacion;
+    private LocalDate fechaAplicacion;
 
     @Column(name = "Fecha_refuerzo", nullable = false)
-    private LocalDate FechaRefuerzo;
+    private LocalDate fechaRefuerzo;
 
     @Column(name = "Fecha_vencimiento", nullable = false)
-    private LocalDate FechaVencimiento;
+    private LocalDate fechaVencimiento;
 
     @Column(name = "Laboratorio", length = 500, nullable = false)
     private String laboratorio;
