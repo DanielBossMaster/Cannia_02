@@ -79,6 +79,57 @@
                 </span>
             </a>
 
+            <button onclick="mostrarVista('inicio')"
+               class="  group relative flex items-center gap-3 px-3 text-white py-1 hover:bg-primary ">
+                <i class="fa-solid fa-house">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         class="lucide lucide-user-round-check-icon lucide-user-round-check">
+                        <path d="M2 21a8 8 0 0 1 13.292-6"/>
+                        <circle cx="10" cy="8" r="5"/>
+                        <path d="m16 19 2 2 4-4"/>
+                    </svg>
+                </i>
+                <span class="sidebar-text hidden">Propietarios</span>
+                <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                    Propietarios
+                </span>
+            </button>
+
+            <button onclick="mostrarVista('citas')"
+               class="  group relative flex items-center gap-3 px-3 text-white py-1 hover:bg-primary ">
+                <i class="fa-solid fa-house">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         class="lucide lucide-calendar-search-icon lucide-calendar-search">
+                        <path d="M16 2v4"/>
+                        <path d="M21 11.75V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7.25"/>
+                        <path d="m22 22-1.875-1.875"/>
+                        <path d="M3 10h18"/>
+                        <path d="M8 2v4"/>
+                        <circle cx="18" cy="18" r="3"/>
+                    </svg>
+                </i>
+                <span class="sidebar-text hidden">Citas pendientes</span>
+                <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                    Citas pendientes
+                </span>
+            </button>
+
             <a th:href="@{/veterinario/miVeterinaria/{id}(id=${veterinario.id})}"
                class="group relative flex text-white items-center gap-3 px-3 py-1 hover:bg-primary ">
                 <i class="fa-solid fa-user">
@@ -144,7 +195,7 @@
             </header>
             <!-- CONTENIDO PRINCIPAL -->
             <main class=" ml-32 flex-grow mx-auto  px-6 py-8 mr-32" >
-                <section id="tab-admin" class="tab-content">
+                <section id="vista-inicio">
                     <div class="items-center ">
                         <div class="flex justify-between items-center mb-6">
                             <div>
@@ -158,7 +209,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="bg-lightSurface w-full p-3 shadow-xl border border-borderLight  overflow-x-hidden ">
+                        <div class="bg-lightSurface w-full p-3 shadow-xl border border-borderLight  overflow-x-hidden">
                             <!-- MENSAJE CUANDO NO HAY PROPIETARIOS -->
                             <h1 th:if="${#lists.isEmpty(propietarios)}"
                                 class="text-center text-2xl text-gray-500 py-8">
@@ -290,13 +341,13 @@
 
                                             <!-- ERROR -->
                                             <div th:if="${errorCodigo != null and propietarioCodigoId == prop.id}"
-                                                 class="bg-red-100 text-red-800 text-xs font-semibold px-3 py-1 rounded">
+                                                 class="bg-red-100 text-red-800 text-xs font-semibold px-3 py-1 ">
                                                 <span th:text="${errorCodigo}"></span>
                                             </div>
 
                                             <!-- CÓDIGO GENERADO -->
                                             <div th:if="${codigoGenerado != null and propietarioCodigoId == prop.id}"
-                                                 class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded">
+                                                 class="bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 ">
                                                 Código:
                                                 <span th:text="${codigoGenerado}" class="tracking-widest"></span>
                                             </div>
@@ -332,7 +383,86 @@
                             </div>
                         </div>
                     </div>
-            </section>
+                </section>
+                <section id="vista-citas" class="hidden" >
+
+
+                    <div class="bg-lightBg  p-10">
+
+                    <h1 class="text-3xl font-extrabold text-secondary mb-8 text-center">
+                         Citas pendientes
+                    </h1>
+
+                    <!-- SIN CITAS -->
+                    <div th:if="${citas.isEmpty()}"
+                         class="text-center text-softText text-lg">
+                        No hay citas pendientes.
+                    </div>
+
+                    <!-- TABLA -->
+                    <div th:if="${!citas.isEmpty()}"
+                         class="bg-lightSurface w-full p-3 shadow-xl border border-borderLight overflow-x-hidden ">
+
+                        <table class="min-w-full bg-white shadow">
+                            <thead class="bg-lightSurface">
+                            <tr>
+                                <th>Mascota</th>
+                                <th>Vacuna</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr th:each="c : ${citas}" class="border-t">
+
+                                <td th:text="${c.nombreMascota}">Mascota</td>
+                                <td th:text="${c.nombreVacuna}">Vacuna</td>
+                                <td th:text="${c.fecha}">Fecha</td>
+                                <td th:text="${c.hora}">Hora</td>
+
+                                <!-- ESTADO -->
+                                <td>
+                                    <span th:text="${c.estado != null ? c.estado : '—'}"></span>
+                                </td>
+
+                                <!-- ACCIONES -->
+                                <td class="flex gap-2 justify-center">
+
+                                    <!-- ACEPTAR -->
+                                    <button
+                                            th:if="${c.estado != null and c.estado.name() == 'AGENDADA'}"
+                                            th:onclick="|aceptarCita(${c.citaId})|"
+                                            class="bg-green-600 text-white px-3 py-1 text-sm hover:bg-green-700">
+                                        Aceptar
+                                    </button>
+
+                                    <!-- RECHAZAR -->
+                                    <button
+                                            th:if="${c.estado != null and c.estado.name() == 'AGENDADA'}"
+                                            th:onclick="|abrirModalRechazo(${c.citaId})|"
+                                            class="bg-red-600 text-white px-3 py-1 text-sm hover:bg-red-700">
+                                        Rechazar
+                                    </button>
+
+                                    <!-- APLICAR -->
+                                    <button
+                                            th:if="${c.estado != null and c.estado.name() == 'ACEPTADA'}"
+                                            th:onclick="|aplicarVacuna(${c.citaId})|"
+                                            class="bg-primary text-white px-3 py-1 text-sm hover:bg-secondary">
+                                        Aplicar vacuna
+                                    </button>
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    </div>
+
+                </section>
             </main>
             <!-- Footer -->
             <footer class=" text-center text-sm text-primary py-3">
@@ -515,8 +645,46 @@
         </button>
     </div>
 </div>
+
+<!-- ================= MODAL RECHAZO ================= -->
+<div id="modalRechazo"
+     class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+
+    <div class="bg-white p-6 w-full max-w-md  shadow-xl">
+
+        <h3 class="text-xl font-semibold text-secondary mb-4">
+            Rechazar cita
+        </h3>
+
+        <input type="hidden" id="citaRechazoId">
+
+        <label class="block text-sm font-medium mb-1">
+            Motivo del rechazo
+        </label>
+
+        <textarea id="mensajeRechazo"
+                  class="w-full border p-2 mb-4"
+                  rows="4"
+                  placeholder="Ej: No hay disponibilidad ese día"></textarea>
+
+        <div class="flex justify-center space-x-3 pt-4">
+            <button onclick="cerrarModalRechazo()"
+                    class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+            Cancelar
+            </button>
+            <button onclick="confirmarRechazo()"
+                    class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+            Rechazar
+            </button>
+        </div>
+    </div>
+</div>
 <script>
-//SIDEBAR
+
+/* ===============================
+           BARRA LATERAL
+=============================== */
+
 function toggleSidebar() {
     const sidebar = document.getElementById("sidebar");
     const texts = document.querySelectorAll(".sidebar-text");
@@ -531,8 +699,11 @@ function toggleSidebar() {
         }
     });
 }
+/* ==========================================
+           MODAL NUEVO PROPIETARIO
+  =========================================== */
 
-        function toggleModal(id) {
+function toggleModal(id) {
         const modal = document.getElementById(id);
         modal.classList.toggle("hidden");
     }
@@ -547,19 +718,22 @@ function toggleSidebar() {
         const inputPropietario = document.getElementById('propietarioId');
 
         function abrirModalMascota(idPropietario) {
-        // Asigna el ID del propietario al input oculto
+
             inputPropietario.value = idPropietario;
-        // Muestra el modal
             modalMascota.classList.remove('hidden');
     }
-        function cerrarModalMascota() {
-        modalMascota.classList.add('hidden');
+ function cerrarModalMascota() {
+  modalMascota.classList.add('hidden');
     }
 
     // Opcional: cerrar modal al hacer clic fuera del contenido
     modalMascota.addEventListener('click', (e) => {
         if (e.target === modalMascota) cerrarModalMascota();
     });
+
+/* ===============================
+           MODAL EDICION
+  =============================== */
 
 function abrirModalEditarPropietario(btn) {
     document.getElementById('editPropietarioId').value = btn.dataset.id;
@@ -584,6 +758,67 @@ function abrirModalEditarPropietario(btn) {
     // Cerrar al hacer click fuera
     document.getElementById('modalEditarPropietario')
         .addEventListener('click', () => cerrarModalEditarPropietario());
+
+/* ===============================
+                 VISTAS
+  =============================== */
+function mostrarVista(vista) {
+    document.querySelectorAll('[id^="vista-"]').forEach(v =>
+        v.classList.add("hidden")
+    );
+
+    const activa = document.getElementById("vista-" + vista);
+    if (activa) {
+        activa.classList.remove("hidden");
+    }
+}
 </script>
+
+<script>
+    function aceptarCita(citaId) {
+        fetch(`/citas/${citaId}/aceptar`, {
+            method: "POST"
+        }).then(res => {
+            if (res.ok) location.reload();
+            else alert("Error al aceptar la cita");
+        });
+    }
+
+    function abrirModalRechazo(citaId) {
+        document.getElementById("citaRechazoId").value = citaId;
+        document.getElementById("modalRechazo").classList.remove("hidden");
+    }
+
+    function confirmarRechazo() {
+        const citaId = document.getElementById("citaRechazoId").value;
+        const mensaje = document.getElementById("mensajeRechazo").value;
+
+        if (!mensaje.trim()) {
+            alert("Debes escribir un motivo");
+            return;
+        }
+
+        fetch(`/citas/${citaId}/rechazar`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({ mensaje })
+        }).then(res => {
+            if (res.ok) location.reload();
+            else alert("Error al rechazar la cita");
+        });
+    }
+
+    function aplicarVacuna(citaId) {
+        fetch(`/citas/${citaId}/aplicar`, {
+            method: "POST"
+        }).then(res => {
+            if (res.ok) location.reload();
+            else alert("Error al aplicar la vacuna");
+        });
+    }
+</script>
+
 </body>
 </html>

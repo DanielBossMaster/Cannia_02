@@ -3,5 +3,6 @@ package scrum.cannia.model;
 public enum EstadoCita {
     AGENDADA,
     ACEPTADA,
-    CANCELADA
+    RECHAZADA,
+    VACUNA_APLICADA
 }

@@ -296,6 +296,7 @@
                                             <div class="mt-2" th:switch="${r.estadoCita}">
 
                                                 <!-- SIN CITA -->
+                                                <!-- ESTADO DE CITA -->
                                                 <div class="mt-2">
 
                                                     <!-- SIN CITA -->
@@ -304,8 +305,8 @@
                                                                 type="button"
                                                                 th:if="${r.permiteAgendar}"
                                                                 th:onclick="|abrirModalCita(${r.idMascota}, ${r.idVacuna})|"
-                                                                class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
-                                                        Solicitar cita
+                                                                class="bg-secondary text-white px-4 py-2 hover:bg-lightSurface hover:text-primary font-bold transition">
+                                                            Solicitar cita
                                                         </button>
 
                                                         <p th:if="${!r.permiteAgendar}"
@@ -315,25 +316,40 @@
                                                     </div>
 
                                                     <!-- AGENDADA -->
-                                                    <div th:if="${r.estadoCita != null and r.estadoCita.name() == 'AGENDADA'}"
+                                                    <div th:if="${r.estadoCita == T(scrum.cannia.model.EstadoCita).AGENDADA}"
                                                          class="text-sm font-semibold text-primary">
                                                          Solicitud enviada
                                                     </div>
 
                                                     <!-- ACEPTADA -->
-                                                    <div th:if="${r.estadoCita != null and r.estadoCita.name() == 'ACEPTADA'}"
+                                                    <div th:if="${r.estadoCita == T(scrum.cannia.model.EstadoCita).ACEPTADA}"
                                                          class="text-sm font-semibold text-green-600">
-                                                         Cita Agendada
+                                                         Cita agendada
                                                     </div>
 
-                                                    <!-- CANCELADA -->
-                                                    <div th:if="${r.estadoCita != null and r.estadoCita.name() == 'CANCELADA'}">
-                                                        <div class="text-sm font-semibold text-red-600">
-                                                             Cita Rechazada
-                                                        </div>
-                                                        <p class="text-xs text-softText mt-1"
+                                                    <!-- RECHAZADA -->
+                                                    <div th:if="${r.estadoCita == T(scrum.cannia.model.EstadoCita).RECHAZADA}">
+                                                        <p class="text-red-600 text-sm font-semibold">
+                                                             Cita rechazada
+                                                        </p>
+
+                                                        <p class="text-xs text-softText"
+                                                           th:if="${r.mensaje != null}"
                                                            th:text="${r.mensaje}">
                                                         </p>
+
+                                                        <button
+                                                                th:if="${r.permiteAgendar}"
+                                                                th:onclick="|abrirModalCita(${r.idMascota}, ${r.idVacuna})|"
+                                                                class="mt-2 text-sm px-3 py-2 bg-primary text-white">
+                                                            Solicitar nuevamente
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- VACUNA APLICADA (24h) -->
+                                                    <div th:if="${r.estadoCita == T(scrum.cannia.model.EstadoCita).VACUNA_APLICADA}"
+                                                         class="text-sm font-semibold text-green-700">
+                                                         Vacuna aplicada correctamente
                                                     </div>
 
                                                 </div>
@@ -342,7 +358,7 @@
                                     </div>
                                 </div>
 
-                                <!-- TODO OK -->
+                                <!--  OK -->
                                 <div th:if="${recordatoriosVacunas.isEmpty()}"
                                      class="text-center py-6">
                                     <p class="text-lg font-semibold text-secondary">

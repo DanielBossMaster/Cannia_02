@@ -54,6 +54,6 @@ public class AgendaModel {
 
     @Column(nullable = false)
     private String estado;
-// AGENDADA | CANCELADA | ATENDIDA
+// AGENDADA | RECHAZADA | ATENDIDA
 
 }

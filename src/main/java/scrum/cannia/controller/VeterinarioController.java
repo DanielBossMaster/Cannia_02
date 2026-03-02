@@ -44,10 +44,10 @@ public class VeterinarioController {
     private final PropietarioRepository propietarioRepository;
     private final MascotaRepository mascotaRepository;
     private final CodigoVinculacionService codigoVinculacionService;
-
+    private final CitaService citaService;
 
     // ============================================
-    //               DASHBOARD PRINCIPAL
+    //             DASHBOARD PRINCIPAL
     // ============================================
 
     @GetMapping("/index")
@@ -74,6 +74,7 @@ public class VeterinarioController {
         model.addAttribute("totalPages", propietariosPage.getTotalPages());
         model.addAttribute("propietario", new PropietarioModel());
         model.addAttribute("mascota", new MascotaModel());
+        model.addAttribute("citas", citaService.obtenerCitasPendientes());
 
         return "veterinario/index";
     }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -43,4 +44,7 @@ public class CitaModel {
 
     @Column(length = 500)
     private String mensaje;
+
+    @Column
+    private LocalDateTime fechaEstado; // cuándo cambió al estado actual
 }
