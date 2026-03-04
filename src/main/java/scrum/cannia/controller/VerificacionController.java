@@ -13,7 +13,16 @@ public class VerificacionController {
 
     private final UsuarioService usuarioService;
 
+    @GetMapping
+    public String verificar(Authentication authentication) {
 
+        String username = authentication.getName();
+
+        usuarioService.enviarSolicitudPorUsername(username);
+
+
+        return"verificacion/verificacion";
+    }
 
     @PostMapping("/solicitar")
     public String solicitarActivacion(Authentication authentication) {
