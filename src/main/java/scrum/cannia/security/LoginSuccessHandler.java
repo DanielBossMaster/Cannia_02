@@ -42,7 +42,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         }
 
         if ("RECHAZADO".equalsIgnoreCase(estado)) {
-            response.sendRedirect("/login?rechazado");
+            response.sendRedirect("/verificacion/rechazado");
             return;
         }
 

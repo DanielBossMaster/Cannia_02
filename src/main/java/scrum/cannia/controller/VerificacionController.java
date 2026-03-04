@@ -15,11 +15,6 @@ public class VerificacionController {
 
 
 
-    @GetMapping
-    public String pantallaVerificacion() {
-        return "verificacion/verificacion";
-    }
-
     @PostMapping("/solicitar")
     public String solicitarActivacion(Authentication authentication) {
 
@@ -33,5 +28,10 @@ public class VerificacionController {
     @GetMapping("/proceso")
     public String proceso() {
         return "verificacion/proceso";
+    }
+
+    @GetMapping("/rechazado")
+    public String rechazado() {
+        return "verificacion/rechazado";
     }
 }

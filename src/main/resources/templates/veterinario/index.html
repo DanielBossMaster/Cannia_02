@@ -403,28 +403,28 @@
                     <div th:if="${!citas.isEmpty()}"
                          class="bg-lightSurface w-full p-3 shadow-xl border border-borderLight overflow-x-hidden ">
 
-                        <table class="min-w-full bg-white shadow">
-                            <thead class="bg-lightSurface">
-                            <tr>
-                                <th>Mascota</th>
-                                <th>Vacuna</th>
-                                <th>Fecha</th>
-                                <th>Hora</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
+                        <table  class="w-full text-center justify-center relative text-sm">
+                            <thead class="bg-gray-100 text-softText text-center uppercase text-xs">
+                            <tr class="border-t border-borderLight hover:bg-gray-100 transition h-10">
+                                <th class="px-4 py-3" >Mascota</th>
+                                <th class="px-4 py-3" >Vacuna</th>
+                                <th class="px-4 py-3">Fecha</th>
+                                <th class="px-4 py-3">Hora</th>
+                                <th class="px-4 py-3">Estado</th>
+                                <th class="px-4 py-3">Acciones</th>
                             </tr>
                             </thead>
 
                             <tbody>
                             <tr th:each="c : ${citas}" class="border-t">
 
-                                <td th:text="${c.nombreMascota}">Mascota</td>
-                                <td th:text="${c.nombreVacuna}">Vacuna</td>
-                                <td th:text="${c.fecha}">Fecha</td>
-                                <td th:text="${c.hora}">Hora</td>
+                                <td th:text="${c.nombreMascota}" class="px-4 py-3">Mascota</td>
+                                <td th:text="${c.nombreVacuna}" class="px-4 py-3">Vacuna</td>
+                                <td th:text="${c.fecha}" class="px-4 py-3">Fecha</td>
+                                <td th:text="${c.hora}" class="px-4 py-3">Hora</td>
 
                                 <!-- ESTADO -->
-                                <td>
+                                <td class="px-4 py-3">
                                     <span th:text="${c.estado != null ? c.estado : '—'}"></span>
                                 </td>
 
@@ -462,6 +462,80 @@
                     </div>
                     </div>
 
+                    <div class="bg-lightBg  p-10">
+
+                        <h1 class="text-3xl font-extrabold text-secondary mb-8 text-center">
+                            Citas pendientes
+                        </h1>
+
+                        <!-- SIN CITAS -->
+                        <div th:if="${citas.isEmpty()}"
+                             class="text-center text-softText text-lg">
+                            No hay citas pendientes.
+                        </div>
+
+                        <!-- TABLA -->
+                        <div th:if="${!citas.isEmpty()}"
+                             class="bg-lightSurface w-full p-3 shadow-xl border border-borderLight overflow-x-hidden ">
+
+                            <table  class="w-full text-center justify-center relative text-sm">
+                                <thead class="bg-gray-100 text-softText text-center uppercase text-xs">
+                                <tr class="border-t border-borderLight hover:bg-gray-100 transition h-10">
+                                    <th class="px-4 py-3" >Mascota</th>
+                                    <th class="px-4 py-3" >Vacuna</th>
+                                    <th class="px-4 py-3">Fecha</th>
+                                    <th class="px-4 py-3">Hora</th>
+                                    <th class="px-4 py-3">Estado</th>
+                                    <th class="px-4 py-3">Acciones</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr th:each="c : ${citas}" class="border-t">
+
+                                    <td th:text="${c.nombreMascota}" class="px-4 py-3">Mascota</td>
+                                    <td th:text="${c.nombreVacuna}" class="px-4 py-3">Vacuna</td>
+                                    <td th:text="${c.fecha}" class="px-4 py-3">Fecha</td>
+                                    <td th:text="${c.hora}" class="px-4 py-3">Hora</td>
+
+                                    <!-- ESTADO -->
+                                    <td class="px-4 py-3">
+                                        <span th:text="${c.estado != null ? c.estado : '—'}"></span>
+                                    </td>
+
+                                    <!-- ACCIONES -->
+                                    <td class="flex gap-2 justify-center">
+
+                                        <!-- ACEPTAR -->
+                                        <button
+                                                th:if="${c.estado != null and c.estado.name() == 'AGENDADA'}"
+                                                th:onclick="|aceptarCita(${c.citaId})|"
+                                                class="bg-green-600 text-white px-3 py-1 text-sm hover:bg-green-700">
+                                            Aceptar
+                                        </button>
+
+                                        <!-- RECHAZAR -->
+                                        <button
+                                                th:if="${c.estado != null and c.estado.name() == 'AGENDADA'}"
+                                                th:onclick="|abrirModalRechazo(${c.citaId})|"
+                                                class="bg-red-600 text-white px-3 py-1 text-sm hover:bg-red-700">
+                                            Rechazar
+                                        </button>
+
+                                        <!-- APLICAR -->
+                                        <button
+                                                th:if="${c.estado != null and c.estado.name() == 'ACEPTADA'}"
+                                                th:onclick="|aplicarVacuna(${c.citaId})|"
+                                                class="bg-primary text-white px-3 py-1 text-sm hover:bg-secondary">
+                                            Aplicar vacuna
+                                        </button>
+
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </section>
             </main>
             <!-- Footer -->

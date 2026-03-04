@@ -689,13 +689,7 @@
         });
     });
     // Cerrar modal al hacer clic fuera del contenido
-    document.querySelectorAll(".modal-overlay").forEach(modal => {
-        modal.addEventListener("click", (e) => {
-            if (e.target === modal) {
-                modal.classList.add("hidden");
-            }
-        });
-    });
+
     //=====================================
     //   VISTAS DE PRODUCTOS Y SERVICIOS
     //=====================================
@@ -758,12 +752,7 @@
             modal.classList.remove('flex');
         }
 
-        document.querySelectorAll('.modal-overlay').forEach(modal => {
-            modal.addEventListener('click', () => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            });
-        });
+
     </script>
 </body>
 </html>
