@@ -51,21 +51,6 @@ public class VacunaService {
                         dto.setEstadoCita(null);
                         dto.setMensaje(null);
 
-                    } else if (cita.getEstado() == EstadoCita.VACUNA_APLICADA) {
-
-                        // 🔹 Vacuna aplicada → mostrar solo por 24h
-                        LocalDateTime limite =
-                                cita.getFechaEstado().plusHours(24);
-
-                        if (LocalDateTime.now().isAfter(limite)) {
-                            // ⛔ Pasaron 24h → ocultar mensaje
-                            dto.setEstadoCita(null);
-                            dto.setMensaje(null);
-                        } else {
-                            // ✅ Aún dentro de 24h
-                            dto.setEstadoCita(EstadoCita.VACUNA_APLICADA);
-                            dto.setMensaje("Vacuna aplicada correctamente");
-                        }
 
                     } else {
                         // 🔹 Estados normales
@@ -81,7 +66,6 @@ public class VacunaService {
                     dto.setFechaRefuerzo(vacuna.getFechaRefuerzo());
                     dto.setDiasRestantes(diasRestantes);
                     dto.setVencida(diasRestantes < 0);
-                    dto.setPermiteAgendar(diasRestantes <= DIAS_PARA_AGENDAR);
 
                     lista.add(dto);
                 }

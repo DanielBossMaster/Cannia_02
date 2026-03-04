@@ -25,4 +25,6 @@ public interface CitaRepository extends JpaRepository<CitaModel, Long> {
             List<EstadoCita> estados,
             VeterinarioModel veterinario
     );
+
+    List<CitaModel> findByEstadoIn(List<EstadoCita> estados);
 }

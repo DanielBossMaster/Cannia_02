@@ -76,6 +76,10 @@ public class VeterinarioController {
         model.addAttribute("mascota", new MascotaModel());
         model.addAttribute("citas", citaService.obtenerCitasPendientes());
 
+
+        model.addAttribute("agenda", citaService.obtenerCitasAceptadas());
+        model.addAttribute("historial", citaService.obtenerHistorial());
+
         return "veterinario/index";
     }
 

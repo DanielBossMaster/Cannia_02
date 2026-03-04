@@ -166,4 +166,43 @@ public class CitaService {
         cita.setMensaje(mensaje);
         citaRepository.save(cita);
     }
+
+    public List<CitaVeterinarioDto> obtenerCitasAceptadas() {
+
+        return citaRepository
+                .findByEstadoOrderByFechaCitaAscHoraCitaAsc(EstadoCita.ACEPTADA)
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    public List<CitaVeterinarioDto> obtenerHistorial() {
+
+        return citaRepository
+                .findByEstadoIn(List.of(
+                        EstadoCita.RECHAZADA,
+                        EstadoCita.VACUNA_APLICADA
+                ))
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    private CitaVeterinarioDto toDto(CitaModel cita) {
+
+        CitaVeterinarioDto dto = new CitaVeterinarioDto();
+
+        dto.setCitaId(cita.getId());
+        dto.setNombreMascota(cita.getMascota().getNomMascota());
+        dto.setNombrePropietario(
+                cita.getMascota().getPropietario().getNombrePro()
+        );
+        dto.setNombreVacuna(cita.getVacuna().getNombre());
+        dto.setFecha(cita.getFechaCita());
+        dto.setHora(cita.getHoraCita());
+        dto.setEstado(cita.getEstado());
+        dto.setMensaje(cita.getMensaje());
+
+        return dto;
+    }
 }
