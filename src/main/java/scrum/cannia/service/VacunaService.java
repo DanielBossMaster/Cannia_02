@@ -20,49 +20,58 @@ import java.util.List;
 public class VacunaService {
 
     private final CitaRepository citaRepository;
-    private static final int DIAS_PARA_AGENDAR = 30;
+    private static final int DIAS_PARA_AGENDAR = 300;
 
-    public List<RecordatorioVacunaDto> obtenerRecordatoriosVacunas(
-            PropietarioModel propietario
-    ) {
+    public List<RecordatorioVacunaDto> obtenerRecordatoriosVacunas(PropietarioModel propietario) {
 
         LocalDate hoy = LocalDate.now();
         List<RecordatorioVacunaDto> lista = new ArrayList<>();
 
         for (MascotaModel mascota : propietario.getMascotas()) {
+
             for (VacunaModel vacuna : mascota.getVacunas()) {
 
-                if (vacuna.getFechaRefuerzo() == null) continue;
+                if (vacuna.getFechaRefuerzo() == null) {
+                    continue;
+                }
 
-                long diasRestantes =
-                        ChronoUnit.DAYS.between(hoy, vacuna.getFechaRefuerzo());
+                long diasRestantes = ChronoUnit.DAYS.between(hoy, vacuna.getFechaRefuerzo());
 
-                if (diasRestantes <= DIAS_PARA_AGENDAR || diasRestantes < 0) {
+                if (diasRestantes <= DIAS_PARA_AGENDAR) {
 
                     RecordatorioVacunaDto dto = new RecordatorioVacunaDto();
 
+                    // buscar última cita
                     CitaModel cita = citaRepository
                             .findTopByVacuna_IdOrderByIdDesc(vacuna.getId())
                             .orElse(null);
 
+                    boolean permiteAgendar = false;
+
                     if (cita == null) {
 
-                        // 🔹 No hay cita
                         dto.setEstadoCita(null);
                         dto.setMensaje(null);
-
+                        permiteAgendar = true;
 
                     } else {
-                        // 🔹 Estados normales
+
                         dto.setEstadoCita(cita.getEstado());
                         dto.setMensaje(cita.getMensaje());
+
+                        if (cita.getEstado() == EstadoCita.RECHAZADA) {
+                            permiteAgendar = true;
+                        }
                     }
+
+                    dto.setPermiteAgendar(permiteAgendar);
 
                     dto.setIdMascota(mascota.getId());
                     dto.setIdVacuna(vacuna.getId());
 
                     dto.setNombreMascota(mascota.getNomMascota());
                     dto.setNombreVacuna(vacuna.getNombre());
+
                     dto.setFechaRefuerzo(vacuna.getFechaRefuerzo());
                     dto.setDiasRestantes(diasRestantes);
                     dto.setVencida(diasRestantes < 0);
@@ -71,6 +80,8 @@ public class VacunaService {
                 }
             }
         }
+
+        lista.sort(Comparator.comparingLong(RecordatorioVacunaDto::getDiasRestantes));
 
         return lista;
     }
