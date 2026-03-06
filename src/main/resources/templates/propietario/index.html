@@ -264,7 +264,8 @@
                             <div class="bg-white/70 backdrop-blur border border-borderLight p-6">
 
                                 <!-- CON RECORDATORIOS -->
-                                <div th:if="${!recordatoriosVacunas.isEmpty()}" class="space-y-4">
+                                <div th:if="${recordatoriosVacunas != null and !recordatoriosVacunas.isEmpty()}"
+                                    class="space-y-4">
 
                                     <div th:each="r : ${recordatoriosVacunas}"
                                          class="flex items-center justify-between p-4 bg-white shadow-md">
@@ -295,7 +296,7 @@
                                             <!-- ESTADO DE CITA -->
                                             <div class="mt-2" th:switch="${r.estadoCita}">
 
-                                                <!-- SIN CITA -->
+
                                                 <!-- ESTADO DE CITA -->
                                                 <div class="mt-2">
 
@@ -358,15 +359,18 @@
                                     </div>
                                 </div>
 
-                                <!--  OK -->
-                                <div th:if="${recordatoriosVacunas.isEmpty()}"
+                                <!-- TODO AL DIA -->
+                                <div th:if="${recordatoriosVacunas == null or recordatoriosVacunas.isEmpty()}"
                                      class="text-center py-6">
+
                                     <p class="text-lg font-semibold text-secondary">
-                                         Todo al día
+                                        Todo al día
                                     </p>
+
                                     <p class="text-sm text-softText mt-1">
                                         Las vacunas de tus mascotas están al día.
                                     </p>
+
                                 </div>
 
                             </div>
