@@ -127,4 +127,8 @@ public class MascotaModel {
             orphanRemoval = true
     )
     private List<VacunaModel> vacunas;
+
+
+    @OneToMany(mappedBy = "mascota")
+    private List<CitaModel> citas;
 }

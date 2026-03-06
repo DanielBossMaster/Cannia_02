@@ -3,6 +3,7 @@ package scrum.cannia.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import scrum.cannia.Dto.CitaPropietarioDto;
 import scrum.cannia.Dto.CitaVeterinarioDto;
 import scrum.cannia.model.*;
 import scrum.cannia.repository.*;
@@ -10,6 +11,8 @@ import scrum.cannia.repository.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -204,5 +207,31 @@ public class CitaService {
         dto.setMensaje(cita.getMensaje());
 
         return dto;
+    }
+    public List<CitaPropietarioDto> obtenerCitasPropietario(PropietarioModel propietario){
+
+        List<CitaPropietarioDto> lista = new ArrayList<>();
+
+        for (MascotaModel mascota : propietario.getMascotas()){
+
+            for (CitaModel cita : mascota.getCitas()){
+
+                CitaPropietarioDto dto = new CitaPropietarioDto();
+
+                dto.setNombreMascota(mascota.getNomMascota());
+                dto.setNombreVacuna(cita.getVacuna().getNombre());
+
+                dto.setFecha(cita.getFechaCita());
+                dto.setHora(cita.getHoraCita());
+
+                dto.setEstado(cita.getEstado());
+
+                lista.add(dto);
+            }
+        }
+
+        lista.sort(Comparator.comparing(CitaPropietarioDto::getFecha));
+
+        return lista;
     }
 }

@@ -260,16 +260,13 @@
                             <p class="text-sm text-softText text-center mb-6">
                                 Próximas vacunas y recordatorios importantes
                             </p>
-
                             <div class="bg-white/70 backdrop-blur border border-borderLight p-6">
 
                                 <!-- CON RECORDATORIOS -->
                                 <div th:if="${recordatoriosVacunas != null and !recordatoriosVacunas.isEmpty()}"
                                     class="space-y-4">
-
                                     <div th:each="r : ${recordatoriosVacunas}"
                                          class="flex items-center justify-between p-4 bg-white shadow-md">
-
                                         <!-- INFO -->
                                         <div>
                                             <p class="font-medium text-secondary"
@@ -281,10 +278,8 @@
                                                 Vacuna
                                             </p>
                                         </div>
-
                                         <!-- ESTADO + ACCIONES -->
                                         <div class="text-center font-bold text-sm">
-
                                             <!-- FECHA -->
                                             <span th:if="${!r.vencida}" class="text-primary">
                                                 En <span th:text="${r.diasRestantes}"></span> días
@@ -292,11 +287,8 @@
                                             <span th:if="${r.vencida}" class="text-red-600">
                                                 Vencida
                                             </span>
-
                                             <!-- ESTADO DE CITA -->
-                                            <div class="mt-2" th:switch="${r.estadoCita}">
-
-
+                                            <div class="mt-2" >
                                                 <!-- ESTADO DE CITA -->
                                                 <div class="mt-2">
 
@@ -373,6 +365,19 @@
 
                                 </div>
 
+                                <div class="flex justify-end mt-3 mb-2">
+
+                                    <button
+                                            type="button"
+                                            onclick="abrirModalCitasAceptadas()"
+                                            class="bg-secondary text-white px-6 py-2 hover:bg-primary transition font-bold">
+
+                                        <img src="../../../../../../../Downloads/searchmagnifierinterfacesymbol1_79893 (3).ico"/>
+
+                                    </button>
+
+                                </div>
+
                             </div>
 
                             <p class="text-xs text-softText mt-4">
@@ -380,6 +385,7 @@
                             </p>
                         </div>
                     </div>
+
                 </section>
                 <section id="vista-Mascotas" class="hidden">
                     <div class="items-center ">
@@ -576,6 +582,91 @@
         </div>
     </div>
 </div>
+
+
+
+<div id="modalCitasAceptadas"
+     class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+
+    <div class="bg-white shadow-xl w-full max-w-xl p-6 relative">
+
+        <!-- BOTON CERRAR -->
+        <button onclick="cerrarModalCitasAceptadas()"
+                class="absolute top-4 right-4 text-gray-500 hover:text-black text-xl">
+            ✕
+        </button>
+
+        <!-- TITULO -->
+        <h3 class="text-xl font-bold text-secondary mb-6 text-center">
+            Mis citas
+        </h3>
+
+        <!-- LISTA -->
+        <div class="space-y-3 max-h-80 overflow-y-auto">
+
+            <!-- CON CITAS -->
+            <div th:if="${!#lists.isEmpty(citas)}">
+
+                <div th:each="c : ${citas}"
+                     class="flex justify-between items-center bg-lightSurface p-4 border border-borderLight">
+
+                    <!-- MASCOTA + VACUNA -->
+                    <div>
+                        <p class="font-semibold text-secondary"
+                           th:text="${c.nombreMascota}">
+                        </p>
+
+                        <p class="text-sm text-softText"
+                           th:text="${c.nombreVacuna}">
+                        </p>
+                    </div>
+
+                    <!-- FECHA -->
+                    <div class="text-center text-sm text-softText">
+                        <p th:text="${#temporals.format(c.fecha,'dd/MM/yyyy')}"></p>
+                        <p th:text="${c.hora}"></p>
+                    </div>
+
+                    <!-- ESTADO -->
+                    <div class="text-sm font-semibold">
+
+                        <span th:if="${c.estado.name() == 'AGENDADA'}"
+                              class="text-primary">
+                            Solicitud enviada
+                        </span>
+
+                        <span th:if="${c.estado.name() == 'ACEPTADA'}"
+                              class="text-green-600">
+                            Confirmada
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SIN CITAS -->
+            <div th:if="${#lists.isEmpty(citas)}"
+                 class="text-center text-softText py-4">
+                No tienes citas programadas.
+            </div>
+
+        </div>
+
+        <!-- BOTON -->
+        <div class="flex justify-center mt-6">
+            <button onclick="cerrarModalCitasAceptadas()"
+                    class="bg-secondary text-white px-5 py-2 hover:bg-primary transition font-semibold">
+                Cerrar
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+
 <!-- ================= MODAL ================= -->
 <div id="modalHistoria"
      class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
@@ -929,6 +1020,26 @@
             const msg = await res.text();
             alert(msg);
         }
+    }
+</script>
+
+<script>
+    function abrirModalCitasAceptadas() {
+
+        const modal = document.getElementById("modalCitasAceptadas");
+
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+
+    }
+
+    function cerrarModalCitasAceptadas() {
+
+        const modal = document.getElementById("modalCitasAceptadas");
+
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+
     }
 </script>
 

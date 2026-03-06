@@ -5,10 +5,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import scrum.cannia.Dto.CitaPropietarioDto;
 import scrum.cannia.Dto.RecordatorioVacunaDto;
 import scrum.cannia.model.*;
 import scrum.cannia.repository.HistoriaClinicaRepository;
 import scrum.cannia.repository.UsuarioRepository;
+import scrum.cannia.service.CitaService;
 import scrum.cannia.service.MascotaService;
 import scrum.cannia.service.VacunaService;
 
@@ -23,6 +25,7 @@ public class PropietarioController {
     private final UsuarioRepository usuarioRepository;
     private final MascotaService mascotaService;
     private final HistoriaClinicaRepository historiaRepository;
+    private final CitaService citaService;
 
     // ============================================
     //           DASHBOARD PROPIETARIO
@@ -44,11 +47,19 @@ public class PropietarioController {
         List<RecordatorioVacunaDto> recordatoriosVacunas =
                 vacunaService.obtenerRecordatoriosVacunas(propietario);
 
-        model.addAttribute("recordatoriosVacunas", recordatoriosVacunas);
 
+        List<RecordatorioVacunaDto> recordatorios =
+                vacunaService.obtenerRecordatoriosVacunas(propietario);
+
+        List<CitaPropietarioDto> citas =
+                citaService.obtenerCitasPropietario(propietario);
+
+
+        model.addAttribute("recordatoriosVacunas", recordatoriosVacunas);
         model.addAttribute("mascotas", mascotas);
         model.addAttribute("mascota", new MascotaModel());
         model.addAttribute("propietario", propietario);
+        model.addAttribute("citas", citas);
 
 
         return "propietario/index";
