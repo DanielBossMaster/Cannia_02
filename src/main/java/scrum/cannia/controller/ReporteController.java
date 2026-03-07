@@ -1,5 +1,6 @@
 package scrum.cannia.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -23,22 +24,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+@AllArgsConstructor
 @Controller
 @RequestMapping("/inventario/reportes")
 @CrossOrigin(origins = "*")
 public class ReporteController {
 
-    @Autowired
-    private ReporteService reporteService;
 
-    @Autowired
-    private PdfExportService pdfExportService;
-
-    @Autowired
-    private ProductoRepository productoRepository;
-
-    @Autowired
-    private VentasReporteService ventasReporteService;
+    private final ReporteService reporteService;
+    private final PdfExportService pdfExportService;
+    private final ProductoRepository productoRepository;
+    private final VentasReporteService ventasReporteService;
 
     // 1. METODO PARA MOSTRAR LA PÁGINA HTML
     @GetMapping("")
