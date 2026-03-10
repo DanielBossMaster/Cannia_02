@@ -38,20 +38,30 @@
 <body class="bg-lightBg min-h-screen">
 
 <!-- Header -->
-<header class="bg-secondary text-white flex justify-between items-center px-6 py-3 shadow-md">
-    <div class="flex items-center space-x-3">
+<header class="bg-secondary text-white flex justify-between items-center px-2 py-1 shadow-md overflow-visible">
+    <div class="flex items-center space-x-3 gap-8">
         <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
+    </div>
+    <div class="flex items-center space-x-3">
         <h1 class="text-lg font-bold">Cannia</h1>
     </div>
 
-    <a th:href="@{/fundacion/dashboard}"
-       class="bg-primary hover:bg-secondary px-4 py-2 rounded-lg shadow text-white transition">
-        ⬅ Volver al inicio
+    <a th:href="@{/fundacion/index}" class="group relative ">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             class="lucide lucide-house-icon lucide-house">
+            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+            <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        </svg>
+        <span class="absolute top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-black text-white text-xs px-2 py-1 whitespace-nowrap z-50">
+            Inicio
+        </span>
     </a>
 </header>
 
 <!-- Contenido principal -->
-<div class="max-w-2xl mx-auto mt-10 bg-white shadow-xl rounded-2xl p-8">
+<div class="max-w-2xl mx-auto mt-10 bg-white shadow-xl  p-8">
 
     <h2 class="text-3xl font-bold text-center text-darkText mb-6">
         Cargar Archivo de Mascotas
@@ -61,9 +71,9 @@
     <form th:action="@{/fundacion/upload}" method="post" enctype="multipart/form-data">
         <label for="dropzone-file"
                class="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed
-                      border-secondary bg-lightBg rounded-xl cursor-pointer hover:bg-gray-200 transition">
+                      border-secondary bg-lightBg  cursor-pointer hover:bg-gray-200 transition">
             <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                <span class="material-icons text-secondary text-5xl">cloud_upload</span>
+                <span class="material-icons text-secondary text-5xl">Subir archivo</span>
 
                 <p class="text-darkText font-medium text-lg mt-2">
                     Arrastra tu archivo aquí
@@ -82,19 +92,19 @@
         <!-- Botón -->
         <button type="submit"
                 class="w-full mt-6 bg-successBtn hover:bg-green-700 text-white font-semibold
-                       py-3 rounded-xl shadow transition">
-            📤 Subir Archivo
+                       py-3  shadow transition">
+       Cargar Archivo
         </button>
     </form>
 
     <!-- Mensajes de éxito o error -->
     <div th:if="${mensaje}"
-         class="mt-6 text-center bg-green-100 text-green-700 font-semibold p-3 rounded-lg">
+         class="mt-6 text-center bg-green-100 text-green-700 font-semibold p-3 ">
         <p th:text="${mensaje}"></p>
     </div>
 
     <div th:if="${error}"
-         class="mt-6 text-center bg-red-100 text-red-700 font-semibold p-3 rounded-lg">
+         class="mt-6 text-center bg-red-100 text-red-700 font-semibold p-3 ">
         <p th:text="${error}"></p>
     </div>
 

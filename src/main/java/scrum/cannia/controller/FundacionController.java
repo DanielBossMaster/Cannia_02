@@ -101,9 +101,9 @@ public class FundacionController {
 
         Long fundacionId = (Long) session.getAttribute("fundacionId");
 
-//        if (fundacionId == null) {
-//            return "redirect:/login";
-//        }
+        if (fundacionId == null) {
+            return "redirect:/login";
+        }
 
         List<MascotaModel> mascotas =
                 mascotaRepository.findByFundacion_Id(fundacionId);

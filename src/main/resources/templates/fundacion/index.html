@@ -63,24 +63,19 @@
                 </div>
                 <!-- Vista historia clinica -->
                 <nav class="flex flex-col gap-1 mt-4">
-                    <a th:href="@{/veterinario/HistoriaClinica}"
+                    <a th:href="@{/fundacion/CargarMascotas}"
                        class="  group relative flex items-center gap-3 px-3 text-white py-1 hover:bg-primary ">
                         <i class="fa-solid fa-house">
-                            <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                  stroke-linecap="round" stroke-linejoin="round" class="  lucide lucide-paw-print-icon lucide-paw-print">
-                                <circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/>
-                                <path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"/>
-                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-down-icon lucide-folder-down"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/><path d="M12 10v6"/><path d="m15 13-3 3-3-3"/></svg>
                         </i>
                         <span class="sidebar-text hidden">Cargar mascotas</span>
                         <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
-                   Cargar mascotas
-                </span>
+                            Cargar mascotas
+                        </span>
                     </a>
 
-                    <button onclick="mostrarVista('inicio')"
-                            class="  group relative flex items-center gap-3 px-3 text-white py-1 hover:bg-primary ">
+                    <a onclick="abrirModalMascota(event)"
+                         class=" group relative flex items-center gap-3 px-3 text-white py-1 hover:bg-primary ">
                         <i class="fa-solid fa-house">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  width="24"
@@ -91,37 +86,36 @@
                                  stroke-width="2"
                                  stroke-linecap="round"
                                  stroke-linejoin="round"
-                                 class="lucide lucide-user-round-check-icon lucide-user-round-check">
-                                <path d="M2 21a8 8 0 0 1 13.292-6"/>
-                                <circle cx="10" cy="8" r="5"/>
-                                <path d="m16 19 2 2 4-4"/>
+                                 class="lucide lucide-user-plus-icon lucide-user-plus">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <line x1="19" x2="19" y1="8" y2="14"/>
+                                <line x1="22" x2="16" y1="11" y2="11"/>
                             </svg>
                         </i>
                         <span class="sidebar-text hidden"> Nueva mascota</span>
                         <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
-                    Nueva mascota
-                </span>
-                    </button>
+                            Nueva mascota
+                        </span>
+                    </a>
 
                     <button onclick="mostrarVista('citas')"
                             class="  group relative flex items-center gap-3 px-3 text-white py-1 hover:bg-primary ">
                         <i class="fa-solid fa-house">
                             <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="24"
-                                 height="24"
+                                 width="24" height="24"
                                  viewBox="0 0 24 24"
                                  fill="none"
                                  stroke="currentColor"
                                  stroke-width="2"
                                  stroke-linecap="round"
                                  stroke-linejoin="round"
-                                 class="lucide lucide-calendar-search-icon lucide-calendar-search">
-                                <path d="M16 2v4"/>
-                                <path d="M21 11.75V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7.25"/>
-                                <path d="m22 22-1.875-1.875"/>
-                                <path d="M3 10h18"/>
-                                <path d="M8 2v4"/>
-                                <circle cx="18" cy="18" r="3"/>
+                                 class="lucide lucide-clipboard-clock-icon lucide-clipboard-clock">
+                                <path d="M16 14v2.2l1.6 1"/>
+                                <path d="M16 4h2a2 2 0 0 1 2 2v.832"/>
+                                <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h2"/>
+                                <circle cx="16" cy="16" r="6"/>
+                                <rect x="8" y="2" width="8" height="4" rx="1"/>
                             </svg>
                         </i>
                         <span class="sidebar-text hidden">Solicitudes</span>
@@ -130,16 +124,23 @@
                 </span>
                     </button>
 
-                    <a th:href="@{/veterinario/miVeterinaria/{id}(id=${veterinario.id})}"
+                    <a
                        class="group relative flex text-white items-center gap-3 px-3 py-1 hover:bg-primary ">
                         <i class="fa-solid fa-user">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                 stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-open-icon lucide-package-open">
-                                <path d="M12 22v-9"/>
-                                <path d="M15.17 2.21a1.67 1.67 0 0 1 1.63 0L21 4.57a1.93 1.93 0 0 1 0 3.36L8.82 14.79a1.655 1.655 0 0 1-1.64 0L3 12.43a1.93 1.93 0 0 1 0-3.36z"/>
-                                <path d="M20 13v3.87a2.06 2.06 0 0 1-1.11 1.83l-6 3.08a1.93 1.93 0 0 1-1.78 0l-6-3.08A2.06 2.06 0 0 1 4 16.87V13"/>
-                                <path d="M21 12.43a1.93 1.93 0 0 0 0-3.36L8.83 2.2a1.64 1.64 0 0 0-1.63 0L3 4.57a1.93 1.93 0 0 0 0 3.36l12.18 6.86a1.636 1.636 0 0 0 1.63 0z"/></svg></i>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 width="24"
+                                 height="24"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 class="lucide lucide-folder-closed-icon lucide-folder-closed">
+                                <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>
+                                <path d="M2 10h20"/>
+                            </svg>
+                        </i>
                         <span class="sidebar-text hidden">Mascotas disponibles</span>
                         <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
                     Mascotas disponibles
@@ -198,28 +199,55 @@
                 <section class="flex justify-center mt-12">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-5xl w-full">
 
-                        <!-- Botón: Cargar mascotas -->
-                        <a class="bg-white p-8  shadow-md hover:shadow-xl transition border border-primary text-center flex flex-col justify-center items-center min-h-[320px]">
+
+                        <a
+                                class="bg-white p-8  shadow-md hover:shadow-2xl transition border border-primary text-center flex flex-col justify-center items-center min-h-[320px]">
                             <div class="text-primary text-4xl mb-4"></div>
                             <h3 class="font-semibold text-xl text-secondary">Disponibles</h3>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="1.5"
+                                 stroke="currentColor"
+                                 class="size-32 text-primary">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 0 0-1.883 2.542l.857 6a2.25 2.25 0 0 0 2.227 1.932H19.05a2.25 2.25 0 0 0 2.227-1.932l.857-6a2.25 2.25 0 0 0-1.883-2.542m-16.5 0V6A2.25 2.25 0 0 1 6 3.75h3.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 0 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.776" />
+                            </svg>
+
                             <p class="text-sm text-gray-500 mt-2 max-w-xs">
                                Aqui estan todas las mascotas que tu fundacion le muestra al publico para adoptar.
                             </p>
                         </a>
 
-                        <!-- Botón: Mascotas cargadas -->
-                        <a class="bg-white p-8  shadow-md hover:shadow-xl transition border border-primary text-center flex flex-col justify-center items-center min-h-[320px]">
+
+                        <a
+                                class="bg-white p-8  shadow-md hover:shadow-2xl transition border border-primary text-center flex flex-col justify-center items-center min-h-[320px]">
                             <div class="text-primary text-4xl mb-4"></div>
                             <h3 class="font-semibold text-xl text-secondary">Solicitudes</h3>
+                            <svg xmlns="http://www.w3.org/2000/svg"  fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="1.5"
+                                 stroke="currentColor"
+                                 class="size-32 text-primary">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                            </svg>
+
                             <p class="text-sm text-gray-500 mt-2 max-w-xs">
                                 En este sitio encontraras las solicitudes para adoptar a tus mascotas
                             </p>
-                        </a
+                        </a>
 
-                        <!-- Botón: Notificaciones -->
-                        <a class="bg-white p-8  shadow-md hover:shadow-xl transition border border-primary text-center flex flex-col justify-center items-center min-h-[320px]">
+
+                        <a
+                                class="bg-white p-8  shadow-md hover:shadow-2xl transition border border-primary text-center flex flex-col justify-center items-center min-h-[320px]">
                             <div class="text-primary text-4xl mb-4"></div>
                             <h3 class="font-semibold text-xl text-secondary">Nueva mascota</h3>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="none" viewBox="0 0 24 24"
+                                 stroke-width="1.5" stroke="currentColor"
+                                 class="size-32 text-primary">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z" />
+                            </svg>
+
                             <p class="text-sm text-gray-500 mt-2 max-w-xs">
                                 Cundo llegue un nuevo amigo registralo aqui
                             </p>
@@ -230,11 +258,67 @@
 
             </main>
         </div>
-
-
+    </div>
+</div>
 
 </body>
+<div id="modalAgregarMascota"
+     class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
 
+    <div class="modal-content bg-white p-4 -2xl shadow-xl w-96">
+
+        <h2 class="text-2xl  font-extrabold mb-8 text-center text-primary-700">
+            Registrar Mascota
+        </h2>
+
+        <!-- FORMULARIO -->
+        <form th:action="@{/propietario/guardar}" method="post">
+
+            <label class="block mb-2 font-semibold">Nombre</label>
+            <input type="text" name="nomMascota" required
+                   class="w-full p-2 border border-primary-300  mb-3"/>
+
+            <label class="block mb-2 font-semibold">Especie</label>
+            <input type="text" name="especie" required
+                   class="w-full p-2 border border-primary-300  mb-3"/>
+
+            <label class="block mb-2 font-semibold">Raza</label>
+            <input type="text" name="raza" required
+                   class="w-full p-2 border border-primary-300  mb-3"/>
+
+            <label class="block mb-2 font-semibold">Color</label>
+            <input type="text" name="color" required
+                   class="w-full p-2 border border-primary-300  mb-3"/>
+
+            <label class="block mb-2 font-semibold">Género</label>
+            <select name="genero" required
+                    class="w-full p-2 border border-primary-300  mb-3">
+                <option value="MACHO">MACHO</option>
+                <option value="HEMBRA">HEMBRA</option>
+            </select>
+
+            <!-- MASCOTA CREADA POR PROPIETARIO = PROPIA -->
+            <input type="hidden" name="tipoEstado" value="PROPIA">
+
+            <label class="block mb-2 font-semibold">Fecha de nacimiento</label>
+            <input type="date" name="fechaNacimiento" required
+                   th:max="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                   class="w-full p-2 border border-primary-300  mb-3"/>
+
+            <div class="flex justify-center pt-2 space-x-2">
+                <button type="button" onclick="cerrarModal('modalAgregarMascota')"
+                        class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                    Cancelar
+                </button>
+
+                <button type="submit"
+                        class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <script>
 
@@ -256,6 +340,61 @@
             }
         });
     }
+
+    /* ===============================
+       MODALES - CORE
+    =============================== */
+    function abrirModal(id) {
+        const modal = document.getElementById(id);
+        if (!modal) return;
+
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+    }
+
+    function cerrarModal(id) {
+        const modal = document.getElementById(id);
+        if (!modal) return;
+
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+
+        // limpiar contenido dinámico si existe
+        const contenido = modal.querySelector("#contenidoHistoria");
+        if (contenido) contenido.innerHTML = '';
+    }
+
+    /* ===============================
+       MODAL: AGREGAR MASCOTA
+    =============================== */
+    function abrirModalMascota(event) {
+        if (event) event.preventDefault();
+        abrirModal("modalAgregarMascota");
+    }
+
+
+    /* ===============================
+       CERRAR MODAL AL CLICK FUERA
+    =============================== */
+    function inicializarModales() {
+        document.querySelectorAll(".modal-content").forEach(content => {
+            const modal = content.closest(".fixed");
+            if (!modal) return;
+
+            modal.addEventListener("click", e => {
+                if (!content.contains(e.target)) {
+                    cerrarModal(modal.id);
+                }
+            });
+        });
+    }
+
+    /* ===============================
+       INIT
+    =============================== */
+    document.addEventListener("DOMContentLoaded", () => {
+        inicializarModales();
+    });
 </script>
 </html>
 
