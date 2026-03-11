@@ -37,12 +37,9 @@ public class VeterinarioController {
     private final ProductoService productoService;
     private final FacturaService facturaService;
     private final FacturaRepository facturaRepository;
-    private final ConsumidorBusquedaService consumidorBusquedaService;
     private final CategoriaService categoriaService;
     private final ServicioService servicioService;
-    private final VeterinarioRepository veterinarioRepository;
     private final PropietarioRepository propietarioRepository;
-    private final MascotaRepository mascotaRepository;
     private final CodigoVinculacionService codigoVinculacionService;
     private final CitaService citaService;
 

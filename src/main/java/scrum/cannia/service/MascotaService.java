@@ -2,6 +2,7 @@ package scrum.cannia.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.apache.commons.math3.analysis.integration.IterativeLegendreGaussIntegrator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import scrum.cannia.Dto.ErrorCargaDTO;
@@ -38,6 +39,22 @@ public class MascotaService {
 
         mascota.setPropietario(propietario);
         mascotaRepository.save(mascota);
+    }
+
+    @Transactional
+    public void registrarMascotaFundacion(MascotaModel mascota, FundacionModel fundacion){
+
+        if (fundacion == null) {
+            throw new IllegalStateException("Fundacion no valida");
+        }
+
+
+
+
+        mascota.setFundacion(fundacion);
+        fundacion.getMascotas().add(mascota);
+        mascotaRepository.save(mascota);
+
     }
 
     // Listar SOLO las mascotas del propietario en sesión

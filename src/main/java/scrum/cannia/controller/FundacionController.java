@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import scrum.cannia.Dto.MascotaCargaDTO;
 import scrum.cannia.Dto.ResultadoCargaMascotasDTO;
 import scrum.cannia.model.FundacionModel;
 import scrum.cannia.model.MascotaModel;
+import scrum.cannia.model.PropietarioModel;
 import scrum.cannia.model.UsuarioModel;
 import scrum.cannia.repository.UsuarioRepository;
 import scrum.cannia.service.MascotaService;
@@ -96,23 +98,27 @@ public class FundacionController {
 
 
 
-    @GetMapping("/mascotasCargadas")
-    public String mascotasCargadas(HttpSession session, Model model) {
+//    @GetMapping("/mascotasCargadas")
+//    public String mascotasCargadas(HttpSession session, Model model) {
+//
+//        Long fundacionId = (Long) session.getAttribute("fundacionId");
+//
+//        if (fundacionId == null) {
+//            return "redirect:/login";
+//        }
+//
+//        List<MascotaModel> mascotas =
+//                mascotaRepository.findByFundacion_Id(fundacionId);
+//
+//        model.addAttribute("mascotas", mascotas);
+//
+//        return "fundacion/MascotasCargadas";
+//    }
 
-        Long fundacionId = (Long) session.getAttribute("fundacionId");
 
-        if (fundacionId == null) {
-            return "redirect:/login";
-        }
-
-        List<MascotaModel> mascotas =
-                mascotaRepository.findByFundacion_Id(fundacionId);
-
-        model.addAttribute("mascotas", mascotas);
-
-        return "fundacion/MascotasCargadas";
-    }
-
+    // ============================================
+    //            REGISTRAR MASCOTA
+    // ============================================
 
 
 }
