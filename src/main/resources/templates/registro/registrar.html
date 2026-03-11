@@ -192,13 +192,19 @@
             <!-- FUNDACIÓN -->
             <div id="camposFundacion" class="hidden grid grid-cols-2 gap-3 text-sm">
 
-                <div class="col-span-2" >
+                <div>
                     <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Nombre Fundación</label>
                     <input type="text" th:field="*{nombreFundacion}"
                            placeholder="El nombre de tu fundacion"
                            class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500">
                 </div>
 
+                <div >
+                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Descripcion</label>
+                    <input type="text" th:field="*{descripcionFundacion}"
+                           placeholder="Agrega una descripcion de tu fundacion"
+                           class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500">
+                </div>
                 <div>
                     <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Teléfono</label>
                     <input type="text" th:field="*{telefonoFundacion}"
@@ -212,13 +218,8 @@
                            placeholder="La direccion de tu fundacion"
                            class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500">
                 </div>
-                <div class="col-span-2">
-                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Descripcion</label>
-                    <input type="text" th:field="*{descripcionFundacion}"
-                           placeholder="Agrega una descripcion de tu fundacion"
-                           class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500">
-                </div>
-                <div class="col-span-2">
+
+                <div>
                     <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Correo</label>
                     <input type="email" th:field="*{emailFundacion}"
                        placeholder="El correo de tu fundacion"
@@ -226,6 +227,14 @@
                        title="Ingresa un correo válido (ej: usuario@correo.com)"
                        class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500">
                 </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Nit</label>
+                    <input type="text" th:field="*{nit}"
+                           placeholder="El Numero de Nit de tu fundacion"
+                           class="w-full px-6 py-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 focus:ring-primary focus:border-primary text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500">
+                </div>
+
             </div>
 
             <!-- BOTÓN -->

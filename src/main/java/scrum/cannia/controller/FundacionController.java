@@ -16,6 +16,7 @@ import scrum.cannia.model.MascotaModel;
 import scrum.cannia.model.PropietarioModel;
 import scrum.cannia.model.UsuarioModel;
 import scrum.cannia.repository.UsuarioRepository;
+import scrum.cannia.service.FundacionService;
 import scrum.cannia.service.MascotaService;
 import scrum.cannia.repository.MascotaRepository;
 import scrum.cannia.service.MascotaServiceCreator;
@@ -33,6 +34,7 @@ public class FundacionController {
     private final MascotaRepository mascotaRepository;
     private final MascotaServiceCreator mascotaServiceCreator;
     private final UsuarioRepository usuarioRepository;;
+    private final FundacionService fundacionService;
 
     @GetMapping("/index")
     public String dashboard(Authentication authentication, Model model) {
@@ -96,29 +98,32 @@ public class FundacionController {
         return "fundacion/CargarMascotas";
     }
 
-
-
-//    @GetMapping("/mascotasCargadas")
-//    public String mascotasCargadas(HttpSession session, Model model) {
-//
-//        Long fundacionId = (Long) session.getAttribute("fundacionId");
-//
-//        if (fundacionId == null) {
-//            return "redirect:/login";
-//        }
-//
-//        List<MascotaModel> mascotas =
-//                mascotaRepository.findByFundacion_Id(fundacionId);
-//
-//        model.addAttribute("mascotas", mascotas);
-//
-//        return "fundacion/MascotasCargadas";
-//    }
-
-
     // ============================================
     //            REGISTRAR MASCOTA
     // ============================================
 
+    @PostMapping("/mascota/registrar")
+    public String registrarMascotaFundacion(
+            @ModelAttribute MascotaModel mascota,
+            @RequestParam Long fundacionId,
+            RedirectAttributes redirectAttributes){
+
+        try {
+
+            FundacionModel fundacion = fundacionService.buscarPorId(fundacionId);
+
+            mascotaService.registrarMascotaFundacion(mascota, fundacion);
+
+            redirectAttributes.addFlashAttribute("success","Mascota registrada");
+
+        }catch (Exception e){
+
+            redirectAttributes.addFlashAttribute("error","Error al registrar mascota");
+
+        }
+
+        return "redirect:/fundacion/dashboard";
+
+    }
 
 }

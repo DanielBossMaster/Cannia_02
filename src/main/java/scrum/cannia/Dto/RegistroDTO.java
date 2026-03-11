@@ -29,6 +29,7 @@ public class RegistroDTO {
     private String direccionFundacion;
     private String telefonoFundacion;
     private String emailFundacion;
+    private String nit;
 
     private String nomMascota;
     private String especie;

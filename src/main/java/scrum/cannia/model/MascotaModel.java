@@ -57,6 +57,10 @@ public class MascotaModel {
     @Column(length = 50)
     private String edadFundacion;
 
+
+    @Column(name = "estado_adopcion")
+    private String estadoAdopcion;
+
     @Column(length = 250)
     private String foto;
 

@@ -63,7 +63,9 @@ public class UsuarioService {
             usuario.setEstado("INACTIVO");
 
             FundacionModel fundacion = new FundacionModel();
+
             fundacion.setNombre(registroDTO.getNombreFundacion());
+            fundacion.setNit(registroDTO.getNit());
             fundacion.setDireccion(registroDTO.getDireccionFundacion());
             fundacion.setTelefono(registroDTO.getTelefonoFundacion());
             fundacion.setEmail(registroDTO.getEmailFundacion());

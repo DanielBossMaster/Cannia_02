@@ -22,6 +22,9 @@ public class FundacionModel {
     @Column(name = "id_fundacion")
     private Long id;
 
+    @Column( length = 50, nullable = true)
+    private String nit;
+
     @Column(length = 50, nullable = false)
     @NotBlank(message = "El Nombre es Obligatorio")
     private String nombre;

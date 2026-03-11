@@ -45,17 +45,30 @@ public class MascotaService {
     public void registrarMascotaFundacion(MascotaModel mascota, FundacionModel fundacion){
 
         if (fundacion == null) {
-            throw new IllegalStateException("Fundacion no valida");
+            throw new IllegalStateException("Fundación no válida");
         }
 
-
-
-
         mascota.setFundacion(fundacion);
+
+        mascota.setEstadoAdopcion("DISPONIBLE");
+
         fundacion.getMascotas().add(mascota);
+
         mascotaRepository.save(mascota);
+    }
+
+    public List<MascotaModel> mascotasDeFundacion(FundacionModel fundacion){
+
+        return mascotaRepository.findByFundacion(fundacion);
 
     }
+
+    public List<MascotaModel> mascotasDisponibles(){
+
+        return mascotaRepository.findByEstadoAdopcion("DISPONIBLE");
+
+    }
+
 
     // Listar SOLO las mascotas del propietario en sesión
     public List<MascotaModel> listarPorPropietario(PropietarioModel propietario) {
