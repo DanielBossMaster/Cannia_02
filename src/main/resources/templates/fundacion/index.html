@@ -216,6 +216,17 @@
             </header>
             <!-- CONTENIDO PRINCIPAL -->
             <main>
+                <main>
+                    <!-- MENSAJE DE EXITO -->
+                    <div th:if="${success}"
+                         class="max-w-3xl mx-auto mt-6 p-4 bg-green-100 border border-green-400 text-green-800 rounded text-center">
+                        <span th:text="${success}"></span>
+                    </div>
+                    <!-- MENSAJE DE ERROR -->
+                    <div th:if="${error}"
+                         class="max-w-3xl mx-auto mt-6 p-4 bg-red-100 border border-red-400 text-red-800 rounded text-center">
+                        <span th:text="${error}"></span>
+                    </div>
                 <section id="vista-Inicio"  class="flex flex-col justify-center mt-12">
                     <div class="max-w-4xl mx-auto mt-16 px-6 text-center">
                         <h1 class="text-4xl text-center leading-tight font-extrabold text-secondary">
@@ -340,9 +351,7 @@
                         </div>
                     </div>
                 </section>
-
             </main>
-
             <footer class="text-center text-sm text-primary py-3 w-full ">
                 © 2025 Cannia Todos los derechos reservados.
             </footer>
@@ -361,7 +370,9 @@
         </h2>
 
         <!-- FORMULARIO -->
-        <form th:action="@{/propietario/guardar}" method="post">
+        <form th:action="@{/fundacion/mascota/registrar}" method="post">
+
+            <input type="hidden" name="fundacionId" th:value="${fundacionId}">
 
             <label class="block mb-2 font-semibold">Nombre</label>
             <input type="text" name="nomMascota" required

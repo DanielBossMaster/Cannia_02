@@ -20,5 +20,11 @@ public class FundacionService {
                 .orElseThrow(() -> new RuntimeException("Fundación no encontrada"));
     }
 
+    public FundacionModel buscarPorCorreo(String correo){
+
+        return fundacionRepository.findByEmail(correo)
+                .orElseThrow(() -> new RuntimeException("Fundación no encontrada"));
+
+    }
 }
 

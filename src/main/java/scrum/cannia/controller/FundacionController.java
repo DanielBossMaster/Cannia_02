@@ -101,29 +101,33 @@ public class FundacionController {
     // ============================================
     //            REGISTRAR MASCOTA
     // ============================================
-
     @PostMapping("/mascota/registrar")
     public String registrarMascotaFundacion(
             @ModelAttribute MascotaModel mascota,
-            @RequestParam Long fundacionId,
+            Authentication authentication,
             RedirectAttributes redirectAttributes){
 
         try {
 
-            FundacionModel fundacion = fundacionService.buscarPorId(fundacionId);
+            String correo = authentication.getName();
+
+            FundacionModel fundacion = fundacionService.buscarPorCorreo(correo);
 
             mascotaService.registrarMascotaFundacion(mascota, fundacion);
 
-            redirectAttributes.addFlashAttribute("success","Mascota registrada");
+            redirectAttributes.addFlashAttribute("success",
+                    "Mascota registrada correctamente");
 
-        }catch (Exception e){
+        } catch (Exception e) {
 
-            redirectAttributes.addFlashAttribute("error","Error al registrar mascota");
+            e.printStackTrace();
+
+            redirectAttributes.addFlashAttribute("error",
+                    "Error al registrar mascota");
 
         }
 
-        return "redirect:/fundacion/dashboard";
-
+        return "redirect:/fundacion/index";
     }
 
 }
