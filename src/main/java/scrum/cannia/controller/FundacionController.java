@@ -20,6 +20,7 @@ import scrum.cannia.service.FundacionService;
 import scrum.cannia.service.MascotaService;
 import scrum.cannia.repository.MascotaRepository;
 import scrum.cannia.service.MascotaServiceCreator;
+import scrum.cannia.service.UsuarioService;
 import scrum.cannia.strategy.DataLoaderStrategy;
 import scrum.cannia.strategy.factory.DataLoaderFactory;
 
@@ -35,6 +36,7 @@ public class FundacionController {
     private final MascotaServiceCreator mascotaServiceCreator;
     private final UsuarioRepository usuarioRepository;;
     private final FundacionService fundacionService;
+    private final UsuarioService usuarioService;
 
     @GetMapping("/index")
     public String dashboard(Authentication authentication, Model model) {
@@ -49,7 +51,11 @@ public class FundacionController {
             return "redirect:/login";
         }
 
+        List<MascotaModel> mascotas = mascotaService.obtenerMascotasFundacion(fundacion);
+
         model.addAttribute("fundacion", fundacion);
+        model.addAttribute("mascotas", mascotas);
+
 
         return "fundacion/index";
     }
@@ -98,9 +104,7 @@ public class FundacionController {
         return "fundacion/CargarMascotas";
     }
 
-    // ============================================
-    //            REGISTRAR MASCOTA
-    // ============================================
+
     @PostMapping("/mascota/registrar")
     public String registrarMascotaFundacion(
             @ModelAttribute MascotaModel mascota,
@@ -109,9 +113,11 @@ public class FundacionController {
 
         try {
 
-            String correo = authentication.getName();
+            String username = authentication.getName();
 
-            FundacionModel fundacion = fundacionService.buscarPorCorreo(correo);
+            UsuarioModel usuario = usuarioService.buscarPorUsername(username);
+
+            FundacionModel fundacion = fundacionService.buscarPorUsuario(usuario);
 
             mascotaService.registrarMascotaFundacion(mascota, fundacion);
 
@@ -129,5 +135,4 @@ public class FundacionController {
 
         return "redirect:/fundacion/index";
     }
-
 }

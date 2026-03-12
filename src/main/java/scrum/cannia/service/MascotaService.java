@@ -70,7 +70,6 @@ public class MascotaService {
     }
 
 
-    // Listar SOLO las mascotas del propietario en sesión
     public List<MascotaModel> listarPorPropietario(PropietarioModel propietario) {
         return mascotaRepository.findByPropietarioId(propietario.getId());
     }
@@ -89,6 +88,12 @@ public class MascotaService {
     public List<MascotaModel> listarConHistoriaYVacunas(
             PropietarioModel propietario) {
         return mascotaRepository.findByPropietarioConHistoria(propietario);
+    }
+
+    public List<MascotaModel> obtenerMascotasFundacion(FundacionModel fundacion){
+
+        return mascotaRepository.findByFundacion(fundacion);
+
     }
 }
 

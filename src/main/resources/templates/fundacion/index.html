@@ -295,62 +295,108 @@
                     </div>
                 </section>
 
-                <section id="vista-Mascotas" class="hidden">
-                    <div class="container mx-auto px-4 py-8">
-                        <div class="bg-primary text-white p-6 rounded-lg shadow-xl mb-8 max-w-3xl mx-auto text-center">
-                            <h2 class="text-2xl font-bold" th:text="${welcomeMessage}"></h2>
-                        </div>
+                    <section id="vista-Mascotas" class="hidden ml-10">
+                        <div class="container mx-auto px-4 py-8">
 
-                        <div class="flex justify-center space-x-4 mb-8">
-                            <a th:href="@{/adopcion}"
-                               th:classappend="${especieSeleccionada == ''} ? 'bg-secondary text-white' : 'bg-white text-secondary border border-secondary'"
-                               class="px-6 py-2 rounded-full font-semibold shadow-md hover:bg-secondary hover:text-white transition">
-                                Todos
-                            </a>
-                            <a th:href="@{/adopcion(especie=${caninoEspecie})}"
-                               th:classappend="${especieSeleccionada == caninoEspecie} ? 'bg-secondary text-white' : 'bg-white text-secondary border border-secondary'"
-                               class="px-6 py-2 rounded-full font-semibold shadow-md hover:bg-secondary hover:text-white transition">
-                                Caninos
-                            </a>
-                            <a th:href="@{/adopcion(especie=${felinoEspecie})}"
-                               th:classappend="${especieSeleccionada == felinoEspecie} ? 'bg-secondary text-white' : 'bg-white text-secondary border border-secondary'"
-                               class="px-6 py-2 rounded-full font-semibold shadow-md hover:bg-secondary hover:text-white transition">
-                                Felinos
-                            </a>
-                        </div>
+                            <!-- MENSAJE -->
+                            <div >
+                                <h1 class="text-center text-5xl font-bold text-gray-700">
+                                    Mascotas de tu fundacion <br> <span th:text="${fundacion.nombre}"></span>
+                                </h1>
+                            </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                            <!-- SIN MASCOTAS -->
+                            <div th:if="${#lists.isEmpty(mascotas)}"
+                                 class="text-center py-16">
 
-                            <div th:if="${#lists.isEmpty(mascotas)}" class="col-span-full">
-                                <p class="text-center text-softText text-lg">
-                                    No hay mascotas disponibles para adopción en este momento.
+                                <p class="text-softText text-lg">
+                                    No tienes mascotas registradas todavía 🐾
                                 </p>
+
+                                <a href="/fundacion/registrar-mascota"
+                                   class="mt-4 inline-block bg-primary text-white px-6 py-2  hover:bg-primary/80 transition">
+
+                                    Registrar primera mascota
+                                </a>
                             </div>
 
-                            <div th:each="mascota : ${mascotas}" class="bg-white rounded-lg shadow-xl overflow-hidden transform hover:scale-[1.02] transition duration-300 border border-borderLight">
+                            <!-- GRID DE MASCOTAS -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-10 gap-8">
 
-                                <div class="h-48 bg-gray-200 flex items-center justify-center overflow-hidden">
-                                    <img th:if="${mascota.foto != null}" th:src="@{'data:image/jpeg;base64,' + ${#strings.arrayToUrlString(mascota.foto)}}"
-                                         alt="Foto de Mascota" class="w-full h-full object-cover"/>
-                                    <span th:unless="${mascota.foto != null}" class="text-softText">Sin foto</span>
-                                </div>
+                                <div th:each="mascota : ${mascotas}"
+                                     class="bg-white  shadow-md hover:shadow-xl transition overflow-hidden border border-borderLight flex flex-col">
 
-                                <div class="p-4">
-                                    <h3 class="text-xl font-bold text-primary mb-1" th:text="${mascota.nomMascota}">Nombre Mascota</h3>
-                                    <p class="text-softText text-sm"><span class="font-semibold">Especie:</span> <span th:text="${mascota.especie}"></span></p>
-                                    <p class="text-softText text-sm"><span class="font-semibold">Raza:</span> <span th:text="${mascota.raza}"></span></p>
-                                    <p class="text-softText text-sm"><span class="font-semibold">Fundación:</span> <span th:text="${mascota.fundacion.nombre}"></span></p>
+                                    <!-- FOTO -->
+                                    <div class="relative h-52 bg-gray-100">
 
-                                    <div class="mt-4">
-                                        <a th:href="@{/adopcion/legalizar/{id}(id=${mascota.id})}" class="block text-center bg-primary text-white px-4 py-2 rounded-md hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
-                                            Legalizar Adopción
-                                        </a>
+                                        <img th:if="${mascota.foto != null}"
+                                             th:src="@{'data:image/jpeg;base64,' + ${#strings.arrayToUrlString(mascota.foto)}}"
+                                             class="w-full h-full object-cover"/>
+
+                                        <div th:unless="${mascota.foto != null}"
+                                             class="w-full h-full flex items-center justify-center text-softText">
+                                            Sin foto
+                                        </div>
+
+                                        <!-- BADGE -->
+                                        <span class="absolute top-3 left-3 bg-green-500 text-white text-xs px-3 py-1  shadow">
+                        Disponible
+                    </span>
+
                                     </div>
+
+                                    <!-- INFO -->
+                                    <div class="p-5 flex flex-col flex-grow">
+
+                                        <h3 class="text-lg font-bold text-secondary"
+                                            th:text="${mascota.nomMascota}">
+                                            Nombre
+                                        </h3>
+
+                                        <div class="mt-2 text-sm text-softText space-y-1">
+
+                                            <p>
+                                                <span class="font-semibold text-secondary">Especie:</span>
+                                                <span th:text="${mascota.especie}"></span>
+                                            </p>
+
+                                            <p>
+                                                <span class="font-semibold text-secondary">Raza:</span>
+                                                <span th:text="${mascota.raza}"></span>
+                                            </p>
+
+                                            <p>
+                                                <span class="font-semibold text-secondary">Fundación:</span>
+                                                <span th:text="${mascota.fundacion.nombre}"></span>
+                                            </p>
+
+                                        </div>
+
+                                        <!-- BOTONES -->
+                                        <div class="mt-auto pt-4 flex justify-between gap-2">
+
+                                            <a th:href="@{/mascota/ver/{id}(id=${mascota.id})}"
+                                               class="flex-1 text-center bg-secondary text-white text-sm py-2  hover:bg-secondary/80 transition">
+
+                                                Ver
+                                            </a>
+
+                                            <a th:href="@{/mascota/editar/{id}(id=${mascota.id})}"
+                                               class="flex-1 text-center bg-yellow-500 text-white text-sm py-2  hover:bg-yellow-600 transition">
+
+                                                Editar
+                                            </a>
+
+                                        </div>
+
+                                    </div>
+
                                 </div>
+
                             </div>
+
                         </div>
-                    </div>
-                </section>
+                    </section>
             </main>
             <footer class="text-center text-sm text-primary py-3 w-full ">
                 © 2025 Cannia Todos los derechos reservados.

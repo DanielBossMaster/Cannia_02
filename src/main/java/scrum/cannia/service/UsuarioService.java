@@ -127,6 +127,13 @@ public class UsuarioService {
 
         return usuarioRepository.save(usuario);
     }
+
+    public UsuarioModel buscarPorUsuario (String username){
+
+        return usuarioRepository.findByUsuario(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+    }
 }
 
 

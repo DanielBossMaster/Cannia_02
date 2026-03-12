@@ -21,6 +21,7 @@ public interface UsuarioRepository extends JpaRepository<UsuarioModel, Long> {
             String estado,
             List<String> roles
     );
+
     @Query("""
     SELECT u FROM UsuarioModel u
     LEFT JOIN FETCH u.veterinario
@@ -28,5 +29,4 @@ public interface UsuarioRepository extends JpaRepository<UsuarioModel, Long> {
     WHERE u.estado = 'PENDIENTE'
 """)
     List<UsuarioModel> findUsuariosPendientesConDatos();
-
 }
