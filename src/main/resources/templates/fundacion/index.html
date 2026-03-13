@@ -215,12 +215,12 @@
                 </div>
             </header>
             <!-- CONTENIDO PRINCIPAL -->
+
             <main>
-                <main>
-                    <!-- MENSAJE DE EXITO -->
-                    <div th:if="${success}"
-                         class="max-w-3xl mx-auto mt-6 p-4 bg-green-100 border border-green-400 text-green-800 rounded text-center">
-                        <span th:text="${success}"></span>
+                <!-- MENSAJE DE EXITO -->
+                <div th:if="${success}"
+                     class="max-w-3xl mx-auto mt-6 p-4 bg-green-100 border border-green-400 text-green-800 rounded text-center">
+                    <span th:text="${success}"></span>
                     </div>
                     <!-- MENSAJE DE ERROR -->
                     <div th:if="${error}"
@@ -288,113 +288,100 @@
                             </svg>
 
                             <p class="text-sm text-gray-500 mt-2 max-w-xs">
-                                Cundo llegue un nuevo amigo registralo aqui
+                                Cuando llegue un nuevo amigo registralo aqui
                             </p>
                         </a>
 
                     </div>
                 </section>
-
-                    <section id="vista-Mascotas" class="hidden ml-10">
+                <section id="vista-Mascotas" class="hidden ml-10">
                         <div class="container mx-auto px-4 py-8">
-
                             <!-- MENSAJE -->
                             <div >
                                 <h1 class="text-center text-5xl font-bold text-gray-700">
                                     Mascotas de tu fundacion <br> <span th:text="${fundacion.nombre}"></span>
                                 </h1>
                             </div>
-
                             <!-- SIN MASCOTAS -->
                             <div th:if="${#lists.isEmpty(mascotas)}"
                                  class="text-center py-16">
-
                                 <p class="text-softText text-lg">
                                     No tienes mascotas registradas todavía 🐾
                                 </p>
-
                                 <a href="/fundacion/registrar-mascota"
                                    class="mt-4 inline-block bg-primary text-white px-6 py-2  hover:bg-primary/80 transition">
-
                                     Registrar primera mascota
                                 </a>
                             </div>
-
                             <!-- GRID DE MASCOTAS -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-10 gap-8">
-
                                 <div th:each="mascota : ${mascotas}"
                                      class="bg-white  shadow-md hover:shadow-xl transition overflow-hidden border border-borderLight flex flex-col">
-
                                     <!-- FOTO -->
                                     <div class="relative h-52 bg-gray-100">
 
-                                        <img th:if="${mascota.foto != null}"
-                                             th:src="@{'data:image/jpeg;base64,' + ${#strings.arrayToUrlString(mascota.foto)}}"
+                                        <img th:if="${mascota.fotoBase64 != null}"
+                                             th:src="'data:image/jpeg;base64,' + ${mascota.fotoBase64}"
                                              class="w-full h-full object-cover"/>
 
-                                        <div th:unless="${mascota.foto != null}"
-                                             class="w-full h-full flex items-center justify-center text-softText">
-                                            Sin foto
-                                        </div>
+                                        <img th:if="${mascota.fotoBase64 == null}"
+                                             src="/img/logo.png"
+                                             class="w-full h-full object-cover"/>
 
-                                        <!-- BADGE -->
-                                        <span class="absolute top-3 left-3 bg-green-500 text-white text-xs px-3 py-1  shadow">
-                        Disponible
-                    </span>
+                                        <span th:text="${mascota.estadoAdopcion}"
+                                              class="absolute top-3 left-3 text-white text-xs px-3 py-1 shadow"
+                                              th:classappend="
+                                              ${mascota.estadoAdopcion == 'DISPONIBLE'} ? ' bg-green-500' :
+                                                (${mascota.estadoAdopcion == 'EN_PROCESO'} ? ' bg-yellow-500' :
+                                                 (${mascota.estadoAdopcion == 'ADOPTADO'} ? ' bg-red-500' :
+                                                  (${mascota.estadoAdopcion == 'NO_DISPONIBLE'} ? 'bg-red-600' : ' bg-gray-500')))">
+
+                                        </span>
 
                                     </div>
-
                                     <!-- INFO -->
                                     <div class="p-5 flex flex-col flex-grow">
-
                                         <h3 class="text-lg font-bold text-secondary"
                                             th:text="${mascota.nomMascota}">
                                             Nombre
                                         </h3>
-
                                         <div class="mt-2 text-sm text-softText space-y-1">
-
                                             <p>
                                                 <span class="font-semibold text-secondary">Especie:</span>
                                                 <span th:text="${mascota.especie}"></span>
                                             </p>
-
                                             <p>
                                                 <span class="font-semibold text-secondary">Raza:</span>
                                                 <span th:text="${mascota.raza}"></span>
                                             </p>
-
-                                            <p>
-                                                <span class="font-semibold text-secondary">Fundación:</span>
-                                                <span th:text="${mascota.fundacion.nombre}"></span>
+                                            <p th:if="${mascota.descripcion != null}"
+                                               class="text-sm text-softText mt-2 line-clamp-2">
+                                                <span class="font-semibold text-secondary">Descripción:</span>
+                                                <span th:text="${mascota.descripcion}"></span>
                                             </p>
 
                                         </div>
 
                                         <!-- BOTONES -->
-                                        <div class="mt-auto pt-4 flex justify-between gap-2">
-
-                                            <a th:href="@{/mascota/ver/{id}(id=${mascota.id})}"
-                                               class="flex-1 text-center bg-secondary text-white text-sm py-2  hover:bg-secondary/80 transition">
-
-                                                Ver
-                                            </a>
-
-                                            <a th:href="@{/mascota/editar/{id}(id=${mascota.id})}"
-                                               class="flex-1 text-center bg-yellow-500 text-white text-sm py-2  hover:bg-yellow-600 transition">
-
+                                        <div class="flex justify-center pt-2 space-x-2">
+                                            <button class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition"
+                                                    th:attr="onclick=|abrirModalEdicion(
+                                                 ${mascota.id},
+                                                '${mascota.nomMascota}',
+                                                '${mascota.especie}',
+                                                '${mascota.raza}',
+                                                '${mascota.estadoAdopcion}',
+                                                '${mascota.descripcion}')|">
                                                 Editar
-                                            </a>
-
-                                        </div>
-
+                                            </button>
+                                            <button class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition"
+                                            th:attr="onclick=|mostrarDescripcion('${mascota.descripcion}')|">
+                                                Descripción
+                                            </button>
+                                         </div>
                                     </div>
-
                                 </div>
-
                             </div>
-
                         </div>
                     </section>
             </main>
@@ -406,6 +393,26 @@
 </div>
 
 </body>
+
+<div id="modalDescripcion"
+     class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+
+    <div class="bg-white p-6 max-w-md w-full">
+
+        <h3 class="text-xl font-bold mb-3">Descripción de la mascota</h3>
+
+        <p id="textoDescripcion" class="text-softText"></p>
+
+        <div class="mt-4 text-right">
+            <button onclick="cerrarModal('modalDescripcion')"
+                    class="bg-secondary text-white px-4 py-2">
+                Cerrar
+            </button>
+        </div>
+
+    </div>
+</div>
+
 <div id="modalAgregarMascota"
      class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
 
@@ -416,7 +423,7 @@
         </h2>
 
         <!-- FORMULARIO -->
-        <form th:action="@{/fundacion/mascota/registrar}" method="post">
+        <form th:action="@{/fundacion/mascota/registrar}" method="post"  enctype="multipart/form-data">
 
             <input type="hidden" name="fundacionId" th:value="${fundacionId}">
 
@@ -443,6 +450,15 @@
                 <option value="HEMBRA">HEMBRA</option>
             </select>
 
+
+            <label class="block mb-2 font-semibold">Foto</label>
+            <input type="file"
+                   name="fotoMascota"
+                   accept="image/*"
+                   class="w-full p-2 border border-primary-300 mb-3">
+
+            <img id="previewMascota" class="hidden w-full h-40 object-cover mt-2">
+
             <!-- MASCOTA CREADA POR PROPIETARIO = PROPIA -->
             <input type="hidden" name="tipoEstado" value="PROPIA">
 
@@ -466,7 +482,119 @@
     </div>
 </div>
 
+
+
+<!-- ================= MODAL EDITAR ================= -->
+<div id="modalEditar" class=" fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+
+    <div class=" modal-content bg-white  w-11/12 max-w-lg p-6 relative">
+
+        <!-- CERRAR -->
+        <button onclick="cerrarModal('modalEditar')"
+                class="absolute top-4 right-4 text-gray-500 hover:text-black text-2xl">
+            ✕
+        </button>
+
+        <h3 class="text-2xl font-bold mb-4">Editar Mascota</h3>
+
+        <!-- FORM -->
+
+    <form th:action="@{/fundacion/mascota/editar}"
+          th:object="${mascota}"
+          method="post"
+          enctype="multipart/form-data"
+          >
+
+        <input type="hidden" id="idMascota"  th:field="*{id}"/>
+
+        <img th:if="${mascota.fotoBase64 != null}"
+             th:src="'data:image/jpeg;base64,' + ${mascota.fotoBase64}"
+             class="w-full h-40 object-cover mb-3">
+
+        <!-- Nombre -->
+        <div class="mb-4">
+            <label class="block font-semibold">Nombre</label>
+            <input type="text" id="nomMascota" th:field="*{nomMascota}"
+                   class="w-full border p-2 "/>
+        </div>
+
+        <!-- Especie -->
+        <div class="mb-4">
+            <label class="block font-semibold">Especie</label>
+            <input type="text" id="especie" th:field="*{especie}"
+                   class="w-full border p-2 "/>
+        </div>
+
+        <!-- Raza -->
+        <div class="mb-4">
+            <label class="block font-semibold">Raza</label>
+            <input type="text" id="raza" th:field="*{raza}"
+                   class="w-full border p-2 "/>
+        </div>
+
+        <!-- foto-->
+
+        <label class="block font-semibold">Cambiar foto</label>
+
+        <input type="file"
+               name="fotoMascota"
+               accept="image/*"
+               class="w-full border p-2 mb-4">
+
+        <!-- Estado adopción -->
+        <div class="mb-4">
+            <label class="block font-semibold">Estado de adopción</label>
+
+            <select th:field="*{estadoAdopcion}" id="estadoAdopcion"
+                    class="w-full border p-2 ">
+
+                <option value="DISPONIBLE">Disponible</option>
+                <option value="EN_PROCESO">En proceso</option>
+                <option value="ADOPTADO">Adoptado</option>
+                <option value="NO_DISPONIBLE">No disponible</option>
+
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label class="block font-semibold">Descripción</label>
+
+            <textarea th:field="*{descripcion}"
+                      rows="4"
+                      placeholder="Ej: Es muy juguetón, le gustan los niños y necesita espacio para correr..."
+                      class="w-full border p-2 resize-none"></textarea>
+        </div>
+
+        <img id="previewEditarMascota"
+             class="hidden w-full h-40 object-cover mt-2">
+
+
+        <div class="flex justify-center pt-2 space-x-2">
+            <button type="button" onclick="cerrarModal('modalEditar')"
+                    class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                Cancelar
+            </button>
+
+            <button type="submit"
+                    class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                Guardar
+            </button>
+        </div>
+    </form>
+</div>
+</div>
 <script>
+
+    function mostrarDescripcion(texto){
+
+        const modal = document.getElementById("modalDescripcion");
+        const contenido = document.getElementById("textoDescripcion");
+
+        contenido.textContent = texto || "Esta mascota aún no tiene descripción.";
+
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+    }
 
     /* ===============================
               BARRA LATERAL
@@ -555,6 +683,52 @@
             activa.classList.remove("hidden");
         }
     }
+
+
+    /* ===============================
+       INIT
+    =============================== */
+    document.addEventListener("DOMContentLoaded", () => {
+        inicializarModales();
+    });
+
+    function abrirModalEdicion(id, nombre, especie, raza, estadoAdopcion, descripcion) {
+
+        document.getElementById('idMascota').value = id;
+        document.getElementById('nomMascota').value = nombre;
+        document.getElementById('especie').value = especie;
+        document.getElementById('raza').value = raza;
+        document.getElementById('estadoAdopcion').value = estadoAdopcion;
+        document.getElementById('descripcion').value = descripcion;
+
+
+        const modal = document.getElementById('modalEditar');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    document.querySelector('input[name="fotoMascota"]').addEventListener('change', function(e){
+
+        const file = e.target.files[0];
+        const preview = document.getElementById("previewMascota");
+
+        if(file){
+            preview.src = URL.createObjectURL(file);
+            preview.classList.remove("hidden");
+        }
+
+    });
+    document.querySelector('input[name="fotoMascota"]').addEventListener('change', function(e){
+
+        const file = e.target.files[0];
+        const preview = document.getElementById("previewEditarMascota");
+
+        if(file){
+            preview.src = URL.createObjectURL(file);
+            preview.classList.remove("hidden");
+        }
+
+    });
 </script>
 </html>
 

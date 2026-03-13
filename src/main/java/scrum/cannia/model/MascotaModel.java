@@ -61,12 +61,37 @@ public class MascotaModel {
     @Column(name = "estado_adopcion")
     private String estadoAdopcion;
 
-    @Column(length = 250)
-    private String foto;
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] foto;
+
+    @Transient
+    private String fotoBase64;
+
+    public String getFotoBase64() {
+        return fotoBase64;
+    }
+
+    public void setFotoBase64(String fotoBase64) {
+        this.fotoBase64 = fotoBase64;
+    }
 
     @Enumerated(EnumType.STRING)
     @Column(length = 15, nullable = true)
     private TipoEstadoMascota tipoEstado;
+
+    @Column(length = 500, nullable = true)
+    private String descripcion;
+
+    @OneToMany(mappedBy = "mascota", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<HistoriaClinicaModel> historiasClinicas;
+
+    @OneToMany(mappedBy = "mascota", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VacunaModel> vacunas;
+
+
+    @OneToMany(mappedBy = "mascota")
+    private List<CitaModel> citas;
 
     // Factory Method mascota creada por Fundacion
     public static MascotaModel crearDesdeFundacion(MascotaCargaDTO dto, FundacionModel fundacion) {
@@ -84,7 +109,6 @@ public class MascotaModel {
 
         // Campos opcionales con valores por defecto
         mascota.setEdadFundacion(dto.getEdad() != null ? String.valueOf(dto.getEdad()) : "0");
-        mascota.setFoto(dto.getFoto() != null ? dto.getFoto() : "");
         mascota.setMedicamento(dto.getMedicamento() != null ? dto.getMedicamento() : "");
 
         // Relaciones
@@ -116,23 +140,4 @@ public class MascotaModel {
         return mascota;
     }
 
-
-    @OneToMany(
-            mappedBy = "mascota",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    private List<HistoriaClinicaModel> historiasClinicas;
-
-    @OneToMany(
-            mappedBy = "mascota",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<VacunaModel> vacunas;
-
-
-    @OneToMany(mappedBy = "mascota")
-    private List<CitaModel> citas;
 }

@@ -24,7 +24,7 @@ public interface MascotaRepository extends JpaRepository<MascotaModel, Long> {
 
     List<MascotaModel> findByEstadoAdopcion(String estado);
 
-
+    Optional<MascotaModel> findById(Long id);
 
     @Query("""
     SELECT DISTINCT m

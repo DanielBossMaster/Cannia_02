@@ -16,6 +16,7 @@ import scrum.cannia.repository.UsuarioRepository;
 //import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -90,10 +91,50 @@ public class MascotaService {
         return mascotaRepository.findByPropietarioConHistoria(propietario);
     }
 
+
+    public MascotaModel buscarPorId(Long id){
+
+        return mascotaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Mascota no encontrada"));
+    }
+
+    public void actualizarMascota(MascotaModel mascota){
+
+        MascotaModel existente = mascotaRepository
+                .findById(mascota.getId())
+                .orElseThrow();
+
+        existente.setNomMascota(mascota.getNomMascota());
+        existente.setEspecie(mascota.getEspecie());
+        existente.setRaza(mascota.getRaza());
+        existente.setEstadoAdopcion(mascota.getEstadoAdopcion());
+        existente.setDescripcion(mascota.getDescripcion());
+
+        if(mascota.getFoto() != null){
+            existente.setFoto(mascota.getFoto());
+        }
+
+        mascotaRepository.save(existente);
+    }
+
+
     public List<MascotaModel> obtenerMascotasFundacion(FundacionModel fundacion){
 
-        return mascotaRepository.findByFundacion(fundacion);
+        List<MascotaModel> mascotas = mascotaRepository.findByFundacion(fundacion);
 
+        for(MascotaModel mascota : mascotas){
+
+            if(mascota.getFoto() != null){
+
+                String base64 = Base64.getEncoder().encodeToString(mascota.getFoto());
+
+                mascota.setFotoBase64(base64);
+
+            }
+
+        }
+
+        return mascotas;
     }
 }
 

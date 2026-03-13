@@ -53,6 +53,7 @@ public class FundacionController {
 
         List<MascotaModel> mascotas = mascotaService.obtenerMascotasFundacion(fundacion);
 
+        model.addAttribute("mascota", new MascotaModel());
         model.addAttribute("fundacion", fundacion);
         model.addAttribute("mascotas", mascotas);
 
@@ -108,10 +109,14 @@ public class FundacionController {
     @PostMapping("/mascota/registrar")
     public String registrarMascotaFundacion(
             @ModelAttribute MascotaModel mascota,
+            @RequestParam("fotoMascota") MultipartFile fotoMascota,
             Authentication authentication,
             RedirectAttributes redirectAttributes){
 
         try {
+            if(!fotoMascota.isEmpty()){
+                mascota.setFoto(fotoMascota.getBytes());
+            }
 
             String username = authentication.getName();
 
@@ -131,6 +136,33 @@ public class FundacionController {
             redirectAttributes.addFlashAttribute("error",
                     "Error al registrar mascota");
 
+        }
+
+        return "redirect:/fundacion/index";
+    }
+
+    @PostMapping("/mascota/editar")
+    public String actualizarMascota(
+            @ModelAttribute MascotaModel mascota,
+            RedirectAttributes redirectAttributes,
+            @RequestParam(value = "fotoMascota", required = false) MultipartFile fotoMascota){
+
+        try {
+            if(fotoMascota != null && !fotoMascota.isEmpty()){
+                mascota.setFoto(fotoMascota.getBytes());
+            }
+
+            mascotaService.actualizarMascota(mascota);
+
+            redirectAttributes.addFlashAttribute("success",
+                    "Mascota actualizada correctamente");
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            redirectAttributes.addFlashAttribute("error",
+                    "Error al actualizar mascota");
         }
 
         return "redirect:/fundacion/index";

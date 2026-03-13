@@ -33,13 +33,10 @@ public class PropietarioController {
 
     @GetMapping("/index")
     public String indexPropietario(
-
             Authentication authentication,
-            Model model
+            Model model) {
 
-    ) {
         PropietarioModel propietario = obtenerPropietario(authentication);
-
 
         List<MascotaModel> mascotas =
                 mascotaService.listarConHistoriaYVacunas(propietario);
