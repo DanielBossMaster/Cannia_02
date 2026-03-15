@@ -58,6 +58,7 @@ public class FundacionController {
 
         model.addAttribute("mascota", new MascotaModel());
         model.addAttribute("fundacion", fundacion);
+        model.addAttribute("fundacionId", fundacion.getId());
         model.addAttribute("mascotas", mascotas);
 
 
