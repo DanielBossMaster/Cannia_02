@@ -52,6 +52,7 @@ public class PropietarioController {
                 citaService.obtenerCitasPropietario(propietario);
 
 
+
         model.addAttribute("recordatoriosVacunas", recordatoriosVacunas);
         model.addAttribute("mascotas", mascotas);
         model.addAttribute("mascota", new MascotaModel());

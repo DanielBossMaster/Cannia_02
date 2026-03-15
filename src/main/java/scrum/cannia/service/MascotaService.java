@@ -122,17 +122,14 @@ public class MascotaService {
 
         List<MascotaModel> mascotas = mascotaRepository.findByFundacion(fundacion);
 
-        for(MascotaModel mascota : mascotas){
+        return mascotas;
+    }
 
-            if(mascota.getFoto() != null){
+    public List<MascotaModel> obtenerMascotasDisponibles(){
 
-                String base64 = Base64.getEncoder().encodeToString(mascota.getFoto());
+        List<MascotaModel> mascotas =
+                mascotaRepository.findByEstadoAdopcion("DISPONIBLE");
 
-                mascota.setFotoBase64(base64);
-
-            }
-
-        }
 
         return mascotas;
     }

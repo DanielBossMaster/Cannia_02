@@ -26,6 +26,7 @@ public interface MascotaRepository extends JpaRepository<MascotaModel, Long> {
 
     Optional<MascotaModel> findById(Long id);
 
+
     @Query("""
     SELECT DISTINCT m
     FROM MascotaModel m

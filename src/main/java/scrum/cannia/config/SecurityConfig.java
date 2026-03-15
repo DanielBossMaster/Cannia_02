@@ -39,8 +39,9 @@ public class SecurityConfig {
                                 "/registro/**",
                                 "/css/**",
                                 "/js/**",
-                                "/img/**"
-
+                                "/img/**",
+                                "/uploads/**",
+                                "/adopciones/**"
                         ).permitAll()
 
 

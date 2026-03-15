@@ -61,20 +61,9 @@ public class MascotaModel {
     @Column(name = "estado_adopcion")
     private String estadoAdopcion;
 
-    @Lob
-    @Column(columnDefinition = "LONGBLOB")
-    private byte[] foto;
 
-    @Transient
-    private String fotoBase64;
-
-    public String getFotoBase64() {
-        return fotoBase64;
-    }
-
-    public void setFotoBase64(String fotoBase64) {
-        this.fotoBase64 = fotoBase64;
-    }
+    @Column(name = "foto")
+    private String foto;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 15, nullable = true)

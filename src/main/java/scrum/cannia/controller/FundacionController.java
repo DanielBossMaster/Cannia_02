@@ -24,6 +24,9 @@ import scrum.cannia.service.UsuarioService;
 import scrum.cannia.strategy.DataLoaderStrategy;
 import scrum.cannia.strategy.factory.DataLoaderFactory;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @AllArgsConstructor
@@ -115,7 +118,16 @@ public class FundacionController {
 
         try {
             if(!fotoMascota.isEmpty()){
-                mascota.setFoto(fotoMascota.getBytes());
+
+                String nombreArchivo = System.currentTimeMillis() + "_" + fotoMascota.getOriginalFilename();
+
+                String ruta = "src/main/resources/static/uploads/mascotas/";
+
+                Path path = Paths.get(ruta + nombreArchivo);
+
+                Files.write(path, fotoMascota.getBytes());
+
+                mascota.setFoto(nombreArchivo);
             }
 
             String username = authentication.getName();
@@ -148,8 +160,17 @@ public class FundacionController {
             @RequestParam(value = "fotoMascota", required = false) MultipartFile fotoMascota){
 
         try {
-            if(fotoMascota != null && !fotoMascota.isEmpty()){
-                mascota.setFoto(fotoMascota.getBytes());
+            if(!fotoMascota.isEmpty()){
+
+                String nombreArchivo = System.currentTimeMillis() + "_" + fotoMascota.getOriginalFilename();
+
+                String ruta = "src/main/resources/static/uploads/mascotas/";
+
+                Path path = Paths.get(ruta + nombreArchivo);
+
+                Files.write(path, fotoMascota.getBytes());
+
+                mascota.setFoto(nombreArchivo);
             }
 
             mascotaService.actualizarMascota(mascota);

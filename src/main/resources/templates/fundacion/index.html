@@ -198,8 +198,7 @@
                 </nav>
             </div>
         </aside>
-        <div class="flex flex-col flex-1 min-h-full transition-all duration-300">
-
+        <div class="flex flex-col flex-1 min-h-screen transition-all duration-300">
             <!-- Header -->
             <header class="bg-secondary text-white flex justify-between items-center px-2 py-1 shadow-md overflow-visible">
                 <div class="flex items-center space-x-3">
@@ -215,18 +214,17 @@
                 </div>
             </header>
             <!-- CONTENIDO PRINCIPAL -->
-
-            <main>
+            <main class="ml-32 mr-32 flex flex-col items-center flex-grow px-6 py-8">
                 <!-- MENSAJE DE EXITO -->
                 <div th:if="${success}"
                      class="max-w-3xl mx-auto mt-6 p-4 bg-green-100 border border-green-400 text-green-800 rounded text-center">
                     <span th:text="${success}"></span>
-                    </div>
+                </div>
                     <!-- MENSAJE DE ERROR -->
-                    <div th:if="${error}"
+                <div th:if="${error}"
                          class="max-w-3xl mx-auto mt-6 p-4 bg-red-100 border border-red-400 text-red-800 rounded text-center">
-                        <span th:text="${error}"></span>
-                    </div>
+                    <span th:text="${error}"></span>
+                </div>
                 <section id="vista-Inicio"  class="flex flex-col justify-center mt-12">
                     <div class="max-w-4xl mx-auto mt-16 px-6 text-center">
                         <h1 class="text-4xl text-center leading-tight font-extrabold text-secondary">
@@ -295,76 +293,69 @@
                     </div>
                 </section>
                 <section id="vista-Mascotas" class="hidden ml-10">
-                        <div class="container mx-auto px-4 py-8">
+                    <div class="container mx-auto px-4 py-8">
                             <!-- MENSAJE -->
-                            <div >
-                                <h1 class="text-center text-5xl font-bold text-gray-700">
-                                    Mascotas de tu fundacion <br> <span th:text="${fundacion.nombre}"></span>
-                                </h1>
-                            </div>
-                            <!-- SIN MASCOTAS -->
-                            <div th:if="${#lists.isEmpty(mascotas)}"
-                                 class="text-center py-16">
-                                <p class="text-softText text-lg">
-                                    No tienes mascotas registradas todavía 🐾
-                                </p>
-                                <a href="/fundacion/registrar-mascota"
-                                   class="mt-4 inline-block bg-primary text-white px-6 py-2  hover:bg-primary/80 transition">
-                                    Registrar primera mascota
-                                </a>
-                            </div>
-                            <!-- GRID DE MASCOTAS -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-10 gap-8">
-                                <div th:each="mascota : ${mascotas}"
-                                     class="bg-white  shadow-md hover:shadow-xl transition overflow-hidden border border-borderLight flex flex-col">
-                                    <!-- FOTO -->
-                                    <div class="relative h-52 bg-gray-100">
+                        <div>
+                            <h1 class="text-center text-5xl font-bold text-gray-700">
+                                Mascotas de tu fundacion <br> <span th:text="${fundacion.nombre}"></span>
+                            </h1>
+                        </div>
+                           <!-- SIN MASCOTAS -->
+                        <div th:if="${#lists.isEmpty(mascotas)}"
+                             class="text-center py-16">
+                            <p class="text-softText px-6 ml-12 gap-8 text-lg">
+                                No tienes mascotas registradas todavía
+                            </p>
+                            <button onclick="abrirModalMascota(event)"
+                               class="bg-secondary text-white px-6 py-4  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                            Registrar primera mascota
+                            </button>
+                        </div>
+                        <!-- GRID DE MASCOTAS -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-10 gap-8">
+                            <div th:each="mascota : ${mascotas}"
+                                 class="bg-white  shadow-md hover:shadow-xl transition overflow-hidden border border-borderLight flex flex-col">
+                                <!-- FOTO -->
+                                <div class="relative h-52 bg-gray-100">
+                                    <img th:if="${mascota.foto != null}"
+                                         th:src="@{/uploads/mascotas/{foto}(foto=${mascota.foto})}"
 
-                                        <img th:if="${mascota.fotoBase64 != null}"
-                                             th:src="'data:image/jpeg;base64,' + ${mascota.fotoBase64}"
-                                             class="w-full h-full object-cover"/>
+                                    class="w-full h-full object-cover"/>
+                                    <img th:if="${mascota.foto == null}"
+                                         th:src="@{/uploads/mascotas/{foto}(foto=${mascota.foto})}"
 
-                                        <img th:if="${mascota.fotoBase64 == null}"
-                                             src="/img/logo.png"
-                                             class="w-full h-full object-cover"/>
-
-                                        <span th:text="${mascota.estadoAdopcion}"
-                                              class="absolute top-3 left-3 text-white text-xs px-3 py-1 shadow"
-                                              th:classappend="
-                                              ${mascota.estadoAdopcion == 'DISPONIBLE'} ? ' bg-green-500' :
-                                                (${mascota.estadoAdopcion == 'EN_PROCESO'} ? ' bg-yellow-500' :
-                                                 (${mascota.estadoAdopcion == 'ADOPTADO'} ? ' bg-red-500' :
-                                                  (${mascota.estadoAdopcion == 'NO_DISPONIBLE'} ? 'bg-red-600' : ' bg-gray-500')))">
-
-                                        </span>
-
+                                    class="w-full h-full object-cover"/>
+                                    <span th:text="${mascota.estadoAdopcion}"
+                                          class="absolute top-3 left-3 text-white text-xs px-3 py-1 shadow"
+                                          th:classappend="
+                                          ${mascota.estadoAdopcion == 'DISPONIBLE'} ? ' bg-green-500' :
+                                           (${mascota.estadoAdopcion == 'EN_PROCESO'} ? ' bg-yellow-500' :
+                                           (${mascota.estadoAdopcion == 'ADOPTADO'} ? ' bg-red-500' :
+                                           (${mascota.estadoAdopcion == 'NO_DISPONIBLE'} ? 'bg-red-600' : ' bg-gray-500')))">
+                                    </span>
+                                </div>
+                                <!-- INFO -->
+                                <div class="p-5 flex flex-col flex-grow">
+                                    <h3 class="text-lg font-bold text-secondary"
+                                        th:text="${mascota.nomMascota}">
+                                        Nombre
+                                    </h3>
+                                    <div class="mt-2 text-sm text-softText space-y-1">
+                                        <p><span class="font-semibold text-secondary">Especie:</span>
+                                            <span th:text="${mascota.especie}"></span>
+                                        </p>
+                                        <p><span class="font-semibold text-secondary">Raza:</span>
+                                            <span th:text="${mascota.raza}"></span>
+                                        </p>
+                                        <p th:if="${mascota.descripcion != null}"
+                                           class="text-sm text-softText mt-2 line-clamp-2">
+                                            <span class="font-semibold text-secondary">Descripción:</span>
+                                            <span th:text="${mascota.descripcion}"></span>
+                                        </p>
                                     </div>
-                                    <!-- INFO -->
-                                    <div class="p-5 flex flex-col flex-grow">
-                                        <h3 class="text-lg font-bold text-secondary"
-                                            th:text="${mascota.nomMascota}">
-                                            Nombre
-                                        </h3>
-                                        <div class="mt-2 text-sm text-softText space-y-1">
-                                            <p>
-                                                <span class="font-semibold text-secondary">Especie:</span>
-                                                <span th:text="${mascota.especie}"></span>
-                                            </p>
-                                            <p>
-                                                <span class="font-semibold text-secondary">Raza:</span>
-                                                <span th:text="${mascota.raza}"></span>
-                                            </p>
-                                            <p th:if="${mascota.descripcion != null}"
-                                               class="text-sm text-softText mt-2 line-clamp-2">
-                                                <span class="font-semibold text-secondary">Descripción:</span>
-                                                <span th:text="${mascota.descripcion}"></span>
-                                            </p>
-
-                                        </div>
-
-                                        <!-- BOTONES -->
-                                        <div class="flex justify-center pt-2 space-x-2">
-                                            <button class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition"
+                                    <!-- BOTONES -->
+                                    <div class="flex justify-center pt-2 space-x-2">
+                                        <button class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition"
                                                     th:attr="onclick=|abrirModalEdicion(
                                                  ${mascota.id},
                                                 '${mascota.nomMascota}',
@@ -374,25 +365,25 @@
                                                 '${mascota.descripcion}')|">
                                                 Editar
                                             </button>
-                                            <button class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition"
-                                            th:attr="onclick=|mostrarDescripcion('${mascota.descripcion}')|">
-                                                Descripción
-                                            </button>
-                                         </div>
+                                        <button class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition"
+                                                th:attr="onclick=|mostrarDescripcion('${mascota.descripcion}')|">
+                                            Descripción
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </div>
+                </section>
             </main>
-            <footer class="text-center text-sm text-primary py-3 w-full ">
+            <!-- Footer -->
+            <footer class=" text-center text-sm text-primary py-3">
                 © 2025 Cannia Todos los derechos reservados.
             </footer>
         </div>
     </div>
 </div>
 
-</body>
 
 <div id="modalDescripcion"
      class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -508,7 +499,8 @@
         <input type="hidden" id="idMascota"  th:field="*{id}"/>
 
         <img th:if="${mascota.fotoBase64 != null}"
-             th:src="'data:image/jpeg;base64,' + ${mascota.fotoBase64}"
+             th:src="@{/uploads/mascotas/{foto}(foto=${mascota.foto})}"
+
              class="w-full h-40 object-cover mb-3">
 
         <!-- Nombre -->
@@ -583,6 +575,7 @@
     </form>
 </div>
 </div>
+</body>
 <script>
 
     function mostrarDescripcion(texto){

@@ -1,103 +1,376 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Mascotas en Adopción</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+
     <script>
         tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#170022",
-                        secondary: "#170022",
-                        lightBg: "#e8ebff",
-                        lightSurface: "#f7f8f9",
-                        darkText: "#1e293b",
-                        softText: "#475569",
-                        borderLight: "#e2e8f0",
+            theme:{
+                extend:{
+                    colors:{
+                        primary:"#170022",
+                        secondary:"#170022",
+                        lightBg:"#e8ebff",
+                        lightSurface:"#f7f8f9",
+                        darkText:"#1e293b",
+                        softText:"#475569",
+                        borderLight:"#e2e8f0",
                     },
-                    fontFamily: {
-                        display: ["Roboto", "sans-serif"],
+                    fontFamily:{
+                        display:["Roboto","sans-serif"],
                     },
-                },
-            },
+                }
+            }
         };
     </script>
+
     <style>
-        body { font-family: 'Roboto', sans-serif; }
+        body{font-family:'Roboto',sans-serif;}
     </style>
 </head>
-<body class="bg-lightBg text-darkText min-h-screen">
-<header class="bg-secondary text-white flex justify-between items-center px-6 py-3 shadow-md">
+
+<body class="bg-lightBg min-h-screen overflow-x-hidden">
+
+
+<!-- HEADER -->
+<!-- Header -->
+<header class="bg-secondary text-white  flex justify-between items-center px-2 py-1 shadow-md ">
     <div class="flex items-center space-x-3">
-        <img src="/img/logo.png" alt="Logo" class="w-8 h-8">
-        <h1 class="text-lg font-bold">Cannia Adopción</h1>
+        <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
+        <h1 class="text-lg font-bold">Cannia</h1>
     </div>
-    <a th:href="@{/mascotas}">
-        <button class="text-sm hover:font-bold bg-white text-secondary px-3 py-1 rounded">Volver</button>
-    </a>
+    <!--           <div>-->
+    <!--                <h1 class="text-3xl font-bold mb-3 text-white">-->
+    <!--                    Veterinaria <span th:text="${veterinaria.nombre}" ></span>-->
+    <!--                </h1>-->
+    <!--            </div>-->
+    <div class="flex items-center space-x-3 gap-8">
+
+        <a sec:authorize="hasRole('PROPIETARIO')"
+           th:href="@{/propietario/index}" class="group relative ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 class="lucide lucide-house-icon lucide-house">
+                <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            </svg>
+            <span class="absolute top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-black text-white text-xs px-2 py-1 whitespace-nowrap z-50">
+                Inicio
+            </span>
+        </a>
+        <a sec:authorize="!isAuthenticated()"
+           th:href="@{/inicio}" class="group relative ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 class="lucide lucide-house-icon lucide-house">
+                <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            </svg>
+            <span class="absolute top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-black text-white text-xs px-2 py-1 whitespace-nowrap z-50">
+                Inicio
+            </span>
+        </a>
+    </div>
 </header>
 
-<main class="container mx-auto px-4 py-8">
 
-    <div class="bg-primary text-white p-6 rounded-lg shadow-xl mb-8 max-w-3xl mx-auto text-center">
-        <h2 class="text-2xl font-bold" th:text="${welcomeMessage}"></h2>
+<!-- CONTENEDOR -->
+<div class="max-w-7xl mx-auto px-6 py-10">
+
+    <!-- MENSAJE DE EXITO -->
+    <div th:if="${success}"
+         class="max-w-3xl mx-auto mt-6 p-4 bg-green-100 border border-green-400 text-green-800 rounded text-center">
+        <span th:text="${success}"></span>
+    </div>
+    <!-- MENSAJE DE ERROR -->
+    <div th:if="${error}"
+         class="max-w-3xl mx-auto mt-6 p-4 bg-red-100 border border-red-400 text-red-800 rounded text-center">
+        <span th:text="${error}"></span>
     </div>
 
-    <div class="flex justify-center space-x-4 mb-8">
-        <a th:href="@{/adopcion}"
-           th:classappend="${especieSeleccionada == ''} ? 'bg-secondary text-white' : 'bg-white text-secondary border border-secondary'"
-           class="px-6 py-2 rounded-full font-semibold shadow-md hover:bg-secondary hover:text-white transition">
-            Todos
-        </a>
-        <a th:href="@{/adopcion(especie=${caninoEspecie})}"
-           th:classappend="${especieSeleccionada == caninoEspecie} ? 'bg-secondary text-white' : 'bg-white text-secondary border border-secondary'"
-           class="px-6 py-2 rounded-full font-semibold shadow-md hover:bg-secondary hover:text-white transition">
-            Caninos
-        </a>
-        <a th:href="@{/adopcion(especie=${felinoEspecie})}"
-           th:classappend="${especieSeleccionada == felinoEspecie} ? 'bg-secondary text-white' : 'bg-white text-secondary border border-secondary'"
-           class="px-6 py-2 rounded-full font-semibold shadow-md hover:bg-secondary hover:text-white transition">
-            Felinos
-        </a>
+    <div class="text-center mb-12">
+
+        <h1 class="text-4xl font-extrabold text-secondary mb-4">
+            Mascotas en Adopción
+        </h1>
+
+        <p class="text-softText text-lg max-w-2xl mx-auto">
+            Encuentra un nuevo compañero que necesita un hogar lleno de amor.
+            Cada adopción salva una vida.
+        </p>
+
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
 
-        <div th:if="${#lists.isEmpty(mascotas)}" class="col-span-full">
-            <p class="text-center text-softText text-lg">
-                No hay mascotas disponibles para adopción en este momento.
-            </p>
+    <!-- GRID -->
+    <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+
+        <!-- CARD -->
+        <div th:each="mascota : ${mascotas}"
+             class="bg-white shadow-sm border border-borderLight overflow-hidden hover:shadow-lg transition">
+
+            <!-- IMAGEN -->
+            <div class="relative">
+
+                <img th:if="${mascota.foto!= null}"
+                     th:src="@{/uploads/mascotas/{foto}(foto=${mascota.foto})}"
+
+                     class="w-full h-full object-cover"/>
+                <img th:if="${mascota.foto== null}"
+                     th:src="@{/uploads/mascotas/{foto}(foto=${mascota.foto})}">
+
+                <span th:text="${mascota.estadoAdopcion}"
+                      class="absolute top-2 left-2 text-white text-xs px-3 py-1"
+                      th:classappend="
+                      ${mascota.estadoAdopcion == 'DISPONIBLE'} ? ' bg-green-500' :
+                      (${mascota.estadoAdopcion == 'EN_PROCESO'} ? ' bg-yellow-500' :
+                      (${mascota.estadoAdopcion == 'ADOPTADO'} ? ' bg-red-500' : ' bg-gray-500'))">
+                </span>
+            </div>
+            <!-- INFO -->
+            <div class="p-5">
+
+                <h3 class="text-xl font-bold text-secondary"
+                    th:text="${mascota.nomMascota}">
+                </h3>
+
+                <p class="text-softText text-sm mb-2">
+                    <span th:text="${mascota.especie}"></span>
+                </p>
+
+                <p class="text-softText text-sm mb-4">
+                    <span th:text="${mascota.genero}"></span>
+                </p>
+
+                <p th:if="${mascota.descripcion != null}"
+                   class="text-softText text-sm mb-4 line-clamp-3"
+                   th:text="${mascota.descripcion}">
+                </p>
+
+                <button class="bg-primary  w-full text-white px-4 py-2 hover:bg-lightSurface hover:text-primary border border-primary font-bold transition"
+                th:attr="onclick=|abrirModalMascota(${mascota.id},
+                '${mascota.nomMascota}',
+                '${mascota.especie}',
+                '${mascota.raza}',
+                '${mascota.genero}',
+                '${mascota.descripcion}',
+                '${mascota.foto}'
+                )|">
+                    Ver detalles
+                </button>
+            </div>
         </div>
+    </div>
+</div>
 
-        <div th:each="mascota : ${mascotas}" class="bg-white rounded-lg shadow-xl overflow-hidden transform hover:scale-[1.02] transition duration-300 border border-borderLight">
 
-            <div class="h-48 bg-gray-200 flex items-center justify-center overflow-hidden">
-                <img th:if="${mascota.foto != null}" th:src="@{'data:image/jpeg;base64,' + ${#strings.arrayToUrlString(mascota.foto)}}"
-                     alt="Foto de Mascota" class="w-full h-full object-cover"/>
-                <span th:unless="${mascota.foto != null}" class="text-softText">Sin foto</span>
+<!-- MODAL MASCOTA -->
+<div id="modalMascota"
+     class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+
+    <div class="bg-white w-full max-w-3xl p-6 relative max-h-[90vh] overflow-y-auto">
+
+
+    <button onclick="cerrarModalMascota()"
+                class="absolute top-4 right-4 text-xl">
+            ✕
+        </button>
+
+        <div class="grid md:grid-cols-2 gap-6">
+
+            <img id="modalFoto" class="w-full h-64 object-cover">
+
+            <div>
+
+                <h2 id="modalNombre" class="text-2xl font-bold mb-3"></h2>
+
+                <p class="text-gray-600">
+                    <b>Especie:</b>
+                    <span id="modalEspecie"></span>
+                </p>
+
+                <p class="text-gray-600">
+                    <b>Raza:</b>
+                    <span id="modalRaza"></span>
+                </p>
+
+                <p class="text-gray-600">
+                    <b>Genero:</b>
+                    <span id="modalGenero"></span>
+                </p>
+
+                <p id="modalDescripcion"
+                   class="mt-4 text-gray-600"></p>
+
+                <button
+                        onclick="mostrarFormularioAdopcion()"
+                        class="mt-6 bg-green-600 text-white px-4 py-2 w-full">
+
+                    Solicitar adopción
+
+                </button>
+
             </div>
 
-            <div class="p-4">
-                <h3 class="text-xl font-bold text-primary mb-1" th:text="${mascota.nomMascota}">Nombre Mascota</h3>
-                <p class="text-softText text-sm"><span class="font-semibold">Especie:</span> <span th:text="${mascota.especie}"></span></p>
-                <p class="text-softText text-sm"><span class="font-semibold">Raza:</span> <span th:text="${mascota.raza}"></span></p>
-                <p class="text-softText text-sm"><span class="font-semibold">Fundación:</span> <span th:text="${mascota.fundacion.nombre}"></span></p>
+        </div>
 
-                <div class="mt-4">
-                    <a th:href="@{/adopcion/legalizar/{id}(id=${mascota.id})}" class="block text-center bg-primary text-white px-4 py-2 rounded-md hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
-                        Legalizar Adopción
-                    </a>
+
+        <!-- FORMULARIO -->
+        <div id="formAdopcion" class="hidden mt-6">
+
+            <div class="bg-lightSurface shadow-2xl w-full p-8">
+
+                <div class="flex items-center justify-between p-4 -mx-8 -mt-8 mb-4 bg-primary text-white">
+
+                    <h2 class="text-xl font-bold">
+                        Solicitud de Adopción para
+                        <span id="nombreMascotaFormulario"></span>
+                    </h2>
+
                 </div>
+
+                <form th:action="@{/adopciones/solicitar}" method="post" class="space-y-4">
+                    <input type="hidden" id="mascotaIdInput" name="mascotaId">
+                    <p class="text-sm font-medium text-softText">
+                        Por favor completa el formulario. Tu solicitud será enviada a la fundación responsable de esta mascota.
+                    </p>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">
+                            ¿Tienes experiencia previa con mascotas?, Cuentanos un poco mas sobre eso.
+                        </label>
+                        <textarea
+                                name="experiencia"
+                                required
+                                class="w-full rounded border border-borderLight bg-lightSurface px-3 py-2 focus:ring-primary focus:border-primary">
+                        </textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">
+                            Tipo de vivienda (Casa/Apartamento, tamaño)
+                        </label>
+                        <input type="text"
+                               name="vivienda"
+                               required
+                               class="w-full rounded border border-borderLight bg-lightSurface px-3 py-2 focus:ring-primary focus:border-primary">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">
+                            ¿Por qué deseas adoptar esta mascota?
+                        </label>
+                        <textarea
+                                name="motivo"
+                                required
+                                class="w-full rounded border border-borderLight bg-lightSurface px-3 py-2 focus:ring-primary focus:border-primary">
+                        </textarea>
+                    </div>
+
+                    <div sec:authorize="!isAuthenticated()" class="space-y-3">
+
+                        <label class="block text-sm font-medium">Nombre</label>
+                        <input type="text" name="nombre"
+                               class="w-full rounded border border-borderLight px-3 py-2">
+
+                        <label class="block text-sm font-medium">Email</label>
+                        <input type="email" name="email"
+                               class="w-full rounded border border-borderLight px-3 py-2">
+
+                        <label class="block text-sm font-medium">Teléfono</label>
+                        <input type="text" name="telefono"
+                               class="w-full rounded border border-borderLight px-3 py-2">
+
+                    </div>
+
+
+                    <div sec:authorize="hasRole('PROPIETARIO')"
+                         class="text-sm text-softText bg-green-50 border border-green-200 p-3 rounded">
+
+                        Tu solicitud se enviará usando los datos de tu cuenta registrada.
+
+                    </div>
+
+                    <div class="flex justify-center space-x-4 pt-4">
+                        <button type="button"
+                                onclick="cerrarFormularioAdopcion()"
+                                class="bg-lightSurface text-primary px-4 py-2 hover:bg-primary hover:text-white border border-primary font-bold transition">
+                            Cancelar
+                        </button>
+                        <button type="submit"
+                                class="bg-primary text-white px-4 py-2 hover:bg-lightSurface hover:text-primary border border-primary font-bold transition">
+                            Enviar Solicitud
+                        </button>
+                    </div>
+
+                </form>
+
             </div>
         </div>
     </div>
-</main>
-<footer class="text-center mt-4">
-    <p>&copy; 2025 App Cannia. Todos los derechos reservados.</p>
-</footer>
+</div>
+
+
+<script>
+
+    function abrirModalMascota(id,nombre,especie,raza,genero,descripcion,foto){
+
+        document.getElementById("modalMascota").classList.remove("hidden")
+
+        document.getElementById("modalNombre").innerText = nombre
+        document.getElementById("modalEspecie").innerText = especie
+        document.getElementById("modalRaza").innerText = raza
+        document.getElementById("modalGenero").innerText = genero
+        document.getElementById("modalDescripcion").innerText = descripcion
+
+        document.getElementById("mascotaIdInput").value = id
+
+        if(foto && foto !== "null"){
+            document.getElementById("modalFoto").src = "/uploads/mascotas/" + foto
+        }else{
+            document.getElementById("modalFoto").src = "/img/logo.png"
+        }
+
+
+    }
+
+    function cerrarModalMascota(){
+
+        document.getElementById("modalMascota").classList.add("hidden")
+        document.getElementById("formAdopcion").classList.add("hidden")
+
+    }
+
+    function mostrarFormularioAdopcion(){
+
+        const form = document.getElementById("formAdopcion")
+
+        form.classList.remove("hidden")
+
+        document.getElementById("nombreMascotaFormulario").innerText =
+            document.getElementById("modalNombre").innerText
+
+        form.scrollIntoView({
+            behavior: "smooth"
+        })
+
+    }
+
+
+    function cerrarFormularioAdopcion(){
+
+        document.getElementById("formAdopcion").classList.add("hidden")
+
+    }
+
+
+</script>
+
 </body>
 </html>
