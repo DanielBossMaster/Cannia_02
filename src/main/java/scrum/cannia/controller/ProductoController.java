@@ -73,6 +73,11 @@ public class ProductoController {
             }
         });
 
+
+        VeterinarioModel veterinario = usuario.getVeterinario();
+
+        model.addAttribute("veterinario", veterinario);
+
         model.addAttribute("productos", productosPage.getContent());
         model.addAttribute("currentPageProductos", pageProductos);
         model.addAttribute("totalPagesProductos", productosPage.getTotalPages());

@@ -252,6 +252,8 @@ public class VeterinarioController {
                         9
                 );
 
+        model.addAttribute("veterinario", veterinario);
+
         // 3. Datos para la vista
         model.addAttribute("productos", productosPage.getContent());
         model.addAttribute("currentPageProductos", pageProductos);
