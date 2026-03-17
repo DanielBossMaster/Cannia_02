@@ -187,10 +187,8 @@
                             Adoptar
                         </span>
                     </a>
-
                 </nav>
             </div>
-
             <!-- Bloque inferior  -->
             <div class="mb-6">
                 <nav class="flex flex-col gap-4">
@@ -236,7 +234,7 @@
                         <!-- COLUMNA IZQUIERDA · TEXTO -->
                         <div class="max-w-xl">
                             <h2 class="text-6xl leading-tight font-extrabold text-secondary">
-                                Hola <span th:text="${propietario.nombrePro}"></span>,
+                                Bienvenido Propietario <span th:text="${propietario.nombrePro}"></span>,
                                 <br>
                                 El cuidado de tus mascotas
                                 <span class="block text-primary">en un solo lugar.</span>
@@ -255,7 +253,6 @@
                                 Próximas vacunas y recordatorios importantes
                             </p>
                             <div class="bg-white/70 backdrop-blur border border-borderLight p-6">
-
                                 <!-- CON RECORDATORIOS -->
                                 <div th:if="${recordatoriosVacunas != null and !recordatoriosVacunas.isEmpty()}"
                                     class="space-y-4">
@@ -285,7 +282,6 @@
                                             <div class="mt-2" >
                                                 <!-- ESTADO DE CITA -->
                                                 <div class="mt-2">
-
                                                     <!-- SIN CITA -->
                                                     <div th:if="${r.estadoCita == null}">
                                                         <button
@@ -295,36 +291,30 @@
                                                                 class="bg-secondary text-white px-4 py-2 hover:bg-lightSurface hover:text-primary font-bold transition">
                                                             Solicitar cita
                                                         </button>
-
                                                         <p th:if="${!r.permiteAgendar}"
                                                            class="text-xs text-softText">
                                                             Aún no disponible
                                                         </p>
                                                     </div>
-
                                                     <!-- AGENDADA -->
                                                     <div th:if="${r.estadoCita == T(scrum.cannia.model.EstadoCita).AGENDADA}"
                                                          class="text-sm font-semibold text-primary">
                                                          Solicitud enviada
                                                     </div>
-
                                                     <!-- ACEPTADA -->
                                                     <div th:if="${r.estadoCita == T(scrum.cannia.model.EstadoCita).ACEPTADA}"
                                                          class="text-sm font-semibold text-green-600">
                                                          Cita agendada
                                                     </div>
-
                                                     <!-- RECHAZADA -->
                                                     <div th:if="${r.estadoCita == T(scrum.cannia.model.EstadoCita).RECHAZADA}">
                                                         <p class="text-red-600 text-sm font-semibold">
                                                              Cita rechazada
                                                         </p>
-
                                                         <p class="text-xs text-softText"
                                                            th:if="${r.mensaje != null}"
                                                            th:text="${r.mensaje}">
                                                         </p>
-
                                                         <button
                                                                 th:if="${r.permiteAgendar}"
                                                                 th:onclick="|abrirModalCita(${r.idMascota}, ${r.idVacuna})|"
@@ -332,40 +322,31 @@
                                                             Solicitar nuevamente
                                                         </button>
                                                     </div>
-
                                                     <!-- VACUNA APLICADA (24h) -->
                                                     <div th:if="${r.estadoCita == T(scrum.cannia.model.EstadoCita).VACUNA_APLICADA}"
                                                          class="text-sm font-semibold text-green-700">
                                                          Vacuna aplicada correctamente
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
                                 <!-- TODO AL DIA -->
                                 <div th:if="${recordatoriosVacunas == null or recordatoriosVacunas.isEmpty()}"
                                      class="text-center py-6">
-
                                     <p class="text-lg font-semibold text-secondary">
                                         Todo al día
                                     </p>
-
                                     <p class="text-sm text-softText mt-1">
                                         Las vacunas de tus mascotas están al día.
                                     </p>
-
                                 </div>
-
                                 <div class="flex justify-end mt-3 mb-2">
-
                                     <button
                                             type="button"
                                             onclick="abrirModalCitasAceptadas()"
                                             class="bg-secondary text-white px-6 py-2 hover:bg-primary transition font-bold">
-
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              width="24"
                                              height="24"
@@ -381,19 +362,14 @@
                                             <path d="M11 7v4"/>
                                             <path d="M11 15h.01"/>
                                         </svg>
-
                                     </button>
-
                                 </div>
-
                             </div>
-
                             <p class="text-xs text-softText mt-4">
                                 Te avisaremos cuando se acerque una próxima vacuna.
                             </p>
                         </div>
                     </div>
-
                 </section>
                 <section id="vista-Mascotas" class="hidden">
                     <div class="items-center ">
@@ -442,73 +418,67 @@
                                                 class="bg-primary hover:bg-secondary text-white px-4 py-2 rounded-lg transition"
 
                                                 th:attr="onclick=|abrirModalEdicion(
-                ${m.id},
-                '${m.nomMascota}',
-                '${m.especie}',
-                '${m.raza}',
-                '${m.color}',
-                '${m.genero}'
-            )|">
-
+                                                ${m.id},
+                                                '${m.nomMascota}',
+                                                 '${m.especie}',
+                                                 '${m.raza}',
+                                                 '${m.color}',
+                                                 '${m.genero}'
+                                                 )|">
                                             Editar
-
                                         </button>
-
                                     </div>
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </section>
-
-                   <section id="vista-Historia" class="hidden">
-                                            <div class="max-w-6xl mx-auto mt-4 space-y-6">
-                                                <h2 class="text-3xl font-bold text-center text-secondary">
-                                                    Historia Clínica de tus Mascotas
-                                                </h2>
-                                                <!-- SIN MASCOTAS -->
-                                                <div th:if="${mascotas.isEmpty()}"
-                                                     class="text-center text-softText">
-                                                    No tienes mascotas registradas.
-                                                </div>
-                                                <!-- HISTORIA POR CADA MASCOTA -->
-                                                <div th:each="m : ${mascotas}"
-                                                     class="bg-white shadow p-8 space-y-2">
-                                                    <!-- HEADER MASCOTA -->
-                                                    <div class="flex flex-col md:flex-row md:items-center md:justify-center gap-4">
-                                                        <div>
-                                                            <h3 class="text-2xl justify-center flex font-bold">
-                                                                <span th:text="${m.nomMascota}"></span>
-                                                            </h3>
-                                                            <p class="text-softText">
-                                                                <span th:text="${m.especie}"></span> ·
-                                                                <span th:text="${m.raza}"></span> ·
-                                                                <span th:text="${m.genero}"></span>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <!-- TABLA HISTORIA CLÍNICA -->
-                                                    <div class="overflow-x-auto">
-                                                        <table class="min-w-full border border-borderLight">
-                                                            <thead class="bg-lightSurface">
-                                                            <tr>
-                                                                <th class="py-2 px-3 text-left">Fecha</th>
-                                                                <th class="py-2 px-3 text-left">Diagnóstico</th>
-                                                                <th class="py-2 px-3 text-left">Tratamiento</th>
-                                                                <th class="py-2 px-3 text-left">Peso</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            <!-- CON HISTORIA -->
-                                                            <tr th:each="h : ${m.historiasClinicas}"
-                                                                class="border-t">
-                                                                <td class="py-2 px-3"
-                                                                    th:text="${#temporals.format(h.fechaHora, 'dd/MM/yyyy HH:mm')}">
-                                                                </td>
-                                                                <td class="py-2 px-3"
-                                            th:text="${h.diagnostico}">
+                <section id="vista-Historia" class="hidden">
+                    <div class="max-w-6xl mx-auto mt-4 space-y-6">
+                        <h2 class="text-3xl font-bold text-center text-secondary">
+                            Historia Clínica de tus Mascotas
+                        </h2>
+                        <!-- SIN MASCOTAS -->
+                        <div th:if="${mascotas.isEmpty()}"
+                             class="text-center text-softText">
+                            No tienes mascotas registradas.
+                        </div>
+                        <!-- HISTORIA POR CADA MASCOTA -->
+                        <div th:each="m : ${mascotas}"
+                             class="bg-white shadow p-8 space-y-2">
+                            <!-- HEADER MASCOTA -->
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-center gap-4">
+                                <div>
+                                    <h3 class="text-2xl justify-center flex font-bold">
+                                        <span th:text="${m.nomMascota}"></span>
+                                    </h3>
+                                    <p class="text-softText">
+                                        <span th:text="${m.especie}"></span> ·
+                                        <span th:text="${m.raza}"></span> ·
+                                        <span th:text="${m.genero}"></span>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- TABLA HISTORIA CLÍNICA -->
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full border border-borderLight">
+                                    <thead class="bg-lightSurface">
+                                    <tr>
+                                        <th class="py-2 px-3 text-left">Fecha</th>
+                                        <th class="py-2 px-3 text-left">Diagnóstico</th>
+                                        <th class="py-2 px-3 text-left">Tratamiento</th>
+                                        <th class="py-2 px-3 text-left">Peso</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!-- CON HISTORIA -->
+                                    <tr th:each="h : ${m.historiasClinicas}"
+                                        class="border-t">
+                                        <td class="py-2 px-3"
+                                            th:text="${#temporals.format(h.fechaHora, 'dd/MM/yyyy HH:mm')}">
+                                        </td>
+                                        <td class="py-2 px-3"
+                                                th:text="${h.diagnostico}">
                                         </td>
                                         <td class="py-2 px-3"
                                             th:text="${h.tratamiento}">
@@ -814,23 +784,17 @@
 
 <div id="modalCita"
      class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-
     <div class="bg-white  p-6 w-full max-w-md shadow-xl">
-
         <h3 class="text-xl font-semibold text-secondary mb-4">
             Agendar cita
         </h3>
-
-
         <input type="hidden" id="mascotaId">
         <input type="hidden" id="vacunaId">
-
         <!-- FECHA -->
         <label class="block text-sm font-medium mb-1">Fecha</label>
         <input type="date" id="fechaCita"
                class="w-full border p-2 mb-4"
                th:min="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
-
         <!-- HORA -->
         <label class="block text-sm font-medium mb-1">Hora</label>
         <select id="horaCita" class="w-full border p-2 mb-4">
@@ -848,7 +812,6 @@
             <option>16:00</option>
             <option>17:00</option>
         </select>
-
         <!-- ACCIONES -->
         <div  class="flex justify-center gap-3 pt-4">
             <button onclick="cerrarModalCita()"
@@ -861,7 +824,6 @@
             Guardar
             </button>
         </div>
-
     </div>
 </div>
 </body>

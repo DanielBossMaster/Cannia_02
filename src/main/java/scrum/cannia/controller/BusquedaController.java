@@ -1,18 +1,19 @@
-// src/main/java/scrum/cannia/controller/BusquedaController.java
 package scrum.cannia.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import scrum.cannia.Dto.ProductoBusquedaDto; // Importa el DTO
 import scrum.cannia.service.BusquedaService;
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/busqueda")
 public class BusquedaController {
 
-    @Autowired
-    private BusquedaService busquedaService;
+
+    private final BusquedaService busquedaService;
 
 
     @GetMapping("/productos")

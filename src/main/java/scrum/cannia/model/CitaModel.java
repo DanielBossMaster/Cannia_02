@@ -35,7 +35,7 @@ public class CitaModel {
     // Estado de la cita
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EstadoCita estado;
+    private EstadoCita estadoCita;
 
 
     // CitaModel.java

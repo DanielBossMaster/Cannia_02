@@ -2,6 +2,7 @@ package scrum.cannia.controller;
 
 
 import com.sendgrid.helpers.mail.objects.Email;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,15 +19,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+@AllArgsConstructor
 @Controller
 @RequestMapping("/publicidad")
 public class EmailController {
 
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private PropietarioRepository propietarioRepository;
+    private final EmailService emailService;
+    private final PropietarioRepository propietarioRepository;
 
     @PostMapping("/enviar")
     public String enviarPublicidad(

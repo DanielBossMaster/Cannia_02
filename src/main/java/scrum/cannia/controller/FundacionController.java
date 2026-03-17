@@ -11,16 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import scrum.cannia.Dto.MascotaCargaDTO;
 import scrum.cannia.Dto.ResultadoCargaMascotasDTO;
-import scrum.cannia.model.FundacionModel;
-import scrum.cannia.model.MascotaModel;
-import scrum.cannia.model.PropietarioModel;
-import scrum.cannia.model.UsuarioModel;
+import scrum.cannia.model.*;
 import scrum.cannia.repository.UsuarioRepository;
-import scrum.cannia.service.FundacionService;
-import scrum.cannia.service.MascotaService;
+import scrum.cannia.service.*;
 import scrum.cannia.repository.MascotaRepository;
-import scrum.cannia.service.MascotaServiceCreator;
-import scrum.cannia.service.UsuarioService;
 import scrum.cannia.strategy.DataLoaderStrategy;
 import scrum.cannia.strategy.factory.DataLoaderFactory;
 
@@ -37,9 +31,10 @@ public class FundacionController {
     private final MascotaService mascotaService;
     private final MascotaRepository mascotaRepository;
     private final MascotaServiceCreator mascotaServiceCreator;
-    private final UsuarioRepository usuarioRepository;;
+    private final UsuarioRepository usuarioRepository;
     private final FundacionService fundacionService;
     private final UsuarioService usuarioService;
+    private final SolicitudAdopcionService solicitudService;
 
     @GetMapping("/index")
     public String dashboard(Authentication authentication, Model model) {
@@ -56,6 +51,10 @@ public class FundacionController {
 
         List<MascotaModel> mascotas = mascotaService.obtenerMascotasFundacion(fundacion);
 
+        List<SolicitudAdopcionModel> solicitudes = solicitudService.obtenerSolicitudesFundacion(fundacion);
+
+
+        model.addAttribute("solicitudes", solicitudes);
         model.addAttribute("mascota", new MascotaModel());
         model.addAttribute("fundacion", fundacion);
         model.addAttribute("fundacionId", fundacion.getId());
@@ -115,10 +114,10 @@ public class FundacionController {
             @ModelAttribute MascotaModel mascota,
             @RequestParam("fotoMascota") MultipartFile fotoMascota,
             Authentication authentication,
-            RedirectAttributes redirectAttributes){
+            RedirectAttributes redirectAttributes) {
 
         try {
-            if(!fotoMascota.isEmpty()){
+            if (!fotoMascota.isEmpty()) {
 
                 String nombreArchivo = System.currentTimeMillis() + "_" + fotoMascota.getOriginalFilename();
 
@@ -158,10 +157,10 @@ public class FundacionController {
     public String actualizarMascota(
             @ModelAttribute MascotaModel mascota,
             RedirectAttributes redirectAttributes,
-            @RequestParam(value = "fotoMascota", required = false) MultipartFile fotoMascota){
+            @RequestParam(value = "fotoMascota", required = false) MultipartFile fotoMascota) {
 
         try {
-            if(!fotoMascota.isEmpty()){
+            if (!fotoMascota.isEmpty()) {
 
                 String nombreArchivo = System.currentTimeMillis() + "_" + fotoMascota.getOriginalFilename();
 
@@ -186,6 +185,22 @@ public class FundacionController {
             redirectAttributes.addFlashAttribute("error",
                     "Error al actualizar mascota");
         }
+
+        return "redirect:/fundacion/index";
+    }
+
+    @PostMapping("/solicitud/aceptar")
+    public String aceptarSolicitud(@RequestParam Long solicitudId) {
+
+        solicitudService.aceptarSolicitud(solicitudId);
+
+        return "redirect:/fundacion/index";
+    }
+
+    @PostMapping("/solicitud/rechazar")
+    public String rechazarSolicitud(@RequestParam Long solicitudId){
+
+        solicitudService.rechazarSolicitud(solicitudId);
 
         return "redirect:/fundacion/index";
     }

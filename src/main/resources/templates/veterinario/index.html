@@ -195,6 +195,16 @@
             </header>
             <!-- CONTENIDO PRINCIPAL -->
             <main class=" ml-32 flex-grow mx-auto  px-6 py-8 mr-32" >
+                <!-- MENSAJE DE EXITO -->
+                <div th:if="${success}"
+                     class="max-w-3xl mx-auto mt-6 p-4 bg-green-100 border border-green-400 text-green-800 rounded text-center">
+                    <span th:text="${success}"></span>
+                </div>
+                <!-- MENSAJE DE ERROR -->
+                <div th:if="${rechazo}"
+                     class="max-w-3xl mx-auto mt-6 p-4 bg-red-100 border border-red-400 text-red-800 rounded text-center">
+                    <span th:text="${rechazo}"></span>
+                </div>
                 <section id="vista-inicio">
                     <div class="items-center ">
                         <div class="flex justify-between items-center mb-6">

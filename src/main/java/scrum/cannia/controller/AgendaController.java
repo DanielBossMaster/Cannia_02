@@ -1,5 +1,6 @@
 package scrum.cannia.controller;
 import jakarta.servlet.http.HttpSession;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,18 +18,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+@AllArgsConstructor
 @Controller
 @RequestMapping("/agenda")
 public class AgendaController {
 
-    @Autowired
-    private AgendaRepository agendaRepository;
-
-    @Autowired
-    private ServicioRepository servicioRepository;
-
-    @Autowired
-    private AgendaService agendaService;
+    private final AgendaRepository agendaRepository;
+    private final ServicioRepository servicioRepository;
+    private final AgendaService agendaService;
 
     @PostMapping("/confirmar")
     public String guardarAgenda(

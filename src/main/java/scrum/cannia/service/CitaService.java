@@ -42,7 +42,7 @@ public class CitaService {
         }
 
 
-        boolean existeActiva = citaRepository.existsByVacunaIdAndEstadoIn(
+        boolean existeActiva = citaRepository.existsByVacunaIdAndEstadoCitaIn(
                 vacunaId,
                 List.of(
                         EstadoCita.AGENDADA,
@@ -77,7 +77,7 @@ public class CitaService {
         cita.setVacuna(vacuna);
         cita.setFechaCita(fecha);
         cita.setHoraCita(hora);
-        cita.setEstado(EstadoCita.AGENDADA);
+        cita.setEstadoCita(EstadoCita.AGENDADA);
 
         citaRepository.save(cita);
     }
@@ -88,14 +88,14 @@ public class CitaService {
         CitaModel cita = citaRepository.findById(citaId)
                 .orElseThrow();
 
-        if (cita.getEstado() != EstadoCita.ACEPTADA) {
+        if (cita.getEstadoCita() != EstadoCita.ACEPTADA) {
             throw new IllegalStateException("La cita no está aceptada");
         }
 
         VacunaModel vacuna = cita.getVacuna();
 
         // 1. Marcar cita como finalizada
-        cita.setEstado(EstadoCita.VACUNA_APLICADA);
+        cita.setEstadoCita(EstadoCita.VACUNA_APLICADA);
         cita.setFechaEstado(LocalDateTime.now());
 
         // 2. Registrar aplicación de vacuna
@@ -109,7 +109,7 @@ public class CitaService {
     }
 
     public List<CitaModel> obtenerCitasPendientes(VeterinarioModel veterinario) {
-        return citaRepository.findByEstadoInAndVacuna_Mascota_Propietario_Veterinario(
+        return citaRepository.findByEstadoCitaInAndVacuna_Mascota_Propietario_Veterinario(
                 List.of(
                         EstadoCita.AGENDADA,
                         EstadoCita.ACEPTADA
@@ -121,7 +121,7 @@ public class CitaService {
     public List<CitaVeterinarioDto> obtenerCitasPendientes() {
 
         return citaRepository
-                .findByEstadoOrderByFechaCitaAscHoraCitaAsc(EstadoCita.AGENDADA)
+                .findByEstadoCitaOrderByFechaCitaAscHoraCitaAsc(EstadoCita.AGENDADA)
                 .stream()
                 .map(cita -> {
 
@@ -135,7 +135,7 @@ public class CitaService {
                     dto.setNombreVacuna(cita.getVacuna().getNombre());
                     dto.setFecha(cita.getFechaCita());
                     dto.setHora(cita.getHoraCita());
-                    dto.setEstado(cita.getEstado());
+                    dto.setEstado(cita.getEstadoCita());
                     dto.setMensaje(cita.getMensaje());
 
                     return dto;
@@ -148,11 +148,11 @@ public class CitaService {
         CitaModel cita = citaRepository.findById(citaId)
                 .orElseThrow();
 
-        if (cita.getEstado() != EstadoCita.AGENDADA) {
+        if (cita.getEstadoCita() != EstadoCita.AGENDADA) {
             throw new IllegalStateException("Solo se pueden aceptar citas solicitadas");
         }
 
-        cita.setEstado(EstadoCita.ACEPTADA);
+        cita.setEstadoCita(EstadoCita.ACEPTADA);
         cita.setMensaje(null);
         citaRepository.save(cita);
     }
@@ -161,11 +161,11 @@ public class CitaService {
         CitaModel cita = citaRepository.findById(citaId)
                 .orElseThrow();
 
-        if (cita.getEstado() != EstadoCita.AGENDADA) {
+        if (cita.getEstadoCita() != EstadoCita.AGENDADA) {
             throw new IllegalStateException("Solo se pueden rechazar citas solicitadas");
         }
 
-        cita.setEstado(EstadoCita.RECHAZADA);
+        cita.setEstadoCita(EstadoCita.RECHAZADA);
         cita.setMensaje(mensaje);
         citaRepository.save(cita);
     }
@@ -173,7 +173,7 @@ public class CitaService {
     public List<CitaVeterinarioDto> obtenerCitasAceptadas() {
 
         return citaRepository
-                .findByEstadoOrderByFechaCitaAscHoraCitaAsc(EstadoCita.ACEPTADA)
+                .findByEstadoCitaOrderByFechaCitaAscHoraCitaAsc(EstadoCita.ACEPTADA)
                 .stream()
                 .map(this::toDto)
                 .toList();
@@ -182,7 +182,7 @@ public class CitaService {
     public List<CitaVeterinarioDto> obtenerHistorial() {
 
         return citaRepository
-                .findByEstadoIn(List.of(
+                .findByEstadoCitaIn(List.of(
                         EstadoCita.RECHAZADA,
                         EstadoCita.VACUNA_APLICADA
                 ))
@@ -203,7 +203,7 @@ public class CitaService {
         dto.setNombreVacuna(cita.getVacuna().getNombre());
         dto.setFecha(cita.getFechaCita());
         dto.setHora(cita.getHoraCita());
-        dto.setEstado(cita.getEstado());
+        dto.setEstado(cita.getEstadoCita());
         dto.setMensaje(cita.getMensaje());
 
         return dto;
@@ -224,7 +224,7 @@ public class CitaService {
                 dto.setFecha(cita.getFechaCita());
                 dto.setHora(cita.getHoraCita());
 
-                dto.setEstado(cita.getEstado());
+                dto.setEstado(cita.getEstadoCita());
 
                 lista.add(dto);
             }

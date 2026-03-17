@@ -241,7 +241,7 @@
                 <section id="vista-Inicio"  class="flex flex-col justify-center mt-12">
                     <div class="max-w-4xl mx-auto mt-16 px-6 text-center">
                         <h1 class="text-4xl text-center leading-tight font-extrabold text-secondary">
-                            Bienvenido a Cannia, donde tu fundacion <span class="text-primary" th:text="${fundacionNombre}">Okvet</span>
+                            Bienvenido a Cannia, donde tu fundacion <span class="text-primary" th:text="${fundacion.nombre}">Okvet</span>
                             <br> podrá publicar mascotas en adopción
                             y administrar todas las solicitudes <span class="block text-primary">de forma simple y en un solo lugar.</span>
                         </h1>
@@ -307,6 +307,7 @@
                     </div>
                 </section>
                 <section id="vista-Mascotas" class="hidden ml-10">
+
                     <div class="container mx-auto px-4 py-8">
                             <!-- MENSAJE -->
                         <div>
@@ -385,6 +386,94 @@
                                         </button>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section id="vista-Solicitudes" class="hidden ml-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+                        <div th:each="solicitud : ${solicitudes}"
+                             class="bg-white border border-borderLight shadow-md p-5">
+
+                            <div class="relative h-52 bg-gray-100">
+
+                                <img th:if="${solicitud.mascota.foto != null}"
+                                     th:src="@{/uploads/mascotas/{foto}(foto=${solicitud.mascota.foto})}"
+
+                                     class="w-full h-full object-cover"/>
+                                <img th:if="${solicitud.mascota.foto == null}"
+                                     src="/img/logo.png"
+                                     class="w-full h-full object-cover"/>
+                            </div>
+                            <h3 class="text-lg font-bold text-secondary">
+                                <span th:text="${solicitud.mascota.nomMascota}"></span>
+                            </h3>
+                            <p class="text-sm text-softText mt-2">
+                                Experiencia:
+                                <span th:text="${solicitud.experiencia}"></span>
+                            </p>
+                            <p class="text-sm text-softText">
+                                Vivienda:
+                                <span th:text="${solicitud.vivienda}"></span>
+                            </p>
+
+                            <p class="text-sm text-softText">
+                                Motivo:
+                                <span th:text="${solicitud.motivo}"></span>
+                            </p>
+
+                            <p class="text-sm text-softText mt-2">
+                                Estado:
+                                <span class="font-semibold"
+                                      th:text="${solicitud.estado}">
+                                </span>
+                            </p>
+                            <p class="text-sm text-softText">
+                                <b>Solicitante:</b>
+                                <span th:if="${solicitud.propietario != null}"
+                                      th:text="${solicitud.propietario.nombrePro}">
+                                </span>
+                                <span th:if="${solicitud.propietario == null}"
+                                      th:text="${solicitud.nombre}">
+                                </span>
+                            </p>
+                            <p class="text-sm text-softText">
+                                <b>Email:</b>
+                                <span th:if="${solicitud.propietario != null}"
+                                      th:text="${solicitud.propietario.correoPro}">
+                                </span>
+                                <span th:if="${solicitud.propietario == null}"
+                                      th:text="${solicitud.email}">
+                                </span>
+                            </p>
+                            <p class="text-sm text-softText">
+                                <b>Telefono:</b>
+                                <span th:if="${solicitud.propietario != null}"
+                                      th:text="${solicitud.propietario.telefonoPro}">
+                                </span>
+                                <span th:if="${solicitud.propietario == null}"
+                                      th:text="${solicitud.telefono}">
+                                </span>
+                            </p>
+
+                            <div th:if="${solicitud.estado == 'PENDIENTE'}"
+                                 class="flex gap-2 mt-3">
+
+                                <form th:action="@{/fundacion/solicitud/aceptar}" method="post">
+                                    <input type="hidden" name="solicitudId"
+                                           th:value="${solicitud.id}">
+                                    <button class="bg-green-600 text-white px-3 py-1">
+                                        Aceptar
+                                    </button>
+                                </form>
+
+                                <form th:action="@{/fundacion/solicitud/rechazar}" method="post">
+                                    <input type="hidden" name="solicitudId"
+                                           th:value="${solicitud.id}">
+                                         <button class="bg-red-600 text-white px-3 py-1">
+                                        Rechazar
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

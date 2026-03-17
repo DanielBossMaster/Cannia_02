@@ -12,19 +12,19 @@ public interface CitaRepository extends JpaRepository<CitaModel, Long> {
 
 
 
-    boolean existsByVacunaIdAndEstadoIn(
+    boolean existsByVacunaIdAndEstadoCitaIn(
             Long vacunaId,
             List<EstadoCita> estados
     );
 
     Optional<CitaModel> findTopByVacuna_IdOrderByIdDesc(Long vacunaId);
 
-    List<CitaModel> findByEstadoOrderByFechaCitaAscHoraCitaAsc(EstadoCita estado);
+    List<CitaModel> findByEstadoCitaOrderByFechaCitaAscHoraCitaAsc(EstadoCita estado);
 
-    List<CitaModel> findByEstadoInAndVacuna_Mascota_Propietario_Veterinario(
+    List<CitaModel> findByEstadoCitaInAndVacuna_Mascota_Propietario_Veterinario(
             List<EstadoCita> estados,
             VeterinarioModel veterinario
     );
 
-    List<CitaModel> findByEstadoIn(List<EstadoCita> estados);
+    List<CitaModel> findByEstadoCitaIn(List<EstadoCita> estados);
 }

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import scrum.cannia.model.CitaModel;
 import scrum.cannia.model.EstadoCita;
 import scrum.cannia.model.UsuarioModel;
@@ -57,8 +58,10 @@ public class CitaController {
 
     @PostMapping("/{id}/aceptar")
     @ResponseBody
-    public ResponseEntity<?> aceptar(@PathVariable Long id) {
+    public ResponseEntity<?> aceptar(@PathVariable Long id,  RedirectAttributes redirectAttributes) {
         citaService.aceptarCita(id);
+        redirectAttributes.addFlashAttribute("success",
+                "Cita agendada correctamente");
         return ResponseEntity.ok().build();
     }
 
@@ -66,9 +69,12 @@ public class CitaController {
     @ResponseBody
     public ResponseEntity<?> rechazar(
             @PathVariable Long id,
-            @RequestParam String mensaje
+            @RequestParam String mensaje,
+            RedirectAttributes redirectAttributes
     ) {
         citaService.rechazarCita(id, mensaje);
+        redirectAttributes.addFlashAttribute("rechazo",
+                "Cita rechazada");
         return ResponseEntity.ok().build();
     }
 

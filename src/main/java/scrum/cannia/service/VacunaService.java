@@ -56,10 +56,10 @@ public class VacunaService {
 
                     } else {
 
-                        dto.setEstadoCita(cita.getEstado());
+                        dto.setEstadoCita(cita.getEstadoCita());
                         dto.setMensaje(cita.getMensaje());
 
-                        if (cita.getEstado() == EstadoCita.RECHAZADA) {
+                        if (cita.getEstadoCita() == EstadoCita.RECHAZADA) {
                             permiteAgendar = true;
                         }
                     }
