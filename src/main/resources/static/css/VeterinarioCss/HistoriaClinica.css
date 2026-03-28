@@ -10,9 +10,9 @@ body {
 
 /* ===== ENCABEZADO ===== */
 header {
-    background: #170022;
+    background: #170022 ;
     color: white;
-    padding: 0 18px;
+    padding: 0 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -28,41 +28,72 @@ header {
 }
 
 .logo img {
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    object-fit: cover;
+
 
 }
 
 /* Títulos del header */
-header h1 {
-    margin: 0;
-    font-weight: 700;
-    font-size: 20px;
-    letter-spacing: 0.4px;
+header a {
+    color: white;
 }
 
 header {
-    margin: 0;
+    margin: 0 ;
     font-size: 1.3rem;
     font-weight: 300;
-    opacity: 0.9;
+
+}
+
+/* CONTENEDOR */
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* TOOLTIP */
+.tooltip-text {
+    position: absolute;
+    top: 100%; /* debajo */
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 6px;
+
+    background: black;
+    color: white;
+    font-size: 16px;
+
+    padding: 4px 8px;
+
+    white-space: nowrap;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+
+    z-index: 50;
+}
+
+/* HOVER (equivalente a group-hover) */
+.tooltip-container:hover .tooltip-text {
+    opacity: 1;
 }
 
 /* ===== BARRA DE BÚSQUEDA ===== */
 .Barra {
     background: #ffffff;
-    border-radius: 25px;
-    padding: 4px 15px;
+    padding: 4px 8px;
     display: flex;
     align-items: center;
     width: 450px;
     transition: all 0.3s ease;
-    margin: 10px auto;
+    margin: 8px auto;
+    height: 25px;
 }
 
 .Barra:hover {
@@ -537,4 +568,8 @@ textarea {
     color: #f0f0f0;
     transition: all 0.3s ease;
     text-decoration: none;
+
 }
+
+/* PERZONALIZACION */
+

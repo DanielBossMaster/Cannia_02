@@ -73,9 +73,7 @@ public class PropietarioService {
                         new RuntimeException("Propietario no encontrado o no autorizado"));
     }
 
-    public List<PropietarioModel> listarPorVeterinario(Long veterinarioId) {
-        return propietarioRepository.findByVeterinarioId(veterinarioId);
-    }
+
 
     public PropietarioModel guardar(PropietarioModel propietario) {
         return propietarioRepository.save(propietario);

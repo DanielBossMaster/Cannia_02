@@ -1,6 +1,7 @@
 package scrum.cannia.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -9,16 +10,25 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import scrum.cannia.Dto.RegistroDTO;
 import scrum.cannia.model.*;
 import scrum.cannia.repository.*;
-import scrum.cannia.service.CodigoVinculacionService;
-import scrum.cannia.service.PropietarioService;
-import scrum.cannia.service.UsuarioService;
+import scrum.cannia.service.*;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @AllArgsConstructor
 @Controller
 @RequestMapping("/registro")
 public class RegistroController {
 
+
+
+    private final PasswordResetTokenService tokenService;
+    private final EmailService emailService;
+
+
+
     private final UsuarioService usuarioService;
-    private final VeterinariaRepository veterinariaRepository;
+
     private final CodigoVinculacionService codigoVinculacionService;
     private final PropietarioService propietarioService;
 
@@ -109,5 +119,119 @@ public class RegistroController {
         }
 
         return "registro/RegistroPropietario";
+    }
+
+
+    @PostMapping("/forgot-password")
+    public String procesarForgotPassword(
+
+            @RequestParam String username,
+            @RequestParam String email,
+
+            RedirectAttributes redirectAttributes){
+
+        UsuarioModel usuario =
+                usuarioService.buscarPorUsuario(username);
+
+        boolean datosValidos = false;
+
+        if(usuario != null){
+
+            UsuarioModel usuarioPorEmail =
+                    usuarioService.buscarPorEmail(email);
+
+            if(usuarioPorEmail != null &&
+                    usuarioPorEmail.getIdUsuario()
+                            .equals(usuario.getIdUsuario())){
+
+                datosValidos = true;
+            }
+        }
+
+        if(datosValidos){
+
+            String token =
+                    UUID.randomUUID().toString();
+
+            tokenService.crearToken(usuario, token);
+
+            emailService.enviarCorreoRecuperacion(
+                    email,
+                    token
+            );
+            // mensaje de éxito
+            redirectAttributes.addFlashAttribute(
+                "mensajeRecuperacion",
+                "Si los datos coinciden, recibirás un enlace para recuperar tu contraseña."
+            );
+        } else {
+            // mensaje de error
+            redirectAttributes.addFlashAttribute(
+                "errorRecuperacion",
+                "El usuario y el correo no coinciden."
+            );
+        }
+        return "redirect:/login";
+    }
+
+    @GetMapping("/reset-password")
+    public String mostrarResetPassword(
+            @RequestParam String token,
+            Model model){
+
+        System.out.println("ENTRO AL POST RESET PASSWORD");
+
+        PasswordResetTokenModel tokenModel =
+                tokenService.buscarPorToken(token);
+
+        if(tokenModel == null){
+
+            return "token-invalido";
+        }
+
+        model.addAttribute("token", token);
+
+        return "login/NuevaPassword";
+    }
+
+    @PostMapping("/reset-password")
+    public String cambiarPassword(
+            @RequestParam String token,
+            @RequestParam String password){
+
+        PasswordResetTokenModel tokenModel =
+                tokenService.buscarPorToken(token);
+
+        if(tokenModel == null){
+
+            System.out.println("TOKEN INVALIDO");
+
+            return "token-invalido";
+        }
+
+        if(tokenModel.getFechaExpiracion()
+                .isBefore(LocalDateTime.now())){
+
+            System.out.println("TOKEN EXPIRADO");
+
+            return "token-expirado";
+        }
+
+        UsuarioModel usuario =
+                tokenModel.getUsuario();
+
+        System.out.println(
+                "ACTUALIZANDO PASSWORD USUARIO ID: "
+                        + usuario.getIdUsuario()
+        );
+
+        usuarioService.actualizarPassword(
+                usuario,
+                password
+        );
+
+        tokenService.eliminar(tokenModel);
+
+        return "redirect:/login?passwordActualizada";
     }
 }

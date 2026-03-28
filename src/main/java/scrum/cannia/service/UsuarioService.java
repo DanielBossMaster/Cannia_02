@@ -134,6 +134,48 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
     }
+
+    public UsuarioModel buscarPorEmail(String email){
+
+        // buscar en propietario
+        PropietarioModel propietario =
+                propietarioRepository.findByCorreoPro(email)
+                        .orElse(null);
+
+        if(propietario != null){
+            return propietario.getUsuario();
+        }
+
+        // buscar en veterinario
+        VeterinarioModel veterinario =
+                veterinarioRepository.findByCorreoVete(email)
+                        .orElse(null);
+
+        if(veterinario != null){
+            return veterinario.getUsuario();
+        }
+
+        // buscar en fundacion
+        FundacionModel fundacion =
+                fundacionRepository.findByEmail(email)
+                        .orElse(null);
+
+        if(fundacion != null){
+            return fundacion.getUsuario();
+        }
+
+        return null;
+    }
+    public void actualizarPassword(
+            UsuarioModel usuario,
+            String nuevaPassword){
+
+        usuario.setContrasena(
+                passwordEncoder.encode(nuevaPassword)
+        );
+
+        usuarioRepository.save(usuario);
+    }
 }
 
 

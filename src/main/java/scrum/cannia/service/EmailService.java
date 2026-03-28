@@ -7,21 +7,53 @@ import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
 
+
 @Service
 public class EmailService {
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     @Value("${sendgrid.api.key}")
     private String apiKey;
 
+    public void enviarCorreoRecuperacion(
+            String email,
+            String token){
+
+        String link =
+                "http://localhost:8081/registro/reset-password?token=" + token;
+
+        SimpleMailMessage mensaje =
+                new SimpleMailMessage();
+
+        mensaje.setTo(email);
+
+        mensaje.setSubject(
+                "Recuperar contraseña - Cannia");
+
+        mensaje.setText(
+                "Hola \n\n" +
+                        "Haz clic en el enlace para cambiar tu contraseña:\n"
+                        + link +
+                        "\n\nEste enlace expira en 30 minutos."
+        );
+
+        mailSender.send(mensaje);
+    }
+
     public void enviarPublicidad(String correo, String titulo, String mensajeHtml, byte[] imagenBytes, String nombreImagen) throws IOException {
 
-        Email from = new Email("sena.danielboss@gmail.com");
+        Email from = new Email("cannia.scrum2@gmail.com");
         Email to = new Email(correo);
 
         Content content = new Content("text/html", mensajeHtml);
