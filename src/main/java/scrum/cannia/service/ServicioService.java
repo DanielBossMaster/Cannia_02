@@ -97,4 +97,21 @@ public class ServicioService {
 
         servicioRepository.save(original);
     }
+
+    public List<ServicioModel> buscarPorNombreYVeterinaria(
+            String nombre,
+            Integer veterinariaId
+    ) {
+
+        if (nombre == null || nombre.trim().isEmpty()) {
+            return listarActivosPorVeterinaria(veterinariaId);
+        }
+
+        return servicioRepository
+                .findByVeterinaria_IdAndEstadoTrueAndNombreContainingIgnoreCase(
+                        veterinariaId,
+                        nombre.trim()
+                );
+    }
+
 }

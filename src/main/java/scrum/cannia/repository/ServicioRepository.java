@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface ServicioRepository extends JpaRepository<ServicioModel, Integer> {
 
+
     Page<ServicioModel> findByVeterinaria_Id(
             Integer veterinariaId,
             Pageable pageable
@@ -27,4 +28,10 @@ public interface ServicioRepository extends JpaRepository<ServicioModel, Integer
             Integer veterinariaId,
             Pageable pageable
     );
+    
+    List<ServicioModel> findByVeterinaria_IdAndEstadoTrueAndNombreContainingIgnoreCase(
+            Integer veterinariaId,
+            String nombre
+    );
+
 }

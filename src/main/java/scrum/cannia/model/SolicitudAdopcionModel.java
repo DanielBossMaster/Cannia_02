@@ -36,6 +36,7 @@ public class SolicitudAdopcionModel {
     private String experiencia;
     private String vivienda;
     private String motivo;
+    private String mascotas;
 
     private String estado; // PENDIENTE, ACEPTADA, RECHAZADA
 

@@ -46,6 +46,7 @@ public class AdopcionController {
             @RequestParam String experiencia,
             @RequestParam String vivienda,
             @RequestParam String motivo,
+            @RequestParam String mascotas,
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String telefono
@@ -56,6 +57,7 @@ public class AdopcionController {
                 experiencia,
                 vivienda,
                 motivo,
+                mascotas,
                 nombre,
                 email,
                 telefono,

@@ -56,8 +56,8 @@
     </style>
 </head>
 
-<body class="bg-lightBg text-darkText h-screen overflow-x-hidden">
-<div class="h-full flex">
+<body class="bg-lightBg text-darkText min-h-screen overflow-x-hidden overflow-y-hidden">
+<div class="min-h-screen flex">
     <div class="flex flex-1  relative">
         <!-- SIDEBAR -->
         <aside id="sidebar" class="bg-secondary shadow-2xl text-white w-12 transition-all duration-300 h-full flex flex-col justify-between">
@@ -194,7 +194,7 @@
         </div>
     </header>
     <!-- CONTENIDO PRINCIPAL -->
-    <main class=" ml-32 mb-32 flex-grow mx-auto  px-6 py-8 mr-32" >
+    <main class=" ml-32 flex-grow mx-auto  px-6 py-8 mr-32" >
         <section id="vista-productos" class="vista-activa">
             <div class="items-center ">
                 <div class="flex justify-between items-center mb-6">
@@ -378,11 +378,11 @@
                 </div>
             </div>
         </section>
+        <!-- Footer -->
+        <footer class=" text-center text-sm text-primary py-3">
+            © 2025 App Cannia. Todos los derechos reservados.
+        </footer>
     </main>
-    <!-- Footer -->
-    <footer class=" text-center text-sm text-primary py-3">
-        © 2025 App Cannia. Todos los derechos reservados.
-    </footer>
 </div>
 
 
@@ -512,7 +512,6 @@
     </div>
 </div>
 </div>
-
     <!-- ================= MODAL EDITAR PRODUCTO ================= -->
     <div id="modalEditarProducto"
          class="modal-overlay fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">

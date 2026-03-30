@@ -27,6 +27,7 @@ public class SolicitudAdopcionService {
             String experiencia,
             String vivienda,
             String motivo,
+            String mascotas,
             String nombre,
             String email,
             String telefono,
@@ -40,6 +41,7 @@ public class SolicitudAdopcionService {
 
         solicitud.setMascota(mascota);
         solicitud.setExperiencia(experiencia);
+        solicitud.setMascotas(mascotas);
         solicitud.setVivienda(vivienda);
         solicitud.setMotivo(motivo);
 

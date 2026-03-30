@@ -80,7 +80,8 @@ public class TiendaController {
     @GetMapping("/propietario/servicios")
     public String serviciosPropietario(
             Authentication authentication,
-            Model model
+            Model model,
+            @RequestParam(value = "q", required = false) String q
     ) {
 
         UsuarioModel usuario = usuarioRepository
@@ -88,7 +89,6 @@ public class TiendaController {
                 .orElseThrow(() ->
                         new IllegalStateException("Usuario no autenticado"));
 
-        // Seguridad: solo propietarios
         if (usuario.getPropietario() == null) {
             return "redirect:/login";
         }
@@ -101,24 +101,23 @@ public class TiendaController {
         if (veterinaria == null) {
             model.addAttribute("error",
                     "La veterinaria aún no ha sido configurada por el veterinario.");
-            model.addAttribute("productos", List.of());
-            model.addAttribute("categorias", List.of());
+            model.addAttribute("servicios", List.of());
             return "tienda/Servicios";
         }
 
-
         List<ServicioModel> servicios =
-                servicioService.listarActivosPorVeterinaria(
+                servicioService.buscarPorNombreYVeterinaria(
+                        q,
                         veterinaria.getId()
                 );
 
         model.addAttribute("servicios", servicios);
         model.addAttribute("veterinaria", veterinaria);
         model.addAttribute("direccion", propietario.getDireccionPro());
+        model.addAttribute("consulta", q); // mantiene el texto en el input
 
-        return "tienda/Servicios"; // 👈 vista del propietario
+        return "tienda/Servicios";
     }
-
     // ============================================
     //             TIENDA DE VETERINARIO
     // ============================================
@@ -177,21 +176,30 @@ public class TiendaController {
     @GetMapping("/veterinario/servicios/preview")
     public String serviciosPreview(
             Authentication authentication,
-            Model model
+            Model model,
+            @RequestParam(value = "q", required = false) String q
     ) {
 
         UsuarioModel usuario = usuarioRepository
                 .findByUsuario(authentication.getName())
                 .orElseThrow();
 
-        // Seguridad: solo veterinarios
+        // seguridad: solo veterinarios
         if (usuario.getVeterinario() == null) {
             return "redirect:/login";
         }
 
-        VeterinariaModel veterinaria = usuario.getVeterinario().getVeterinaria();
+        VeterinariaModel veterinaria =
+                usuario.getVeterinario().getVeterinaria();
 
-        model.addAttribute("servicios", servicioService.listarActivosPorVeterinaria(veterinaria.getId()));
+        List<ServicioModel> servicios =
+                servicioService.buscarPorNombreYVeterinaria(
+                        q,
+                        veterinaria.getId()
+                );
+
+        model.addAttribute("servicios", servicios);
+        model.addAttribute("consulta", q);
         model.addAttribute("veterinaria", veterinaria);
 
         return "tienda/ServiciosPreview";
