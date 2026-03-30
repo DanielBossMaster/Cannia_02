@@ -26,12 +26,16 @@ public class EmailService {
     @Value("${sendgrid.api.key}")
     private String apiKey;
 
+    @Value("${app.url}")
+    private String appUrl;
+
     public void enviarCorreoRecuperacion(
             String email,
             String token){
 
+
         String link =
-                "http://localhost:8081/registro/reset-password?token=" + token;
+                appUrl + "/registro/reset-password?token=" + token;
 
         SimpleMailMessage mensaje =
                 new SimpleMailMessage();

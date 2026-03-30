@@ -12,9 +12,7 @@ import java.util.List;
 @RequestMapping("/api/busqueda")
 public class BusquedaController {
 
-
     private final BusquedaService busquedaService;
-
 
     @GetMapping("/productos")
     public List<ProductoBusquedaDto> buscar(
@@ -22,6 +20,5 @@ public class BusquedaController {
             @RequestParam(name = "idCategoria", required = false) Long idCategoria) {
 
         return busquedaService.buscarProductos(query, idCategoria);
-        // Spring automáticamente serializa la lista de DTOs a un JSON limpio
     }
 }

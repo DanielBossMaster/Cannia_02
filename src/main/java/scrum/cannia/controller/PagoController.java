@@ -33,6 +33,9 @@ public class PagoController {
     @Value("${stripe.api.key}")
     private String stripeApiKey;
 
+    @Value("${app.url}")
+    private String appUrl;
+
     @PostConstruct
     private void initStripe() {
         Stripe.apiKey = stripeApiKey;
@@ -79,8 +82,8 @@ public class PagoController {
         SessionCreateParams params = SessionCreateParams.builder()
                 .addAllLineItem(lineItems)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl("http://localhost:8081/pago/exitoso")
-                .setCancelUrl("http://localhost:8081/pago/cancelado")
+                .setSuccessUrl(appUrl + "/pago/exitoso")
+                .setCancelUrl(appUrl + "/pago/cancelado")
                 .build();
 
         Session sessionStripe = Session.create(params);

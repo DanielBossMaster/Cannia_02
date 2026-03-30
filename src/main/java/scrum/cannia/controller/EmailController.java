@@ -60,8 +60,6 @@ public class EmailController {
         return "redirect:/veterinario/GestionVentas";
     }
 
-
-
     private String construirCorreoHtmlCID(String titulo, String mensaje) {
 
         return "<div style='font-family: Arial; padding: 20px;'>" +
@@ -70,29 +68,4 @@ public class EmailController {
                 "<p style='font-size: 16px; color: #444;'>" + mensaje + "</p>" +
                 "</div>";
     }
-
-
-    private String construirCorreoHtml(String titulo, String mensaje, String imagenUrl) {
-        StringBuilder html = new StringBuilder();
-
-        html.append("<div style='font-family: Arial, sans-serif; padding: 20px;'>");
-
-        html.append("<h2 style='color: #2b6cb0;'>" + titulo + "</h2>");
-
-        if (imagenUrl != null) {
-            html.append("<img src='" + imagenUrl + "' style='width:100%; max-width:600px; border-radius:8px; margin-bottom:20px;'>");
-        }
-
-        html.append("<p style='font-size: 16px; color: #444;'>");
-        html.append(mensaje);
-        html.append("</p>");
-
-        html.append("</div>");
-
-        return html.toString();
-    }
-
-
-
-
 }
