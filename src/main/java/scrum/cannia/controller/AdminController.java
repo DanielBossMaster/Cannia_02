@@ -36,7 +36,7 @@ public class AdminController {
                 "mensaje",
                 "Usuario aprobado correctamente "
         );
-        return "redirect:/Admin/index";
+        return "redirect:/admin/index";
     }
 
     @PostMapping("/rechazar/{id}")
@@ -47,7 +47,7 @@ public class AdminController {
                 "Usuario rechazado correctamente "
         );
 
-        return "redirect:/Admin/index";
+        return "redirect:/admin/index";
     }
 }
 
