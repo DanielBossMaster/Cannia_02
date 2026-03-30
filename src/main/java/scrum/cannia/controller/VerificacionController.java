@@ -21,7 +21,7 @@ public class VerificacionController {
         usuarioService.enviarSolicitudPorUsername(username);
 
 
-        return"verificacion/verificacion";
+        return"Verificacion/Verificacion";
     }
 
     @PostMapping("/solicitar")
@@ -31,16 +31,16 @@ public class VerificacionController {
 
         usuarioService.enviarSolicitudPorUsername(username);
 
-        return "redirect:/verificacion/proceso";
+        return "redirect:/Verificacion/Proceso";
     }
 
     @GetMapping("/proceso")
     public String proceso() {
-        return "verificacion/proceso";
+        return "Verificacion/Proceso";
     }
 
     @GetMapping("/rechazado")
     public String rechazado() {
-        return "verificacion/rechazado";
+        return "Verificacion/Rechazado";
     }
 }
