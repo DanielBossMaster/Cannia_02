@@ -15,7 +15,7 @@ public class HomeController {
 
     @GetMapping("/login")
     public String mostrarLogin() {
-        return "login/login";
+        return "login/Login";
     }
 
     @GetMapping("/cerrar-sesion")
