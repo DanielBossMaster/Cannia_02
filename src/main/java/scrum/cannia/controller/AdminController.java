@@ -26,7 +26,7 @@ public class AdminController {
     @GetMapping("/index")
     public String dashboard(Model model) {
         model.addAttribute("pendientes", adminService.obtenerPendientes());
-        return "admin/index";
+        return "Admin/index";
     }
 
     @PostMapping("/aprobar/{id}")
@@ -36,7 +36,7 @@ public class AdminController {
                 "mensaje",
                 "Usuario aprobado correctamente "
         );
-        return "redirect:/admin/index";
+        return "redirect:/Admin/index";
     }
 
     @PostMapping("/rechazar/{id}")
@@ -47,7 +47,7 @@ public class AdminController {
                 "Usuario rechazado correctamente "
         );
 
-        return "redirect:/admin/index";
+        return "redirect:/Admin/index";
     }
 }
 
