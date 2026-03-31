@@ -10,7 +10,7 @@ public class HomeController {
 
     @GetMapping("/inicio")
     public String home() {
-        return "/login/index";
+        return "login/Index";
     }
 
     @GetMapping("/login")
