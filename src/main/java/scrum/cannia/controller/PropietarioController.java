@@ -21,6 +21,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
+
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
 @AllArgsConstructor
 @Controller
@@ -32,6 +36,7 @@ public class PropietarioController {
     private final MascotaService mascotaService;
     private final HistoriaClinicaRepository historiaRepository;
     private final CitaService citaService;
+    private final  Cloudinary cloudinary;
 
     // ============================================
     //           DASHBOARD PROPIETARIO
@@ -79,34 +84,20 @@ public class PropietarioController {
             RedirectAttributes redirectAttributes
 
     ) throws IOException {
-
         PropietarioModel propietario = obtenerPropietario(authentication);
-
         // Si el usuario sube imagen
         if (!archivoFoto.isEmpty()) {
-
-            // generar nombre único
-            String nombreArchivo =
-                    System.currentTimeMillis() + "_" +
-                            archivoFoto.getOriginalFilename();
-
-            // ruta donde se guardará
-            Path rutaCarpeta =
-                    Paths.get("src/main/resources/static/uploads/mascotas");
-
-            // crear carpeta si no existe
-            Files.createDirectories(rutaCarpeta);
-
-            // guardar archivo
-            Files.write(
-                    rutaCarpeta.resolve(nombreArchivo),
-                    archivoFoto.getBytes()
-            );
-
-            // guardar nombre en la entidad
-            mascota.setFoto(nombreArchivo);
+            Map resultado =
+                    cloudinary.uploader().upload(
+                            archivoFoto.getBytes(),
+                            ObjectUtils.asMap(
+                                    "folder", "mascotas"
+                            )
+                    );
+            String urlImagen =
+                    resultado.get("secure_url").toString();
+            mascota.setFoto(urlImagen);
         }
-
         mascotaService.registrarMascota(mascota, propietario);
         redirectAttributes.addFlashAttribute("mensajeExito", "Mascota registrada correctamente");
 
@@ -124,24 +115,20 @@ public class PropietarioController {
             RedirectAttributes redirectAttributes
     ) throws IOException {
 
-        // si el usuario sube una nueva foto
-        if (archivoFoto != null && !archivoFoto.isEmpty()) {
+        if(archivoFoto != null && !archivoFoto.isEmpty()){
 
-            String nombreArchivo =
-                    System.currentTimeMillis() + "_" +
-                            archivoFoto.getOriginalFilename();
+            Map resultado =
+                    cloudinary.uploader().upload(
 
-            Path rutaCarpeta =
-                    Paths.get("src/main/resources/static/uploads/mascotas");
+                            archivoFoto.getBytes(),
+                            ObjectUtils.asMap(
+                                    "folder", "mascotas"
+                            )
+                    );
 
-            Files.createDirectories(rutaCarpeta);
-
-            Files.write(
-                    rutaCarpeta.resolve(nombreArchivo),
-                    archivoFoto.getBytes()
+            mascota.setFoto(
+                    resultado.get("secure_url").toString()
             );
-
-            mascota.setFoto(nombreArchivo);
         }
 
         mascotaService.actualizarMascota(mascota);

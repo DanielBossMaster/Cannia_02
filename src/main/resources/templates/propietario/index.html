@@ -393,7 +393,7 @@
                                     <!-- FOTO -->
                                     <div class="flex-shrink-0">
                                         <img th:if="${m.foto != null && !m.foto.isEmpty()}"
-                                             th:src="@{/uploads/mascotas/{foto}(foto=${m.foto})}"
+                                             th:src="${m.foto}"
                                              class="w-40 h-40 object-cover rounded-full"/>
                                         <img th:if="${m.foto == null || m.foto.isEmpty()}"
                                              src="/img/logo.png"
@@ -943,8 +943,7 @@
         </form>
     </div>
 </div>
-<div id="modalCita"
-     class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+<div id="modalCita" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50">
     <div class="bg-white  p-6 w-full max-w-md shadow-xl">
         <h3 class="text-xl font-semibold text-secondary mb-4">
             Agendar cita
