@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" type="image/png" th:href="@{/img/favicon.png}">
     <title>Productos</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -142,111 +144,106 @@
                     </span>
                 </a>
             </nav>
-        </div>
-
-    <div class="mb-6">
-        <nav class="flex flex-col gap-4">
-            <a th:href="@{/cerrar-sesion}" class=" group relative flex items-center gap-3 px-3 py-1 hover:bg-primary">
-                <i class="fa-solid fa-circle-info">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                         iewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                         stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out">
-                        <path d="m16 17 5-5-5-5"/>
-                        <path d="M21 12H9"/>
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    </svg>
-                </i>
-                <span class="sidebar-text hidden">Cerrar Sesion</span>
-                <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
-                    Cerrar Sesion
-                </span>
-            </a>
-        </nav>
-    </div>
-</aside>
-<div class="flex-1 h-full  min-h-0 flex flex-col">
-    <!-- Header -->
-    <header class="bg-secondary text-white flex justify-between items-center px-2 py-1 shadow-md">
-        <div class="flex items-center space-x-3">
-            <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
-            <h1 class="text-lg font-bold">Cannia</h1>
-        </div>
-        <div>
-            <h1 class="text-3xl font-bold text-white">
-                Veterinaria <span th:text="${veterinaria.nombre}" ></span>
-            </h1>
-        </div>
-        <div class="flex items-center space-x-3 gap-8">
-            <a th:href="@{/veterinario/index}" class="group relative ">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                     class="lucide lucide-house-icon lucide-house">
-                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
-                    <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                </svg>
-                <span class="absolute top-full left-1/2 -translate-x-1/2 mt-2
-                 pointer-events-none opacity-0 group-hover:opacity-100
-                 transition-opacity bg-black text-white text-xs
-               px-2 py-1 whitespace-nowrap z-50"> Inicio
+            </div>
+            <div class="mb-6">
+                <nav class="flex flex-col gap-4">
+                    <a th:href="@{/cerrar-sesion}" class=" group relative flex items-center gap-3 px-3 py-1 hover:bg-primary">
+                        <i class="fa-solid fa-circle-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out">
+                                <path d="m16 17 5-5-5-5"/>
+                                <path d="M21 12H9"/>
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            </svg>
+                        </i>
+                        <span class="sidebar-text hidden">Cerrar Sesion</span>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Cerrar Sesion
                         </span>
-            </a>
-        </div>
-    </header>
-    <!-- CONTENIDO PRINCIPAL -->
-    <main class=" ml-32 flex-grow mx-auto  px-6 py-8 mr-32" >
-        <section id="vista-productos" class="vista-activa">
-            <div class="items-center ">
-                <div class="flex justify-between items-center mb-6">
-            <!-- BOTÓN ABRIR MODAL -->
-                    <button data-modal="modalProducto"
-                            class="bg-secondary  text-white p-4 shadow-xl  transform hover:scale-105 mx-6 text-center hover:shadow-2xl
-                             hover:bg-secondary hover:text-white transition-all duration-300 flex items-center gap-2">
+                    </a>
+                </nav>
+            </div>
+        </aside>
+        <div class="flex-1 h-full  min-h-0 flex flex-col">
+            <!-- Header -->
+            <header class="bg-secondary text-white flex justify-between items-center px-2 py-1 shadow-md">
+                <div class="flex items-center space-x-3">
+                    <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
+                    <h1 class="text-lg font-bold">Cannia</h1>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-white">
+                        Veterinaria <span th:text="${veterinaria.nombre}" ></span>
+                    </h1>
+                </div>
+                <div class="flex items-center space-x-3 gap-8">
+                    <a th:href="@{/veterinario/index}" class="group relative ">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                             stroke-linejoin="round" class="lucide lucide-copy-plus-icon lucide-copy-plus"><line x1="15" x2="15" y1="12" y2="18"/><line x1="12" x2="18" y1="15" y2="15"/><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
-                            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-house-icon lucide-house">
+                            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/>
+                            <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                         </svg>
-                        Agregar Producto
-                    </button>
-                    </div>
-                    <!-- TABLA -->
-                    <div class="bg-lightSurface w-full p-6 shadow-xl border border-borderLight  overflow-x-hidden ">
-                        <h1 th:if="${#lists.isEmpty(productos)}"
+                        <span class="absolute top-full left-1/2 -translate-x-1/2 mt-2 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity bg-black text-white text-xs px-2 py-1 whitespace-nowrap z-50"> Inicio
+                        </span>
+                    </a>
+                </div>
+            </header>
+            <!-- CONTENIDO PRINCIPAL -->
+            <main class=" ml-32 flex-grow mx-auto  px-6 py-8 mr-32" >
+                <section id="vista-productos" class="vista-activa">
+                    <div class="items-center ">
+                        <div class="flex justify-between items-center mb-6">
+                            <!-- BOTÓN ABRIR MODAL -->
+                            <button data-modal="modalProducto"
+                                    class="bg-secondary  text-white p-4 shadow-xl  transform hover:scale-105 mx-6 text-center hover:shadow-2xl hover:bg-secondary hover:text-white transition-all duration-300 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="lucide lucide-copy-plus-icon lucide-copy-plus"><line x1="15" x2="15" y1="12" y2="18"/><line x1="12" x2="18" y1="15" y2="15"/><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                                </svg>
+                                Agregar Producto
+                            </button>
+                        </div>
+
+                        <!-- TABLA -->
+                        <div class="bg-lightSurface w-full p-6 shadow-xl border border-borderLight  overflow-x-hidden ">
+                            <h1 th:if="${#lists.isEmpty(productos)}"
                             class="text-center text-2xl text-gray-500 py-8">
-                            Aún no has registrado productos
-                        </h1>
-                        <table th:if="${!#lists.isEmpty(productos)}"
-                                class="w-full  text-sm">
-                            <thead class="bg-gray-100 text-softText  uppercase text-xs">
-                            <tr>
-                                <th class="p-3 text-left">Foto</th>
-                                <th class="p-3 text-left">Nombre</th>
-                                <th class="p-3 text-left">Descripción</th>
-                                <th class="p-3 text-center">Cantidad</th>
-                                <th class="p-3 text-center">Valor</th>
-                                <th class="p-3 text-center">Unidad</th>
-                                <th class="p-3 text-center">Estado</th>
-                                <th class="p-3 text-center">Acciones</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="prod : ${productos}" class="border-t border-borderLight hover:bg-gray-100 transition">
-                                <td class="px-4 py-3 text-left">
-                                    <img th:if="${prod.fotoBase64 != null}"
-                                         th:src="'data:image/jpeg;base64,' + ${prod.fotoBase64}"
-                                         style="width: 70px; height: 70px;">
-                                </td>
-                                <td th:text="${prod.nombre}" class="px-4 py-3 text-left"></td>
-                                <td th:text="${prod.descripcion}" class="px-4 py-3 text-left"></td>
-                                <td th:text="${prod.cantidad}" class="px-4 py-3 text-center"></td>
-                                <td th:text="${prod.valor}" class="px-4 py-3 text-center"></td>
-                                <td th:text="${prod.unidadMedida}" class="px-4 py-3 text-center"></td>
-                                <!-- PUNTO VERDE / ROJO -->
-                                <td class="p-3 text-center">
-                                    <span th:classappend="${prod.estado} ? 'estado-dot on' : 'estado-dot off'"></span>
-                                </td>
-                                <td class="p-3 text-center">
+                                Aún no has registrado productos
+                            </h1>
+                            <table th:if="${!#lists.isEmpty(productos)}" class="w-full  text-sm">
+                                <thead class="bg-gray-100 text-softText  uppercase text-xs">
+                                <tr>
+                                    <th class="p-3 text-left">Foto</th>
+                                    <th class="p-3 text-left">Nombre</th>
+                                    <th class="p-3 text-left">Descripción</th>
+                                    <th class="p-3 text-center">Cantidad</th>
+                                    <th class="p-3 text-center">Valor</th>
+                                    <th class="p-3 text-center">Unidad</th>
+                                    <th class="p-3 text-center">Estado</th>
+                                    <th class="p-3 text-center">Acciones</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="prod : ${productos}" class="border-t border-borderLight hover:bg-gray-100 transition">
+                                    <td class="px-4 py-3 text-left">
+                                        <img th:if="${prod.fotoBase64 != null}"
+                                             th:src="'data:image/jpeg;base64,' + ${prod.fotoBase64}"
+                                             style="width: 70px; height: 70px;">
+                                    </td>
+                                    <td th:text="${prod.nombre}" class="px-4 py-3 text-left"></td>
+                                    <td th:text="${prod.descripcion}" class="px-4 py-3 text-left"></td>
+                                    <td th:text="${prod.cantidad}" class="px-4 py-3 text-center"></td>
+                                    <td th:text="${prod.valor}" class="px-4 py-3 text-center"></td>
+                                    <td th:text="${prod.unidadMedida}" class="px-4 py-3 text-center"></td>
+                                    <!-- PUNTO VERDE / ROJO -->
+                                    <td class="p-3 text-center">
+                                        <span th:classappend="${prod.estado} ? 'estado-dot on' : 'estado-dot off'"></span>
+                                    </td>
+                                    <td class="p-3 text-center">
                                         <button type="button"
                                                 class="bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 transition"
                                                 onclick="abrirModalEditarProducto(this)"
@@ -260,132 +257,172 @@
                                                 th:data-estado="${prod.estado}">
                                             Editar
                                         </button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <!-- PAGINACIÓN -->
-                        <div th:if="${!#lists.isEmpty(productos)}"
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <!-- PAGINACIÓN -->
+                            <div th:if="${!#lists.isEmpty(productos)}"
                                 class="flex justify-center items-center gap-2 mt-6">
-
-                            <!-- Botón Anterior -->
-                            <a th:if="${currentPageProductos > 0}"
-                               th:href="@{/inventario/productos(pageProductos=${currentPageProductos - 1})}"
-                               class="px-3 py-1 bg-gray-200  hover:bg-gray-300 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-left-dash-icon lucide-arrow-big-left-dash"><path d="M13 9a1 1 0 0 1-1-1V5.061a1 1 0 0 0-1.811-.75l-6.835 6.836a1.207 1.207 0 0 0 0 1.707l6.835 6.835a1 1 0 0 0 1.811-.75V16a1 1 0 0 1 1-1h2a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1z"/><path d="M20 9v6"/></svg>
-                            </a>
-
-                            <!-- Números de página -->
-                            <span th:each="i : ${#numbers.sequence(0, totalPagesProductos - 1)}">
-                                <a th:href="@{/inventario/productos(pageProductos=${i})}" th:text="${i + 1}"
-                                   class="px-3 py-1  transition"
-                                   th:classappend="${i == currentPageProductos}? 'bg-secondary text-white font-bold': 'bg-gray-200 hover:bg-gray-300'">
+                                <!-- Botón Anterior -->
+                                <a th:if="${currentPageProductos > 0}"
+                                   th:href="@{/inventario/productos(pageProductos=${currentPageProductos - 1})}"
+                                   class="px-3 py-1 bg-gray-200  hover:bg-gray-300 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         width="24"
+                                         height="24"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         class="lucide lucide-arrow-big-left-dash-icon lucide-arrow-big-left-dash">
+                                        <path d="M13 9a1 1 0 0 1-1-1V5.061a1 1 0 0 0-1.811-.75l-6.835 6.836a1.207 1.207 0 0 0 0 1.707l6.835 6.835a1 1 0 0 0 1.811-.75V16a1 1 0 0 1 1-1h2a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1z"/>
+                                        <path d="M20 9v6"/>
+                                    </svg>
                                 </a>
-                            </span>
-                            <!-- Botón Siguiente -->
-                            <a th:if="${currentPageProductos < totalPagesProductos - 1}"
-                               th:href="@{/inventario/productos(pageProductos=${currentPageProductos + 1})}"
-                               class="px-3 py-1 bg-gray-200  hover:bg-gray-300 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-right-dash-icon lucide-arrow-big-right-dash"><path d="M11 9a1 1 0 0 0 1-1V5.061a1 1 0 0 1 1.811-.75l6.836 6.836a1.207 1.207 0 0 1 0 1.707l-6.836 6.835a1 1 0 0 1-1.811-.75V16a1 1 0 0 0-1-1H9a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z"/><path d="M4 9v6"/></svg>
-                            </a>
+                                <!-- Números de página -->
+                                <span th:each="i : ${#numbers.sequence(0, totalPagesProductos - 1)}">
+                                    <a th:href="@{/inventario/productos(pageProductos=${i})}" th:text="${i + 1}"
+                                       class="px-3 py-1  transition"
+                                       th:classappend="${i == currentPageProductos}? 'bg-secondary text-white font-bold': 'bg-gray-200 hover:bg-gray-300'">
+                                    </a>
+                                </span>
+                                <!-- Botón Siguiente -->
+                                <a th:if="${currentPageProductos < totalPagesProductos - 1}"
+                                   th:href="@{/inventario/productos(pageProductos=${currentPageProductos + 1})}"
+                                   class="px-3 py-1 bg-gray-200  hover:bg-gray-300 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     width="24"
+                                     height="24"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     class="lucide lucide-arrow-big-right-dash-icon lucide-arrow-big-right-dash">
+                                    <path d="M11 9a1 1 0 0 0 1-1V5.061a1 1 0 0 1 1.811-.75l6.836 6.836a1.207 1.207 0 0 1 0 1.707l-6.836 6.835a1 1 0 0 1-1.811-.75V16a1 1 0 0 0-1-1H9a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z"/>
+                                    <path d="M4 9v6"/>
+                                </svg>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-        </section>
-        <!-- Servicios -->
-        <section id="vista-servicios" class="hidden">
-            <div class="items-center ">
-                <div class="flex justify-between items-center mb-6">
-                    <!-- BOTÓN ABRIR MODAL -->
-                    <button data-modal="modalServicio"
-                            class="bg-secondary  text-white p-4 shadow-xl  transform hover:scale-105 mx-6 text-center hover:shadow-2xl
-                             hover:bg-secondary hover:text-white transition-all duration-300 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                             stroke-linejoin="round" class="lucide lucide-copy-plus-icon lucide-copy-plus"><line x1="15" x2="15" y1="12" y2="18"/><line x1="12" x2="18" y1="15" y2="15"/><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
-                            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
-                        </svg>
-                        Agregar Servicio
-                    </button>
-                </div>
-                <!-- TABLA -->
-                <div class="bg-lightSurface w-full p-6 shadow-xl border border-borderLight  overflow-x-hidden ">
-                    <h1 th:if="${#lists.isEmpty(servicios)}"
-                        class="text-center text-2xl text-gray-500 py-8">
-                        Aún no has registrado servicios
-                    </h1>
-                    <table th:if="${!#lists.isEmpty(servicios)}"
-                            class="w-full  text-sm">
-                        <thead class="bg-gray-100 text-softText  uppercase text-xs">
-                        <tr>
-                            <th class="p-3 text-left">Nombre</th>
-                            <th class="p-3 text-left">Descripción</th>
-                            <th class="p-3 text-center">Duración</th>
-                            <th class="p-3 text-center">Precio</th>
-                            <th class="p-3 text-center">Estado</th>
-                            <th class="p-3 text-center">Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="serv : ${servicios}" class="border-t border-borderLight hover:bg-gray-100 transition">
-                            <td th:text="${serv.nombre}" class="px-4 py-3 text-left"></td>
-                            <td th:text="${serv.descripcion}" class="px-4 py-3 text-left"></td>
-                            <td th:text="${serv.duracionEstimada} + ' min'" class="px-4 py-3 text-center"></td>
-                            <td th:text="${serv.precio}" class="px-4 py-3 text-center"></td>
-                            <td class="px-4 py-3 text-center">
-                                <!-- PUNTO VERDE / ROJO -->
-                                <span th:classappend="${serv.estado} ? 'estado-dot on' : 'estado-dot off'"></span>
-                            </td>
-                            <td class="p-3 text-center">
-                                <button type="button"
-                                        class="bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 transition"
-                                        onclick="abrirModalEditarServicio(this)"
+                </section>
+                <!-- Servicios -->
+                <section id="vista-servicios" class="hidden">
+                    <div class="items-center ">
+                        <div class="flex justify-between items-center mb-6">
+                            <!-- BOTÓN ABRIR MODAL -->
+                            <button data-modal="modalServicio"
+                                    class="bg-secondary  text-white p-4 shadow-xl  transform hover:scale-105 mx-6 text-center hover:shadow-2xl hover:bg-secondary hover:text-white transition-all duration-300 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     width="24"
+                                     height="24"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     class="lucide lucide-copy-plus-icon lucide-copy-plus">
+                                    <line x1="15" x2="15" y1="12" y2="18"/>
+                                    <line x1="12" x2="18" y1="15" y2="15"/>
+                                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                                </svg>
+                                Agregar Servicio
+                            </button>
+                        </div>
+                        <!-- TABLA -->
+                        <div class="bg-lightSurface w-full p-6 shadow-xl border border-borderLight  overflow-x-hidden ">
+                            <h1 th:if="${#lists.isEmpty(servicios)}"
+                                class="text-center text-2xl text-gray-500 py-8">
+                                Aún no has registrado servicios
+                            </h1>
+                            <table th:if="${!#lists.isEmpty(servicios)}"
+                                   class="w-full  text-sm">
+                                <thead class="bg-gray-100 text-softText  uppercase text-xs">
+                                <tr>
+                                    <th class="p-3 text-left">Nombre</th>
+                                    <th class="p-3 text-left">Descripción</th>
+                                    <th class="p-3 text-center">Duración</th>
+                                    <th class="p-3 text-center">Precio</th>
+                                    <th class="p-3 text-center">Estado</th>
+                                    <th class="p-3 text-center">Acciones</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="serv : ${servicios}" class="border-t border-borderLight hover:bg-gray-100 transition">
+                                    <td th:text="${serv.nombre}" class="px-4 py-3 text-left"></td>
+                                    <td th:text="${serv.descripcion}" class="px-4 py-3 text-left"></td>
+                                    <td th:text="${serv.duracionEstimada} + ' min'" class="px-4 py-3 text-center"></td>
+                                    <td th:text="${serv.precio}" class="px-4 py-3 text-center"></td>
+                                    <td class="px-4 py-3 text-center">
+                                        <!-- PUNTO VERDE / ROJO -->
+                                        <span th:classappend="${serv.estado} ? 'estado-dot on' : 'estado-dot off'"></span>
+                                    </td>
+                                    <td class="p-3 text-center">
+                                        <button type="button"
+                                                class="bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 transition"
+                                                onclick="abrirModalEditarServicio(this)"
 
-                                        th:data-id="${serv.id}"
-                                        th:data-nombre="${serv.nombre}"
-                                        th:data-descripcion="${serv.descripcion}"
-                                        th:data-duracion="${serv.duracionEstimada}"
-                                        th:data-precio="${serv.precio}"
-                                        th:data-estado="${serv.estado}">
-                                    Editar
-                                </button>
-                            </td>
-                        </tbody>
-                    </table>
-                    <!-- PAGINACIÓN SERVICIOS -->
-                    <div th:if="${!#lists.isEmpty(servicios)}"
-                            class="flex justify-center gap-2 mt-6">
-                        <!-- Anterior -->
-                        <a th:if="${currentPageServicios > 0}"
-                           th:href="@{/inventario/productos(pageServicios=${currentPageServicios - 1},vista='servicios')}"
-                           class="px-3 py-1 bg-gray-200  hover:bg-gray-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-left-dash-icon lucide-arrow-big-left-dash"><path d="M13 9a1 1 0 0 1-1-1V5.061a1 1 0 0 0-1.811-.75l-6.835 6.836a1.207 1.207 0 0 0 0 1.707l6.835 6.835a1 1 0 0 0 1.811-.75V16a1 1 0 0 1 1-1h2a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1z"/><path d="M20 9v6"/></svg>
-                        </a>
-                        <!-- Números -->
-                        <span th:each="i : ${#numbers.sequence(0, totalPagesServicios - 1)}">
-                            <a th:href="@{/inventario/productos(pageServicios=${i},vista='servicios')}"
-                               th:text="${i + 1}" class="px-3 py-1 "
-                               th:classappend="${i == currentPageServicios}? 'bg-secondary text-white font-bold': 'bg-gray-200 hover:bg-gray-300'">
-                            </a>
-                        </span>
-                        <!-- Siguiente -->
-                        <a th:if="${currentPageServicios < totalPagesServicios - 1}"
-                           th:href="@{/inventario/productos(pageServicios=${currentPageServicios + 1},vista='servicios')}"
-                           class="px-3 py-1 bg-gray-200  hover:bg-gray-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-right-dash-icon lucide-arrow-big-right-dash"><path d="M11 9a1 1 0 0 0 1-1V5.061a1 1 0 0 1 1.811-.75l6.836 6.836a1.207 1.207 0 0 1 0 1.707l-6.836 6.835a1 1 0 0 1-1.811-.75V16a1 1 0 0 0-1-1H9a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z"/><path d="M4 9v6"/></svg>
-                        </a>
+                                                th:data-id="${serv.id}"
+                                                th:data-nombre="${serv.nombre}"
+                                                th:data-descripcion="${serv.descripcion}"
+                                                th:data-duracion="${serv.duracionEstimada}"
+                                                th:data-precio="${serv.precio}"
+                                                th:data-estado="${serv.estado}">
+                                            Editar
+                                        </button>
+                                    </td>
+                                </tbody>
+                            </table>
+                            <!-- PAGINACIÓN SERVICIOS -->
+                            <div th:if="${!#lists.isEmpty(servicios)}" class="flex justify-center gap-2 mt-6">
+                                <!-- Anterior -->
+                                <a th:if="${currentPageServicios > 0}"
+                                   th:href="@{/inventario/productos(pageServicios=${currentPageServicios - 1},vista='servicios')}"
+                                   class="px-3 py-1 bg-gray-200  hover:bg-gray-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         width="24" height="24"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round"
+                                         class="lucide lucide-arrow-big-left-dash-icon lucide-arrow-big-left-dash">
+                                        <path d="M13 9a1 1 0 0 1-1-1V5.061a1 1 0 0 0-1.811-.75l-6.835 6.836a1.207 1.207 0 0 0 0 1.707l6.835 6.835a1 1 0 0 0 1.811-.75V16a1 1 0 0 1 1-1h2a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1z"/>
+                                        <path d="M20 9v6"/>
+                                    </svg>
+                                </a>
+                                <!-- Números -->
+                                <span th:each="i : ${#numbers.sequence(0, totalPagesServicios - 1)}">
+                                    <a th:href="@{/inventario/productos(pageServicios=${i},vista='servicios')}"
+                                       th:text="${i + 1}" class="px-3 py-1 "
+                                       th:classappend="${i == currentPageServicios}? 'bg-secondary text-white font-bold': 'bg-gray-200 hover:bg-gray-300'">
+                                    </a>
+                                </span>
+                                <!-- Siguiente -->
+                                <a th:if="${currentPageServicios < totalPagesServicios - 1}"
+                                   th:href="@{/inventario/productos(pageServicios=${currentPageServicios + 1},vista='servicios')}"
+                                   class="px-3 py-1 bg-gray-200  hover:bg-gray-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-right-dash-icon lucide-arrow-big-right-dash"><path d="M11 9a1 1 0 0 0 1-1V5.061a1 1 0 0 1 1.811-.75l6.836 6.836a1.207 1.207 0 0 1 0 1.707l-6.836 6.835a1 1 0 0 1-1.811-.75V16a1 1 0 0 0-1-1H9a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z"/><path d="M4 9v6"/></svg>
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </section>
-        <!-- Footer -->
-        <footer class=" text-center text-sm text-primary py-3">
-            © 2025 App Cannia. Todos los derechos reservados.
-        </footer>
-    </main>
-</div>
-
-
+                </section>
+                <!-- Footer -->
+                <footer class=" text-center text-sm text-primary py-3">
+                    © 2025 App Cannia. Todos los derechos reservados.
+                </footer>
+            </main>
+        </div>
+    </div>
 
 <!-- MODAL REGISTRAR producto -->
 <div id="modalProducto" class="hidden fixed inset-0 modal-overlay bg-black bg-opacity-50 flex items-center justify-center z-50">

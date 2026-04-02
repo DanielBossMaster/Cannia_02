@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" th:href="@{/img/favicon.png}">
     <title>Tienda - Veterinario </title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -89,7 +90,6 @@
                     </button>
                 </nav>
             </div>
-
             <!-- Bloque inferior (2 items) -->
             <div class="mb-6">
                 <nav class="flex flex-col gap-4">
@@ -108,11 +108,9 @@
                     </a>
                 </nav>
             </div>
-
         </aside>
         <div class="flex flex-col flex-1 h-full overflow-y-auto">
-
-        <!-- Header -->
+            <!-- Header -->
             <header class="bg-secondary text-white flex justify-between items-center px-2 py-1 shadow-md">
                 <div class="flex items-center space-x-3">
                     <img src="/img/logo.png" alt="Logo" class="w-10 h-10">
@@ -133,237 +131,232 @@
                     </a>
                 </div>
             </header>
-<!-- Contenedor principal -->
-<div class="text-center mx-auto p-6">
-    <!-- Encabezado -->
-        <div th:unless="${esBusqueda}">
-            <div class="max-w-7xl mx-auto mb-3 ">
-                <h1 class="text-5xl font-bold text-gray-700">
-                    Veterinaria <span th:text="${veterinaria.nombre}" ></span>
-                </h1>
-            <p class="text-gray-600 text-sm">
-                Esta es la experiencia de compra final para tus usuarios. Debes revisar detalladamente que la información del producto
-                (incluyendo especificaciones, valor monetario y detalles clave) <br> se alinee perfectamente con lo planificado para garantizar una transacción fluida y sin confusiones para el comprador.
-            </p>
-            </div>
-        </div>
-
-        <div th:if="${esBusqueda}">
-            <p class="text-gray-600 mb-2">Mostrando resultados para: "<b th:text="${consulta}"></b>"
-                <span th:if="${categoriaSeleccionada != null}">en la categoría seleccionada.</span>
-                <a th:href="@{/tienda/veterinario/tienda/preview}"
-                   class="bg-primary text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
-                    Ver Catálogo Completo
-                </a>
-            </p>
-        </div>
-
-        <div class=" p-1 max-w-4xl mx-auto mb-3">
-            <div class="sidebar-filtros">
-                <form th:action="@{/tienda/veterinario/tienda/preview}" method="GET" class="flex flex-row gap-4 w-full items-end">
-
-                    <button type="submit"
-                            class="p-2 h-10 bg-primary text-white  hover:bg-secondary transition duration-150 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                             class="lucide lucide-search-icon lucide-search">
-                            <path d="m21 21-4.34-4.34"/>
-                            <circle cx="11" cy="11" r="8"/>
-                        </svg>
-                    </button>
-
-                    <div class="form-group mb-0 w-1/3 min-w-0">
-                        <label for="categoriaInput" class="sr-only">Categoría:</label>
-                        <select id="categoriaInput" name="idCategoria"
-                                class="w-full p-2 border border-gray-300  focus:ring-primary focus:border-primary">
-                            <option value=""> Todas las Categorías </option>
-                            <option th:each="cat : ${categorias}"
-                                    th:value="${cat.id}"
-                                    th:text="${cat.nombre}"
-                                    th:selected="${cat.id == categoriaSeleccionada}">
-                            </option>
-                        </select>
+            <!-- Contenedor principal -->
+            <div class="text-center mx-auto p-6">
+                <!-- Encabezado -->
+                <div th:unless="${esBusqueda}">
+                    <div class="max-w-7xl mx-auto mb-3 ">
+                        <h1 class="text-5xl font-bold text-gray-700">
+                            Veterinaria <span th:text="${veterinaria.nombre}" ></span>
+                        </h1>
+                        <p class="text-gray-600 text-sm">
+                            Esta es la experiencia de compra final para tus usuarios. Debes revisar detalladamente que la información del producto
+                            (incluyendo especificaciones, valor monetario y detalles clave) <br> se alinee perfectamente con lo planificado para garantizar una transacción fluida y sin confusiones para el comprador.
+                        </p>
                     </div>
-
-
-                    <div class="form-group mb-0 flex-grow">
-                    <label for="searchInput" class="sr-only">Buscar por nombre:</label>
-                    <input type="text" name="q" id="searchInput"
-                           th:value="${consulta}"
-                           class="w-full p-2 border border-gray-300  focus:ring-primary focus:border-primary"
-                           placeholder="Buscar por nombre...">
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div th:if="${#lists.isEmpty(productos)}" class="col-span-full text-center text-gray-500 mt-8">
-            <h3 class="text-lg font-semibold">No se encontraron productos</h3>
-            <p th:if="${esBusqueda}">Intenta una búsqueda diferente o limpia los filtros.</p>
-        </div>
-
-        <div th:unless="${#lists.isEmpty(productos)}" id="productosContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-            <div th:each="p : ${productos}"
-                 class=" producto-card bg-white shadow-lg hover:shadow-2xl transition mx-6 p-6 flex flex-col">
-
-                <img th:if="${p.fotoBase64 != null and not #strings.isEmpty(p.fotoBase64)}"
-                     th:src="${p.fotoBase64}"
-                     class=" imagen w-full h-48 object-cover mb-4"
-                     alt="Imagen del producto">
-
-                <img th:if="${p.fotoBase64 == null or #strings.isEmpty(p.fotoBase64)}"
-                     src="/img/placeholder.png"
-                     class=" imagen w-full h-48 object-cover mb-4"
-                     alt="Producto sin imagen">
-
-                <h2 class="nombre-producto text-xl font-semibold text-gray-900" th:text="${p.nombre}"></h2>
-                <p class=" descripcion text-gray-600 text-sm mt-2" th:text="${p.descripcion}"></p>
-                <p class="precio text-lg font-bold text-green-600 mt-4"
-                   th:data-precio="${p.valor}">
-                    $<span th:text="${p.valor}"></span>
-                </p>
-                <button type="button"
-                        th:onclick="'agregarAlCarrito(' + ${p.id} + ');mostrarExito()'"
-                        class="bg-primary text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
-                    Agregar al carrito
-                </button>
-            </div>
-        </div>
-    </div>
-    <div id="carritoModal" class="hidden fixed inset-0 bg-black bg-opacity-40  flex justify-center overflow-auto items-center">
-        <div class="bg-white p-6   shadow-xl">
-            <div class="flex items-center justify-between">
-                <h2 class="text-2xl font-bold mb-4">Carrito de compras</h2>
-                <button class="text-2xl font-bold mb-4 text-red-600" onclick="cerrarCarrito()" >
-                    x</button>
-            </div>
-
-            <div class=" flex items-center space-between gap-10 ">
-                <div class="">
-                    <h2 class="text-lg font-semibold">Método de entrega</h2>
-
-                    <label class="flex items-start gap-2 cursor-pointer">
-                        <input type="radio" name="metodoEntrega" value="domicilio" checked
-                               onclick="mostrarDireccion(true)">
-                        <span>Domicilio</span>
-                    </label>
-                    <div class="p-4 bg-gray-50 border mb-4">
-                        <h3 class="font-semibold">Dirección de domicilio</h3>
-                        <p th:text="${direccion}"></p>
-                    </div>
-
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="metodoEntrega" value="tienda"
-                               onclick="mostrarDireccion(false)">
-                        <span>Recoger en tienda</span>
-                    </label>
                 </div>
 
-                <div id="carritoItems" th:insert="Fragmentos/CarritoItems :: items"></div>
+                <div th:if="${esBusqueda}">
+                    <p class="text-gray-600 mb-2">Mostrando resultados para: "<b th:text="${consulta}"></b>"
+                        <span th:if="${categoriaSeleccionada != null}">en la categoría seleccionada.</span>
+                        <a th:href="@{/tienda/veterinario/tienda/preview}"
+                           class="bg-primary text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
+                            Ver Catálogo Completo
+                        </a>
+                    </p>
+                </div>
 
+                <div class=" p-1 max-w-4xl mx-auto mb-3">
+                    <div class="sidebar-filtros">
+                        <form th:action="@{/tienda/veterinario/tienda/preview}" method="GET" class="flex flex-row gap-4 w-full items-end">
+                            <button type="submit" class="p-2 h-10 bg-primary text-white  hover:bg-secondary transition duration-150 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     class="lucide lucide-search-icon lucide-search">
+                                    <path d="m21 21-4.34-4.34"/>
+                                    <circle cx="11" cy="11" r="8"/>
+                                </svg>
+                            </button>
+                            <div class="form-group mb-0 w-1/3 min-w-0">
+                                <label for="categoriaInput" class="sr-only">Categoría:</label>
+                                <select id="categoriaInput" name="idCategoria" class="w-full p-2 border border-gray-300  focus:ring-primary focus:border-primary">
+                                    <option value=""> Todas las Categorías </option>
+                                    <option th:each="cat : ${categorias}"
+                                            th:value="${cat.id}"
+                                            th:text="${cat.nombre}"
+                                            th:selected="${cat.id == categoriaSeleccionada}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group mb-0 flex-grow">
+                                <label for="searchInput" class="sr-only">Buscar por nombre:</label>
+                                <input type="text" name="q" id="searchInput"
+                                       th:value="${consulta}"
+                                       class="w-full p-2 border border-gray-300  focus:ring-primary focus:border-primary"
+                                       placeholder="Buscar por nombre...">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div th:if="${#lists.isEmpty(productos)}" class="col-span-full text-center text-gray-500 mt-8">
+                    <h3 class="text-lg font-semibold">No se encontraron productos</h3>
+                    <p th:if="${esBusqueda}">Intenta una búsqueda diferente o limpia los filtros.</p>
+                </div>
+
+                <div th:unless="${#lists.isEmpty(productos)}" id="productosContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+                    <div th:each="p : ${productos}"
+                         class=" producto-card bg-white shadow-lg hover:shadow-2xl transition mx-6 p-6 flex flex-col">
+
+                        <img th:if="${p.fotoBase64 != null and not #strings.isEmpty(p.fotoBase64)}"
+                             th:src="${p.fotoBase64}"
+                             class=" imagen w-full h-48 object-cover mb-4"
+                             alt="Imagen del producto">
+
+                        <img th:if="${p.fotoBase64 == null or #strings.isEmpty(p.fotoBase64)}"
+                             src="/img/placeholder.png"
+                             class=" imagen w-full h-48 object-cover mb-4"
+                             alt="Producto sin imagen">
+
+                        <h2 class="nombre-producto text-xl font-semibold text-gray-900" th:text="${p.nombre}"></h2>
+                        <p class=" descripcion text-gray-600 text-sm mt-2" th:text="${p.descripcion}"></p>
+                        <p class="precio text-lg font-bold text-green-600 mt-4"
+                           th:data-precio="${p.valor}">
+                            $<span th:text="${p.valor}"></span>
+                        </p>
+                        <button type="button"
+                                th:onclick="'agregarAlCarrito(' + ${p.id} + ');mostrarExito()'"
+                                class="bg-primary text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
+                            Agregar al carrito
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="flex justify-center mt-4">
+            <div id="carritoModal" class="hidden fixed inset-0 bg-black bg-opacity-40  flex justify-center overflow-auto items-center">
+                <div class="bg-white p-6   shadow-xl">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-2xl font-bold mb-4">Carrito de compras</h2>
+                        <button class="text-2xl font-bold mb-4 text-red-600" onclick="cerrarCarrito()" >
+                            x</button>
+                    </div>
 
-                <button id="btnPagar"
-                        class="bg-primary  px-4 text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
-                    Ir a pagar
-                </button>
+                    <div class=" flex items-center space-between gap-10 ">
+                        <div class="">
+                            <h2 class="text-lg font-semibold">Método de entrega</h2>
 
+                            <label class="flex items-start gap-2 cursor-pointer">
+                                <input type="radio" name="metodoEntrega" value="domicilio" checked
+                                       onclick="mostrarDireccion(true)">
+                                <span>
+                                    Domicilio
+                                </span>
+                            </label>
+                            <div class="p-4 bg-gray-50 border mb-4">
+                                <h3 class="font-semibold">Dirección de domicilio</h3>
+                                <p th:text="${direccion}"></p>
+                            </div>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="metodoEntrega" value="tienda"
+                                       onclick="mostrarDireccion(false)">
+                                <span>
+                                    Recoger en tienda
+                                </span>
+                            </label>
+                        </div>
+                        <div id="carritoItems" th:insert="Fragmentos/CarritoItems :: items"></div>
+                    </div>
+                    <div class="flex justify-center mt-4">
+                        <button id="btnPagar"
+                                class="bg-primary  px-4 text-white p-2 shadow-xl transform hover:scale-105 mx-8 text-center hover:shadow-2xl hover:bg-secondary transition-all duration-300">
+                            Ir a pagar
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-            <script th:inline="javascript">
-                function toggleSidebar() {
-                    const sidebar = document.getElementById("sidebar");
-                    const texts = document.querySelectorAll(".sidebar-text");
+</div>
 
-                    const expanded = sidebar.classList.toggle("w-64");
-                    sidebar.classList.toggle("w-12", !expanded);
+<script th:inline="javascript">
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const texts = document.querySelectorAll(".sidebar-text");
+        const expanded = sidebar.classList.toggle("w-64");
+        sidebar.classList.toggle("w-12", !expanded);
 
-                    texts.forEach(t => {
-                        t.classList.toggle("hidden", !expanded);
-                    });
+        texts.forEach(t => {
+            t.classList.toggle("hidden", !expanded);
+        });
 
-                }
-                // Función genérica para abrir/cerrar cualquier modal
-                function toggleModal(id) {
-                    const modal = document.getElementById(id);
-                    modal.classList.toggle("hidden");
-                }
+    }
+    // Función genérica para abrir/cerrar cualquier modal
+    function toggleModal(id) {
+        const modal = document.getElementById(id);
+        modal.classList.toggle("hidden");
+    }
 
-        function abrirCarrito() {
-            document.getElementById("carritoModal").classList.remove("hidden");
-            cargarCarrito();
+    function abrirCarrito() {
+        document.getElementById("carritoModal").classList.remove("hidden");
+        cargarCarrito();
+    }
+
+    function cerrarCarrito() {
+           document.getElementById("carritoModal").classList.add("hidden");
+    }
+
+    function agregarAlCarrito(id) {
+        fetch(`/carrito/agregar/${id}`, { method: "POST" })
+            .then(() => {
+                cargarCarrito();   // 🔥 Recargar contenido del carrito
+                // 🔥 Abrir modal
+            });
+    }
+
+    function cargarCarrito() {
+        fetch("/carrito/items")
+            .then(r => r.text())
+            .then(html => {
+                // Reemplazar el contenido dinamicamente
+                document.getElementById("carritoItems").innerHTML = html;
+            });
+    }
+
+    function vaciarCarrito() {
+        fetch("/carrito/vaciar")
+            .then(() => cargarCarrito());
+    }
+
+    function recargarCarrito() {
+        fetch("/carrito/items")
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById("carritoItems").innerHTML = html;
+            });
         }
 
-        function cerrarCarrito() {
-            document.getElementById("carritoModal").classList.add("hidden");
-        }
+    function aumentar(id) {
+        fetch(`/carrito/aumentar/${id}`, {
+            method: "POST"
+        })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById("carritoItems").innerHTML = html;
+            });
+    }
 
-        function agregarAlCarrito(id) {
-            fetch(`/carrito/agregar/${id}`, { method: "POST" })
-                .then(() => {
-                    cargarCarrito();   // 🔥 Recargar contenido del carrito
-                    // 🔥 Abrir modal
-                });
-        }
+    function disminuir(id) {
+        fetch(`/carrito/disminuir/${id}`, {
+            method: "POST"
+        })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById("carritoItems").innerHTML = html;
+            });
+    }
 
-        function cargarCarrito() {
-            fetch("/carrito/items")
-                .then(r => r.text())
-                .then(html => {
-                    // Reemplazar el contenido dinamicamente
-                    document.getElementById("carritoItems").innerHTML = html;
-                });
-        }
+    function eliminarItem(id) {
+        fetch(`/carrito/eliminar/${id}`)
+            .then(() => recargarCarrito());
+    }
 
-        function vaciarCarrito() {
-            fetch("/carrito/vaciar")
-                .then(() => cargarCarrito());
-        }
-
-
-
-        function recargarCarrito() {
-            fetch("/carrito/items")
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById("carritoItems").innerHTML = html;
-                });
-        }
-
-        function aumentar(id) {
-            fetch(`/carrito/aumentar/${id}`, {
-                method: "POST"
-            })
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById("carritoItems").innerHTML = html;
-                });
-        }
-
-        function disminuir(id) {
-            fetch(`/carrito/disminuir/${id}`, {
-                method: "POST"
-            })
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById("carritoItems").innerHTML = html;
-                });
-        }
-
-        function eliminarItem(id) {
-            fetch(`/carrito/eliminar/${id}`)
-                .then(() => recargarCarrito());
-        }
-
-
-
-        function mostrarExito() {
-            alert("✅ ¡Agregado al carrito exitosamente!");
-        }
-
-    </script>
-
+    function mostrarExito() {
+        alert("✅ ¡Agregado al carrito exitosamente!");
+    }
+</script>
 </body>
 </html>
