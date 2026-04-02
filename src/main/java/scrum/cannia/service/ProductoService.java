@@ -12,6 +12,7 @@ import scrum.cannia.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import scrum.cannia.repository.VeterinariaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
@@ -69,6 +70,8 @@ public class ProductoService {
     // ===============================
     //        LISTAR INVENTARIO
     // ===============================
+    
+    @Transactional(readOnly = true)
     public Page<ProductoModel> listarPorVeterinaria(
             Integer veterinariaId,
             int page,

@@ -32,7 +32,7 @@ public class ProductoController {
     //   LISTAR INVENTARIO Y MOSTRAR FORMULARIOS
     // ============================================
 
-    @GetMapping
+    @GetMapping("/index")
     public String productos(
             @RequestParam(defaultValue = "0") int pageProductos,
             @RequestParam(defaultValue = "0") int pageServicios,
@@ -91,7 +91,7 @@ public class ProductoController {
         model.addAttribute("servicio", new ServicioModel());
         model.addAttribute("veterinaria", veterinaria);
 
-        return "Inventario/Producto";
+        return "inventario/producto";
     }
 
 
@@ -110,7 +110,7 @@ public class ProductoController {
 
         if (br.hasErrors()) {
             model.addAttribute("mensaje", "Por favor corrige los campos.");
-            return "Inventario/Producto";
+            return "inventario/producto";
         }
 
         // 1. Usuario autenticado
@@ -135,7 +135,7 @@ public class ProductoController {
                 veterinaria
         );
 
-        return "redirect:/Inventario/Producto";
+        return "redirect:/inventario/productos/index";
     }
 
     // ============================================
@@ -170,7 +170,7 @@ public class ProductoController {
 
         model.addAttribute("producto", producto);
 
-        return "redirect:/Inventario/Producto";
+        return "redirect:/inventario/productos/index";
     }
 
     // ============================================
@@ -207,7 +207,7 @@ public class ProductoController {
                 archivo);
 
 
-        return "redirect:/Inventario/Producto";
+        return "redirect:/inventario/productos/index";
     }
 
 }

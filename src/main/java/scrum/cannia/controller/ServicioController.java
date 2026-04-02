@@ -40,7 +40,7 @@ public class ServicioController {
 
         if (br.hasErrors()) {
             model.addAttribute("mensaje", "Error en los datos del servicio");
-            return "Inventario/Servicio";
+            return "inventario/producto";
         }
 
         UsuarioModel usuario = usuarioRepository
@@ -57,7 +57,7 @@ public class ServicioController {
 
         servicioService.guardarServicioVeterinaria(servicio, veterinaria);
 
-        return "redirect:/inventario/productos";
+        return "redirect:/inventario/productos/index";
     }
 
 
@@ -76,6 +76,6 @@ public class ServicioController {
 
         servicioService.actualizarServicioVeterinaria(servicio, veterinariaId);
 
-        return "redirect:/inventario/productos";
+        return "redirect:/inventario/productos/index";
     }
 }

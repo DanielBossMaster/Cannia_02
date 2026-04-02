@@ -20,8 +20,8 @@ public class ProductoModel {
     @Column(name = "id_producto")
     private int id;
 
-    @Lob
-    @Column(columnDefinition = "LONGBLOB")
+
+    @Column(columnDefinition = "BYTEA")
     private byte[] foto;
 
     @Column(length = 20, nullable = false)
