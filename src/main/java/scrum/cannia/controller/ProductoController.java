@@ -91,7 +91,7 @@ public class ProductoController {
         model.addAttribute("servicio", new ServicioModel());
         model.addAttribute("veterinaria", veterinaria);
 
-        return "Inventario/producto";
+        return "Inventario/Producto";
     }
 
 
@@ -110,7 +110,7 @@ public class ProductoController {
 
         if (br.hasErrors()) {
             model.addAttribute("mensaje", "Por favor corrige los campos.");
-            return "Inventario/producto";
+            return "Inventario/Producto";
         }
 
         // 1. Usuario autenticado
@@ -135,7 +135,7 @@ public class ProductoController {
                 veterinaria
         );
 
-        return "redirect:/inventario/productos";
+        return "redirect:/Inventario/Producto";
     }
 
     // ============================================
@@ -170,7 +170,7 @@ public class ProductoController {
 
         model.addAttribute("producto", producto);
 
-        return "redirect:/inventario/productos";
+        return "redirect:/Inventario/Producto";
     }
 
     // ============================================
@@ -207,7 +207,7 @@ public class ProductoController {
                 archivo);
 
 
-        return "redirect:/inventario/productos";
+        return "redirect:/Inventario/Producto";
     }
 
 }
