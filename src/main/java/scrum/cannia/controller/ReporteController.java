@@ -1,7 +1,6 @@
 package scrum.cannia.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,11 +36,11 @@ public class ReporteController {
     private final VentasReporteService ventasReporteService;
 
     // 1. METODO PARA MOSTRAR LA PÁGINA HTML
-    @GetMapping("")
+    @GetMapping("index")
     public String mostrarPaginaReportes(Model model) {
         model.addAttribute("titulo", "Reportes de Productos");
         model.addAttribute("modulo", "Inventario");
-        return "Inventario/Reporte";
+        return "inventario/reporte";
     }
 
     // 2. METODO PARA LA API (JSON)
