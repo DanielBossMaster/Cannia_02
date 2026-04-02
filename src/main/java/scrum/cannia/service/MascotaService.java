@@ -25,11 +25,25 @@ public class MascotaService {
 
     private final MascotaRepository mascotaRepository;
 
-    // Mascotas disponibles (adopción)
-    public List<MascotaModel> listarMascotasDisponibles() {
-        return mascotaRepository.findByTipoEstado(TipoEstadoMascota.DISPONIBLE);
+
+    @Transactional
+    public void eliminarMascotaLogico(Long idMascota){
+
+        MascotaModel mascota = mascotaRepository
+                .findById(idMascota)
+                .orElseThrow(() ->
+                        new RuntimeException("Mascota no encontrada"));
+
+        mascota.setActivo(false);
+
+        mascotaRepository.save(mascota);
     }
 
+    public List<MascotaModel> listarPorPropietario(PropietarioModel propietario) {
+
+        return mascotaRepository
+                .findByPropietarioIdAndActivoTrue(propietario.getId());
+    }
     // Registrar mascota (solo propietario en sesión)
     @Transactional
     public void registrarMascota(MascotaModel mascota, PropietarioModel propietario) {
@@ -48,31 +62,10 @@ public class MascotaService {
         if (fundacion == null) {
             throw new IllegalStateException("Fundación no válida");
         }
-
         mascota.setFundacion(fundacion);
-
         mascota.setEstadoAdopcion("DISPONIBLE");
-
         fundacion.getMascotas().add(mascota);
-
         mascotaRepository.save(mascota);
-    }
-
-    public List<MascotaModel> mascotasDeFundacion(FundacionModel fundacion){
-
-        return mascotaRepository.findByFundacion(fundacion);
-
-    }
-
-    public List<MascotaModel> mascotasDisponibles(){
-
-        return mascotaRepository.findByEstadoAdopcion("DISPONIBLE");
-
-    }
-
-
-    public List<MascotaModel> listarPorPropietario(PropietarioModel propietario) {
-        return mascotaRepository.findByPropietarioId(propietario.getId());
     }
 
     // Obtener mascota segura (para historia clínica)
@@ -88,7 +81,7 @@ public class MascotaService {
 
     public List<MascotaModel> listarConHistoriaYVacunas(
             PropietarioModel propietario) {
-        return mascotaRepository.findByPropietarioConHistoria(propietario);
+        return mascotaRepository.findByPropietarioConHistoriaActivas(propietario);
     }
 
 

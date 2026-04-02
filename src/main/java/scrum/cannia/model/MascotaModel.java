@@ -18,6 +18,9 @@ public class MascotaModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_mascota")
     private Long id;
+    
+    @Column(nullable = false)
+    private Boolean activo = true;
 
     @Column(length = 45, nullable = false)
     private String nomMascota;

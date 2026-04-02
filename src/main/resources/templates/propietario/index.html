@@ -230,6 +230,10 @@
             <main class="flex-1 overflow-y-auto px-6 py-8">
                 <section id="vista-Inicio"
                          class="max-w-7xl mx-auto px-6 ">
+                    <!-- MENSAJE DE EXITO -->
+                    <div th:if="${mensajeExito}" class="max-w-3xl mx-auto mt-6 p-4 bg-green-100 border border-green-400 text-green-800 rounded text-center">
+                        <span th:text="${mensajeExito}"></span>
+                    </div>
                     <!-- CONTENEDOR DOS COLUMNAS -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 mt-24 items-start">
                         <!-- COLUMNA IZQUIERDA · TEXTO -->
@@ -384,49 +388,80 @@
                                 No tienes mascotas registradas.
                             </div>
                             <!-- GRID DE CARDS -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                                <div th:each="m : ${mascotas}"
-                                     class="bg-white rounded-2xl shadow hover:shadow-lg transition p-6">
-
+                            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                                <div th:each="m : ${mascotas}" class="bg-white shadow hover:shadow-lg transition p-5 flex gap-4 items-center border">
                                     <!-- FOTO -->
-
-                                    <img th:if="${m.foto != null && !m.foto.isEmpty()}"
-                                         th:src="@{/uploads/mascotas/{foto}(foto=${m.foto})}"
-                                         class="w-full h-40 object-cover rounded-lg mb-4"/>
-
-                                    <img th:if="${m.foto == null || m.foto.isEmpty()}"
-                                         src="/img/logo.png"
-                                         class="w-full h-40 object-cover rounded-lg mb-4"/>
-
+                                    <div class="flex-shrink-0">
+                                        <img th:if="${m.foto != null && !m.foto.isEmpty()}"
+                                             th:src="@{/uploads/mascotas/{foto}(foto=${m.foto})}"
+                                             class="w-40 h-40 object-cover rounded-full"/>
+                                        <img th:if="${m.foto == null || m.foto.isEmpty()}"
+                                             src="/img/logo.png"
+                                             class="w-40 h-40 object-cover rounded-full"/>
+                                    </div>
                                     <!-- INFO -->
-                                    <h3 class="text-xl font-bold mb-1"
-                                        th:text="${m.nomMascota}">
-                                    </h3>
-
-                                    <p class="text-gray-600">
-                                        <span th:text="${m.especie}"></span> ·
-                                        <span th:text="${m.raza}"></span>
-                                    </p>
-
-                                    <p class="text-gray-500 text-sm">
-                                        Género: <span th:text="${m.genero}"></span>
-                                    </p>
-
-                                    <!-- ACCIONES -->
-                                    <div class="mt-4 flex justify-end">
-
-                                        <button
-                                                class="bg-primary hover:bg-secondary text-white px-4 py-2 rounded-lg transition"
-
-                                                th:attr="onclick=|abrirModalEdicion(
-                                                ${m.id},
+                                    <div class="flex-1">
+                                        <h3 class="font-semibold text-xl"
+                                            th:text="${m.nomMascota}">
+                                        </h3>
+                                        <p class="text-md text-gray-700">
+                                            <span th:text="${m.especie}"></span>
+                                            <span th:text="${m.raza}"></span>
+                                        </p>
+                                        <p class="text-md text-gray-500">
+                                            <span th:text="${m.genero}"></span>
+                                            <span th:text="${m.color}"></span>
+                                        </p>
+                                    </div>
+                                    <!-- BOTON -->
+                                    <div>
+                                        <form th:action="@{/propietario/mascota/eliminar}" method="post"
+                                              onsubmit="return confirm('¿Seguro que deseas eliminar esta mascota?')">
+                                            <input type="hidden" name="id" th:value="${m.id}">
+                                            <button type="submit"  class=" relative group py-1 xt-sm text-primary font-bolt transform hover:scale-105 transition">
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     width="24"
+                                                     height="24"
+                                                     viewBox="0 0 24 24"
+                                                     fill="none"
+                                                     stroke="currentColor"
+                                                     stroke-width="2"
+                                                     stroke-linecap="round"
+                                                     stroke-linejoin="round"
+                                                     class="lucide lucide-trash-icon lucide-trash">
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                                    <path d="M3 6h18"/>
+                                                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                                </svg>
+                                                <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                                    Eliminar
+                                                </span>
+                                            </button>
+                                        </form>
+                                        <button class=" relative group py-1 xt-sm text-primary font-bolt transform hover:scale-105 transition"
+                                                th:attr="onclick=|abrirModalEdicion( ${m.id},
                                                 '${m.nomMascota}',
-                                                 '${m.especie}',
-                                                 '${m.raza}',
-                                                 '${m.color}',
-                                                 '${m.genero}'
-                                                 )|">
-                                            Editar
+                                                '${m.especie}',
+                                                '${m.raza}',
+                                                '${m.color}',
+                                                '${m.genero}'
+                                                )|">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                 width="24"
+                                                 height="24"
+                                                 viewBox="0 0 24 24"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 stroke-width="2"
+                                                 stroke-linecap="round"
+                                                 stroke-linejoin="round"
+                                                 class="lucide lucide-settings-icon lucide-settings">
+                                                <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                            <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                                Editar
+                                            </span>
                                         </button>
                                     </div>
                                 </div>
@@ -669,7 +704,7 @@
         </h2>
 
         <!-- FORMULARIO -->
-        <form th:action="@{/propietario/guardar}" method="post">
+        <form th:action="@{/propietario/mascota/guardar}" method="post"  enctype="multipart/form-data">
 
             <label class="block mb-2 font-semibold">Nombre</label>
             <input type="text" name="nomMascota" required
@@ -693,6 +728,11 @@
                 <option value="MACHO">MACHO</option>
                 <option value="HEMBRA">HEMBRA</option>
             </select>
+
+            <label class="block mb-2 font-semibold">Foto</label>
+            <input type="file" name="archivoFoto"
+                   accept="image/png, image/jpeg"
+                   class="w-full p-2 border mb-3"/>
 
             <!-- MASCOTA CREADA POR PROPIETARIO = PROPIA -->
             <input type="hidden" name="tipoEstado" value="PROPIA">
@@ -730,7 +770,7 @@
         <h3 class="text-2xl font-bold mb-4">Editar Mascota</h3>
 
         <!-- FORM -->
-        <form th:action="@{/mascotas/editar}" method="post" class="space-y-4">
+        <form th:action="@{/propietario/mascota/editar}" method="post" class="space-y-4" enctype="multipart/form-data">
 
             <input type="hidden" name="id" id="idMascota">
 
@@ -766,6 +806,12 @@
                     <option value="HEMBRA">HEMBRA</option>
                 </select>
             </div>
+
+            <label class="block text-sm font-medium">Foto</label>
+            <input type="file"
+                   name="archivoFoto"
+                   accept="image/png, image/jpeg"
+                   class="w-full border px-3 py-2">
 
             <div class="flex justify-center gap-3 pt-4">
                 <button type="button" onclick="cerrarModal('modalEditar')"
@@ -981,9 +1027,7 @@
             alert(msg);
         }
     }
-</script>
 
-<script>
     function abrirModalCitasAceptadas() {
 
         const modal = document.getElementById("modalCitasAceptadas");
@@ -1001,7 +1045,12 @@
         modal.classList.remove("flex");
 
     }
+
+    setTimeout(() => {
+        const alerta = document.getElementById("alertaExito");
+        if(alerta){
+            alerta.style.display = "none";
+        }
+    }, 5000);
 </script>
-
-
 </html>

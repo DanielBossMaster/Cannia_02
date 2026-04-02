@@ -14,9 +14,8 @@ import java.util.Optional;
 
 @Repository
 public interface MascotaRepository extends JpaRepository<MascotaModel, Long> {
-    List<MascotaModel> findByPropietarioId(Long idPropietario);
 
-    List<MascotaModel> findByTipoEstado(TipoEstadoMascota tipo);
+    List<MascotaModel> findByPropietarioId(Long idPropietario);
 
     Optional<MascotaModel> findByIdAndPropietario_Id(Long mascotaId, Long propietarioId);
 
@@ -26,14 +25,16 @@ public interface MascotaRepository extends JpaRepository<MascotaModel, Long> {
 
     Optional<MascotaModel> findById(Long id);
 
+    List<MascotaModel> findByPropietarioIdAndActivoTrue(Long propietarioId);
 
     @Query("""
     SELECT DISTINCT m
     FROM MascotaModel m
     LEFT JOIN FETCH m.historiasClinicas
     WHERE m.propietario = :propietario
+    AND m.activo = true
 """)
-    List<MascotaModel> findByPropietarioConHistoria(
+    List<MascotaModel> findByPropietarioConHistoriaActivas(
             @Param("propietario") PropietarioModel propietario
     );
     }
