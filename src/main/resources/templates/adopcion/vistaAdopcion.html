@@ -123,11 +123,11 @@
             <div class="relative">
 
                 <img th:if="${mascota.foto!= null}"
-                     th:src="@{/uploads/mascotas/{foto}(foto=${mascota.foto})}"
+                     th:src="${mascota.foto}"
 
                      class="w-full h-full object-cover"/>
                 <img th:if="${mascota.foto== null}"
-                     th:src="@{/uploads/mascotas/{foto}(foto=${mascota.foto})}">
+                     th:src="${mascota.foto}">
 
                 <span th:text="${mascota.estadoAdopcion}"
                       class="absolute top-2 left-2 text-white text-xs px-3 py-1"
