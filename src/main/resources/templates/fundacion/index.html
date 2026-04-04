@@ -318,7 +318,7 @@
                                 <!-- FOTO -->
                                 <div class="relative h-52 bg-gray-100">
                                     <img th:if="${mascota.foto != null}"
-                                         th:src="@{/uploads/mascotas/{foto}(foto=${mascota.foto})}"
+                                         th:src="${mascota.foto}"
                                          class="w-full h-full object-cover"/>
                                     <img th:if="${mascota.foto == null}"
                                          src="/img/logo.png"
@@ -452,7 +452,7 @@
                              class="bg-white border border-borderLight shadow-md p-5">
                             <div class="relative h-52 bg-gray-100">
                                 <img th:if="${solicitud.mascota.foto != null}"
-                                     th:src="@{/uploads/mascotas/{foto}(foto=${solicitud.mascota.foto})}"
+                                     th:src="${solicitud.mascota.foto}"
                                      class="w-full h-full object-cover"/>
                                 <img th:if="${solicitud.mascota.foto == null}"
                                      src="/img/logo.png"
@@ -573,7 +573,7 @@
           enctype="multipart/form-data">
         <input type="hidden" id="idMascota"  th:field="*{id}"/>
         <img th:if="${mascota.foto != null}"
-             th:src="@{/uploads/mascotas/{foto}(foto=${mascota.foto})}"
+             th:src="${mascota.foto}"
              class="w-full h-40 object-cover mb-3">
         <!-- Nombre -->
         <div class="mb-4">
@@ -777,17 +777,31 @@
         }
 
     });
-    document.querySelector('input[name="fotoMascota"]').addEventListener('change', function(e){
+    document.querySelectorAll('input[name="fotoMascota"]')
+        .forEach(input => {
 
-        const file = e.target.files[0];
-        const preview = document.getElementById("previewEditarMascota");
+            input.addEventListener('change', function(e){
 
-        if(file){
-            preview.src = URL.createObjectURL(file);
-            preview.classList.remove("hidden");
-        }
+                const file = e.target.files[0];
 
-    });
+                if(!file) return;
+
+                const preview =
+                    e.target
+                        .closest("form")
+                        .querySelector("img");
+
+                if(preview){
+
+                    preview.src =
+                        URL.createObjectURL(file);
+
+                    preview.classList.remove("hidden");
+                }
+
+            });
+
+        });
 </script>
 </html>
 

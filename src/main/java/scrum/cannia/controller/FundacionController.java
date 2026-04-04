@@ -17,17 +17,21 @@ import scrum.cannia.service.*;
 import scrum.cannia.repository.MascotaRepository;
 import scrum.cannia.strategy.DataLoaderStrategy;
 import scrum.cannia.strategy.factory.DataLoaderFactory;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Controller
 @RequestMapping("/fundacion")
 public class FundacionController {
 
+    private final Cloudinary cloudinary;
     private final MascotaService mascotaService;
     private final MascotaRepository mascotaRepository;
     private final MascotaServiceCreator mascotaServiceCreator;
@@ -117,17 +121,21 @@ public class FundacionController {
             RedirectAttributes redirectAttributes) {
 
         try {
-            if (!fotoMascota.isEmpty()) {
+            if(!fotoMascota.isEmpty()){
 
-                String nombreArchivo = System.currentTimeMillis() + "_" + fotoMascota.getOriginalFilename();
+                Map resultado = cloudinary.uploader().upload(
 
-                String ruta = "src/main/resources/static/uploads/mascotas/";
+                        fotoMascota.getBytes(),
 
-                Path path = Paths.get(ruta + nombreArchivo);
+                        ObjectUtils.asMap(
+                                "folder", "mascotas"
+                        )
+                );
 
-                Files.write(path, fotoMascota.getBytes());
+                String urlImagen =
+                        resultado.get("secure_url").toString();
 
-                mascota.setFoto(nombreArchivo);
+                mascota.setFoto(urlImagen);
             }
 
             String username = authentication.getName();
@@ -160,17 +168,21 @@ public class FundacionController {
             @RequestParam(value = "fotoMascota", required = false) MultipartFile fotoMascota) {
 
         try {
-            if (!fotoMascota.isEmpty()) {
+            if(!fotoMascota.isEmpty()){
 
-                String nombreArchivo = System.currentTimeMillis() + "_" + fotoMascota.getOriginalFilename();
+                Map resultado = cloudinary.uploader().upload(
 
-                String ruta = "src/main/resources/static/uploads/mascotas/";
+                        fotoMascota.getBytes(),
 
-                Path path = Paths.get(ruta + nombreArchivo);
+                        ObjectUtils.asMap(
+                                "folder", "mascotas"
+                        )
+                );
 
-                Files.write(path, fotoMascota.getBytes());
+                String urlImagen =
+                        resultado.get("secure_url").toString();
 
-                mascota.setFoto(nombreArchivo);
+                mascota.setFoto(urlImagen);
             }
 
             mascotaService.actualizarMascota(mascota);
