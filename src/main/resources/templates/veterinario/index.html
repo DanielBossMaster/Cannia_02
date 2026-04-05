@@ -101,9 +101,7 @@
                     Propietarios
                 </span>
             </button>
-
-            <button onclick="mostrarVista('citas')"
-               class="  group relative flex items-center gap-3 px-3 text-white py-1 hover:bg-primary ">
+            <button onclick="mostrarVista('citas')" class="  group relative flex items-center gap-3 px-3 text-white py-1 hover:bg-primary ">
                 <i class="fa-solid fa-house">
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="24"
@@ -145,30 +143,39 @@
                 </span>
             </a>
         </nav>
-    </div>
+            </div>
     <!-- Bloque inferior (2 items) -->
-    <div class="mb-6">
-        <nav class="flex flex-col gap-4">
-            <a th:href="@{/cerrar-sesion}"
-               class=" group relative flex items-center text-white gap-3 px-3 py-1 hover:bg-primary ">
-                <i class="fa-solid fa-circle-info">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                         stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out">
-                        <path d="m16 17 5-5-5-5"/>
-                        <path d="M21 12H9"/>
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    </svg>
-                </i>
-                <span class="sidebar-text hidden">Cerrar Sesion</span>
-                <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
-                    Cerrar Sesion
-                </span>
-            </a>
-        </nav>
-    </div>
-</aside>
-
+            <div class="mb-6">
+                <nav class="flex flex-col gap-4">
+                    <button onclick="mostrarVista('perfil')"
+                            class=" group relative flex items-center text-white gap-3 px-3 py-1 hover:bg-primary ">
+                        <i class="fa-solid fa-circle-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-icon lucide-settings"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
+                        </i>
+                        <span class="sidebar-text hidden">Perfil</span>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Perfil
+                        </span>
+                    </button>
+                    <a th:href="@{/cerrar-sesion}"
+                       class=" group relative flex items-center text-white gap-3 px-3 py-1 hover:bg-primary ">
+                        <i class="fa-solid fa-circle-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out">
+                                <path d="m16 17 5-5-5-5"/>
+                                <path d="M21 12H9"/>
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            </svg>
+                        </i>
+                        <span class="sidebar-text hidden">Cerrar Sesion</span>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Cerrar Sesion
+                        </span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
         <div class="flex flex-col flex-1 min-h-full transition-all duration-300">
             <!-- Header -->
             <header class="bg-secondary text-white flex justify-between items-center px-2 py-1 shadow-md overflow-visible">
@@ -196,12 +203,12 @@
             <main class=" ml-32 flex-grow mx-auto  px-6 py-8 mr-32" >
                 <!-- MENSAJE DE EXITO -->
                 <div th:if="${success}"
-                     class="max-w-3xl mx-auto mt-6 p-4 bg-green-100 border border-green-400 text-green-800 rounded text-center">
+                     class="max-w-3xl mx-auto mt-6 p-4 bg-green-100 border border-green-400 text-green-800 xt-center">
                     <span th:text="${success}"></span>
                 </div>
                 <!-- MENSAJE DE ERROR -->
                 <div th:if="${rechazo}"
-                     class="max-w-3xl mx-auto mt-6 p-4 bg-red-100 border border-red-400 text-red-800 rounded text-center">
+                     class="max-w-3xl mx-auto mt-6 p-4 bg-red-100 border border-red-400 text-red-800 xt-center">
                     <span th:text="${rechazo}"></span>
                 </div>
                 <section id="vista-inicio">
@@ -473,121 +480,385 @@
 
                     <!-- ================= HISTORIAL DE CITAS ACEPTADAS ================= -->
 
-                    <div class="bg-lightBg w-full p-4">
-                        <h2 class="text-3xl font-extrabold text-secondary mb-4 text-center">
+                        <div class="bg-lightBg w-full p-4">
+                            <h2 class="text-3xl font-extrabold text-secondary mb-4 text-center">
                             Citas aceptadas
-                        </h2>
+                            </h2>
 
-                        <!-- SIN HISTORIAL -->
-                        <div th:if="${agenda.isEmpty()}"
-                             class="text-center text-softText text-lg">
-                            No hay registros aún.
+                            <!-- SIN HISTORIAL -->
+                            <div th:if="${agenda.isEmpty()}"
+                                 class="text-center text-softText text-lg">
+                                No hay registros aún.
+                            </div>
+                            <div th:if="${!agenda.isEmpty()}">
+                                <table  class="bg-lightSurface w-full p-3 shadow-sm border border-borderLight overflow-x-hidden">
+                                    <thead class="bg-gray-100 text-softText uppercase text-xs">
+                                    <tr class="h-10">
+                                        <th class="w-1/6 py-3">Mascota</th>
+                                        <th class="w-1/6 py-3">Propietario</th>
+                                        <th class="w-1/6 py-3">Vacuna</th>
+                                        <th class="w-1/6 py-3">Fecha</th>
+                                        <th class="w-1/6 py-3">Hora</th>
+                                        <th class="w-1/6 py-3">Acción</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="c : ${agenda}" class="border-t h-12">
+                                        <td  class="py-2" th:text="${c.nombreMascota}"></td>
+                                        <td  class="py-2" th:text="${c.nombrePropietario}"></td>
+                                        <td  class="py-2" th:text="${c.fecha}"></td>
+                                        <td  class="py-2" th:text="${c.hora}"></td>
+                                        <td  class="flex gap-2 justify-center">
+                                            <button th:onclick="|aplicarVacuna(${c.citaId})|"
+                                                    class=" relative group py-1 xt-sm text-primary font-bolt transform hover:scale-105 transition">
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     width="24"
+                                                     viewBox="0 0 24 24"
+                                                     fill="none"
+                                                     stroke="currentColor"
+                                                     stroke-width="2"
+                                                     stroke-linecap="round"
+                                                     class="lucide lucide-syringe-icon lucide-syringe">
+                                                    <path d="m18 2 4 4"/>
+                                                    <path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/>
+                                                    <path d="m9 11 4 4"/>
+                                                    <path d="m5 19-3 3"/>
+                                                    <path d="m14 4 6 6"/>
+                                                </svg>
+                                                <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                                    Vacuna aplicada
+                                                </span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- ================= HISTORIAL DE CITAS RECHAZADAS/ VACUNAS APLICADAS ================= -->
+                            <div class="bg-lightBg w-full p-4">
+                                <h1 class="text-3xl font-extrabold text-secondary mb-4 text-center">
+                                    Historial de solicitudes
+                                </h1>
+                                <!-- SIN HISTORIAL -->
+                                <div th:if="${historial.isEmpty()}"
+                                     class="text-center text-softText text-lg">
+                                    No hay registros aún.
+                                </div>
+                                <!-- TABLA  -->
+                                <div th:if="${!historial.isEmpty()}" class="bg-lightSurface w-full p-3 shadow-sm border border-borderLight overflow-x-hidden">
+                                    <table class="w-full table-fixed text-center text-sm">
+                                        <thead class="bg-gray-100  text-softText uppercase text-xs">
+                                        <tr class="h-10">
+                                            <th class="py-3">Mascota</th>
+                                            <th class="py-3">Propietario</th>
+                                            <th class="py-3">Vacuna</th>
+                                            <th class="py-3">Fecha</th>
+                                            <th class="py-3">Hora</th>
+                                            <th class="py-3">Estado</th>
+                                            <th class="py-3">Mensaje</th>
+                                        </thead>
+                                    <tbody>
+                                    <tr th:each="c : ${historial}"
+                                        class="border-t h-12">
+                                        <td class="py-2" th:text="${c.nombreMascota}"></td>
+                                        <td class="py-2" th:text="${c.nombrePropietario}"></td>
+                                        <td class="py-2" th:text="${c.nombreVacuna}"></td>
+                                        <td class="py-2" th:text="${c.fecha}"></td>
+                                        <td class="py-2" th:text="${c.hora}"></td>
+                                        <td class="py-2 text-center">
+                                            <span th:if="${c.estado.name() == 'RECHAZADA'}" class="text-red-600 font-semibold">
+                                                Cita rechazada
+                                            </span>
+                                            <span th:if="${c.estado.name() == 'VACUNA_APLICADA'}" class="text-blue-600 font-semibold">
+                                                Vacuna aplicada
+                                            </span>
+                                        </td>
+                                        <!-- Mensaje -->
+                                        <td class="px-4 py-2 text-sm text-softText">
+                                            <span th:text="${c.mensaje != null ? c.mensaje : '—'}"></span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                        <div th:if="${!agenda.isEmpty()}"
-                         class="bg-lightSurface w-full p-3 shadow-sm border border-borderLight overflow-x-hidden">
-                            <table class="w-full table-fixed text-center text-sm">
-                            <thead class="bg-gray-100 text-softText uppercase text-xs">
-                            <tr class="h-10">
-                                <th class="w-1/6 py-3">Mascota</th>
-                                <th class="w-1/6 py-3">Propietario</th>
-                                <th class="w-1/6 py-3">Vacuna</th>
-                                <th class="w-1/6 py-3">Fecha</th>
-                                <th class="w-1/6 py-3">Hora</th>
-                                <th class="w-1/6 py-3">Acción</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="c : ${agenda}" class="border-t h-12">
-                                <td  class="py-2" th:text="${c.nombreMascota}"></td>
-                                <td  class="py-2" th:text="${c.nombrePropietario}"></td>
-                                <td  class="py-2" th:text="${c.nombreVacuna}"></td>
-                                <td  class="py-2" th:text="${c.fecha}"></td>
-                                <td  class="py-2" th:text="${c.hora}"></td>
-                                <td  class="flex gap-2 justify-center">
-                                    <button th:onclick="|aplicarVacuna(${c.citaId})|"
-                                            class=" relative group py-1 xt-sm text-primary font-bolt transform hover:scale-105 transition">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                             width="24"
-                                             height="24"
-                                             viewBox="0 0 24 24"
-                                             fill="none"
-                                             stroke="currentColor"
-                                             stroke-width="2"
-                                             stroke-linecap="round"
-                                             stroke-linejoin="round"
-                                             class="lucide lucide-syringe-icon lucide-syringe">
-                                            <path d="m18 2 4 4"/>
-                                            <path d="m17 7 3-3"/>
-                                            <path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/>
-                                            <path d="m9 11 4 4"/>
-                                            <path d="m5 19-3 3"/>
-                                            <path d="m14 4 6 6"/>
-                                        </svg>
+                    </div>
+                </section>
+                <section id="vista-perfil" class="hidden">
+                    <div class="max-w-6xl mx-auto mt-6 grid grid-cols-1 md:grid-cols-[0.95fr_1.7fr] gap-8">
+                        <!-- ========================
+                                SEGURIDAD
+                        ======================== -->
+                        <div class="bg-lightSurface border border-borderLight-lg p-5 h-fit">
+                            <h2 class="text-primary text-2xl font-semibold mb-5">
+                                Informacion de Usuario
+                            </h2>
+                            <!-- USERNAME -->
+                            <div class="mb-5">
+                                <label class="text-softText text-md block mb-1">
+                                    Usuario
+                                </label>
+                                <input id="username"
+                                        type="text"
+                                        th:value="${veterinario.usuario.usuario}"
+                                        disabled
+                                        class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full"/>
+                                <div class="flex justify-end  mt-2">
+                                    <button id="edit-username"
+                                            onclick="activarEdicion('username')"
+                                            class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line-icon lucide-pencil-line"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
                                         <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
-                                            Vacuna aplicada
+                                            Editar
                                         </span>
                                     </button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- ================= HISTORIAL DE CITAS RECHAZADAS/ VACUNAS APLICADAS ================= -->
-
-                    <div class="bg-lightBg w-full p-4">
-                        <h1 class="text-3xl font-extrabold text-secondary mb-4 text-center">
-                            Historial de solicitudes
-                        </h1>
-                        <!-- SIN HISTORIAL -->
-                        <div th:if="${historial.isEmpty()}"
-                             class="text-center text-softText text-lg">
-                            No hay registros aún.
-                        </div>
-                        <!-- TABLA  -->
-                        <div th:if="${!historial.isEmpty()}"
-                                class="bg-lightSurface w-full p-3 shadow-sm border border-borderLight overflow-x-hidden">
-                            <table class="w-full table-fixed text-center text-sm">
-                                <thead class="bg-gray-100  text-softText uppercase text-xs">
-                                <tr class="h-10">
-                                    <th class="py-3">Mascota</th>
-                                    <th class="py-3">Propietario</th>
-                                    <th class="py-3">Vacuna</th>
-                                    <th class="py-3">Fecha</th>
-                                    <th class="py-3">Hora</th>
-                                    <th class="py-3">Estado</th>
-                                    <th class="py-3">Mensaje</th>
-                                </tr>
-                                </thead>
-
-                                <tbody>
-                                <tr th:each="c : ${historial}"
-                                    class="border-t h-12">
-                                    <td class="py-2" th:text="${c.nombreMascota}"></td>
-                                    <td class="py-2" th:text="${c.nombrePropietario}"></td>
-                                    <td class="py-2" th:text="${c.nombreVacuna}"></td>
-                                    <td class="py-2" th:text="${c.fecha}"></td>
-                                    <td class="py-2" th:text="${c.hora}"></td>
-                                    <td class="py-2 text-center">
-                                        <span th:if="${c.estado.name() == 'RECHAZADA'}"
-                                              class="text-red-600 font-semibold">
-                                            Cita rechazada
+                                </div>
+                                <div id="acciones-username" class="hidden mt-2 flex gap-2 justify-end">
+                                    <button onclick="guardarUsuario()" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                    Guardar
+                                    </button>
+                                    <button onclick="cancelarEdicion('username')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                    Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- PASSWORD -->
+                            <div>
+                                <label class="text-softText text-md block mb-1">
+                                    Contraseña
+                                </label>
+                                <input type="password"
+                                        value="************"
+                                        disabled
+                                        class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full"/>
+                                <div class="flex justify-end mt-2">
+                                    <button id="edit-password"
+                                            onclick="mostrarCambioPassword()"
+                                            class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line-icon lucide-pencil-line"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+                                        <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                            Editar
                                         </span>
-                                        <span th:if="${c.estado.name() == 'VACUNA_APLICADA'}"
-                                              class="text-blue-600 font-semibold">
-                                            Vacuna aplicada
-                                        </span>
-                                    </td>
-                                    <!-- Mensaje -->
-                                    <td class="px-4 py-2 text-sm text-softText">
-                                        <span th:text="${c.mensaje != null ? c.mensaje : '—'}"></span>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                    </button>
+                                </div>
+                                <div id="form-password" class="hidden mt-3">
+                                    <input id="passwordActual"
+                                           type="password"
+                                           placeholder="Contraseña actual"
+                                           class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full mb-2"/>
+                                    <input id="passwordNueva"
+                                           type="password"
+                                           placeholder="Nueva contraseña"
+                                           class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full mb-2"/>
+                                    <input id="passwordConfirm"
+                                           type="password"
+                                           placeholder="Confirmar contraseña"
+                                           class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full mb-3"/>
+                                    <div class="flex gap-2 justify-end">
+                                        <button onclick="cambiarPassword()"  class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            Guardar
+                                        </button>
+                                        <button onclick="cancelarPassword()"  class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    </div>
+                        <!-- ========================
+                            INFORMACION VETERINARIO
+                        ======================== -->
+                        <div class="bg-lightSurface border border-borderLight-lg p-5">
+                            <h2 class="text-primary text-2xl font-semibold mb-5">
+                                Información Personal
+                            </h2>
+                            <!-- LICENCIA -->
+                            <div class="mb-5">
+                                <label class="text-softText text-md block mb-1">
+                                    Licencia
+                                </label>
+                                <input id="numLicencia"
+                                        type="text"
+                                        th:value="${veterinario.numLicencia}"
+                                        disabled
+                                        class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full"/>
+                                <div class="flex justify-end mt-2">
+                                    <button id="edit-numLicencia" onclick="activarEdicion('numLicencia')"
+                                            class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line-icon lucide-pencil-line"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+                                        <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                            Editar
+                                        </span>
+                                    </button>
+                                </div>
+                                <div id="acciones-numLicencia" class="hidden mt-2 flex gap-2 justify-end">
+                                    <button onclick="guardarCampo('numLicencia')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                    Guardar
+                                    </button>
+                                    <button onclick="cancelarEdicion('numLicencia')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                    Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- NOMBRE Y APELLIDO -->
+                            <div class="grid grid-cols-2 gap-4 mb-5">
+                                <div>
+                                    <label class="text-softText text-md block mb-1">
+                                        Nombre
+                                    </label>
+                                    <input id="nombreVete"
+                                            type="text"
+                                            th:value="${veterinario.nombreVete}"
+                                            disabled
+                                            class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full"/>
+                                    <div class="flex justify-end mt-2">
+                                        <button
+                                                id="edit-nombreVete"
+                                                onclick="activarEdicion('nombreVete')"
+                                                class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line-icon lucide-pencil-line"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+                                            <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                            Editar
+                                        </span>
+                                        </button>
+                                    </div>
+                                    <div id="acciones-nombreVete"
+                                         class="hidden mt-2 flex gap-2 justify-end">
+                                        <button  onclick="guardarCampo('nombreVete')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        Guardar
+                                        </button>
+                                        <button onclick="cancelarEdicion('nombreVete')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="text-softText text-md block mb-1">
+                                        Apellido
+                                    </label>
+                                    <input id="apellidoVete"
+                                            type="text"
+                                            th:value="${veterinario.apellidoVete}"
+                                            disabled
+                                            class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full"/>
+                                    <div class="flex justify-end mt-2">
+                                        <button id="edit-apellidoVete"
+                                                onclick="activarEdicion('apellidoVete')"
+                                                class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line-icon lucide-pencil-line"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+                                            <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                            Editar
+                                        </span>
+                                        </button>
+                                    </div>
+                                    <div id="acciones-apellidoVete"
+                                         class="hidden mt-2 flex gap-2 justify-end">
+                                        <button onclick="guardarCampo('apellidoVete')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        Guardar
+                                        </button>
+                                        <button onclick="cancelarEdicion('apellidoVete')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TELEFONO Y CORREO -->
+                            <div class="grid grid-cols-2 gap-4 mb-5">
+                                <div>
+                                    <label class="text-softText text-md block mb-1">
+                                        Teléfono
+                                    </label>
+                                    <input id="telefonoVete"
+                                            type="text"
+                                            th:value="${veterinario.telefonoVete}"
+                                            disabled
+                                            class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full"/>
+                                    <div class="flex justify-end mt-2">
+                                        <button id="edit-telefonoVete"
+                                                onclick="activarEdicion('telefonoVete')"
+                                                class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line-icon lucide-pencil-line"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+                                            <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                            Editar
+                                        </span>
+                                        </button>
+                                    </div>
+                                    <div id="acciones-telefonoVete"
+                                         class="hidden mt-2 flex gap-2 justify-end">
+                                        <button onclick="guardarCampo('telefonoVete')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        Guardar
+                                        </button>
+                                        <button onclick="cancelarEdicion('telefonoVete')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="text-softText text-md block mb-1">
+                                        Correo
+                                    </label>
+                                    <input id="correoVete"
+                                            type="email"
+                                            th:value="${veterinario.correoVete}"
+                                            disabled
+                                            class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full"/>
+                                    <div class="flex justify-end mt-2">
+                                        <button id="edit-correoVete"
+                                                onclick="activarEdicion('correoVete')"
+                                                class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line-icon lucide-pencil-line"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+                                            <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                            Editar
+                                        </span>
+                                        </button>
+                                    </div>
+                                    <div id="acciones-correoVete" class="hidden mt-2 flex gap-2 justify-end">
+                                        <button onclick="guardarCampo('correoVete')"
+                                                class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        Guardar
+                                        </button>
+                                        <button onclick="cancelarEdicion('correoVete')"
+                                                class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- DIRECCION -->
+                            <div>
+                                <label class="text-softText text-md block mb-1">
+                                    Dirección
+                                </label>
+                                <input id="direccionVete"
+                                        type="text"
+                                        th:value="${veterinario.direccionVete}"
+                                        disabled
+                                        class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full"/>
+                                <div class="flex justify-end mt-2">
+                                    <button id="edit-direccionVete"
+                                            onclick="activarEdicion('direccionVete')"
+                                            class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line-icon lucide-pencil-line"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+                                        <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                            Editar
+                                        </span>
+                                    </button>
+                                </div>
+                                <div id="acciones-direccionVete" class="hidden mt-2 flex gap-2 justify-end">
+                                    <button onclick="guardarCampo('direccionVete')"
+                                            class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                    Guardar
+                                    </button>
+                                    <button onclick="cancelarEdicion('direccionVete')"
+                                            class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                    Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
             </main>
@@ -598,8 +869,9 @@
         </div>
     </div>
 </div>
-<!-- MODAL REGISTRAR PROPIETARIO -->
-<div id="modalPropietario" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+<!-- ========= MODAL REGISTRAR PROPIETARIO =============== -->
+<div id="modalPropietario"
+     class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-lightSurface w-full  max-w-md  shadow-lg p-6 relative">
         <h3 class="text-lg font-bold text-center text-secondary mb-4">Registrar Propietario</h3>
         <form th:action="@{/veterinario/nuevo}" method="post" th:object="${propietario}" class="space-y-4">
@@ -635,8 +907,14 @@
                        th:field="*{correoPro}" class="w-full  border-borderLight  px-3 py-2 " required>
             </div>
             <div class="flex justify-center space-x-3 pt-4">
-                <button type="button" onclick="toggleModal('modalPropietario')" class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Cancelar</button>
-                <button type="submit" class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">Guardar</button>
+                <button type="button" onclick="toggleModal('modalPropietario')"
+                        class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                    Cancelar
+                </button>
+                <button type="submit"
+                        class="bg-secondary text-white px-4 py-2  hover:bg-lightSurface hover:shadow-xl hover:text-primary font-bold transition">
+                    Guardar
+                </button>
             </div>
         </form>
         <button onclick="toggleModal('modalPropietario')" class="absolute top-3 right-3 text-softText hover:text-primary">
@@ -644,12 +922,14 @@
         </button>
     </div>
 </div>
-<!-- MODAL REGISTRAR MASCOTA -->
+<!-- ========== MODAL REGISTRAR MASCOTA ============ -->
 <div th:each="prop : ${propietarios}" >
-    <div id="modalMascota" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-lightSurface w-full max-w-md  shadow-lg p-6 relative">
-            <h3 class="text-lg font-bold text-center text-secondary mb-4">Registrar Mascota</h3>
-            <form th:action="@{/veterinario/nuevom}" method="post" th:object="${mascota}"  class="space-y-4">
+    <div id="modalMascota"
+     class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+
+            <div class="bg-lightSurface w-full max-w-md  shadow-lg p-6 relative">
+                <h3 class="text-lg font-bold text-center text-secondary mb-4">Registrar Mascota</h3>
+                <form th:action="@{/veterinario/nuevom}" method="post" th:object="${mascota}"  class="space-y-4">
 
                 <input type="hidden" name="propietarioId" id="propietarioId">
                 <div>
@@ -697,7 +977,7 @@
         </div>
     </div>
 </div>
-
+<!-- =========== MODAL EDITAR PROPIETARIO ============== -->
 <div id="modalEditarPropietario"
      class="modal-overlay fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
 
@@ -772,7 +1052,6 @@
         </button>
     </div>
 </div>
-
 <!-- ================= MODAL RECHAZO ================= -->
 <div id="modalRechazo"
      class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50">
@@ -834,7 +1113,6 @@ function toggleModal(id) {
         const modal = document.getElementById(id);
         modal.classList.toggle("hidden");
     }
-
         // Vincular botones del dashboard
         document.querySelectorAll("button").forEach(btn => {
         if (btn.textContent.includes("Agregar Propietario")) {
@@ -843,25 +1121,21 @@ function toggleModal(id) {
     });
         const modalMascota = document.getElementById('modalMascota');
         const inputPropietario = document.getElementById('propietarioId');
-
-        function abrirModalMascota(idPropietario) {
+function abrirModalMascota(idPropietario) {
 
             inputPropietario.value = idPropietario;
             modalMascota.classList.remove('hidden');
     }
- function cerrarModalMascota() {
+function cerrarModalMascota() {
   modalMascota.classList.add('hidden');
     }
-
     // Opcional: cerrar modal al hacer clic fuera del contenido
     modalMascota.addEventListener('click', (e) => {
         if (e.target === modalMascota) cerrarModalMascota();
     });
-
 /* ===============================
            MODAL EDICION
   =============================== */
-
 function abrirModalEditarPropietario(btn) {
     document.getElementById('editPropietarioId').value = btn.dataset.id;
 
@@ -875,14 +1149,11 @@ function abrirModalEditarPropietario(btn) {
     document.getElementById('modalEditarPropietario').classList.remove('hidden');
     document.getElementById('modalEditarPropietario').classList.add('flex');
 }
-
-    function cerrarModalEditarPropietario() {
+function cerrarModalEditarPropietario() {
         const modal = document.getElementById('modalEditarPropietario');
         modal.classList.add('hidden');
         modal.classList.remove('flex');
     }
-
-    // Cerrar al hacer click fuera
     document.getElementById('modalEditarPropietario')
         .addEventListener('click', () => cerrarModalEditarPropietario());
 
@@ -899,10 +1170,7 @@ function mostrarVista(vista) {
         activa.classList.remove("hidden");
     }
 }
-</script>
-
-<script>
-    function aceptarCita(citaId) {
+function aceptarCita(citaId) {
         fetch(`/citas/${citaId}/aceptar`, {
             method: "POST"
         }).then(res => {
@@ -910,13 +1178,11 @@ function mostrarVista(vista) {
             else alert("Error al aceptar la cita");
         });
     }
-
-    function abrirModalRechazo(citaId) {
+function abrirModalRechazo(citaId) {
         document.getElementById("citaRechazoId").value = citaId;
         document.getElementById("modalRechazo").classList.remove("hidden");
     }
-
-    function confirmarRechazo() {
+function confirmarRechazo() {
         const citaId = document.getElementById("citaRechazoId").value;
         const mensaje = document.getElementById("mensajeRechazo").value;
 
@@ -936,8 +1202,7 @@ function mostrarVista(vista) {
             else alert("Error al rechazar la cita");
         });
     }
-
-    function aplicarVacuna(citaId) {
+function aplicarVacuna(citaId) {
         fetch(`/citas/${citaId}/aplicar`, {
             method: "POST"
         }).then(res => {
@@ -945,7 +1210,193 @@ function mostrarVista(vista) {
             else alert("Error al aplicar la vacuna");
         });
     }
-</script>
+function guardarCampo(campo){
+        let valor = document.getElementById(campo).value;
+        fetch("/veterinario/actualizar-campo", {
+            method: "POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify({
 
+                campo: campo,
+                valor: valor
+
+            })
+        })
+            .then(r=>{
+                cancelarEdicion(campo);
+                alert("Dato actualizado");
+            });
+    }
+function guardarUsuario(){
+    let valor =
+        document.getElementById("username").value;
+    fetch("/registro/actualizar-username",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            username:valor
+        })
+
+    })
+        .then(r=>r.text())
+        .then(r=>{
+            if(r === "logout"){
+                alert("Debes iniciar sesión nuevamente");
+                window.location.href="/login";
+            }
+        });
+}
+function guardarPassword(){
+    let valor =
+        document.getElementById("password").value;
+    fetch("/registro/actualizar-password",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            password:valor
+        })
+    })
+        .then(r=>r.text())
+        .then(r=>{
+            let input =
+                document.getElementById("password");
+            input.value="";
+            input.disabled=true;
+            document
+                .getElementById("btn-password")
+                .classList.add("hidden");
+            alert("Contraseña actualizada");
+        });
+}
+function mostrarCambioPassword(){
+
+    document
+        .getElementById("form-password")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("edit-password")
+        .classList.add("hidden");
+
+}
+function cancelarPassword(){
+
+    document
+        .getElementById("form-password")
+        .classList.add("hidden");
+
+    document
+        .getElementById("edit-password")
+        .classList.remove("hidden");
+
+
+    document.getElementById("passwordActual").value="";
+    document.getElementById("passwordNueva").value="";
+    document.getElementById("passwordConfirm").value="";
+
+}
+function cambiarPassword(){
+    let actual =
+        document.getElementById("passwordActual").value;
+    let nueva =
+        document.getElementById("passwordNueva").value;
+    let confirmar =
+        document.getElementById("passwordConfirm").value;
+
+    if(nueva !== confirmar){
+
+        alert("Las contraseñas no coinciden");
+        return;
+    }
+    fetch("/registro/cambiar-password",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            actual:actual,
+            nueva:nueva
+        })
+    })
+        .then(r=>r.text())
+        .then(r=>{
+            if(r === "ok"){
+                alert("Contraseña actualizada correctamente");
+                // limpiar campos
+                document.getElementById("passwordActual").value="";
+                document.getElementById("passwordNueva").value="";
+                document.getElementById("passwordConfirm").value="";
+                // ocultar formulario
+                cancelarPassword();
+            }
+            else{
+                alert(r);
+            }
+        });
+
+}
+function activarEdicion(id){
+
+    let input = document.getElementById(id);
+
+    input.disabled = false;
+
+    // estilo en modo edición
+    input.classList.remove("bg-white","border-borderLight");
+    input.classList.add(
+        "bg-lightBg",
+        "border-primary",
+        "ring-1",
+        "ring-primary"
+    );
+
+    // ocultar botón editar
+    document
+        .getElementById("edit-" + id)
+        .classList.add("hidden");
+
+    // mostrar botones guardar/cancelar
+    document
+        .getElementById("acciones-" + id)
+        .classList.remove("hidden");
+
+}
+function cancelarEdicion(id){
+
+    let input = document.getElementById(id);
+
+    input.disabled = true;
+
+    // volver al estilo normal
+    input.classList.remove(
+        "bg-lightBg",
+        "border-primary",
+        "ring-1",
+        "ring-primary"
+    );
+
+    input.classList.add(
+        "bg-white",
+        "border-borderLight"
+    );
+
+    // mostrar botón editar
+    document
+        .getElementById("edit-" + id)
+        .classList.remove("hidden");
+
+    // ocultar acciones
+    document
+        .getElementById("acciones-" + id)
+        .classList.add("hidden");
+
+}
+</script>
 </body>
 </html>

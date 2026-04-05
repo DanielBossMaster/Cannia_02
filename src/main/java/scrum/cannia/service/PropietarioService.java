@@ -123,4 +123,45 @@ public class PropietarioService {
 
         propietarioRepository.save(existente);
     }
+
+    public PropietarioModel buscarPorUsername(String username){
+
+        return propietarioRepository
+                .findByUsuarioUsuario(username)
+                .orElseThrow(() ->
+                        new RuntimeException("Propietario no encontrado"));
+
+    }
+    public PropietarioModel actualizarCampo(
+            String username,
+            String campo,
+            String valor
+    ) {
+        PropietarioModel propietario =
+                buscarPorUsername(username);
+
+        switch (campo) {
+            case "numDoc":
+                propietario.setNumDoc(valor);
+                break;
+            case "nombrePro":
+                propietario.setNombrePro(valor);
+                break;
+            case "apellidoPro":
+                propietario.setApellidoPro(valor);
+                break;
+            case "direccionPro":
+                propietario.setDireccionPro(valor);
+                break;
+            case "telefonoPro":
+                propietario.setTelefonoPro(valor);
+                break;
+            case "correoPro":
+                propietario.setCorreoPro(valor);
+                break;
+            default:
+                throw new IllegalArgumentException("Campo no válido");
+        }
+        return propietarioRepository.save(propietario);
+    }
 }

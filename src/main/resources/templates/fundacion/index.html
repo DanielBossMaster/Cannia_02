@@ -188,6 +188,16 @@
             <!-- Bloque inferior (2 items) -->
             <div class="mb-6">
                 <nav class="flex flex-col gap-4">
+                    <button onclick="mostrarVista('perfil')"
+                            class=" group relative flex items-center text-white gap-3 px-3 py-1 hover:bg-primary ">
+                        <i class="fa-solid fa-circle-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-icon lucide-settings"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
+                        </i>
+                        <span class="sidebar-text hidden">Perfil</span>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Perfil
+                        </span>
+                    </button>
                     <a th:href="@{/cerrar-sesion}"
                        class=" group relative flex items-center text-white gap-3 px-3 py-1 hover:bg-primary ">
                         <i class="fa-solid fa-circle-info">
@@ -223,7 +233,7 @@
                 </div>
             </header>
             <!-- CONTENIDO PRINCIPAL -->
-            <main class="ml-32 mr-32 flex flex-col items-center flex-grow px-6 py-8">
+            <main class=" ml-32 flex-grow mx-auto  px-6 py-8 mr-32">
                 <!-- MENSAJE DE EXITO -->
                 <div th:if="${success}" class="max-w-3xl mx-auto mt-6 p-4 bg-green-100 border border-green-400 text-green-800 rounded text-center">
                     <span th:text="${success}"></span>
@@ -486,6 +496,282 @@
                         </div>
                     </div>
                 </section>
+                <section id="vista-perfil" class="hidden">
+                    <div class="max-w-6xl mx-auto mt-6 grid grid-cols-1 md:grid-cols-[0.95fr_1.7fr] gap-8">
+                        <!-- ========================
+                                SEGURIDAD
+                        ======================== -->
+                        <div class="bg-lightSurface border border-borderLight-lg p-5 h-fit">
+                            <h2 class="text-primary text-2xl font-semibold mb-5">
+                                Informacion de Usuario
+                            </h2>
+                            <!-- USERNAME -->
+                            <div class="mb-5">
+                                <label class="text-softText text-md block mb-1">
+                                    Usuario
+                                </label>
+                                <input id="username"
+                                       type="text"
+                                       th:value="${fundacion.usuario.usuario}"
+                                       disabled
+                                       class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full"/>
+                                <div class="flex justify-end  mt-2">
+                                    <button id="edit-username"
+                                            onclick="activarEdicion('username')"
+                                            class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line-icon lucide-pencil-line"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+                                        <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                            Editar
+                                        </span>
+                                    </button>
+                                </div>
+                                <div id="acciones-username" class="hidden mt-2 flex gap-2 justify-end">
+                                    <button onclick="guardarUsuario()" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        Guardar
+                                    </button>
+                                    <button onclick="cancelarEdicion('username')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- PASSWORD -->
+                            <div>
+                                <label class="text-softText text-md block mb-1">
+                                    Contraseña
+                                </label>
+                                <input type="password"
+                                       value="************"
+                                       disabled
+                                       class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full"/>
+                                <div class="flex justify-end mt-2">
+                                    <button id="edit-password"
+                                            onclick="mostrarCambioPassword()"
+                                            class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line-icon lucide-pencil-line"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+                                        <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                            Editar
+                                        </span>
+                                    </button>
+                                </div>
+                                <div id="form-password" class="hidden mt-3">
+                                    <input id="passwordActual"
+                                           type="password"
+                                           placeholder="Contraseña actual"
+                                           class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full mb-2"/>
+                                    <input id="passwordNueva"
+                                           type="password"
+                                           placeholder="Nueva contraseña"
+                                           class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full mb-2"/>
+                                    <input id="passwordConfirm"
+                                           type="password"
+                                           placeholder="Confirmar contraseña"
+                                           class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full mb-3"/>
+                                    <div class="flex gap-2 justify-end">
+                                        <button onclick="cambiarPassword()"  class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            Guardar
+                                        </button>
+                                        <button onclick="cancelarPassword()"  class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ========================
+                            INFORMACION VETERINARIO
+                        ======================== -->
+                        <div class="bg-lightSurface border border-borderLight-lg p-5">
+                            <h2 class="text-primary text-2xl font-semibold mb-5">
+                                Información Personal
+                            </h2>
+                            <!-- LICENCIA -->
+                            <div class="mb-5">
+                                <label class="text-softText text-md block mb-1">
+                                    Nit
+                                </label>
+                                <input id="nit"
+                                       type="text"
+                                       th:value="${fundacion.nit}"
+                                       disabled
+                                       class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full"/>
+                                <div class="flex justify-end mt-2">
+                                    <button id="edit-nit" onclick="activarEdicion('nit')"
+                                            class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line-icon lucide-pencil-line"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+                                        <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                            Editar
+                                        </span>
+                                    </button>
+                                </div>
+                                <div id="acciones-nit" class="hidden mt-2 flex gap-2 justify-end">
+                                    <button onclick="guardarCampo('nit')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        Guardar
+                                    </button>
+                                    <button onclick="cancelarEdicion('nit')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- NOMBRE Y APELLIDO -->
+                            <div class="grid grid-cols-2 gap-4 mb-5">
+                                <div>
+                                    <label class="text-softText text-md block mb-1">
+                                        Nombre
+                                    </label>
+                                    <input id="nombre"
+                                           type="text"
+                                           th:value="${fundacion.nombre}"
+                                           disabled
+                                           class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full"/>
+                                    <div class="flex justify-end mt-2">
+                                        <button
+                                                id="edit-nombre"
+                                                onclick="activarEdicion('nombre')"
+                                                class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line-icon lucide-pencil-line"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+                                            <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                            Editar
+                                        </span>
+                                        </button>
+                                    </div>
+                                    <div id="acciones-nombre"
+                                         class="hidden mt-2 flex gap-2 justify-end">
+                                        <button  onclick="guardarCampo('nombre')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            Guardar
+                                        </button>
+                                        <button onclick="cancelarEdicion('nombre')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="text-softText text-md block mb-1">
+                                        Descripcion
+                                    </label>
+                                    <input id="descripcion"
+                                           type="text"
+                                           th:value="${fundacion.descripcion}"
+                                           disabled
+                                           class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full"/>
+                                    <div class="flex justify-end mt-2">
+                                        <button id="edit-descripcion"
+                                                onclick="activarEdicion('descripcion')"
+                                                class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line-icon lucide-pencil-line"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+                                            <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                            Editar
+                                        </span>
+                                        </button>
+                                    </div>
+                                    <div id="acciones-descripcion"
+                                         class="hidden mt-2 flex gap-2 justify-end">
+                                        <button onclick="guardarCampo('descripcion')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            Guardar
+                                        </button>
+                                        <button onclick="cancelarEdicion('descripcion')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TELEFONO Y CORREO -->
+                            <div class="grid grid-cols-2 gap-4 mb-5">
+                                <div>
+                                    <label class="text-softText text-md block mb-1">
+                                        Teléfono
+                                    </label>
+                                    <input id="telefono"
+                                           type="text"
+                                           th:value="${fundacion.telefono}"
+                                           disabled
+                                           class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full"/>
+                                    <div class="flex justify-end mt-2">
+                                        <button id="edit-telefono"
+                                                onclick="activarEdicion('telefono')"
+                                                class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line-icon lucide-pencil-line"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+                                            <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                            Editar
+                                        </span>
+                                        </button>
+                                    </div>
+                                    <div id="acciones-telefono"
+                                         class="hidden mt-2 flex gap-2 justify-end">
+                                        <button onclick="guardarCampo('telefono')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            Guardar
+                                        </button>
+                                        <button onclick="cancelarEdicion('telefono')" class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="text-softText text-md block mb-1">
+                                        Correo
+                                    </label>
+                                    <input id="email"
+                                           type="email"
+                                           th:value="${fundacion.email}"
+                                           disabled
+                                           class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full"/>
+                                    <div class="flex justify-end mt-2">
+                                        <button id="edit-email"
+                                                onclick="activarEdicion('email')"
+                                                class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line-icon lucide-pencil-line"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+                                            <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                            Editar
+                                        </span>
+                                        </button>
+                                    </div>
+                                    <div id="acciones-email" class="hidden mt-2 flex gap-2 justify-end">
+                                        <button onclick="guardarCampo('email')"
+                                                class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            Guardar
+                                        </button>
+                                        <button onclick="cancelarEdicion('email')"
+                                                class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- DIRECCION -->
+                            <div>
+                                <label class="text-softText text-md block mb-1">
+                                    Dirección
+                                </label>
+                                <input id="direccion"
+                                       type="text"
+                                       th:value="${fundacion.direccion}"
+                                       disabled
+                                       class="bg-white border border-borderLight text-darkText px-3 py-2 text-sm w-full"/>
+                                <div class="flex justify-end mt-2">
+                                    <button id="edit-direccion"
+                                            onclick="activarEdicion('direccion')"
+                                            class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-line-icon lucide-pencil-line"><path d="M13 21h8"/><path d="m15 5 4 4"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+                                        <span class="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-200 bg-black text-white text-xs px-2 py-1  whitespace-nowrap z-50">
+                                            Editar
+                                        </span>
+                                    </button>
+                                </div>
+                                <div id="acciones-direccion" class="hidden mt-2 flex gap-2 justify-end">
+                                    <button onclick="guardarCampo('direccion')"
+                                            class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        Guardar
+                                    </button>
+                                    <button onclick="cancelarEdicion('direccion')"
+                                            class=" relative group  flex items-center gap-1 bg-secondary text-white px-2 py-1 hover:bg-lightSurface hover:shadow-xl hover:text-primary transition">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </main>
             <!-- Footer -->
             <footer class=" text-center text-sm text-primary py-3">
@@ -654,11 +940,9 @@
         modal.classList.remove("hidden");
         modal.classList.add("flex");
     }
-
     /* ===============================
               BARRA LATERAL
     =============================== */
-
     function toggleSidebar() {
         const sidebar = document.getElementById("sidebar");
         const texts = document.querySelectorAll(".sidebar-text");
@@ -673,7 +957,6 @@
             }
         });
     }
-
     /* ===============================
        MODALES - CORE
     =============================== */
@@ -684,7 +967,6 @@
         modal.classList.remove("hidden");
         modal.classList.add("flex");
     }
-
     function cerrarModal(id) {
         const modal = document.getElementById(id);
         if (!modal) return;
@@ -696,7 +978,6 @@
         const contenido = modal.querySelector("#contenidoHistoria");
         if (contenido) contenido.innerHTML = '';
     }
-
     /* ===============================
        MODAL: AGREGAR MASCOTA
     =============================== */
@@ -704,8 +985,6 @@
         if (event) event.preventDefault();
         abrirModal("modalAgregarMascota");
     }
-
-
     /* ===============================
        CERRAR MODAL AL CLICK FUERA
     =============================== */
@@ -721,14 +1000,12 @@
             });
         });
     }
-
     /* ===============================
        INIT
     =============================== */
     document.addEventListener("DOMContentLoaded", () => {
         inicializarModales();
     });
-
     /* ===============================
                   VISTAS
    =============================== */
@@ -742,15 +1019,12 @@
             activa.classList.remove("hidden");
         }
     }
-
-
     /* ===============================
        INIT
     =============================== */
     document.addEventListener("DOMContentLoaded", () => {
         inicializarModales();
     });
-
     function abrirModalEdicion(id, nombre, especie, raza, estadoAdopcion, descripcion) {
 
         document.getElementById('idMascota').value = id;
@@ -765,7 +1039,6 @@
         modal.classList.remove('hidden');
         modal.classList.add('flex');
     }
-
     document.querySelector('input[name="fotoMascota"]').addEventListener('change', function(e){
 
         const file = e.target.files[0];
@@ -802,6 +1075,193 @@
             });
 
         });
+    function guardarCampo(campo){
+        let valor = document.getElementById(campo).value;
+        fetch("/fundacion/actualizar-campo", {
+            method: "POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify({
+
+                campo: campo,
+                valor: valor
+
+            })
+        })
+            .then(r=>{
+                cancelarEdicion(campo);
+                alert("Dato actualizado");
+            });
+    }
+    function guardarUsuario(){
+        let valor =
+            document.getElementById("username").value;
+        fetch("/registro/actualizar-username",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                username:valor
+            })
+
+        })
+            .then(r=>r.text())
+            .then(r=>{
+                if(r === "logout"){
+                    alert("Debes iniciar sesión nuevamente");
+                    window.location.href="/login";
+                }
+            });
+    }
+    function guardarPassword(){
+        let valor =
+            document.getElementById("password").value;
+        fetch("/registro/actualizar-password",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                password:valor
+            })
+        })
+            .then(r=>r.text())
+            .then(r=>{
+                let input =
+                    document.getElementById("password");
+                input.value="";
+                input.disabled=true;
+                document
+                    .getElementById("btn-password")
+                    .classList.add("hidden");
+                alert("Contraseña actualizada");
+            });
+    }
+    function mostrarCambioPassword(){
+
+        document
+            .getElementById("form-password")
+            .classList.remove("hidden");
+
+        document
+            .getElementById("edit-password")
+            .classList.add("hidden");
+
+    }
+    function cancelarPassword(){
+
+        document
+            .getElementById("form-password")
+            .classList.add("hidden");
+
+        document
+            .getElementById("edit-password")
+            .classList.remove("hidden");
+
+
+        document.getElementById("passwordActual").value="";
+        document.getElementById("passwordNueva").value="";
+        document.getElementById("passwordConfirm").value="";
+
+    }
+    function cambiarPassword(){
+        let actual =
+            document.getElementById("passwordActual").value;
+        let nueva =
+            document.getElementById("passwordNueva").value;
+        let confirmar =
+            document.getElementById("passwordConfirm").value;
+
+        if(nueva !== confirmar){
+
+            alert("Las contraseñas no coinciden");
+            return;
+        }
+        fetch("/registro/cambiar-password",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                actual:actual,
+                nueva:nueva
+            })
+        })
+            .then(r=>r.text())
+            .then(r=>{
+                if(r === "ok"){
+                    alert("Contraseña actualizada correctamente");
+                    // limpiar campos
+                    document.getElementById("passwordActual").value="";
+                    document.getElementById("passwordNueva").value="";
+                    document.getElementById("passwordConfirm").value="";
+                    // ocultar formulario
+                    cancelarPassword();
+                }
+                else{
+                    alert(r);
+                }
+            });
+
+    }
+    function activarEdicion(id){
+
+        let input = document.getElementById(id);
+
+        input.disabled = false;
+
+        // estilo en modo edición
+        input.classList.remove("bg-white","border-borderLight");
+        input.classList.add(
+            "bg-lightBg",
+            "border-primary",
+            "ring-1",
+            "ring-primary"
+        );
+
+        // ocultar botón editar
+        document
+            .getElementById("edit-" + id)
+            .classList.add("hidden");
+
+        // mostrar botones guardar/cancelar
+        document
+            .getElementById("acciones-" + id)
+            .classList.remove("hidden");
+
+    }
+    function cancelarEdicion(id){
+
+        let input = document.getElementById(id);
+
+        input.disabled = true;
+
+        // volver al estilo normal
+        input.classList.remove(
+            "bg-lightBg",
+            "border-primary",
+            "ring-1",
+            "ring-primary"
+        );
+
+        input.classList.add(
+            "bg-white",
+            "border-borderLight"
+        );
+
+        // mostrar botón editar
+        document
+            .getElementById("edit-" + id)
+            .classList.remove("hidden");
+
+        // ocultar acciones
+        document
+            .getElementById("acciones-" + id)
+            .classList.add("hidden");
+
+    }
 </script>
 </html>
 
