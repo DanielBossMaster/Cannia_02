@@ -1,6 +1,7 @@
 package scrum.cannia.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import scrum.cannia.repository.*;
 import scrum.cannia.service.*;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -233,5 +235,48 @@ public class RegistroController {
         tokenService.eliminar(tokenModel);
 
         return "redirect:/login?passwordActualizada";
+    }
+
+    // ============================================
+    //        EDITAR NOMBRE DE USUARIO
+    // ============================================
+
+    @PostMapping("/actualizar-username")
+    @ResponseBody
+    public String actualizarUsername(
+            @RequestBody Map<String,String> datos,
+            Authentication authentication
+    ){
+        String usernameActual =
+                authentication.getName();
+        usuarioService.actualizarUsername(
+                usernameActual,
+                datos.get("username")
+        );
+        return "logout";
+    }
+
+    // ============================================
+    //              EDITAR PASSWORD
+    // ============================================
+
+    @PostMapping("/cambiar-password")
+    @ResponseBody
+    public String cambiarPassword(
+            @RequestBody Map<String,String> datos,
+            Authentication authentication
+    ){
+        try{
+            usuarioService.cambiarPasswordSeguro(
+                    authentication.getName(),
+                    datos.get("actual"),
+                    datos.get("nueva")
+
+            );
+            return "ok";
+        }
+        catch(Exception e){
+            return e.getMessage();
+        }
     }
 }

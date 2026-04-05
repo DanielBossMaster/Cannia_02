@@ -82,7 +82,6 @@ public class UsuarioService {
         }
     }
 
-
     //  ENVIAR SOLICITUD DE ACTIVACIÓN (usando sesión)
     public void enviarSolicitudPorUsername(String username) {
 
@@ -112,8 +111,6 @@ public class UsuarioService {
             String username,
             String contrasena
     ) {
-
-
         if (usuarioRepository.existsByUsuario(username)) {
             throw new IllegalArgumentException("El nombre de usuario ya existe");
         }
@@ -173,7 +170,47 @@ public class UsuarioService {
         usuario.setContrasena(
                 passwordEncoder.encode(nuevaPassword)
         );
+        usuarioRepository.save(usuario);
+    }
+    public void actualizarUsername(
+            String usernameActual,
+            String nuevoUsername
+    ){
 
+        if(usuarioRepository.existsByUsuario(nuevoUsername)){
+            throw new IllegalArgumentException(
+                    "El username ya existe");
+        }
+        UsuarioModel usuario =
+                buscarPorUsername(usernameActual);
+
+        usuario.setUsuario(nuevoUsername);
+
+        usuarioRepository.save(usuario);
+
+    }
+    
+    public void cambiarPasswordSeguro(
+
+            String username,
+            String passwordActual,
+            String passwordNueva
+    ){
+        UsuarioModel usuario =
+                buscarPorUsername(username);
+// validar contraseña actual
+        if(!passwordEncoder.matches(
+                passwordActual,
+                usuario.getContrasena()
+        )){
+            throw new IllegalArgumentException(
+                    "Contraseña actual incorrecta"
+            );
+        }
+// actualizar contraseña encriptada
+        usuario.setContrasena(
+                passwordEncoder.encode(passwordNueva)
+        );
         usuarioRepository.save(usuario);
     }
 }

@@ -24,6 +24,7 @@ public interface PropietarioRepository extends JpaRepository<PropietarioModel,Lo
     @Query("SELECT p.correoPro FROM PropietarioModel p WHERE p.correoPro IS NOT NULL")
     List<String> obtenerCorreosDePropietarios();
 
+    Optional<PropietarioModel> findByUsuarioUsuario(String usuario);
 
 }
 

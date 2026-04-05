@@ -68,6 +68,29 @@ public class FundacionController {
         return "fundacion/index";
     }
 
+    // ============================================
+    //        EDITAR PERFIL Propietario
+    // ============================================
+
+    @PostMapping("/actualizar-campo")
+    @ResponseBody
+    public String actualizarCampo(
+            @RequestBody Map<String,String> datos,
+            Authentication authentication
+    ) {
+
+        String username = authentication.getName() ;
+
+        fundacionService.actualizarCampo(
+
+                username,
+                datos.get("campo"),
+                datos.get("valor")
+
+        );
+
+        return "ok";
+    }
     @GetMapping("/CargarMascotas")
     public String vistaCargarMascotas() {
         return "fundacion/CargarMascotas";

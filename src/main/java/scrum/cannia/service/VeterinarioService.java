@@ -55,4 +55,37 @@ public class VeterinarioService {
                 .orElseThrow(() ->
                         new IllegalStateException("Veterinario no encontrado"));
     }
+
+    public VeterinarioModel actualizarCampo(
+            String username,
+            String campo,
+            String valor
+    ) {
+        VeterinarioModel veterinario =
+                buscarPorUsuario(username);
+
+        switch (campo) {
+            case "numLicencia":
+                veterinario.setNumLicencia(valor);
+                break;
+            case "nombreVete":
+                veterinario.setNombreVete(valor);
+                break;
+            case "apellidoVete":
+                veterinario.setApellidoVete(valor);
+                break;
+            case "direccionVete":
+                veterinario.setDireccionVete(valor);
+                break;
+            case "telefonoVete":
+                veterinario.setTelefonoVete(valor);
+                break;
+            case "correoVete":
+                veterinario.setCorreoVete(valor);
+                break;
+            default:
+                throw new IllegalArgumentException("Campo no válido");
+        }
+        return veterinarioRepo.save(veterinario);
+    }
 }

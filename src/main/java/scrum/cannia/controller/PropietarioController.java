@@ -14,6 +14,7 @@ import scrum.cannia.repository.HistoriaClinicaRepository;
 import scrum.cannia.repository.UsuarioRepository;
 import scrum.cannia.service.CitaService;
 import scrum.cannia.service.MascotaService;
+import scrum.cannia.service.PropietarioService;
 import scrum.cannia.service.VacunaService;
 
 import java.io.IOException;
@@ -37,6 +38,7 @@ public class PropietarioController {
     private final HistoriaClinicaRepository historiaRepository;
     private final CitaService citaService;
     private final  Cloudinary cloudinary;
+    private final PropietarioService propietarioService;
 
     // ============================================
     //           DASHBOARD PROPIETARIO
@@ -70,6 +72,29 @@ public class PropietarioController {
 
 
         return "propietario/index";
+    }
+    // ============================================
+    //        EDITAR PERFIL Propietario
+    // ============================================
+
+    @PostMapping("/actualizar-campo")
+    @ResponseBody
+    public String actualizarCampo(
+            @RequestBody Map<String,String> datos,
+            Authentication authentication
+    ) {
+
+       String username = authentication.getName() ;
+
+        propietarioService.actualizarCampo(
+
+                username,
+                datos.get("campo"),
+                datos.get("valor")
+
+        );
+
+        return "ok";
     }
 
     // ============================================

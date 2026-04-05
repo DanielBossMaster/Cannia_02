@@ -111,10 +111,8 @@
 
     </div>
 
-
     <!-- GRID -->
     <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-
         <!-- CARD -->
         <div th:each="mascota : ${mascotas}"
              class="bg-white shadow-sm border border-borderLight overflow-hidden hover:shadow-lg transition">
@@ -139,29 +137,19 @@
             </div>
             <!-- INFO -->
             <div class="p-5">
-
-                <h3 class="text-xl font-bold text-secondary" th:text="${mascota.nomMascota}">
-                </h3>
-
+                <h3 class="text-xl font-bold text-secondary" th:text="${mascota.nomMascota}"></h3>
                 <p class="text-softText text-sm mb-2">
                    Especie: <span th:text="${mascota.especie}"></span>
                 </p>
-
                 <p class="text-softText text-sm mb-2">
                     Fundacion: <span th:text="${mascota.fundacion.nombre}"></span>
                 </p>
-
                 <p class="text-softText text-sm mb-4">
                   Genero: <span th:text="${mascota.genero}"></span>
                 </p>
-
-                <p th:if="${mascota.descripcion != null}"
-                   class="text-softText text-sm mb-4 line-clamp-3"
+                <p th:if="${mascota.descripcion != null}" class="text-softText text-sm mb-4 line-clamp-3"
                    th:text="${mascota.descripcion}">
-
                 </p>
-
-
                 <button class="bg-primary  w-full text-white px-4 py-2 hover:bg-lightSurface hover:text-primary border border-primary font-bold transition"
                 th:attr="onclick=|abrirModalMascota(${mascota.id},
                 '${mascota.nomMascota}',
@@ -290,24 +278,54 @@
 
 <script>
 
-    function abrirModalMascota(id,nombre,especie,raza,genero,descripcion,foto){
+    function abrirModalMascota(
+        id,
+        nombre,
+        especie,
+        raza,
+        genero,
+        descripcion,
+        foto
+    ){
 
-        document.getElementById("modalMascota").classList.remove("hidden")
+        document.getElementById("modalMascota")
+            .classList.remove("hidden");
 
-        document.getElementById("modalNombre").innerText = nombre
-        document.getElementById("modalEspecie").innerText = especie
-        document.getElementById("modalRaza").innerText = raza
-        document.getElementById("modalGenero").innerText = genero
-        document.getElementById("modalDescripcion").innerText = descripcion
+        document.getElementById("modalNombre")
+            .innerText = nombre;
 
-        document.getElementById("mascotaIdInput").value = id
+        document.getElementById("modalEspecie")
+            .innerText = especie;
 
-        if(foto && foto !== "null"){
-            document.getElementById("modalFoto").src = "/uploads/mascotas/" + foto
+        document.getElementById("modalRaza")
+            .innerText = raza;
+
+        document.getElementById("modalGenero")
+            .innerText = genero;
+
+        document.getElementById("modalDescripcion")
+            .innerText = descripcion || "Sin descripción";
+
+        document.getElementById("mascotaIdInput")
+            .value = id;
+
+
+        /* =============================
+           FOTO DESDE CLOUDINARY
+        ============================= */
+
+        const imagen =
+            document.getElementById("modalFoto");
+
+        if(foto && foto !== "null" && foto !== ""){
+
+            imagen.src = foto;
+
         }else{
-            document.getElementById("modalFoto").src = "/img/logo.png"
-        }
 
+            imagen.src = "/img/logo.png";
+
+        }
 
     }
 

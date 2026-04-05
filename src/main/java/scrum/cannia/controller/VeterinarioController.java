@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Controller
@@ -42,6 +43,7 @@ public class VeterinarioController {
     private final PropietarioRepository propietarioRepository;
     private final CodigoVinculacionService codigoVinculacionService;
     private final CitaService citaService;
+    private final UsuarioService usuarioService;
 
     // ============================================
     //             DASHBOARD PRINCIPAL
@@ -78,6 +80,31 @@ public class VeterinarioController {
         model.addAttribute("historial", citaService.obtenerHistorial());
 
         return "veterinario/index";
+    }
+
+
+    // ============================================
+    //        EDITAR PERFIL VETERINARIO
+    // ============================================
+
+    @PostMapping("/actualizar-campo")
+    @ResponseBody
+    public String actualizarCampo(
+            @RequestBody Map<String,String> datos,
+            Authentication authentication
+    ) {
+
+        String username = authentication.getName();
+
+        veterinarioService.actualizarCampo(
+
+                username,
+                datos.get("campo"),
+                datos.get("valor")
+
+        );
+
+        return "ok";
     }
 
     // ============================================
