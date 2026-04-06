@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 public class EmailService {
 
-    @Autowired
+    @Autowired(required = false)
     private JavaMailSender mailSender;
 
     @Value("${sendgrid.api.key}")
@@ -32,7 +32,6 @@ public class EmailService {
     public void enviarCorreoRecuperacion(
             String email,
             String token){
-
 
         String link =
                 appUrl + "/registro/reset-password?token=" + token;
@@ -52,7 +51,11 @@ public class EmailService {
                         "\n\nEste enlace expira en 30 minutos."
         );
 
-        mailSender.send(mensaje);
+        if(mailSender != null){
+            mailSender.send(mensaje);
+        }else{
+            System.out.println("JavaMailSender no disponible en este entorno");
+        }
     }
 
     public void enviarPublicidad(String correo, String titulo, String mensajeHtml, byte[] imagenBytes, String nombreImagen) throws IOException {
