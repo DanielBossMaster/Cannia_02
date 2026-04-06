@@ -266,7 +266,7 @@
                                 class="flex justify-center items-center gap-2 mt-6">
                                 <!-- Botón Anterior -->
                                 <a th:if="${currentPageProductos > 0}"
-                                   th:href="@{/inventario/productos(pageProductos=${currentPageProductos - 1})}"
+                                   th:href="@{/inventario/productos/index(pageProductos=${currentPageProductos - 1})}"
                                    class="px-3 py-1 bg-gray-200  hover:bg-gray-300 transition">
                                     <svg xmlns="http://www.w3.org/2000/svg"
                                          width="24"
@@ -284,14 +284,14 @@
                                 </a>
                                 <!-- Números de página -->
                                 <span th:each="i : ${#numbers.sequence(0, totalPagesProductos - 1)}">
-                                    <a th:href="@{/inventario/productos(pageProductos=${i})}" th:text="${i + 1}"
+                                    <a th:href="@{/inventario/productos/index(pageProductos=${i})}" th:text="${i + 1}"
                                        class="px-3 py-1  transition"
                                        th:classappend="${i == currentPageProductos}? 'bg-secondary text-white font-bold': 'bg-gray-200 hover:bg-gray-300'">
                                     </a>
                                 </span>
                                 <!-- Botón Siguiente -->
                                 <a th:if="${currentPageProductos < totalPagesProductos - 1}"
-                                   th:href="@{/inventario/productos(pageProductos=${currentPageProductos + 1})}"
+                                   th:href="@{/inventario/productos/index(pageProductos=${currentPageProductos + 1})}"
                                    class="px-3 py-1 bg-gray-200  hover:bg-gray-300 transition">
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                      width="24"

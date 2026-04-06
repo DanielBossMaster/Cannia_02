@@ -24,20 +24,20 @@ public class ProductoModel {
     @Column(columnDefinition = "BYTEA")
     private byte[] foto;
 
-    @Column(length = 20, nullable = false)
+    @Column( nullable = false)
     private String nombre;
 
-    @Column(length = 300, nullable = false)
+    @Column( nullable = false)
     private String descripcion;
 
-    @Column(length = 20, nullable = false)
+    @Column( nullable = false)
     private Integer cantidad;
 
-    @Column(length = 20, nullable = false)
+    @Column( nullable = false)
     private Integer valor;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 50, nullable = false)
+    @Column( nullable = false)
     private UnidadMedida unidadMedida;
 
 
@@ -46,7 +46,7 @@ public class ProductoModel {
 
 
     @Column
-    private boolean publicado;
+    private boolean publicado;  
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_veterinaria")
