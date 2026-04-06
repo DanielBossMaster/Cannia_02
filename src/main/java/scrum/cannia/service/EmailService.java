@@ -29,32 +29,56 @@ public class EmailService {
     @Value("${app.url}")
     private String appUrl;
 
-    public void enviarCorreoRecuperacion(
-            String email,
-            String token){
+    public void enviarCorreoRecuperacion(String correo, String token) {
 
-        String link =
-                appUrl + "/registro/reset-password?token=" + token;
+        try {
 
-        SimpleMailMessage mensaje =
-                new SimpleMailMessage();
+            String link =
+                    appUrl + "/registro/reset-password?token=" + token;
 
-        mensaje.setTo(email);
+            Email from =
+                    new Email("cannia.scrum2@gmail.com");
 
-        mensaje.setSubject(
-                "Recuperar contraseña - Cannia");
+            Email to =
+                    new Email(correo);
 
-        mensaje.setText(
-                "Hola \n\n" +
-                        "Haz clic en el enlace para cambiar tu contraseña:\n"
-                        + link +
-                        "\n\nEste enlace expira en 30 minutos."
-        );
+            Content content =
+                    new Content(
+                            "text/plain",
+                            "Recuperar contraseña\n\n" +
+                                    "Haz clic en el enlace:\n" +
+                                    link +
+                                    "\n\nEl enlace expira en 30 minutos."
+                    );
 
-        if(mailSender != null){
-            mailSender.send(mensaje);
-        }else{
-            System.out.println("JavaMailSender no disponible en este entorno");
+            Mail mail =
+                    new Mail(
+                            from,
+                            "Recuperar contraseña - Cannia",
+                            to,
+                            content
+                    );
+
+            SendGrid sg =
+                    new SendGrid(apiKey);
+
+            Request request =
+                    new Request();
+
+            request.setMethod(Method.POST);
+
+            request.setEndpoint("mail/send");
+
+            request.setBody(mail.build());
+
+            sg.api(request);
+
+            System.out.println("Correo enviado correctamente");
+
+        } catch (Exception e) {
+
+            System.out.println("Error enviando correo: "
+                    + e.getMessage());
         }
     }
 

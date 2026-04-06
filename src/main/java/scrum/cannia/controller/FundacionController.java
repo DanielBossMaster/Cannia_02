@@ -98,24 +98,41 @@ public class FundacionController {
 
     @PostMapping("/upload")
     public String cargarMascotasFundacion(
+
             @RequestParam("archivo") MultipartFile file,
-            HttpSession session,
-            Model model) {
+            Authentication authentication,
+            Model model
+    ) {
 
-        Long fundacionId = (Long) session.getAttribute("fundacionId");
+        UsuarioModel usuario =
+                (UsuarioModel) authentication.getPrincipal();
 
-        if (fundacionId == null) {
-            model.addAttribute("error", "No hay fundación en sesión.");
+        if (usuario == null ||
+                usuario.getFundacion() == null) {
+
+            model.addAttribute(
+                    "error",
+                    "No hay fundación asociada al usuario."
+            );
+
             return "redirect:/login";
         }
 
+        Long fundacionId =
+                usuario.getFundacion().getId();
+
         try {
+
             // 1️⃣ Obtener estrategia según extensión
-            String filename = file.getOriginalFilename();
-            DataLoaderStrategy strategy = DataLoaderFactory.getStrategy(filename);
+            String filename =
+                    file.getOriginalFilename();
+
+            DataLoaderStrategy strategy =
+                    DataLoaderFactory.getStrategy(filename);
 
             // 2️⃣ Leer archivo (Strategy)
-            List<MascotaCargaDTO> mascotasDTO = strategy.loadData(file);
+            List<MascotaCargaDTO> mascotasDTO =
+                    strategy.loadData(file);
 
             // 3️⃣ Crear mascotas usando TEMPLATE METHOD
             ResultadoCargaMascotasDTO resultado =
@@ -125,16 +142,26 @@ public class FundacionController {
                     );
 
             // 4️⃣ Enviar resultados a la vista
-            model.addAttribute("total", resultado.getGuardadas().size());
-            model.addAttribute("errores", resultado.getErrores());
+            model.addAttribute(
+                    "total",
+                    resultado.getGuardadas().size()
+            );
+
+            model.addAttribute(
+                    "errores",
+                    resultado.getErrores()
+            );
 
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
+
+            model.addAttribute(
+                    "error",
+                    e.getMessage()
+            );
         }
 
         return "fundacion/CargarMascotas";
     }
-
 
     @PostMapping("/mascota/registrar")
     public String registrarMascotaFundacion(
