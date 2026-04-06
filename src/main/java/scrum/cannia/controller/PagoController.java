@@ -43,98 +43,212 @@ public class PagoController {
 
     @PostMapping("/crearCheckout")
     @ResponseBody
-    public Map<String, String> crearCheckout(Authentication authentication) throws Exception {
+    public Map<String, String> crearCheckout(
 
-        String username = authentication.getName();
-        UsuarioModel usuario = usuarioRepository
-                .findByUsuario(authentication.getName())
-                .orElseThrow();
+            @RequestBody Map<String,String> datos,
+            Authentication authentication
 
-        PropietarioModel propietario = usuario.getPropietario();
+    ) throws Exception {
+
+        String metodoEntrega =
+                datos.get("metodoEntrega");
+
+
+        String username =
+                authentication.getName();
+
+        UsuarioModel usuario =
+                usuarioRepository
+                        .findByUsuario(username)
+                        .orElseThrow();
+
+        PropietarioModel propietario =
+                usuario.getPropietario();
+
         if (propietario == null) {
-            throw new IllegalStateException("Solo propietarios pueden pagar");
+
+            throw new IllegalStateException(
+                    "Solo propietarios pueden pagar"
+            );
+
         }
 
-        List<ItemCarrito> carrito = carritoService.getItems(username);
+        List<ItemCarrito> carrito =
+                carritoService.getItems(username);
 
-        if (carrito == null || carrito.isEmpty()) {
-            throw new RuntimeException("El carrito está vacío");
+        if (carrito == null ||
+                carrito.isEmpty()) {
+
+            throw new RuntimeException(
+                    "El carrito está vacío"
+            );
+
         }
 
-        List<SessionCreateParams.LineItem> lineItems = carrito.stream().map(item ->
-                SessionCreateParams.LineItem.builder()
-                        .setQuantity((long) item.getCantidad())
-                        .setPriceData(
-                                SessionCreateParams.LineItem.PriceData.builder()
-                                        .setCurrency("cop")
-                                        .setUnitAmount((long) (item.getProducto().getValor() * 100))
-                                        .setProductData(
-                                                SessionCreateParams.LineItem.PriceData.ProductData
-                                                        .builder()
-                                                        .setName(item.getProducto().getNombre())
-                                                        .build()
+        // guardamos el metodo de entrega en sesión temporal
+        carritoService
+                .guardarMetodoEntrega(
+                        username,
+                        metodoEntrega
+                );
+
+
+        List<SessionCreateParams.LineItem> lineItems =
+                carrito.stream()
+                        .map(item ->
+
+                                SessionCreateParams
+                                        .LineItem
+                                        .builder()
+
+                                        .setQuantity(
+                                                (long) item.getCantidad()
                                         )
+
+                                        .setPriceData(
+
+                                                SessionCreateParams
+                                                        .LineItem
+                                                        .PriceData
+                                                        .builder()
+
+                                                        .setCurrency("cop")
+
+                                                        .setUnitAmount(
+
+                                                                (long)
+                                                                        (item.getProducto()
+                                                                                .getValor() * 100)
+
+                                                        )
+
+                                                        .setProductData(
+
+                                                                SessionCreateParams
+                                                                        .LineItem
+                                                                        .PriceData
+                                                                        .ProductData
+                                                                        .builder()
+
+                                                                        .setName(
+                                                                                item.getProducto()
+                                                                                        .getNombre()
+                                                                        )
+
+                                                                        .build()
+
+                                                        )
+
+                                                        .build()
+
+                                        )
+
                                         .build()
+
                         )
-                        .build()
-        ).toList();
 
-        SessionCreateParams params = SessionCreateParams.builder()
-                .addAllLineItem(lineItems)
-                .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl(appUrl + "/pago/exitoso")
-                .setCancelUrl(appUrl + "/pago/cancelado")
-                .build();
+                        .toList();
 
-        Session sessionStripe = Session.create(params);
 
-        return Map.of("url", sessionStripe.getUrl());
+        SessionCreateParams params =
+                SessionCreateParams
+                        .builder()
+
+                        .addAllLineItem(lineItems)
+
+                        .setMode(
+                                SessionCreateParams.Mode.PAYMENT
+                        )
+
+                        .setSuccessUrl(
+                                appUrl + "/pago/exitoso"
+                        )
+
+                        .setCancelUrl(
+                                appUrl + "/pago/cancelado"
+                        )
+
+                        .build();
+
+
+        Session sessionStripe =
+                Session.create(params);
+
+
+        return Map.of(
+                "url",
+                sessionStripe.getUrl()
+        );
     }
-
 
     // ============================================
     //        PAGO EXITOSO
     // ============================================
     @GetMapping("/exitoso")
-    public String pagoExitoso(Authentication authentication, Model model) {
-        String username = authentication.getName();
+    public String pagoExitoso(
 
-        UsuarioModel usuario = usuarioRepository
-                .findByUsuario(authentication.getName())
-                .orElseThrow();
+            Authentication authentication,
+            Model model
 
-        PropietarioModel propietario = usuario.getPropietario();
+    ) {
+
+        String username =
+                authentication.getName();
+
+        UsuarioModel usuario =
+                usuarioRepository
+                        .findByUsuario(username)
+                        .orElseThrow();
+
+        PropietarioModel propietario =
+                usuario.getPropietario();
+
         if (propietario == null) {
+
             return "redirect:/login";
+
         }
+
 
         VeterinariaModel veterinaria =
-                propietario.getVeterinario().getVeterinaria();
+                propietario
+                        .getVeterinario()
+                        .getVeterinaria();
 
-        if (veterinaria == null) {
-            model.addAttribute("mensaje",
-                    "No hay veterinaria asociada a tu cuenta.");
-            return "tienda/CompraExitosa";
-        }
 
-        List<ItemCarrito> carrito = carritoService.getItems(username);
+        List<ItemCarrito> carrito =
+                carritoService.getItems(username);
 
-        if (carrito.isEmpty()) {
-            model.addAttribute("mensaje",
-                    "El pago fue exitoso, pero el carrito estaba vacío.");
-            return "tienda/CompraExitosa";
-        }
+
+        String metodoEntrega =
+                carritoService
+                        .obtenerMetodoEntrega(
+                                username
+                        );
+
 
         FacturaModel factura =
-                pagoService.registrarFactura(propietario, veterinaria, carrito);
+                pagoService.registrarFactura(
 
-        model.addAttribute("factura", factura);
+                        propietario,
+                        veterinaria,
+                        carrito,
+                        metodoEntrega
+
+                );
+
+
+        model.addAttribute(
+                "factura",
+                factura
+        );
+
 
         carritoService.limpiar(username);
 
+
         return "tienda/CompraExitosa";
     }
-
     // ============================================
     //        PAGO CANCELADO
     // ============================================

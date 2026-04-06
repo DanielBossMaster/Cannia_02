@@ -35,8 +35,9 @@ public class PagoService {
     public FacturaModel registrarFactura(
             PropietarioModel propietario,
             VeterinariaModel veterinaria,
-            List<ItemCarrito> carrito
-    ) {
+            List<ItemCarrito> carrito,
+            String metodoEntrega
+    ){
 
         // 1. Crear factura (sin guardar aún)
         FacturaModel factura = new FacturaModel();
@@ -45,6 +46,7 @@ public class PagoService {
         factura.setMetodoPago(MetodoPago.Tarjeta);
         factura.setVeterinaria(veterinaria);
         factura.setPropietario(propietario);
+        factura.setMetodoEntrega(metodoEntrega);
 
         BigDecimal total = BigDecimal.ZERO;
 
@@ -58,9 +60,7 @@ public class PagoService {
 
             // A. Verificación de stock
             if (stockActual < cantidadVendida) {
-                // Si falla la verificación, lanzamos excepción.
-                // @Transactional asegura que NADA se guardará (ni la factura ni los descuentos anteriores).
-                throw new StockInsuficienteException(
+               throw new StockInsuficienteException(
                         "Stock insuficiente para el producto: " + producto.getNombre() +
                                 ". Stock disponible: " + stockActual + ", Cantidad requerida: " + cantidadVendida
                 );

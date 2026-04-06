@@ -253,13 +253,23 @@
                         </button>
                         <script>
                             document.getElementById("btnPagar").addEventListener("click", async () => {
-                                const respuesta = await fetch("/pago/crearCheckout", {
-                                    method: "POST"
-                                });
+                                const metodoEntrega =
+                                    document.querySelector(
+                                        'input[name="metodoEntrega"]:checked'
+                                    ).value;
+                                const respuesta = await fetch("/pago/crearCheckout",
+                                    {method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json"},
+                                        body: JSON.stringify({
+                                            metodoEntrega: metodoEntrega
+                                        })
+                                    }
+                                );
                                 const data = await respuesta.json();
                                 if (data.url) {
-                                    window.location.href = data.url; // Redirige a Stripe
-                                     } else {
+                                    window.location.href = data.url;
+                                } else {
                                     alert("Error creando checkout");
                                 }
                             });

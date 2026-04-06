@@ -39,6 +39,9 @@ public class FacturaModel {
     @Enumerated(EnumType.STRING)
     @Column(length = 20, nullable = false)
     private EstadoFactura estado;
+    
+    @Column(name = "metodo_entrega")
+    private String metodoEntrega;
 
     @ManyToOne
     @JoinColumn(name = "id_veterinaria",nullable = false)

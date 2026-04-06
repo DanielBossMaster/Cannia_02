@@ -6,10 +6,7 @@ import org.springframework.stereotype.Service;
 import scrum.cannia.model.ItemCarrito;
 import scrum.cannia.model.ProductoModel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -123,5 +120,24 @@ public class CarritoService {
                 )
                 .findFirst()
                 .orElse(null);
+    }
+
+    
+    private Map<String,String> metodoEntregaMap = new HashMap<>();
+
+    public void guardarMetodoEntrega(
+            String username,
+            String metodoEntrega
+    ){
+        metodoEntregaMap.put(
+                username,
+                metodoEntrega
+        );
+    }
+
+    public String obtenerMetodoEntrega(
+            String username
+    ){
+        return metodoEntregaMap.get(username);
     }
 }

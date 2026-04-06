@@ -369,17 +369,16 @@
                                 <th class="p-3 text-left">Cliente</th>
                                 <th class="p-3 text-left">Método de pago</th>
                                 <th class="p-3 text-left">Estado</th>
+                                <th class="p-3 text-left">Entrega</th>
                                 <th class="p-3 text-right">Total</th>
                                 <th class="p-3 text-center">Detalle</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:each="f : ${ventas}" class="border-b hover:bg-gray-100">
-                                <!-- ✅ FECHA -->
+
                                 <td class="p-3" th:text="${#temporals.format(f.fechaEmision, 'dd/MM/yyyy HH:mm')}"></td>
-                                <!-- ✅ PROPIETARIO -->
                                 <td class="p-3" th:text="${f.propietario.nombrePro}"></td>
-                                <!-- ✅ PAGO -->
                                 <td class="p-3" th:text="${f.metodoPago}"></td>
                                 <td class="p-3">
                                     <select class="border p-1" th:onchange="cambiarEstado(this, [[${f.id}]])">
@@ -390,15 +389,13 @@
                                         </option>
                                     </select>
                                 </td>
-                                <!-- ✅ TOTAL -->
+                                <td class="p-3 text-right " th:text="${f.metodoEntrega}"></td>
                                 <td class="p-3 text-right font-semibold" th:text="${'$ ' + f.precioTotal}"></td>
-                                <!-- ✅ BOTÓN DETALLE -->
                                 <td class="p-3 text-center">
                                     <button class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
                                             onclick="this.nextElementSibling.classList.toggle('hidden')">
                                         Ver
                                     </button>
-                                    <!-- ✅ DETALLE FACTURA -->
                                     <div class="hidden mt-3 border rounded bg-gray-50 p-3 text-left">
                                         <p class="font-semibold mb-2">Productos vendidos:</p>
                                         <table class="w-full text-sm">
