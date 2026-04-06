@@ -44,6 +44,7 @@ public class VeterinarioController {
     private final CodigoVinculacionService codigoVinculacionService;
     private final CitaService citaService;
     private final UsuarioService usuarioService;
+    private final AgendaService agendaService;
 
     // ============================================
     //             DASHBOARD PRINCIPAL
@@ -244,10 +245,11 @@ public class VeterinarioController {
     }
 
     // ============================================
-    //              GESTIÓN DE VENTAS
-    // ============================================
+//              GESTIÓN DE VENTAS
+// ============================================
     @GetMapping("/GestionVentas")
     public String gestionVentas(
+
             @RequestParam(defaultValue = "0") int pageProductos,
             @RequestParam(defaultValue = "0") int pageServicios,
             @RequestParam(defaultValue = "productos") String vista,
@@ -255,47 +257,45 @@ public class VeterinarioController {
             Model model
     ) {
 
-        // 1. Usuario autenticado (Spring Security)
         UsuarioModel usuario = usuarioRepository
                 .findByUsuario(authentication.getName())
                 .orElseThrow();
 
         VeterinarioModel veterinario = usuario.getVeterinario();
-
-        // ⚠️ Puede que aún NO tenga veterinaria
         VeterinariaModel veterinaria = veterinario.getVeterinaria();
 
-        // 2. Paginación de productos y servicios
-        Page<ProductoModel> productosPage =
-                productoService.listarActivosPaginado(
+        Page<ProductoModel> productosPage =   productoService.listarActivosPaginado(
                         pageProductos,
-                        9
-                );
+                        9);
 
-        Page<ServicioModel> serviciosPage =
-                servicioService.listarActivosPorVeterinaria(
-                        veterinaria.getId(),
-                        pageServicios,
-                        9
-                );
+        Page<ServicioModel> serviciosPage =   servicioService.listarActivosPorVeterinaria(
+                                veterinaria.getId(),
+                                pageServicios, 9);
 
+        List<FacturaModel> ventas = facturaService.obtenerVentasVeterinaria(
+                                veterinaria.getId());
+
+        List<AgendaModel> citas = agendaService.citasPorVeterinaria(
+                                veterinaria);
+
+        model.addAttribute("veterinaria", veterinaria);
         model.addAttribute("veterinario", veterinario);
-
-        // 3. Datos para la vista
         model.addAttribute("productos", productosPage.getContent());
         model.addAttribute("currentPageProductos", pageProductos);
         model.addAttribute("totalPagesProductos", productosPage.getTotalPages());
-
         model.addAttribute("servicios", serviciosPage.getContent());
         model.addAttribute("currentPageServicios", pageServicios);
         model.addAttribute("totalPagesServicios", serviciosPage.getTotalPages());
-
+        model.addAttribute("ventas", ventas);
+        model.addAttribute("citas", citas);
         model.addAttribute("vistaActiva", vista);
-        model.addAttribute("veterinaria", veterinaria);
         model.addAttribute("categorias", categoriaService.listarTodas());
-
         if (!model.containsAttribute("categoria")) {
-            model.addAttribute("categoria", new CategoriaModel());
+
+            model.addAttribute(
+                    "categoria",
+                    new CategoriaModel()
+            );
         }
 
         return "veterinario/GestionVentas";
