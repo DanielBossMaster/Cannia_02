@@ -266,7 +266,7 @@
                                 class="flex justify-center items-center gap-2 mt-6">
                                 <!-- Botón Anterior -->
                                 <a th:if="${currentPageProductos > 0}"
-                                   th:href="@{/inventario/productos(pageProductos=${currentPageProductos - 1})}"
+                                   th:href="@{/inventario/productos/index(pageProductos=${currentPageProductos - 1})}"
                                    class="px-3 py-1 bg-gray-200  hover:bg-gray-300 transition">
                                     <svg xmlns="http://www.w3.org/2000/svg"
                                          width="24"
@@ -284,14 +284,14 @@
                                 </a>
                                 <!-- Números de página -->
                                 <span th:each="i : ${#numbers.sequence(0, totalPagesProductos - 1)}">
-                                    <a th:href="@{/inventario/productos(pageProductos=${i})}" th:text="${i + 1}"
+                                    <a th:href="@{/inventario/productos/index(pageProductos=${i})}" th:text="${i + 1}"
                                        class="px-3 py-1  transition"
                                        th:classappend="${i == currentPageProductos}? 'bg-secondary text-white font-bold': 'bg-gray-200 hover:bg-gray-300'">
                                     </a>
                                 </span>
                                 <!-- Botón Siguiente -->
                                 <a th:if="${currentPageProductos < totalPagesProductos - 1}"
-                                   th:href="@{/inventario/productos(pageProductos=${currentPageProductos + 1})}"
+                                   th:href="@{/inventario/productos/index(pageProductos=${currentPageProductos + 1})}"
                                    class="px-3 py-1 bg-gray-200  hover:bg-gray-300 transition">
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                      width="24"
@@ -384,7 +384,7 @@
                             <div th:if="${!#lists.isEmpty(servicios)}" class="flex justify-center gap-2 mt-6">
                                 <!-- Anterior -->
                                 <a th:if="${currentPageServicios > 0}"
-                                   th:href="@{/inventario/productos(pageServicios=${currentPageServicios - 1},vista='servicios')}"
+                                   th:href="@{/inventario/productos/index(pageServicios=${currentPageServicios - 1},vista='servicios')}"
                                    class="px-3 py-1 bg-gray-200  hover:bg-gray-300">
                                     <svg xmlns="http://www.w3.org/2000/svg"
                                          width="24" height="24"
@@ -401,14 +401,14 @@
                                 </a>
                                 <!-- Números -->
                                 <span th:each="i : ${#numbers.sequence(0, totalPagesServicios - 1)}">
-                                    <a th:href="@{/inventario/productos(pageServicios=${i},vista='servicios')}"
+                                    <a th:href="@{/inventario/productos/index(pageServicios=${i},vista='servicios')}"
                                        th:text="${i + 1}" class="px-3 py-1 "
                                        th:classappend="${i == currentPageServicios}? 'bg-secondary text-white font-bold': 'bg-gray-200 hover:bg-gray-300'">
                                     </a>
                                 </span>
                                 <!-- Siguiente -->
                                 <a th:if="${currentPageServicios < totalPagesServicios - 1}"
-                                   th:href="@{/inventario/productos(pageServicios=${currentPageServicios + 1},vista='servicios')}"
+                                   th:href="@{/inventario/productos/index(pageServicios=${currentPageServicios + 1},vista='servicios')}"
                                    class="px-3 py-1 bg-gray-200  hover:bg-gray-300">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-right-dash-icon lucide-arrow-big-right-dash"><path d="M11 9a1 1 0 0 0 1-1V5.061a1 1 0 0 1 1.811-.75l6.836 6.836a1.207 1.207 0 0 1 0 1.707l-6.836 6.835a1 1 0 0 1-1.811-.75V16a1 1 0 0 0-1-1H9a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1z"/><path d="M4 9v6"/></svg>
                                 </a>
