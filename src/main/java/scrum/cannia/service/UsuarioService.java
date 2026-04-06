@@ -7,6 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import scrum.cannia.Dto.RegistroDTO;
 import scrum.cannia.model.*;
 import scrum.cannia.repository.*;
+
+import java.util.Optional;
+
 @AllArgsConstructor
 @Service
 public class UsuarioService {
@@ -189,7 +192,7 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
 
     }
-    
+
     public void cambiarPasswordSeguro(
 
             String username,
@@ -213,6 +216,7 @@ public class UsuarioService {
         );
         usuarioRepository.save(usuario);
     }
+
 }
 
 
