@@ -503,10 +503,10 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="c : ${agenda}" class="border-t h-12">
-                                        <td  class="py-2" th:text="${c.nombreMascota}"></td>
-                                        <td  class="py-2" th:text="${c.nombrePropietario}"></td>
-                                        <td  class="py-2" th:text="${c.fecha}"></td>
-                                        <td  class="py-2" th:text="${c.hora}"></td>
+                                        <td  class="py-2 text-center" th:text="${c.nombreMascota}"></td>
+                                        <td  class="py-2 text-center" th:text="${c.nombrePropietario}"></td>
+                                        <td  class="py-2 text-center" th:text="${c.fecha}"></td>
+                                        <td  class="py-2 text-center" th:text="${c.hora}"></td>
                                         <td  class="flex gap-2 justify-center">
                                             <button th:onclick="|aplicarVacuna(${c.citaId})|"
                                                     class=" relative group py-1 xt-sm text-primary font-bolt transform hover:scale-105 transition">
