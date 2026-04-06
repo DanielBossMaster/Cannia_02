@@ -155,7 +155,7 @@
                         </span>
                     </button>
 
-                    <a th:href="@{/veterinario/ventas}"
+                    <button onclick="mostrarVista('ventas')"
                        class=" group relative flex items-center gap-3 px-3 py-1 hover:bg-primary -md">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -167,7 +167,15 @@
                         <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
                             Ventas
                         </span>
-                    </a>
+                    </button>
+                    <button onclick="mostrarVista('agenda')"
+                            class=" group relative flex items-center gap-3 px-3 py-1 hover:bg-primary -md">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-clock-icon lucide-calendar-clock"><path d="M16 14v2.2l1.6 1"/><path d="M16 2v4"/><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"/><path d="M3 10h5"/><path d="M8 2v4"/><circle cx="16" cy="16" r="6"/></svg>
+                        <span class="sidebar-text hidden"> Agenda </span>
+                        <span class="pointer-events-none absolute left-full ml-2  bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 whitespace-nowrap z-50">
+                            Agenda
+                        </span>
+                    </button>
                 </nav>
             </div>
 
@@ -283,7 +291,6 @@
                         </div>
                     </div>
                 </section>
-                <!-- Servicios -->
                 <section id="vista-servicios" class="hidden">
                     <div class="items-center ">
                         <!-- CONTENEDOR DEL TÍTULO -->
@@ -344,6 +351,125 @@
                         </div>
                     </div>
                 </section>
+                <section id="vista-ventas" class="hidden">
+                    <div class="w-4/5 max-w-6xl mx-auto mb-4">
+                        <h1 class="text-4xl font-bold text-gray-700">
+                            Ventas Realizadas <span th:text="${veterinaria.nombre}"></span>
+                        </h1>
+                    </div>
+                    <div class="bg-lightSurface w-4/5 max-w-6xl mx-auto p-6 shadow-xl border border-borderLight overflow-x-auto">
+                        <div th:if="${#lists.isEmpty(ventas)}" class="text-center text-2xl text-gray-500 mt-6">
+                            Aún no se han registrado ventas.
+                        </div>
+                        <table th:if="${!#lists.isEmpty(ventas)}"
+                               class="w-full text-left text-sm">
+                            <thead class="bg-gray-100 text-softText  uppercase text-xs">
+                            <tr>
+                                <th class="p-3 text-left">Fecha</th>
+                                <th class="p-3 text-left">Cliente</th>
+                                <th class="p-3 text-left">Método de pago</th>
+                                <th class="p-3 text-left">Estado</th>
+                                <th class="p-3 text-right">Total</th>
+                                <th class="p-3 text-center">Detalle</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="f : ${ventas}" class="border-b hover:bg-gray-100">
+                                <!-- ✅ FECHA -->
+                                <td class="p-3" th:text="${#temporals.format(f.fechaEmision, 'dd/MM/yyyy HH:mm')}"></td>
+                                <!-- ✅ PROPIETARIO -->
+                                <td class="p-3" th:text="${f.propietario.nombrePro}"></td>
+                                <!-- ✅ PAGO -->
+                                <td class="p-3" th:text="${f.metodoPago}"></td>
+                                <td class="p-3">
+                                    <select class="border p-1" th:onchange="cambiarEstado(this, [[${f.id}]])">
+                                        <option th:each="e : ${T(scrum.cannia.model.EstadoFactura).values()}"
+                                                th:value="${e}"
+                                                th:text="${e}"
+                                                th:selected="${e.name() == f.estado.name()}">
+                                        </option>
+                                    </select>
+                                </td>
+                                <!-- ✅ TOTAL -->
+                                <td class="p-3 text-right font-semibold" th:text="${'$ ' + f.precioTotal}"></td>
+                                <!-- ✅ BOTÓN DETALLE -->
+                                <td class="p-3 text-center">
+                                    <button class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                                            onclick="this.nextElementSibling.classList.toggle('hidden')">
+                                        Ver
+                                    </button>
+                                    <!-- ✅ DETALLE FACTURA -->
+                                    <div class="hidden mt-3 border rounded bg-gray-50 p-3 text-left">
+                                        <p class="font-semibold mb-2">Productos vendidos:</p>
+                                        <table class="w-full text-sm">
+                                            <thead>
+                                            <tr class="border-b">
+                                                <th class="text-left">Producto</th>
+                                                <th class="text-center">Cantidad</th>
+                                                <th class="text-right">Precio</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="d : ${f.detalles}" class="border-b">
+                                                <td th:text="${d.producto.nombre}"></td>
+                                                <td class="text-center" th:text="${d.cantidad}"></td>
+                                                <td class="text-right" th:text="${'$ ' + d.precio}">
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section id="vista-agenda" class="hidden">
+                    <div class="w-4/5 max-w-6xl mx-auto mb-4">
+                        <h1 class="text-4xl font-bold text-gray-700">
+                            Citas agendadas
+                            <span th:text="${veterinaria.nombre}"></span>
+                        </h1>
+                    </div>
+                    <!-- CONTENEDOR -->
+                    <div class="bg-lightSurface w-4/5 max-w-6xl mx-auto p-6 shadow-xl border border-borderLight overflow-x-auto">
+                        <!-- SIN CITAS -->
+                        <div th:if="${#lists.isEmpty(citas)}"
+                             class="text-center text-2xl text-gray-500 mt-6">
+                            No hay citas agendadas
+                        </div>
+                        <!-- TABLA -->
+                        <table th:if="${!#lists.isEmpty(citas)}"
+                               class="w-full text-left text-sm">
+                            <thead class="bg-gray-100 text-softText uppercase text-xs">
+                            <tr>
+                                <th class="p-3 text-left">Fecha</th>
+                                <th class="p-3 text-left"> Servicio </th>
+                                <th class="p-3 text-left">Propietario</th>
+                                <th class="p-3 text-center">Hora</th>
+                                <th class="p-3 text-center">Estado</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="c : ${citas}"
+                                class="border-b hover:bg-gray-100">
+                                <td class="p-3" th:text="${#temporals.format(c.fecha, 'dd/MM/yyyy')}"></td>
+                                <td class="p-3" th:text="${c.servicio.nombre}"></td>
+                                <td class="p-3" th:text="${c.propietario.nombrePro}"></td>
+                                <td class="p-3 text-center" th:text="${c.hora}"></td>
+                                <td class="p-3 text-center">
+                                    <select class="border p-1">
+                                        <option>AGENDADA</option>
+                                        <option>ATENDIDA</option>
+                                        <option>RECHAZADA</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
             </main>
             <!-- Footer -->
             <footer class="text-center text-sm text-primary py-3 w-full border-t">
@@ -396,7 +522,6 @@
         </div>
     </div>
 </div>
-
 <div id="modalCrearCategoria" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white p-6 -lg shadow-2xl w-96 relative">
         <div class="flex justify-between items-center border-b pb-3 mb-4">
@@ -422,7 +547,6 @@
         </form>
     </div>
 </div>
-
 <div id="modalEditarCategoria" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white p-6 -lg shadow-2xl w-96 relative">
         <div class="flex justify-between items-center border-b pb-3 mb-4">
@@ -526,6 +650,8 @@
     function mostrarVista(vista) {
         document.getElementById("vista-productos").classList.add("hidden");
         document.getElementById("vista-servicios").classList.add("hidden");
+        document.getElementById("vista-ventas").classList.add("hidden");
+        document.getElementById("vista-agenda").classList.add("hidden");
 
         document.getElementById("vista-" + vista).classList.remove("hidden");
     }
