@@ -104,8 +104,11 @@ public class FundacionController {
             Model model
     ) {
 
+        String email =
+                authentication.getName();
+
         UsuarioModel usuario =
-                (UsuarioModel) authentication.getPrincipal();
+                usuarioService.buscarPorEmail(email);
 
         if (usuario == null ||
                 usuario.getFundacion() == null) {
@@ -123,25 +126,21 @@ public class FundacionController {
 
         try {
 
-            // 1️⃣ Obtener estrategia según extensión
             String filename =
                     file.getOriginalFilename();
 
             DataLoaderStrategy strategy =
                     DataLoaderFactory.getStrategy(filename);
 
-            // 2️⃣ Leer archivo (Strategy)
             List<MascotaCargaDTO> mascotasDTO =
                     strategy.loadData(file);
 
-            // 3️⃣ Crear mascotas usando TEMPLATE METHOD
             ResultadoCargaMascotasDTO resultado =
                     mascotaServiceCreator.crearDesdeFundacion(
                             mascotasDTO,
                             fundacionId
                     );
 
-            // 4️⃣ Enviar resultados a la vista
             model.addAttribute(
                     "total",
                     resultado.getGuardadas().size()
