@@ -61,5 +61,13 @@ public class AgendaService {
         return agendaRepository.findByPropietario(propietario);
     }
 
+    public List<AgendaModel> citasPorVeterinaria(
+            VeterinariaModel veterinaria
+    ){
+        return agendaRepository
+                .findByVeterinariaOrderByFechaDescHoraDesc(
+                        veterinaria
+                );
+    }
 }
 
