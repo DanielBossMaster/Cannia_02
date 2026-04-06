@@ -1,103 +1,132 @@
 package scrum.cannia.controller;
-import jakarta.servlet.http.HttpSession;
+
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import scrum.cannia.model.*;
-import scrum.cannia.repository.AgendaRepository;
-import scrum.cannia.repository.ServicioRepository;
+import scrum.cannia.model.UsuarioModel;
+import scrum.cannia.repository.UsuarioRepository;
 import scrum.cannia.service.AgendaService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
-@AllArgsConstructor
 @Controller
 @RequestMapping("/agenda")
+@AllArgsConstructor
 public class AgendaController {
 
-    private final AgendaRepository agendaRepository;
-    private final ServicioRepository servicioRepository;
     private final AgendaService agendaService;
+    private final UsuarioRepository usuarioRepository; // 👈 nuevo
+
 
     @PostMapping("/confirmar")
-    public String guardarAgenda(
+    public String confirmarAgenda(
+
             @RequestParam Integer servicioId,
             @RequestParam LocalDate fecha,
             @RequestParam LocalTime hora,
-            HttpSession session,
+            Authentication authentication,
             RedirectAttributes redirect
+
     ) {
 
-        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+        String username =
+                authentication.getName();
 
-        if (usuario == null || usuario.getPropietario() == null) {
+        UsuarioModel usuario =
+                usuarioRepository
+                        .findByUsuario(username)
+                        .orElseThrow();
+
+        if (usuario.getPropietario() == null) {
+
             return "redirect:/login";
         }
 
-        PropietarioModel propietario = usuario.getPropietario();
+        try {
 
-        ServicioModel servicio = servicioRepository.findById(servicioId)
-                .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
+            agendaService.agendarServicio(
 
-        VeterinariaModel veterinaria = servicio.getVeterinaria();
+                    servicioId,
+                    fecha,
+                    hora,
+                    usuario.getPropietario()
 
-        // ⛔ Validar horario duplicado
-        boolean ocupado = agendaRepository.existsByServicioAndFechaAndHoraAndEstado(
-                servicio, fecha, hora, "AGENDADA"
-        );
+            );
 
-        if (ocupado) {
-            redirect.addFlashAttribute("error",
-                    "⛔ Ese horario ya está ocupado, elige otro.");
-            return "redirect:/veterinario/Servicios";
+            redirect.addFlashAttribute(
+
+                    "success",
+                    "Cita agendada correctamente"
+
+            );
+
+        } catch (RuntimeException e) {
+
+            if (e.getMessage().equals("HORARIO_OCUPADO")) {
+
+                redirect.addFlashAttribute(
+
+                        "error",
+                        "Ese horario ya está ocupado"
+
+                );
+
+            } else {
+
+                redirect.addFlashAttribute(
+
+                        "error",
+                        "Error al agendar"
+
+                );
+
+            }
+
         }
 
-        // ✅ Crear cita
-        AgendaModel agenda = new AgendaModel();
-        agenda.setServicio(servicio);
-        agenda.setVeterinaria(veterinaria);
-        agenda.setPropietario(propietario);
-        agenda.setFecha(fecha);
-        agenda.setHora(hora);
-        agenda.setEstado("AGENDADA");
-
-        agendaRepository.save(agenda);
-
-        redirect.addFlashAttribute("success",
-                "✅ Cita agendada correctamente");
-
-        return "redirect:/veterinario/Servicios";
+        return "redirect:/tienda/propietario/tienda";
     }
+
+
 
     @GetMapping("/citas/modal")
-    public String cargarCitasModal(HttpSession session, Model model) {
+    public String cargarCitasModal(
 
-        UsuarioModel usuario = (UsuarioModel) session.getAttribute("usuario");
+            Authentication authentication,
+            Model model
 
-        if (usuario == null || usuario.getPropietario() == null) {
-            return "veterinario/Fragmentos/CitasVacio :: contenido";
+    ) {
+
+        String username =
+                authentication.getName();
+
+        UsuarioModel usuario =
+                usuarioRepository
+                        .findByUsuario(username)
+                        .orElseThrow();
+
+        if (usuario.getPropietario() == null) {
+
+            return "/Fragmentos/CitasVacio :: contenido";
         }
 
-        PropietarioModel propietario = usuario.getPropietario();
-
         model.addAttribute(
+
                 "citas",
-                agendaService.citasPorPropietario(propietario)
+
+                agendaService.citasPorPropietario(
+
+                        usuario.getPropietario()
+
+                )
+
         );
 
-        return "veterinario/Fragmentos/CitasModal :: contenido";
+        return "/Fragmentos/CitasModal :: contenido";
     }
 
-
-
 }
-
-
