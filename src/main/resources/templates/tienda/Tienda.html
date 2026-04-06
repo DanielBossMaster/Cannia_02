@@ -231,7 +231,8 @@
                         <div>
                             <h2 class="text-lg font-semibold">Método de entrega</h2>
                             <label class="flex items-start gap-2 cursor-pointer">
-                                <input type="radio" name="metodoEntrega" value="domicilio" checked
+                                <input type="radio" name="metodoEntrega" value="Domicilio"
+                                       checked
                                        onclick="mostrarDireccion(true)">
                                 <span>Domicilio</span>
                             </label>
@@ -240,7 +241,7 @@
                                 <p th:text="${direccion}"></p>
                             </div>
                             <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="radio" name="metodoEntrega" value="tienda" onclick="mostrarDireccion(false)">
+                                <input type="radio" name="metodoEntrega" value="Tienda" onclick="mostrarDireccion(false)">
                                 <span>Recoger en tienda</span>
                             </label>
                         </div>

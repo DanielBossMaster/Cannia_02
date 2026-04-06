@@ -53,7 +53,6 @@ public class PagoController {
         String metodoEntrega =
                 datos.get("metodoEntrega");
 
-
         String username =
                 authentication.getName();
 
@@ -61,119 +60,70 @@ public class PagoController {
                 usuarioRepository
                         .findByUsuario(username)
                         .orElseThrow();
-
         PropietarioModel propietario =
                 usuario.getPropietario();
-
         if (propietario == null) {
-
             throw new IllegalStateException(
                     "Solo propietarios pueden pagar"
             );
-
         }
-
         List<ItemCarrito> carrito =
                 carritoService.getItems(username);
-
         if (carrito == null ||
                 carrito.isEmpty()) {
-
             throw new RuntimeException(
                     "El carrito está vacío"
             );
-
         }
-
-        // guardamos el metodo de entrega en sesión temporal
         carritoService
                 .guardarMetodoEntrega(
                         username,
                         metodoEntrega
                 );
-
-
         List<SessionCreateParams.LineItem> lineItems =
                 carrito.stream()
                         .map(item ->
-
                                 SessionCreateParams
                                         .LineItem
                                         .builder()
-
                                         .setQuantity(
                                                 (long) item.getCantidad()
                                         )
-
                                         .setPriceData(
-
                                                 SessionCreateParams
                                                         .LineItem
                                                         .PriceData
                                                         .builder()
-
                                                         .setCurrency("cop")
-
                                                         .setUnitAmount(
-
                                                                 (long)
                                                                         (item.getProducto()
-                                                                                .getValor() * 100)
-
-                                                        )
-
+                                                                                .getValor() * 100))
                                                         .setProductData(
-
                                                                 SessionCreateParams
                                                                         .LineItem
                                                                         .PriceData
                                                                         .ProductData
                                                                         .builder()
-
                                                                         .setName(
                                                                                 item.getProducto()
-                                                                                        .getNombre()
-                                                                        )
-
-                                                                        .build()
-
-                                                        )
-
-                                                        .build()
-
-                                        )
-
-                                        .build()
-
-                        )
-
+                                                                                        .getNombre())
+                                                                        .build())
+                                                        .build())
+                                        .build())
                         .toList();
-
 
         SessionCreateParams params =
                 SessionCreateParams
                         .builder()
-
                         .addAllLineItem(lineItems)
-
                         .setMode(
-                                SessionCreateParams.Mode.PAYMENT
-                        )
-
-                        .setSuccessUrl(
-                                appUrl + "/pago/exitoso"
-                        )
-
-                        .setCancelUrl(
-                                appUrl + "/pago/cancelado"
-                        )
-
+                                SessionCreateParams.Mode.PAYMENT)
+                        .setSuccessUrl(appUrl + "/pago/exitoso")
+                        .setCancelUrl(appUrl + "/pago/cancelado")
                         .build();
-
-
         Session sessionStripe =
                 Session.create(params);
-
 
         return Map.of(
                 "url",
@@ -186,10 +136,8 @@ public class PagoController {
     // ============================================
     @GetMapping("/exitoso")
     public String pagoExitoso(
-
             Authentication authentication,
             Model model
-
     ) {
 
         String username =
@@ -209,23 +157,18 @@ public class PagoController {
 
         }
 
-
         VeterinariaModel veterinaria =
                 propietario
                         .getVeterinario()
                         .getVeterinaria();
 
-
         List<ItemCarrito> carrito =
                 carritoService.getItems(username);
 
-
         String metodoEntrega =
-                carritoService
-                        .obtenerMetodoEntrega(
+                carritoService.obtenerMetodoEntrega(
                                 username
                         );
-
 
         FacturaModel factura =
                 pagoService.registrarFactura(
@@ -233,19 +176,10 @@ public class PagoController {
                         propietario,
                         veterinaria,
                         carrito,
-                        metodoEntrega
+                        metodoEntrega);
 
-                );
-
-
-        model.addAttribute(
-                "factura",
-                factura
-        );
-
-
+        model.addAttribute("factura", factura);
         carritoService.limpiar(username);
-
 
         return "tienda/CompraExitosa";
     }
