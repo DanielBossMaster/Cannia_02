@@ -323,42 +323,6 @@ public class VeterinarioController {
         return "veterinario/FormularioPublicidad";
     }
 
-
-
-
-    // ============================================
-    //                 VENTAS
-    // ============================================
-
-    @GetMapping("/ventas")
-    public String verVentas(Authentication authentication, Model model) {
-
-        UsuarioModel usuario = usuarioRepository
-                .findByUsuario(authentication.getName())
-                .orElseThrow();
-
-        // Seguridad: solo veterinarios
-        if (usuario.getVeterinario() == null) {
-            return "redirect:/login";
-        }
-
-        VeterinariaModel veterinaria = usuario.getVeterinario().getVeterinaria();
-
-        // Puede no tener veterinaria aún
-        if (veterinaria == null) {
-            return "redirect:/veterinario/index";
-        }
-
-        List<FacturaModel> ventas =
-                facturaService.obtenerVentasVeterinaria(veterinaria.getId());
-
-        model.addAttribute("ventas", ventas);
-        model.addAttribute("veterinaria", veterinaria);
-
-        return "veterinario/Ventas";
-    }
-
-
     // ============================================
     //            VENTAS / ESTADO
     // ============================================
